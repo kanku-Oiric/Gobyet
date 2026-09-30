@@ -149,6 +149,11 @@ def head(cv, cx, cy, eyes="look", brows="flat", mouth="frown", face="F", tilt=0)
             cv.fill([(p[0], p[1] - 1) for p in pts[1:]], "K")
         elif brows == "up":
             cv.fill(rect(x0 - 2, by - 1, 4, 1), "K")
+        elif brows == "raised":  # skeptis: alis kiri turun, alis kanan melengkung naik
+            if i == 0:
+                cv.fill({(x0 - 2, by), (x0 - 1, by), (x0, by + 1), (x0 + 1, by + 1)}, "K")
+            else:
+                cv.fill({(x0 - 2, by - 1), (x0 - 1, by - 2), (x0, by - 2), (x0 + 1, by - 1)}, "K")
     # hidung dan mulut
     my = int(cy + 4)
     cv.put(cx - 1, my - 1, "M"); cv.put(cx, my - 1, "M")
@@ -158,6 +163,8 @@ def head(cv, cx, cy, eyes="look", brows="flat", mouth="frown", face="F", tilt=0)
         cv.fill(rect(cx - 2, my + 1, 4, 1), "M")
     elif mouth == "smile":
         cv.fill({(cx - 2, my + 1), (cx - 1, my + 2), (cx, my + 2), (cx + 1, my + 1)}, "M")
+    elif mouth == "smirk":  # datar dengan sudut kanan naik
+        cv.fill({(cx - 2, my + 2), (cx - 1, my + 2), (cx, my + 2), (cx + 1, my + 1)}, "M")
     elif mouth == "shout":
         cv.fill(rect(cx - 2, my + 1, 4, 3), "M")
         cv.fill(rect(cx - 1, my + 3, 2, 1), "T")

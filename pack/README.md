@@ -66,7 +66,7 @@ Animasi lama berisi beberapa beat, jadi pemetaannya ke state adalah kecocokan te
 | `normal/idle` | `ngopi-santai` | |
 | `normal/happy` | `makan-pisang` | |
 | `greek-philosopher/thinking` | `filsuf-yunani` | berakhir dengan `!` |
-| `academic/victory` | `wisuda` | |
+| `academic/idle` | `wisuda` | dipindah dari `academic/victory` di Gerbang B; 78% loop adalah pose tenang memegang ijazah |
 | `scientist/thinking` | `rambut-einstein` | berakhir menjulurkan lidah |
 | `hacker/idle` | `hacker` | berakhir dengan `OK` |
 | `detective/thinking` | `detektif-bug` | berisi momen kaget |
@@ -81,6 +81,18 @@ Setiap sel di manifest punya field `origin`:
 - `"baru"`: aset yang dibuat di Fase 2 dengan rig yang sama. Kode kostumnya ada di `src/roles.py`, dengan kanvas 64×48, palet `PAL`, dan garis tepi yang sama.
 
 Aset baru juga punya field `gate`, yaitu gerbang persetujuan tempat aset itu dibuat, dan nama file `<kostum>-<state>`. Preview menandai aset baru dengan label **BARU** (biru), berbeda dari **ASLI** (hijau).
+
+## Validasi
+
+```sh
+python3 src/validate_pack.py --gate B    # hash, palet, kanvas, seam loop, IoU siluet, ukuran, teks, prop, tabel beat
+node --test pack/resolver.test.js        # resolver dan manifest
+```
+
+- `pack/sha256-asli.txt` mengunci 27 file `gif/` dan `sheets/` yang ada sebelum Fase 2.
+- `pack/sha256-disetujui.txt` mengunci aset baru yang gayanya sudah disetujui pemilik (saat ini Gerbang A).
+- Validator keluar dengan kode 1 bila ada hash berubah, warna di luar `PAL`, piksel semi-transparan, ukuran salah, atau seam loop aset baru melebihi selisih antar-frame terbesarnya.
+- Seam loop aset asli hanya dilaporkan, tidak digagalkan, karena aset asli tidak boleh diubah.
 
 ## Rancangan aturan pemilihan (untuk integrasi arena, belum diimplementasikan)
 

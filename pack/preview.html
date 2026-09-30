@@ -32,6 +32,7 @@ body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 var(-
 .wrap > * { min-width: 0; }
 h1 { margin: 0; font-size: clamp(24px, 5vw, 34px); line-height: 1.15; color: var(--fur); }
 h2 { margin: 0 0 10px; font-size: 18px; }
+h3 { margin: 0; font-size: 14px; color: var(--muted); }
 p { margin: 0; }
 .muted { color: var(--muted); }
 .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
@@ -118,9 +119,9 @@ tr.group td, tr.group th { background: var(--bg); font: 700 11px/1 var(--f-mono)
   </section>
 
   <section class="panel" aria-labelledby="cmpTitle">
-    <h2 id="cmpTitle">Banding gaya: Gerbang A</h2>
-    <p class="muted" style="margin-bottom:12px">Normal asli di samping Referee baru. Tiap aset tampil 1× (piksel asli 64×48, dari sheet 1×) dan 4× (dari sheet @4x).</p>
-    <div class="compare" id="compare"></div>
+    <h2 id="cmpTitle">Banding gaya: Gerbang B</h2>
+    <p class="muted" style="margin-bottom:12px">Normal asli di samping kostum peran. Tiap aset tampil 1× (piksel asli 64×48, dari sheet 1×) dan 4× (dari sheet @4x). Aset baru berlabel gerbangnya.</p>
+    <div id="compare" style="display:grid;gap:14px"></div>
   </section>
 
   <section class="panel" aria-labelledby="playTitle">
@@ -279,26 +280,36 @@ tr.group td, tr.group th { background: var(--bg); font: 700 11px/1 var(--f-mono)
   }
 
   // ---- banding gaya (1x dari sheet, 4x dari sheet@4x)
-  var COMPARE = [["normal", "idle"], ["referee", "idle"], ["referee", "thinking"]];
+  var COMPARE = [
+    ["Idle berdampingan", [["normal", "idle"], ["referee", "idle"], ["judge", "idle"], ["skeptic", "idle"], ["champion", "idle"]]],
+    ["State lain Gerbang A dan B", [["referee", "thinking"], ["judge", "thinking"], ["judge", "judging"], ["skeptic", "suspicious"],
+      ["skeptic", "attack"], ["champion", "victory"]]],
+  ];
   function buildCompare() {
     var box = $("compare");
     box.textContent = "";
-    COMPARE.forEach(function (pair) {
-      var r = P.resolve(manifest, pair[0], pair[1]);
-      if (r.kind !== "exact") return;
-      var isNew = r.cell.origin === "baru";
-      var fig = el("figure", "cmp " + (isNew ? "baru" : "asli"));
-      fig.style.margin = "0";
-      var row = el("div", "scales");
-      var c1 = el("canvas", "x1"); c1.width = 64; c1.height = 48;
-      var c4 = el("canvas", "x4"); c4.width = 256; c4.height = 192;
-      row.appendChild(c1); row.appendChild(c4);
-      fig.appendChild(row);
-      fig.appendChild(el("figcaption", null, (isNew ? "BARU" : "ASLI") + " · " + pair[0] + "/" + pair[1] + " · " + r.cell.source));
-      fig.setAttribute("aria-label", pair[0] + " " + pair[1] + (isNew ? ", aset baru" : ", aset asli") + ", 1x dan 4x");
-      box.appendChild(fig);
-      cells.push({ canvas: c1, cell: r.cell, url: assetUrl(r.cell.sheet), last: -1, size: 64 });
-      if (r.cell.sheet4x) cells.push({ canvas: c4, cell: r.cell, url: assetUrl(r.cell.sheet4x), last: -1, size: 256 });
+    COMPARE.forEach(function (group) {
+      box.appendChild(el("h3", null, group[0]));
+      var row = el("div", "compare");
+      box.appendChild(row);
+      group[1].forEach(function (pair) {
+        var r = P.resolve(manifest, pair[0], pair[1]);
+        if (r.kind !== "exact") return;
+        var isNew = r.cell.origin === "baru";
+        var fig = el("figure", "cmp " + (isNew ? "baru" : "asli"));
+        fig.style.margin = "0";
+        var scales = el("div", "scales");
+        var c1 = el("canvas", "x1"); c1.width = 64; c1.height = 48;
+        var c4 = el("canvas", "x4"); c4.width = 256; c4.height = 192;
+        scales.appendChild(c1); scales.appendChild(c4);
+        fig.appendChild(scales);
+        var label = isNew ? "BARU · gerbang " + (r.cell.gate || "?") : "ASLI";
+        fig.appendChild(el("figcaption", null, label + " · " + pair[0] + "/" + pair[1] + " · " + r.cell.source));
+        fig.setAttribute("aria-label", pair[0] + " " + pair[1] + ", " + label + ", 1x dan 4x");
+        row.appendChild(fig);
+        cells.push({ canvas: c1, cell: r.cell, url: assetUrl(r.cell.sheet), last: -1, size: 64 });
+        if (r.cell.sheet4x) cells.push({ canvas: c4, cell: r.cell, url: assetUrl(r.cell.sheet4x), last: -1, size: 256 });
+      });
     });
   }
 

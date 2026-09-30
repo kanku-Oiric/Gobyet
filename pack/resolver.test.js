@@ -21,18 +21,22 @@ function pngSize(file) {
   return { w: b.readUInt32BE(16), h: b.readUInt32BE(20) };
 }
 
+// Fixture kecil dari sel asli: test perilaku fallback tidak ikut berubah saat aset baru ditambahkan ke manifest.
+const FIX = { cells: { normal: { idle: M.cells.normal.idle, happy: M.cells.normal.happy }, hacker: { idle: M.cells.hacker.idle } } };
+
 test("kombinasi valid: sel asli terkena tepat (exact)", () => {
-  for (const [c, s] of [["normal", "idle"], ["normal", "happy"], ["greek-philosopher", "thinking"], ["academic", "victory"],
+  for (const [c, s] of [["normal", "idle"], ["normal", "happy"], ["greek-philosopher", "thinking"], ["academic", "idle"],
     ["scientist", "thinking"], ["hacker", "idle"], ["detective", "thinking"]]) {
     const r = P.resolve(M, c, s);
     assert.equal(r.kind, "exact", c + "/" + s);
     assert.deepEqual(r.resolved, { costume: c, state: s });
     assert.equal(r.cell.status, "final");
+    assert.equal(r.cell.origin, "asli", c + "/" + s);
   }
 });
 
 test("state hilang: jatuh ke kostum+idle bila ada", () => {
-  const r = P.resolve(M, "hacker", "victory");
+  const r = P.resolve(FIX, "hacker", "victory");
   assert.equal(r.kind, "fallback");
   assert.equal(r.step, "costume+idle");
   assert.deepEqual(r.resolved, { costume: "hacker", state: "idle" });
@@ -40,18 +44,27 @@ test("state hilang: jatuh ke kostum+idle bila ada", () => {
 });
 
 test("state hilang tanpa idle kostum: jatuh ke normal+state, lalu normal+idle", () => {
-  const a = P.resolve(M, "greek-philosopher", "happy");
+  const a = P.resolve(FIX, "greek-philosopher", "happy");
   assert.equal(a.step, "normal+state");
   assert.deepEqual(a.resolved, { costume: "normal", state: "happy" });
-  const b = P.resolve(M, "greek-philosopher", "victory");
+  const b = P.resolve(FIX, "greek-philosopher", "victory");
   assert.equal(b.step, "normal+idle");
   assert.deepEqual(b.tried, ["greek-philosopher/victory", "greek-philosopher/idle", "normal/victory", "normal/idle"]);
 });
 
 test("kostum hilang atau tidak dikenal: jatuh ke normal", () => {
-  assert.equal(P.resolve(M, "judge", "judging").step, "normal+idle");
+  assert.equal(P.resolve(FIX, "judge", "judging").step, "normal+idle");
   assert.equal(P.resolve(M, "pirate", "happy").step, "normal+state");
   assert.equal(P.resolve(M, "pirate", "tidak-ada").step, "normal+idle");
+});
+
+test("pemetaan Gerbang B: wisuda di academic/idle, academic/victory bukan wisuda", () => {
+  const idle = P.resolve(M, "academic", "idle");
+  assert.equal(idle.kind, "exact");
+  assert.equal(idle.cell.source, "wisuda");
+  assert.equal(idle.cell.keyframe, 0);
+  const v = P.resolve(M, "academic", "victory");
+  assert.ok(!(v.kind === "exact" && v.cell.source === "wisuda"), "wisuda masih terpetakan ke academic/victory");
 });
 
 test("input dinormalkan: spasi, huruf besar, kosong, bukan string", () => {

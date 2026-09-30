@@ -44,7 +44,8 @@ ORIGINAL = {
     ("normal", "idle"): ("ngopi-santai", 0),
     ("normal", "happy"): ("makan-pisang", 4),
     ("greek-philosopher", "thinking"): ("filsuf-yunani", 10),
-    ("academic", "victory"): ("wisuda", 11),
+    # Dipindah dari academic/victory di Gerbang B: 78% loop wisuda adalah pose tenang memegang ijazah.
+    ("academic", "idle"): ("wisuda", 0),
     ("scientist", "thinking"): ("rambut-einstein", 8),
     ("hacker", "idle"): ("hacker", 2),
     ("detective", "thinking"): ("detektif-bug", 6),
@@ -54,6 +55,15 @@ ORIGINAL = {
 NEW = {
     ("referee", "idle"): ("referee-idle", 2, "A"),
     ("referee", "thinking"): ("referee-thinking", 12, "A"),
+    # Gerbang B: frame kunci 0 (frame pertama = pose tetap yang jelas).
+    ("judge", "idle"): ("judge-idle", 0, "B"),
+    ("judge", "thinking"): ("judge-thinking", 0, "B"),
+    ("judge", "judging"): ("judge-judging", 0, "B"),
+    ("skeptic", "idle"): ("skeptic-idle", 0, "B"),
+    ("skeptic", "suspicious"): ("skeptic-suspicious", 0, "B"),
+    ("skeptic", "attack"): ("skeptic-attack", 0, "B"),
+    ("champion", "idle"): ("champion-idle", 0, "B"),
+    ("champion", "victory"): ("champion-victory", 0, "B"),
 }
 
 # Animasi yang ada tetapi sengaja tidak dimasukkan ke matriks MVP.
