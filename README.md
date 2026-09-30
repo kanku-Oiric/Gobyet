@@ -36,9 +36,48 @@ Sistem kostum × state untuk dipakai di aplikasi (misalnya arena Battle Royale A
 
 - `manifest.json`: peta kostum × state.
 - `resolver.js`: resolver dengan fallback berantai.
-- `preview.html`: matriks semua kostum × state, dengan placeholder yang ditandai jelas.
+- `preview.html`: matriks semua kostum × state, panel banding gaya, dan tes buta. Placeholder ditandai jelas.
 
 Detailnya di [`pack/README.md`](pack/README.md).
+
+### Update: Fase 2, aset per gerbang
+
+Aset baru dibuat bertahap. Setiap gerbang berhenti dulu sampai gayanya disetujui.
+
+| Gerbang | Isi | Status |
+|---|---|---|
+| A | Referee: idle, thinking | disetujui |
+| B | Judge: idle, thinking, judging · Skeptic: idle, suspicious, attack · Champion: idle, victory (laurel emas diganti medali) | revisi Champion selesai, menunggu konfirmasi |
+| C | Greek Philosopher: idle, victory, defeated · Academic: thinking, victory, defeated · Normal: thinking, victory, defeated | menunggu persetujuan gaya |
+| D | Scientist, Mathematician | belum |
+| E | Hacker, Detective, Lawyer | belum |
+| F | Sel sisanya, audit, dokumentasi | belum |
+
+Terisi 26 dari 75 sel yang berlaku: 7 aset asli dan 19 aset baru. Sel lainnya memakai fallback.
+
+**Kostum peran (idle)**
+
+| Referee | Judge | Skeptic | Champion |
+|:---:|:---:|:---:|:---:|
+| <img src="gif/referee-idle.gif" width="192" alt="Gobyet berkaus wasit bergaris dengan peluit, tangan di pinggang, menoleh kiri-kanan"> | <img src="gif/judge-idle.gif" width="192" alt="Gobyet berjubah hakim hitam memegang palu di samping landasan"> | <img src="gif/skeptic-idle.gif" width="192" alt="Gobyet bersweter hijau dan bermonokel emas, bersedekap dengan satu alis naik"> | <img src="gif/champion-idle.gif" width="192" alt="Gobyet berselempang merah dengan medali emas, memamerkan piala"> |
+| juga: `thinking` | juga: `thinking`, `judging` | juga: `suspicious`, `attack` | juga: `victory` |
+
+**Gerbang C**
+
+| | idle / thinking | victory | defeated |
+|---|:---:|:---:|:---:|
+| Greek Philosopher | <img src="gif/greek-philosopher-idle.gif" width="192" alt="Filsuf Gobyet mengelus janggut sambil membawa gulungan"> | <img src="gif/greek-philosopher-victory.gif" width="192" alt="Filsuf Gobyet mengangkat gulungan yang terbuka sambil melompat kecil"> | <img src="gif/greek-philosopher-defeated.gif" width="192" alt="Filsuf Gobyet rebah, gulungannya menggelinding menjauh"> |
+| Academic | <img src="gif/academic-thinking.gif" width="192" alt="Gobyet bertopi toga membaca ijazah lalu memegang dagu"> | <img src="gif/academic-victory.gif" width="192" alt="Gobyet melempar topi toga tinggi-tinggi lalu menangkapnya lagi"> | <img src="gif/academic-defeated.gif" width="192" alt="Gobyet bertopi toga miring duduk lunglai memegang ijazah kusut"> |
+| Normal | <img src="gif/normal-thinking.gif" width="192" alt="Gobyet menggaruk kepala dengan gelembung tanda tanya"> | <img src="gif/normal-victory.gif" width="192" alt="Gobyet mengangkat pisang tinggi-tinggi seperti piala"> | <img src="gif/normal-defeated.gif" width="192" alt="Gobyet rebah menyamping dan menghela napas"> |
+
+Baris Greek Philosopher kolom pertama adalah `idle`; baris Academic dan Normal adalah `thinking` (idle keduanya sudah ada: `wisuda` dan `ngopi-santai`).
+
+Cek sendiri:
+
+```bash
+python3 src/validate_pack.py --gate C    # hash aset lama, palet, seam loop, siluet, ukuran, warna
+node --test pack/resolver.test.js        # resolver dan manifest
+```
 
 ## Pasang Gobyet di project lain
 
@@ -49,6 +88,8 @@ Tempel di README atau halaman mana pun:
 ```
 
 Ganti `marah-debug` dengan nama animasi lain: `makan-pisang`, `ngopi-santai`, `wisuda`, `filsuf-yunani`, `rambut-einstein`, `hacker`, `detektif-bug`, atau `kondangan`. Atur ukurannya lewat `width` (kelipatan 64 paling tajam: 128, 256, 512).
+
+Aset character pack (`referee-idle`, `judge-judging`, dan seterusnya; daftar lengkapnya di `pack/manifest.json`) baru bisa dipakai lewat URL `main` setelah Fase 2 digabung ke `main`.
 
 ## Sprite sheet
 
@@ -66,7 +107,7 @@ Untuk web atau game, pakai sprite sheet di [`sheets/`](sheets): satu baris frame
 | `detektif-bug` | 20 | 3,0 detik |
 | `kondangan` | 12 | 1,7 detik |
 
-Durasi tiap frame ada di `SCENES` pada [`src/scenes.py`](src/scenes.py) dan [`src/costumes.py`](src/costumes.py).
+Durasi tiap frame ada di `SCENES` pada [`src/scenes.py`](src/scenes.py) dan [`src/costumes.py`](src/costumes.py). Jumlah frame dan durasi aset character pack ada di [`pack/manifest.json`](pack/manifest.json).
 
 ## Bikin pose baru
 
@@ -79,7 +120,9 @@ Gobyet tidak digambar per frame, tapi disusun dari "rig" di [`src/monkey.py`](sr
 
 Kostum ada di [`src/costumes.py`](src/costumes.py): badan berbaju (`dressed_body()`), aksesori kepala (`mortarboard()`, `laurel()`, `beard()`, `wild_hair()`, `hood()`, `sunglasses()`, `deerstalker()`, `peci()`), dan properti (`scroll()`, `column()`, `chalkboard()`, `magnifier()`, `bug()`).
 
-Untuk pose atau kostum baru, tulis fungsi frame baru di `src/scenes.py` atau `src/costumes.py`, daftarkan di `SCENES`-nya, lalu jalankan:
+Aset character pack Fase 2 ada di [`src/roles.py`](src/roles.py) (Referee, Judge, Skeptic, Champion) dan [`src/domains.py`](src/domains.py) (Normal dan kostum domain, termasuk pose rebah `lying_body()`).
+
+Untuk pose atau kostum baru, tulis fungsi frame baru di `src/scenes.py`, `src/costumes.py`, `src/roles.py`, atau `src/domains.py`, daftarkan di `SCENES`-nya, lalu jalankan:
 
 ```bash
 pip install -r requirements.txt
