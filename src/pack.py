@@ -8,9 +8,11 @@ jumlah frame dan durasi per frame yang diambil langsung dari SCENES.
 
 FORMAT = "gobyet-pack/1"
 
-# 12 kostum MVP. Urutan = urutan tampilan di preview.
+# Kostum: (id, label, group). Urutan = urutan tampilan di preview (baris dikelompokkan per group).
+# 12 kostum MVP lama, lalu kostum baru Fase 2 lanjutan (group special, fantasy, theology, dan gamer).
 COSTUMES = [
     ("normal", "Normal", "core"),
+    ("normal-gblk", "Normal GBLK", "special"),
     ("referee", "Referee", "role"),
     ("judge", "Judge", "role"),
     ("skeptic", "Skeptic", "role"),
@@ -22,21 +24,80 @@ COSTUMES = [
     ("lawyer", "Lawyer", "domain"),
     ("hacker", "Hacker", "domain"),
     ("detective", "Detective", "domain"),
+    ("gamer", "Gamer", "domain"),
+    ("knight", "Knight", "fantasy"),
+    ("knight-heavy", "Knight: Heavy", "fantasy"),
+    ("knight-archer", "Knight: Archer", "fantasy"),
+    ("knight-manatarms", "Knight: Man-at-Arms", "fantasy"),
+    ("knight-assassin", "Knight: Assassin", "fantasy"),
+    ("viking", "Viking", "fantasy"),
+    ("viking-berserker", "Viking: Berserker", "fantasy"),
+    ("viking-huscarl", "Viking: Huscarl", "fantasy"),
+    ("viking-gestir", "Viking: Gestir", "fantasy"),
+    ("viking-bondi", "Viking: Bondi", "fantasy"),
+    ("pirate", "Pirate", "fantasy"),
+    ("pirate-captain", "Pirate: Captain", "fantasy"),
+    ("pirate-skirmisher", "Pirate: Skirmisher", "fantasy"),
+    ("pirate-sharpshooter", "Pirate: Sharpshooter", "fantasy"),
+    ("pirate-buccaneer", "Pirate: Buccaneer", "fantasy"),
+    ("wizard", "Wizard", "fantasy"),
+    ("pak-haji", "Pak Haji", "theology"),
+    ("priest", "Priest", "theology"),
 ]
 
-# State wajib untuk semua kostum, lalu state opsional. "costumes" membatasi state
-# opsional ke peran tertentu; tanpa "costumes" berarti boleh untuk semua kostum.
-STATES = [
-    {"id": "idle", "label": "idle", "required": True},
-    {"id": "thinking", "label": "thinking", "required": True},
-    {"id": "victory", "label": "victory", "required": True},
-    {"id": "defeated", "label": "defeated", "required": True},
-    {"id": "judging", "label": "judging", "required": False, "costumes": ["judge"]},
-    {"id": "suspicious", "label": "suspicious", "required": False, "costumes": ["skeptic"]},
-    {"id": "attack", "label": "attack", "required": False, "costumes": ["skeptic"]},
-    {"id": "shocked", "label": "shocked", "required": False},
-    {"id": "happy", "label": "happy", "required": False},
-]
+# Field opsional per kostum, ditulis ke manifest hanya bila ada. base = kostum induk untuk fallback.
+COSTUME_META = {
+    "normal-gblk": {"base": "normal", "caption": "GBLK = Gamers Berkembang Lewat Kebodohan"},
+}
+for _faction, _variants in (("knight", ("heavy", "archer", "manatarms", "assassin")),
+                            ("viking", ("berserker", "huscarl", "gestir", "bondi")),
+                            ("pirate", ("captain", "skirmisher", "sharpshooter", "buccaneer"))):
+    for _v in _variants:
+        COSTUME_META["%s-%s" % (_faction, _v)] = {"base": _faction}
+
+STATE_IDS = ["idle", "thinking", "victory", "defeated", "judging", "suspicious", "attack", "shocked", "happy",
+             "dance-a", "dance-b", "dance-c", "reveal"]
+
+# APPLIES: satu-satunya sumber sel yang berlaku. {kostum: {state: "required" | "optional"}}.
+# Sel yang tidak tercantum tidak berlaku ("-" di preview).
+R, O = "required", "optional"
+_CORE4 = {"idle": R, "thinking": R, "victory": R, "defeated": R}
+APPLIES = {c: dict(_CORE4, shocked=O, happy=O) for c, _, g in COSTUMES if g in ("core", "role") or c in (
+    "greek-philosopher", "academic", "scientist", "mathematician", "lawyer", "hacker", "detective")}
+APPLIES["judge"]["judging"] = O
+APPLIES["skeptic"].update(suspicious=O, attack=O)
+APPLIES["detective"]["suspicious"] = O  # keputusan pemilik (Fase 2 lanjutan)
+APPLIES["normal"]["dance-a"] = O
+APPLIES["champion"]["dance-a"] = O
+APPLIES["gamer"] = dict(_CORE4, happy=O, shocked=O, **{"dance-a": O})
+APPLIES["normal-gblk"] = {"idle": R, "victory": R, "defeated": R, "reveal": O, "happy": O,
+                          "dance-a": O, "dance-b": O, "dance-c": O}
+for _c in ("knight", "wizard"):
+    APPLIES[_c] = dict(_CORE4, shocked=O, attack=O)
+for _c in ("viking", "pirate"):
+    APPLIES[_c] = dict(_CORE4, attack=O, **{"dance-a": O})
+for _c in ("pak-haji", "priest"):
+    APPLIES[_c] = dict(_CORE4, happy=O)
+for _c, _meta in COSTUME_META.items():
+    if _meta.get("base") in ("knight", "viking", "pirate"):
+        APPLIES[_c] = {"idle": R, "victory": R, "attack": O}
+
+
+def _states():
+    """Daftar state untuk kompatibilitas manifest lama: "required" bila wajib di setiap kostum yang
+    memakainya, "costumes" = allowlist bila state tidak berlaku untuk semua kostum."""
+    out = []
+    all_ids = [c for c, _, _ in COSTUMES]
+    for sid in STATE_IDS:
+        users = [c for c in all_ids if sid in APPLIES[c]]
+        st = {"id": sid, "label": sid, "required": all(APPLIES[c][sid] == R for c in users)}
+        if users != all_ids:
+            st["costumes"] = users
+        out.append(st)
+    return out
+
+
+STATES = _states()
 
 # Sel yang sudah punya asset: (kostum, state) -> (nama animasi, frame kunci untuk tampilan statis).
 # Setiap animasi lama berisi beberapa beat; state di sini adalah kecocokan terdekat.
@@ -59,12 +120,12 @@ NEW = {
     ("referee", "thinking"): ("referee-thinking", 12, "A"),
     ("judge", "idle"): ("judge-idle", 0, "B"),
     ("judge", "thinking"): ("judge-thinking", 0, "B"),
-    ("judge", "judging"): ("judge-judging", 0, "B"),
+    ("judge", "judging"): ("judge-judging", 9, "B"),
     ("skeptic", "idle"): ("skeptic-idle", 0, "B"),
     ("skeptic", "suspicious"): ("skeptic-suspicious", 0, "B"),
-    ("skeptic", "attack"): ("skeptic-attack", 0, "B"),
+    ("skeptic", "attack"): ("skeptic-attack", 7, "B"),
     ("champion", "idle"): ("champion-idle", 0, "B"),
-    ("champion", "victory"): ("champion-victory", 0, "B"),
+    ("champion", "victory"): ("champion-victory", 4, "B"),
     ("greek-philosopher", "idle"): ("greek-philosopher-idle", 0, "C"),
     ("greek-philosopher", "victory"): ("greek-philosopher-victory", 6, "C"),
     ("greek-philosopher", "defeated"): ("greek-philosopher-defeated", 7, "C"),
@@ -76,13 +137,34 @@ NEW = {
     ("normal", "defeated"): ("normal-defeated", 0, "C"),
 }
 
+# Profil export. Aset gerbang A-C (dan semua aset asli) diekspor dengan pengaturan lama: palet PAL saja,
+# optimize=False, sheet 1x dan @4x. Aset baru mulai Gerbang D: palet PAL + PAL_EXT, GIF optimize=True,
+# dan hanya sheet 1x (sheet4x opsional; preview memperbesar sheet 1x tanpa smoothing).
+LEGACY_GATES = ("A", "B", "C")
+
+
+def modern(name):
+    """True bila animasi `name` adalah aset baru yang memakai profil export Gerbang D ke atas."""
+    for src, _, gate in NEW.values():
+        if src == name:
+            return gate not in LEGACY_GATES
+    return False
+
+
 # Animasi yang ada tetapi sengaja tidak dimasukkan ke matriks MVP.
 EXTRAS = {
     "marah-debug": "Normal: ngamuk ke laptop. Tidak cocok dengan state standar (campuran shocked dan marah).",
     "kondangan": "Kostum peci + batik, di luar 12 kostum MVP.",
 }
 
-FALLBACK = ["costume+state", "costume+idle", "normal+state", "normal+idle", "placeholder"]
+FALLBACK = ["costume+state", "costume+idle", "base+state", "base+idle", "normal+state", "normal+idle", "placeholder"]
+
+
+def costume_entry(c, label, group):
+    entry = {"id": c, "label": label, "group": group}
+    entry.update(COSTUME_META.get(c, {}))
+    entry["applies"] = APPLIES[c]
+    return entry
 
 
 def manifest(scenes):
@@ -106,13 +188,15 @@ def manifest(scenes):
         }
         if gate:
             cell["gate"] = gate
+        if modern(name):
+            del cell["sheet4x"]
     return {
         "format": FORMAT,
         "generated_by": "src/export.py (dari src/pack.py)",
         "paths": "relatif terhadap file manifest ini",
         "canvas": {"w": 64, "h": 48},
         "gif_scale": 8,
-        "costumes": [{"id": c, "label": label, "group": group} for c, label, group in COSTUMES],
+        "costumes": [costume_entry(c, label, group) for c, label, group in COSTUMES],
         "states": STATES,
         "fallback": FALLBACK,
         "cells": cells,

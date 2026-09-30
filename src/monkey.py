@@ -20,6 +20,19 @@ PAL = {
     "I": (196, 228, 246), "k": (44, 76, 60), "m": (232, 228, 218),  # lensa, papan tulis, marmer
 }
 
+# Palet tambahan untuk aset baru mulai Gerbang D. Aset lama hanya memakai PAL dan diekspor dengan urutan
+# palet lama, jadi byte-nya tidak berubah. Aset baru memakai palet lokal (hanya warna yang dipakai aset
+# itu), jadi menambah kunci di sini tidak mengubah aset baru yang sudah ada. Kunci tidak boleh sama
+# dengan kunci PAL. Kunci yang masih bebas: J j p t w z i o dan angka.
+PAL_EXT = {
+    "p": (98, 58, 140), "j": (70, 40, 104),  # ungu: rompi Mathematician (Gerbang D)
+}
+
+
+def rgb(c):
+    """Warna untuk kunci palet: PAL dulu, lalu PAL_EXT."""
+    return PAL[c] if c in PAL else PAL_EXT[c]
+
 
 class Canvas:
     def __init__(self):
@@ -36,7 +49,7 @@ class Canvas:
     def image(self, scale=1, bg=None):
         im = Image.new("RGBA", (W, H), bg + (255,) if bg else (0, 0, 0, 0))
         for (x, y), c in self.px.items():
-            im.putpixel((x, y), PAL[c] + (255,))
+            im.putpixel((x, y), rgb(c) + (255,))
         return im.resize((W * scale, H * scale), Image.NEAREST) if scale != 1 else im
 
 

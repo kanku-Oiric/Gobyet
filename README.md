@@ -42,18 +42,22 @@ Detailnya di [`pack/README.md`](pack/README.md).
 
 ### Update: Fase 2, aset per gerbang
 
-Aset baru dibuat bertahap. Setiap gerbang berhenti dulu sampai gayanya disetujui.
+Aset baru dibuat bertahap per gerbang. Urutan kerjanya A, B, C, D, E, G, H, I, J, F. Status terkini ada di [`pack/PROGRESS.md`](pack/PROGRESS.md).
 
 | Gerbang | Isi | Status |
 |---|---|---|
 | A | Referee: idle, thinking | disetujui |
-| B | Judge: idle, thinking, judging · Skeptic: idle, suspicious, attack · Champion: idle, victory (laurel emas diganti medali) | revisi Champion selesai, menunggu konfirmasi |
+| B | Judge: idle, thinking, judging · Skeptic: idle, suspicious, attack · Champion: idle, victory (laurel emas diganti medali) | disetujui |
 | C | Greek Philosopher: idle, victory, defeated · Academic: thinking, victory, defeated · Normal: thinking, victory, defeated | disetujui |
-| D | Scientist, Mathematician | belum |
-| E | Hacker, Detective, Lawyer | belum |
-| F | Sel sisanya, audit, dokumentasi | belum |
+| D | Scientist: idle, shocked, victory · Mathematician: idle, thinking, victory | belum |
+| E | Hacker: thinking, shocked, victory · Detective: idle, suspicious, shocked, victory · Lawyer: idle, thinking, victory | belum |
+| G | Gamer (7 state), Normal-GBLK (8 state) | belum |
+| H | Knight, Viking, Pirate, Wizard | belum |
+| I | Pak Haji, Priest | belum |
+| J | 12 varian kelas Knight, Viking, Pirate | belum |
+| F | Sisa sel 12 kostum lama, audit, dokumentasi | belum |
 
-Terisi 26 dari 75 sel yang berlaku: 7 aset asli dan 19 aset baru. Sel lainnya memakai fallback.
+Terisi 26 dari 163 sel yang berlaku: 7 aset asli dan 19 aset baru. Sel lainnya memakai fallback.
 
 **Kostum peran (idle)**
 

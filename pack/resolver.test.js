@@ -133,10 +133,11 @@ test("sel rusak dilewati, rantai berlanjut ke sel valid berikutnya", () => {
   assert.equal(r.step, "normal+idle");
 });
 
-test("seluruh matriks 12 x 9 teresolusi tanpa error", () => {
+test("seluruh matriks kostum x state teresolusi tanpa error", () => {
+  // Dimensi matriks mengikuti manifest (dulu 12 x 9; sejak Fase 2 lanjutan 32 kostum x 13 state).
   const { costumes, states } = P.matrix(M);
-  assert.equal(costumes.length, 12);
-  assert.equal(states.length, 9);
+  assert.equal(costumes.length, M.costumes.length);
+  assert.equal(states.length, M.states.length);
   const kinds = { exact: 0, fallback: 0, placeholder: 0 };
   for (const c of costumes) for (const s of states) {
     const r = P.resolve(M, c.id, s.id);
@@ -147,7 +148,81 @@ test("seluruh matriks 12 x 9 teresolusi tanpa error", () => {
   const all = Object.values(M.cells).flatMap((row) => Object.values(row));
   assert.equal(kinds.exact, all.length);
   assert.equal(all.filter((c) => c.origin === "asli").length, 7);
-  assert.equal(kinds.exact + kinds.fallback, 108);
+  assert.equal(kinds.exact + kinds.fallback, costumes.length * states.length);
+});
+
+test("applies: tabel sel berlaku 163 (78 kostum lama + 85 kostum baru), semua sel terisi berlaku", () => {
+  const { costumes, states } = P.matrix(M);
+  let total = 0, req = 0;
+  const old12 = ["normal", "referee", "judge", "skeptic", "champion", "greek-philosopher", "academic", "scientist",
+    "mathematician", "lawyer", "hacker", "detective"];
+  let oldTotal = 0;
+  for (const c of costumes) for (const s of states) {
+    const rule = P.cellRule(c, s);
+    if (!rule) continue;
+    total++; if (rule === "required") req++;
+    if (old12.includes(c.id)) oldTotal++;
+  }
+  assert.equal(total, 163);
+  assert.equal(oldTotal, 78);
+  for (const [costume, row] of Object.entries(M.cells)) {
+    const c = costumes.find((x) => x.id === costume);
+    for (const state of Object.keys(row)) {
+      assert.ok(P.cellRule(c, states.find((x) => x.id === state)), costume + "/" + state + " terisi tapi tidak berlaku");
+    }
+  }
+  // state tanpa "applies" (manifest lama) tetap memakai aturan required + allowlist
+  const legacy = { id: "judge" };
+  assert.equal(P.cellRule(legacy, { id: "judging", required: false, costumes: ["judge"] }), "optional");
+  assert.equal(P.cellRule({ id: "normal" }, { id: "judging", required: false, costumes: ["judge"] }), null);
+  assert.equal(P.cellRule({ id: "normal" }, { id: "idle", required: true }), "required");
+});
+
+test("varian tanpa aset jatuh ke induk; induk tanpa aset jatuh ke normal", () => {
+  const cell = (n) => ({ sheet: n + ".png", frames: 1, durations_ms: [100] });
+  const m = {
+    costumes: [{ id: "normal" }, { id: "knight" }, { id: "knight-heavy", base: "knight" }, { id: "viking-gestir", base: "viking" },
+      { id: "normal-gblk", base: "normal" }],
+    cells: { normal: { idle: cell("n"), happy: cell("nh") }, knight: { idle: cell("k"), attack: cell("ka") } },
+  };
+  let r = P.resolve(m, "knight-heavy", "attack");
+  assert.equal(r.step, "base+state");
+  assert.deepEqual(r.tried, ["knight-heavy/attack", "knight-heavy/idle", "knight/attack"]);
+  r = P.resolve(m, "knight-heavy", "victory");
+  assert.equal(r.step, "base+idle");
+  assert.deepEqual(r.resolved, { costume: "knight", state: "idle" });
+  r = P.resolve(m, "viking-gestir", "happy");  // induk ada di daftar tapi tanpa aset
+  assert.equal(r.step, "normal+state");
+  assert.deepEqual(r.tried, ["viking-gestir/happy", "viking-gestir/idle", "viking/happy", "viking/idle", "normal/happy"]);
+  r = P.resolve(m, "normal-gblk", "reveal");  // base = normal: langkah base dilewati
+  assert.equal(r.step, "normal+idle");
+  assert.deepEqual(r.tried, ["normal-gblk/reveal", "normal-gblk/idle", "normal/reveal", "normal/idle"]);
+  // manifest tanpa field base: rantai lama
+  const old = { cells: m.cells };
+  assert.deepEqual(P.resolve(old, "knight-heavy", "attack").tried, ["knight-heavy/attack", "knight-heavy/idle", "normal/attack", "normal/idle"]);
+  // base yang rusak tidak membuat error
+  for (const bad of [42, null, {}, "", "   "]) {
+    const mb = { costumes: [{ id: "x", base: bad }], cells: m.cells };
+    assert.doesNotThrow(() => P.resolve(mb, "x", "victory"));
+    assert.deepEqual(P.resolve(mb, "x", "victory").tried, ["x/victory", "x/idle", "normal/victory", "normal/idle"]);
+  }
+  const thrower = { cells: m.cells };
+  Object.defineProperty(thrower, "costumes", { get() { throw new Error("boom"); } });
+  assert.equal(P.resolve(thrower, "knight-heavy", "victory").step, "normal+idle");
+});
+
+test("frame kunci keputusan pemilik: champion-victory f4, judge-judging f9, skeptic-attack f7", () => {
+  assert.equal(M.cells.champion.victory.keyframe, 4);
+  assert.equal(M.cells.judge.judging.keyframe, 9);
+  assert.equal(M.cells.skeptic.attack.keyframe, 7);
+});
+
+test("sheet4x opsional: sel tanpa sheet4x tetap valid dan teresolusi exact", () => {
+  const cell = { sheet: "a.png", frames: 2, durations_ms: [100, 100], loop: true, keyframe: 1 };
+  assert.ok(P.validCell(cell));
+  const r = P.resolve({ cells: { normal: { idle: cell } } }, "normal", "idle");
+  assert.equal(r.kind, "exact");
+  assert.equal(P.frameAt(cell, 0, true), 1);
 });
 
 test("frameAt: mengikuti durasi, loop, dan reduced motion", () => {
@@ -168,13 +243,15 @@ test("manifest: setiap asset yang dirujuk benar-benar ada dan ukurannya cocok", 
   for (const [costume, row] of Object.entries(M.cells)) {
     for (const [state, cell] of Object.entries(row)) {
       assert.ok(P.validCell(cell), costume + "/" + state);
-      for (const key of ["sheet", "sheet4x", "gif"]) {
+      for (const key of ["sheet", "gif"].concat(cell.sheet4x ? ["sheet4x"] : [])) {
         assert.ok(fs.existsSync(path.join(dir, cell[key])), costume + "/" + state + " " + key + " hilang: " + cell[key]);
       }
       const s1 = pngSize(path.join(dir, cell.sheet));
       assert.deepEqual(s1, { w: w * cell.frames, h: h }, cell.sheet);
-      const s4 = pngSize(path.join(dir, cell.sheet4x));
-      assert.deepEqual(s4, { w: w * 4 * cell.frames, h: h * 4 }, cell.sheet4x);
+      if (cell.sheet4x) {  // opsional untuk aset baru sejak Gerbang D
+        const s4 = pngSize(path.join(dir, cell.sheet4x));
+        assert.deepEqual(s4, { w: w * 4 * cell.frames, h: h * 4 }, cell.sheet4x);
+      }
       assert.ok(cell.keyframe >= 0 && cell.keyframe < cell.frames);
     }
   }
@@ -194,7 +271,7 @@ test("aset baru: ditandai, punya gerbang, terhubung ke file yang ada dengan ukur
       assert.ok(/^[A-Z]$/.test(cell.gate || ""), costume + "/" + state + " tanpa gerbang");
       assert.equal(cell.source, costume + "-" + state, "nama file aset baru mengikuti <kostum>-<state>");
       assert.deepEqual(pngSize(path.join(dir, cell.sheet)), { w: 64 * cell.frames, h: 48 });
-      assert.deepEqual(pngSize(path.join(dir, cell.sheet4x)), { w: 256 * cell.frames, h: 192 });
+      if (cell.sheet4x) assert.deepEqual(pngSize(path.join(dir, cell.sheet4x)), { w: 256 * cell.frames, h: 192 });
       assert.deepEqual(gifSize(path.join(dir, cell.gif)), { w: 512, h: 384 });
       assert.equal(P.resolve(M, costume, state).kind, "exact");
     }

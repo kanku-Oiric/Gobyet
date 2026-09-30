@@ -11,62 +11,403 @@
     {
       "id": "normal",
       "label": "Normal",
-      "group": "core"
+      "group": "core",
+      "applies": {
+        "idle": "required",
+        "thinking": "required",
+        "victory": "required",
+        "defeated": "required",
+        "shocked": "optional",
+        "happy": "optional",
+        "dance-a": "optional"
+      }
+    },
+    {
+      "id": "normal-gblk",
+      "label": "Normal GBLK",
+      "group": "special",
+      "base": "normal",
+      "caption": "GBLK = Gamers Berkembang Lewat Kebodohan",
+      "applies": {
+        "idle": "required",
+        "victory": "required",
+        "defeated": "required",
+        "reveal": "optional",
+        "happy": "optional",
+        "dance-a": "optional",
+        "dance-b": "optional",
+        "dance-c": "optional"
+      }
     },
     {
       "id": "referee",
       "label": "Referee",
-      "group": "role"
+      "group": "role",
+      "applies": {
+        "idle": "required",
+        "thinking": "required",
+        "victory": "required",
+        "defeated": "required",
+        "shocked": "optional",
+        "happy": "optional"
+      }
     },
     {
       "id": "judge",
       "label": "Judge",
-      "group": "role"
+      "group": "role",
+      "applies": {
+        "idle": "required",
+        "thinking": "required",
+        "victory": "required",
+        "defeated": "required",
+        "shocked": "optional",
+        "happy": "optional",
+        "judging": "optional"
+      }
     },
     {
       "id": "skeptic",
       "label": "Skeptic",
-      "group": "role"
+      "group": "role",
+      "applies": {
+        "idle": "required",
+        "thinking": "required",
+        "victory": "required",
+        "defeated": "required",
+        "shocked": "optional",
+        "happy": "optional",
+        "suspicious": "optional",
+        "attack": "optional"
+      }
     },
     {
       "id": "champion",
       "label": "Champion",
-      "group": "role"
+      "group": "role",
+      "applies": {
+        "idle": "required",
+        "thinking": "required",
+        "victory": "required",
+        "defeated": "required",
+        "shocked": "optional",
+        "happy": "optional",
+        "dance-a": "optional"
+      }
     },
     {
       "id": "greek-philosopher",
       "label": "Greek Philosopher",
-      "group": "domain"
+      "group": "domain",
+      "applies": {
+        "idle": "required",
+        "thinking": "required",
+        "victory": "required",
+        "defeated": "required",
+        "shocked": "optional",
+        "happy": "optional"
+      }
     },
     {
       "id": "academic",
       "label": "Academic",
-      "group": "domain"
+      "group": "domain",
+      "applies": {
+        "idle": "required",
+        "thinking": "required",
+        "victory": "required",
+        "defeated": "required",
+        "shocked": "optional",
+        "happy": "optional"
+      }
     },
     {
       "id": "scientist",
       "label": "Scientist",
-      "group": "domain"
+      "group": "domain",
+      "applies": {
+        "idle": "required",
+        "thinking": "required",
+        "victory": "required",
+        "defeated": "required",
+        "shocked": "optional",
+        "happy": "optional"
+      }
     },
     {
       "id": "mathematician",
       "label": "Mathematician",
-      "group": "domain"
+      "group": "domain",
+      "applies": {
+        "idle": "required",
+        "thinking": "required",
+        "victory": "required",
+        "defeated": "required",
+        "shocked": "optional",
+        "happy": "optional"
+      }
     },
     {
       "id": "lawyer",
       "label": "Lawyer",
-      "group": "domain"
+      "group": "domain",
+      "applies": {
+        "idle": "required",
+        "thinking": "required",
+        "victory": "required",
+        "defeated": "required",
+        "shocked": "optional",
+        "happy": "optional"
+      }
     },
     {
       "id": "hacker",
       "label": "Hacker",
-      "group": "domain"
+      "group": "domain",
+      "applies": {
+        "idle": "required",
+        "thinking": "required",
+        "victory": "required",
+        "defeated": "required",
+        "shocked": "optional",
+        "happy": "optional"
+      }
     },
     {
       "id": "detective",
       "label": "Detective",
-      "group": "domain"
+      "group": "domain",
+      "applies": {
+        "idle": "required",
+        "thinking": "required",
+        "victory": "required",
+        "defeated": "required",
+        "shocked": "optional",
+        "happy": "optional",
+        "suspicious": "optional"
+      }
+    },
+    {
+      "id": "gamer",
+      "label": "Gamer",
+      "group": "domain",
+      "applies": {
+        "idle": "required",
+        "thinking": "required",
+        "victory": "required",
+        "defeated": "required",
+        "happy": "optional",
+        "shocked": "optional",
+        "dance-a": "optional"
+      }
+    },
+    {
+      "id": "knight",
+      "label": "Knight",
+      "group": "fantasy",
+      "applies": {
+        "idle": "required",
+        "thinking": "required",
+        "victory": "required",
+        "defeated": "required",
+        "shocked": "optional",
+        "attack": "optional"
+      }
+    },
+    {
+      "id": "knight-heavy",
+      "label": "Knight: Heavy",
+      "group": "fantasy",
+      "base": "knight",
+      "applies": {
+        "idle": "required",
+        "victory": "required",
+        "attack": "optional"
+      }
+    },
+    {
+      "id": "knight-archer",
+      "label": "Knight: Archer",
+      "group": "fantasy",
+      "base": "knight",
+      "applies": {
+        "idle": "required",
+        "victory": "required",
+        "attack": "optional"
+      }
+    },
+    {
+      "id": "knight-manatarms",
+      "label": "Knight: Man-at-Arms",
+      "group": "fantasy",
+      "base": "knight",
+      "applies": {
+        "idle": "required",
+        "victory": "required",
+        "attack": "optional"
+      }
+    },
+    {
+      "id": "knight-assassin",
+      "label": "Knight: Assassin",
+      "group": "fantasy",
+      "base": "knight",
+      "applies": {
+        "idle": "required",
+        "victory": "required",
+        "attack": "optional"
+      }
+    },
+    {
+      "id": "viking",
+      "label": "Viking",
+      "group": "fantasy",
+      "applies": {
+        "idle": "required",
+        "thinking": "required",
+        "victory": "required",
+        "defeated": "required",
+        "attack": "optional",
+        "dance-a": "optional"
+      }
+    },
+    {
+      "id": "viking-berserker",
+      "label": "Viking: Berserker",
+      "group": "fantasy",
+      "base": "viking",
+      "applies": {
+        "idle": "required",
+        "victory": "required",
+        "attack": "optional"
+      }
+    },
+    {
+      "id": "viking-huscarl",
+      "label": "Viking: Huscarl",
+      "group": "fantasy",
+      "base": "viking",
+      "applies": {
+        "idle": "required",
+        "victory": "required",
+        "attack": "optional"
+      }
+    },
+    {
+      "id": "viking-gestir",
+      "label": "Viking: Gestir",
+      "group": "fantasy",
+      "base": "viking",
+      "applies": {
+        "idle": "required",
+        "victory": "required",
+        "attack": "optional"
+      }
+    },
+    {
+      "id": "viking-bondi",
+      "label": "Viking: Bondi",
+      "group": "fantasy",
+      "base": "viking",
+      "applies": {
+        "idle": "required",
+        "victory": "required",
+        "attack": "optional"
+      }
+    },
+    {
+      "id": "pirate",
+      "label": "Pirate",
+      "group": "fantasy",
+      "applies": {
+        "idle": "required",
+        "thinking": "required",
+        "victory": "required",
+        "defeated": "required",
+        "attack": "optional",
+        "dance-a": "optional"
+      }
+    },
+    {
+      "id": "pirate-captain",
+      "label": "Pirate: Captain",
+      "group": "fantasy",
+      "base": "pirate",
+      "applies": {
+        "idle": "required",
+        "victory": "required",
+        "attack": "optional"
+      }
+    },
+    {
+      "id": "pirate-skirmisher",
+      "label": "Pirate: Skirmisher",
+      "group": "fantasy",
+      "base": "pirate",
+      "applies": {
+        "idle": "required",
+        "victory": "required",
+        "attack": "optional"
+      }
+    },
+    {
+      "id": "pirate-sharpshooter",
+      "label": "Pirate: Sharpshooter",
+      "group": "fantasy",
+      "base": "pirate",
+      "applies": {
+        "idle": "required",
+        "victory": "required",
+        "attack": "optional"
+      }
+    },
+    {
+      "id": "pirate-buccaneer",
+      "label": "Pirate: Buccaneer",
+      "group": "fantasy",
+      "base": "pirate",
+      "applies": {
+        "idle": "required",
+        "victory": "required",
+        "attack": "optional"
+      }
+    },
+    {
+      "id": "wizard",
+      "label": "Wizard",
+      "group": "fantasy",
+      "applies": {
+        "idle": "required",
+        "thinking": "required",
+        "victory": "required",
+        "defeated": "required",
+        "shocked": "optional",
+        "attack": "optional"
+      }
+    },
+    {
+      "id": "pak-haji",
+      "label": "Pak Haji",
+      "group": "theology",
+      "applies": {
+        "idle": "required",
+        "thinking": "required",
+        "victory": "required",
+        "defeated": "required",
+        "happy": "optional"
+      }
+    },
+    {
+      "id": "priest",
+      "label": "Priest",
+      "group": "theology",
+      "applies": {
+        "idle": "required",
+        "thinking": "required",
+        "victory": "required",
+        "defeated": "required",
+        "happy": "optional"
+      }
     }
   ],
   "states": [
@@ -78,7 +419,28 @@
     {
       "id": "thinking",
       "label": "thinking",
-      "required": true
+      "required": true,
+      "costumes": [
+        "normal",
+        "referee",
+        "judge",
+        "skeptic",
+        "champion",
+        "greek-philosopher",
+        "academic",
+        "scientist",
+        "mathematician",
+        "lawyer",
+        "hacker",
+        "detective",
+        "gamer",
+        "knight",
+        "viking",
+        "pirate",
+        "wizard",
+        "pak-haji",
+        "priest"
+      ]
     },
     {
       "id": "victory",
@@ -88,7 +450,29 @@
     {
       "id": "defeated",
       "label": "defeated",
-      "required": true
+      "required": true,
+      "costumes": [
+        "normal",
+        "normal-gblk",
+        "referee",
+        "judge",
+        "skeptic",
+        "champion",
+        "greek-philosopher",
+        "academic",
+        "scientist",
+        "mathematician",
+        "lawyer",
+        "hacker",
+        "detective",
+        "gamer",
+        "knight",
+        "viking",
+        "pirate",
+        "wizard",
+        "pak-haji",
+        "priest"
+      ]
     },
     {
       "id": "judging",
@@ -103,7 +487,8 @@
       "label": "suspicious",
       "required": false,
       "costumes": [
-        "skeptic"
+        "skeptic",
+        "detective"
       ]
     },
     {
@@ -111,23 +496,113 @@
       "label": "attack",
       "required": false,
       "costumes": [
-        "skeptic"
+        "skeptic",
+        "knight",
+        "knight-heavy",
+        "knight-archer",
+        "knight-manatarms",
+        "knight-assassin",
+        "viking",
+        "viking-berserker",
+        "viking-huscarl",
+        "viking-gestir",
+        "viking-bondi",
+        "pirate",
+        "pirate-captain",
+        "pirate-skirmisher",
+        "pirate-sharpshooter",
+        "pirate-buccaneer",
+        "wizard"
       ]
     },
     {
       "id": "shocked",
       "label": "shocked",
-      "required": false
+      "required": false,
+      "costumes": [
+        "normal",
+        "referee",
+        "judge",
+        "skeptic",
+        "champion",
+        "greek-philosopher",
+        "academic",
+        "scientist",
+        "mathematician",
+        "lawyer",
+        "hacker",
+        "detective",
+        "gamer",
+        "knight",
+        "wizard"
+      ]
     },
     {
       "id": "happy",
       "label": "happy",
-      "required": false
+      "required": false,
+      "costumes": [
+        "normal",
+        "normal-gblk",
+        "referee",
+        "judge",
+        "skeptic",
+        "champion",
+        "greek-philosopher",
+        "academic",
+        "scientist",
+        "mathematician",
+        "lawyer",
+        "hacker",
+        "detective",
+        "gamer",
+        "pak-haji",
+        "priest"
+      ]
+    },
+    {
+      "id": "dance-a",
+      "label": "dance-a",
+      "required": false,
+      "costumes": [
+        "normal",
+        "normal-gblk",
+        "champion",
+        "gamer",
+        "viking",
+        "pirate"
+      ]
+    },
+    {
+      "id": "dance-b",
+      "label": "dance-b",
+      "required": false,
+      "costumes": [
+        "normal-gblk"
+      ]
+    },
+    {
+      "id": "dance-c",
+      "label": "dance-c",
+      "required": false,
+      "costumes": [
+        "normal-gblk"
+      ]
+    },
+    {
+      "id": "reveal",
+      "label": "reveal",
+      "required": false,
+      "costumes": [
+        "normal-gblk"
+      ]
     }
   ],
   "fallback": [
     "costume+state",
     "costume+idle",
+    "base+state",
+    "base+idle",
     "normal+state",
     "normal+idle",
     "placeholder"
@@ -797,7 +1272,7 @@
           160
         ],
         "loop": true,
-        "keyframe": 0,
+        "keyframe": 9,
         "gate": "B"
       }
     },
@@ -889,7 +1364,7 @@
           140
         ],
         "loop": true,
-        "keyframe": 0,
+        "keyframe": 7,
         "gate": "B"
       }
     },
@@ -951,7 +1426,7 @@
           150
         ],
         "loop": true,
-        "keyframe": 0,
+        "keyframe": 4,
         "gate": "B"
       }
     }
