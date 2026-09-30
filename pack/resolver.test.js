@@ -9,6 +9,12 @@ const P = require("./resolver.js");
 const manifestPath = path.join(__dirname, "manifest.json");
 const M = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
 
+function gifSize(file) {
+  const b = fs.readFileSync(file);
+  assert.equal(b.toString("ascii", 0, 3), "GIF", file + " bukan GIF");
+  return { w: b.readUInt16LE(6), h: b.readUInt16LE(8) };
+}
+
 function pngSize(file) {
   const b = fs.readFileSync(file);
   assert.equal(b.toString("ascii", 1, 4), "PNG", file + " bukan PNG");
@@ -94,7 +100,10 @@ test("seluruh matriks 12 x 9 teresolusi tanpa error", () => {
     kinds[r.kind]++;
     assert.ok(r.cell, "manifest asli selalu punya normal/idle, jadi tidak boleh placeholder");
   }
-  assert.equal(kinds.exact, 7);
+  // Jumlah sel exact mengikuti isi manifest; 7 aset asli pra-Fase 2 harus tetap ada.
+  const all = Object.values(M.cells).flatMap((row) => Object.values(row));
+  assert.equal(kinds.exact, all.length);
+  assert.equal(all.filter((c) => c.origin === "asli").length, 7);
   assert.equal(kinds.exact + kinds.fallback, 108);
 });
 
@@ -128,5 +137,33 @@ test("manifest: setiap asset yang dirujuk benar-benar ada dan ukurannya cocok", 
   }
   for (const x of M.extras) {
     assert.ok(fs.existsSync(path.join(dir, x.gif)) && fs.existsSync(path.join(dir, x.sheet)), x.source);
+  }
+});
+
+test("aset baru: ditandai, punya gerbang, terhubung ke file yang ada dengan ukuran cocok", () => {
+  const dir = path.dirname(manifestPath);
+  const baru = [];
+  for (const [costume, row] of Object.entries(M.cells)) {
+    for (const [state, cell] of Object.entries(row)) {
+      assert.ok(cell.origin === "asli" || cell.origin === "baru", costume + "/" + state + " origin: " + cell.origin);
+      if (cell.origin !== "baru") continue;
+      baru.push(costume + "/" + state);
+      assert.ok(/^[A-Z]$/.test(cell.gate || ""), costume + "/" + state + " tanpa gerbang");
+      assert.equal(cell.source, costume + "-" + state, "nama file aset baru mengikuti <kostum>-<state>");
+      assert.deepEqual(pngSize(path.join(dir, cell.sheet)), { w: 64 * cell.frames, h: 48 });
+      assert.deepEqual(pngSize(path.join(dir, cell.sheet4x)), { w: 256 * cell.frames, h: 192 });
+      assert.deepEqual(gifSize(path.join(dir, cell.gif)), { w: 512, h: 384 });
+      assert.equal(P.resolve(M, costume, state).kind, "exact");
+    }
+  }
+  assert.ok(baru.length >= 1, "belum ada aset baru di manifest");
+});
+
+test("GIF semua sel berukuran 512x384 (kanvas 64x48 x8)", () => {
+  const dir = path.dirname(manifestPath);
+  for (const row of Object.values(M.cells)) {
+    for (const cell of Object.values(row)) {
+      assert.deepEqual(gifSize(path.join(dir, cell.gif)), { w: M.canvas.w * M.gif_scale, h: M.canvas.h * M.gif_scale }, cell.gif);
+    }
   }
 });

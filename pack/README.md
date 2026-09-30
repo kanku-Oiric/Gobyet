@@ -7,7 +7,7 @@ Folder ini berisi sistemnya:
 |---|---|
 | `manifest.json` | Peta kostum × state ke asset, dengan ukuran kanvas, jumlah frame, durasi per frame, loop, dan frame kunci. **Dibangkitkan** oleh `python3 src/export.py` dari `src/pack.py`; jangan diedit tangan. |
 | `resolver.js` | `resolve(manifest, kostum, state)` dengan fallback berantai. Tanpa dependensi, jalan di browser (`window.GobyetPack`) dan Node (`require`). |
-| `resolver.test.js` | Uji resolver dan manifest. Jalankan `node --test pack/resolver.test.js`. |
+| `resolver.test.js` | Uji resolver dan manifest, termasuk ukuran PNG dan GIF setiap aset. Jalankan `node --test pack/resolver.test.js`. |
 | `preview.html` | Matriks 12 kostum × 9 state. Buka lewat server: `python3 -m http.server` di akar repo, lalu `/pack/preview.html`. |
 
 ## Kostum dan state
@@ -72,6 +72,15 @@ Animasi lama berisi beberapa beat, jadi pemetaannya ke state adalah kecocokan te
 | `detective/thinking` | `detektif-bug` | berisi momen kaget |
 
 `marah-debug` dan `kondangan` tetap ada, tetapi di luar matriks (lihat `extras` di manifest).
+
+### Asal sel
+
+Setiap sel di manifest punya field `origin`:
+
+- `"asli"`: 7 aset yang sudah ada sebelum Fase 2.
+- `"baru"`: aset yang dibuat di Fase 2 dengan rig yang sama. Kode kostumnya ada di `src/roles.py`, dengan kanvas 64×48, palet `PAL`, dan garis tepi yang sama.
+
+Aset baru juga punya field `gate`, yaitu gerbang persetujuan tempat aset itu dibuat, dan nama file `<kostum>-<state>`. Preview menandai aset baru dengan label **BARU** (biru), berbeda dari **ASLI** (hijau).
 
 ## Rancangan aturan pemilihan (untuk integrasi arena, belum diimplementasikan)
 

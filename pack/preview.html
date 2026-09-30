@@ -10,7 +10,7 @@
    arsir dan menampilkan hasil fallback yang diredupkan. */
 :root {
   --bg: #f6f1e8; --panel: #fffaf2; --ink: #2b1a10; --muted: #6f5646; --line: #e3d4c0;
-  --fur: #8b5a37; --real: #2f7d4f; --ph: #b0691f; --ph-bg: #f3e3cc; --stage: #fdf7ec;
+  --fur: #8b5a37; --real: #2f7d4f; --new: #2f5fa8; --ph: #b0691f; --ph-bg: #f3e3cc; --stage: #fdf7ec;
   --f-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --f-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   color-scheme: light;
@@ -18,12 +18,12 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #17120e; --panel: #211a14; --ink: #f3e9dc; --muted: #bba592; --line: #3a2e24;
-    --fur: #d59a6a; --real: #5ccb8a; --ph: #f0a654; --ph-bg: #2e2217; --stage: #1d1712; color-scheme: dark;
+    --fur: #d59a6a; --real: #5ccb8a; --new: #7fb0ff; --ph: #f0a654; --ph-bg: #2e2217; --stage: #1d1712; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #17120e; --panel: #211a14; --ink: #f3e9dc; --muted: #bba592; --line: #3a2e24;
-  --fur: #d59a6a; --real: #5ccb8a; --ph: #f0a654; --ph-bg: #2e2217; --stage: #1d1712; color-scheme: dark;
+  --fur: #d59a6a; --real: #5ccb8a; --new: #7fb0ff; --ph: #f0a654; --ph-bg: #2e2217; --stage: #1d1712; color-scheme: dark;
 }
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
@@ -37,6 +37,7 @@ p { margin: 0; }
 .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
 .chip { display: inline-flex; align-items: center; gap: 6px; font: 600 12px/1 var(--f-mono); padding: 6px 9px; border-radius: 6px; }
 .chip.real { color: var(--real); border: 2px solid var(--real); }
+.chip.new { color: var(--new); border: 2px solid var(--new); }
 .chip.ph { color: var(--ph); border: 2px dashed var(--ph); background: repeating-linear-gradient(45deg, var(--ph-bg) 0 6px, transparent 6px 12px); }
 .chip.na { color: var(--muted); border: 1px solid var(--line); }
 .stats { display: flex; flex-wrap: wrap; gap: 8px 18px; font-variant-numeric: tabular-nums; }
@@ -64,6 +65,17 @@ tr.group td, tr.group th { background: var(--bg); font: 700 11px/1 var(--f-mono)
 .frame { width: 128px; height: 96px; border-radius: 6px; background: var(--stage); position: relative; display: grid; place-items: center; overflow: hidden; }
 .frame canvas { width: 128px; height: 96px; image-rendering: pixelated; image-rendering: crisp-edges; display: block; }
 .cell.real .frame { outline: 2px solid var(--real); outline-offset: -2px; }
+.cell.new .frame { outline: 3px solid var(--new); outline-offset: -3px; }
+.cell.new .tag { background: var(--new); color: var(--panel); }
+.compare { display: flex; flex-wrap: wrap; gap: 16px; }
+.cmp { display: grid; gap: 6px; justify-items: start; background: var(--stage); border-radius: 10px; padding: 10px; }
+.cmp .scales { display: flex; gap: 12px; align-items: end; flex-wrap: wrap; }
+.cmp canvas { image-rendering: pixelated; image-rendering: crisp-edges; display: block; }
+.cmp .x1 { width: 64px; height: 48px; }
+.cmp .x4 { width: 256px; height: 192px; max-width: 100%; height: auto; aspect-ratio: 4 / 3; }
+.cmp figcaption { font: 11px/1.3 var(--f-mono); color: var(--muted); }
+.cmp.asli { outline: 2px solid var(--real); }
+.cmp.baru { outline: 3px solid var(--new); }
 .cell.ph .frame { outline: 2px dashed var(--ph); outline-offset: -2px; background: repeating-linear-gradient(45deg, var(--ph-bg) 0 8px, var(--stage) 8px 16px); }
 .cell.ph canvas { opacity: 0.35; filter: grayscale(1); }
 .cell.css .frame::after { content: "?"; font: 700 36px/1 var(--f-mono); color: var(--ph); }
@@ -86,7 +98,8 @@ tr.group td, tr.group th { background: var(--bg); font: 700 11px/1 var(--f-mono)
     <h1>Gobyet Character Pack</h1>
     <p class="muted">Kostum menentukan siapa Gobyet, state menentukan dia sedang apa. Setiap sel diselesaikan oleh resolver dengan fallback berantai: kostum+state → kostum+idle → normal+state → normal+idle → placeholder.</p>
     <div class="row">
-      <span class="chip real">ASLI</span><span class="muted">asset sendiri</span>
+      <span class="chip real">ASLI</span><span class="muted">7 aset yang sudah ada sebelum Fase 2</span>
+      <span class="chip new">BARU</span><span class="muted">aset hasil generate Fase 2</span>
       <span class="chip ph">PLACEHOLDER</span><span class="muted">belum ada asset; yang tampil adalah hasil fallback, diredupkan</span>
       <span class="chip na">—</span><span class="muted">state tidak berlaku untuk kostum ini</span>
     </div>
@@ -102,6 +115,12 @@ tr.group td, tr.group th { background: var(--bg); font: 700 11px/1 var(--f-mono)
   <section class="panel" aria-labelledby="statsTitle">
     <h2 id="statsTitle">Cakupan</h2>
     <div class="stats" id="stats"></div>
+  </section>
+
+  <section class="panel" aria-labelledby="cmpTitle">
+    <h2 id="cmpTitle">Banding gaya: Gerbang A</h2>
+    <p class="muted" style="margin-bottom:12px">Normal asli di samping Referee baru. Tiap aset tampil 1× (piksel asli 64×48, dari sheet 1×) dan 4× (dari sheet @4x).</p>
+    <div class="compare" id="compare"></div>
   </section>
 
   <section class="panel" aria-labelledby="playTitle">
@@ -179,9 +198,10 @@ tr.group td, tr.group th { background: var(--bg); font: 700 11px/1 var(--f-mono)
     wrap.appendChild(frame);
     var tag, note;
     if (result.kind === "exact") {
-      wrap.classList.add("real");
-      tag = "ASLI";
-      note = result.cell.source + " · " + result.cell.frames + " frame";
+      var isNew = result.cell.origin === "baru";
+      wrap.classList.add(isNew ? "new" : "real");
+      tag = isNew ? "BARU" : "ASLI";
+      note = result.cell.source + " · " + result.cell.frames + " frame" + (isNew && result.cell.gate ? " · gerbang " + result.cell.gate : "");
     } else if (result.kind === "fallback") {
       wrap.classList.add("ph");
       tag = "PLACEHOLDER";
@@ -215,7 +235,7 @@ tr.group td, tr.group th { background: var(--bg); font: 700 11px/1 var(--f-mono)
     thead.appendChild(hr);
     table.appendChild(thead);
     var tbody = el("tbody"), group = null;
-    var count = { real: 0, ph: 0, reqReal: 0, req: 0, applicable: 0 };
+    var count = { real: 0, fresh: 0, ph: 0, reqReal: 0, req: 0, applicable: 0 };
     mx.costumes.forEach(function (c) {
       if (c.group !== group) {
         group = c.group;
@@ -240,7 +260,10 @@ tr.group td, tr.group th { background: var(--bg); font: 700 11px/1 var(--f-mono)
           td.appendChild(cellView(r));
           count.applicable++;
           if (s.required) count.req++;
-          if (r.kind === "exact") { count.real++; if (s.required) count.reqReal++; } else count.ph++;
+          if (r.kind === "exact") {
+            if (r.cell.origin === "baru") count.fresh++; else count.real++;
+            if (s.required) count.reqReal++;
+          } else count.ph++;
         }
         tr.appendChild(td);
       });
@@ -249,9 +272,33 @@ tr.group td, tr.group th { background: var(--bg); font: 700 11px/1 var(--f-mono)
     table.appendChild(tbody);
     var st = $("stats");
     st.textContent = "";
-    [[count.real, "sel asli"], [count.ph, "placeholder"], [count.reqReal + " / " + count.req, "state wajib terisi"],
+    [[count.real, "sel asli"], [count.fresh, "sel baru"], [count.ph, "placeholder"], [count.reqReal + " / " + count.req, "state wajib terisi"],
      [mx.costumes.length + " × " + mx.states.length, "kostum × state"]].forEach(function (p) {
       var d = el("div"); d.appendChild(el("b", null, String(p[0]))); d.appendChild(document.createTextNode(" " + p[1])); st.appendChild(d);
+    });
+  }
+
+  // ---- banding gaya (1x dari sheet, 4x dari sheet@4x)
+  var COMPARE = [["normal", "idle"], ["referee", "idle"], ["referee", "thinking"]];
+  function buildCompare() {
+    var box = $("compare");
+    box.textContent = "";
+    COMPARE.forEach(function (pair) {
+      var r = P.resolve(manifest, pair[0], pair[1]);
+      if (r.kind !== "exact") return;
+      var isNew = r.cell.origin === "baru";
+      var fig = el("figure", "cmp " + (isNew ? "baru" : "asli"));
+      fig.style.margin = "0";
+      var row = el("div", "scales");
+      var c1 = el("canvas", "x1"); c1.width = 64; c1.height = 48;
+      var c4 = el("canvas", "x4"); c4.width = 256; c4.height = 192;
+      row.appendChild(c1); row.appendChild(c4);
+      fig.appendChild(row);
+      fig.appendChild(el("figcaption", null, (isNew ? "BARU" : "ASLI") + " · " + pair[0] + "/" + pair[1] + " · " + r.cell.source));
+      fig.setAttribute("aria-label", pair[0] + " " + pair[1] + (isNew ? ", aset baru" : ", aset asli") + ", 1x dan 4x");
+      box.appendChild(fig);
+      cells.push({ canvas: c1, cell: r.cell, url: assetUrl(r.cell.sheet), last: -1, size: 64 });
+      if (r.cell.sheet4x) cells.push({ canvas: c4, cell: r.cell, url: assetUrl(r.cell.sheet4x), last: -1, size: 256 });
     });
   }
 
@@ -299,10 +346,11 @@ tr.group td, tr.group th { background: var(--bg); font: 700 11px/1 var(--f-mono)
     var f = P.frameAt(c.cell, t, still);
     if (f === c.last) return;
     c.last = f;
+    var w = c.size || 64, h = w * 3 / 4;
     var ctx = c.canvas.getContext("2d");
     ctx.imageSmoothingEnabled = false;
-    ctx.clearRect(0, 0, 64, 48);
-    ctx.drawImage(im, f * 64, 0, 64, 48, 0, 0, 64, 48);
+    ctx.clearRect(0, 0, w, h);
+    ctx.drawImage(im, f * w, 0, w, h, 0, 0, w, h);
   }
   function tick(now) {
     var t = now - t0;
@@ -314,6 +362,7 @@ tr.group td, tr.group th { background: var(--bg); font: 700 11px/1 var(--f-mono)
   function start(m, url) {
     manifest = m; manifestUrl = url;
     buildMatrix();
+    buildCompare();
     fillSelects();
     updatePlay();
     setMotion(reduced);

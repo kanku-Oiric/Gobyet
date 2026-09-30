@@ -136,6 +136,7 @@
     "normal": {
       "idle": {
         "status": "final",
+        "origin": "asli",
         "source": "ngopi-santai",
         "sheet": "../sheets/ngopi-santai.png",
         "sheet4x": "../sheets/ngopi-santai@4x.png",
@@ -164,6 +165,7 @@
       },
       "happy": {
         "status": "final",
+        "origin": "asli",
         "source": "makan-pisang",
         "sheet": "../sheets/makan-pisang.png",
         "sheet4x": "../sheets/makan-pisang@4x.png",
@@ -203,6 +205,7 @@
     "greek-philosopher": {
       "thinking": {
         "status": "final",
+        "origin": "asli",
         "source": "filsuf-yunani",
         "sheet": "../sheets/filsuf-yunani.png",
         "sheet4x": "../sheets/filsuf-yunani@4x.png",
@@ -237,6 +240,7 @@
     "academic": {
       "victory": {
         "status": "final",
+        "origin": "asli",
         "source": "wisuda",
         "sheet": "../sheets/wisuda.png",
         "sheet4x": "../sheets/wisuda@4x.png",
@@ -269,6 +273,7 @@
     "scientist": {
       "thinking": {
         "status": "final",
+        "origin": "asli",
         "source": "rambut-einstein",
         "sheet": "../sheets/rambut-einstein.png",
         "sheet4x": "../sheets/rambut-einstein@4x.png",
@@ -305,6 +310,7 @@
     "hacker": {
       "idle": {
         "status": "final",
+        "origin": "asli",
         "source": "hacker",
         "sheet": "../sheets/hacker.png",
         "sheet4x": "../sheets/hacker@4x.png",
@@ -335,6 +341,7 @@
     "detective": {
       "thinking": {
         "status": "final",
+        "origin": "asli",
         "source": "detektif-bug",
         "sheet": "../sheets/detektif-bug.png",
         "sheet4x": "../sheets/detektif-bug@4x.png",
@@ -364,6 +371,70 @@
         ],
         "loop": true,
         "keyframe": 6
+      }
+    },
+    "referee": {
+      "idle": {
+        "status": "final",
+        "origin": "baru",
+        "source": "referee-idle",
+        "sheet": "../sheets/referee-idle.png",
+        "sheet4x": "../sheets/referee-idle@4x.png",
+        "gif": "../gif/referee-idle.gif",
+        "frames": 16,
+        "durations_ms": [
+          170,
+          170,
+          170,
+          170,
+          170,
+          170,
+          120,
+          170,
+          170,
+          170,
+          170,
+          170,
+          170,
+          170,
+          120,
+          170
+        ],
+        "loop": true,
+        "keyframe": 2,
+        "gate": "A"
+      },
+      "thinking": {
+        "status": "final",
+        "origin": "baru",
+        "source": "referee-thinking",
+        "sheet": "../sheets/referee-thinking.png",
+        "sheet4x": "../sheets/referee-thinking@4x.png",
+        "gif": "../gif/referee-thinking.gif",
+        "frames": 18,
+        "durations_ms": [
+          150,
+          150,
+          150,
+          150,
+          150,
+          150,
+          150,
+          150,
+          150,
+          150,
+          190,
+          190,
+          190,
+          190,
+          190,
+          190,
+          190,
+          190
+        ],
+        "loop": true,
+        "keyframe": 12,
+        "gate": "A"
       }
     }
   },

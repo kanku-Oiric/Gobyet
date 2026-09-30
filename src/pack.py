@@ -1,6 +1,7 @@
 """Spesifikasi Gobyet Character Pack: kostum = identitas, state = sedang apa.
 
 Ini satu-satunya tempat yang memetakan animasi yang ada ke sel kostum x state.
+Sel "asli" adalah 7 aset yang sudah ada sebelum Fase 2; sel "baru" dibuat di Fase 2.
 src/export.py membaca modul ini untuk menulis pack/manifest.json, lengkap dengan
 jumlah frame dan durasi per frame yang diambil langsung dari SCENES.
 """
@@ -37,9 +38,9 @@ STATES = [
     {"id": "happy", "label": "happy", "required": False},
 ]
 
-# Sel yang sudah punya asset asli: (kostum, state) -> (nama animasi, frame kunci untuk tampilan statis).
+# Sel yang sudah punya asset: (kostum, state) -> (nama animasi, frame kunci untuk tampilan statis).
 # Setiap animasi lama berisi beberapa beat; state di sini adalah kecocokan terdekat.
-CELLS = {
+ORIGINAL = {
     ("normal", "idle"): ("ngopi-santai", 0),
     ("normal", "happy"): ("makan-pisang", 4),
     ("greek-philosopher", "thinking"): ("filsuf-yunani", 10),
@@ -47,6 +48,12 @@ CELLS = {
     ("scientist", "thinking"): ("rambut-einstein", 8),
     ("hacker", "idle"): ("hacker", 2),
     ("detective", "thinking"): ("detektif-bug", 6),
+}
+
+# Aset baru hasil Fase 2, per gerbang persetujuan. Dibuat dengan rig yang sama (src/roles.py).
+NEW = {
+    ("referee", "idle"): ("referee-idle", 2, "A"),
+    ("referee", "thinking"): ("referee-thinking", 12, "A"),
 }
 
 # Animasi yang ada tetapi sengaja tidak dimasukkan ke matriks MVP.
@@ -61,10 +68,13 @@ FALLBACK = ["costume+state", "costume+idle", "normal+state", "normal+idle", "pla
 def manifest(scenes):
     """scenes: {nama: (fungsi_frame, jumlah_frame, fungsi_durasi)} gabungan semua animasi."""
     cells = {}
-    for (costume, state), (name, keyframe) in CELLS.items():
+    entries = [(k, v[0], v[1], "asli", None) for k, v in ORIGINAL.items()]
+    entries += [(k, v[0], v[1], "baru", v[2]) for k, v in NEW.items()]
+    for (costume, state), name, keyframe, origin, gate in entries:
         _, n, ms = scenes[name]
-        cells.setdefault(costume, {})[state] = {
+        cell = cells.setdefault(costume, {})[state] = {
             "status": "final",
+            "origin": origin,
             "source": name,
             "sheet": "../sheets/%s.png" % name,
             "sheet4x": "../sheets/%s@4x.png" % name,
@@ -74,6 +84,8 @@ def manifest(scenes):
             "loop": True,
             "keyframe": keyframe,
         }
+        if gate:
+            cell["gate"] = gate
     return {
         "format": FORMAT,
         "generated_by": "src/export.py (dari src/pack.py)",

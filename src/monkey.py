@@ -106,7 +106,7 @@ def head(cv, cx, cy, eyes="look", brows="flat", mouth="frown", face="F", tilt=0)
     ey = int(cy + 0.4)
     for i, x0 in enumerate(ex):
         x0 = int(x0)
-        if eyes in ("look", "wide", "down", "side"):
+        if eyes in ("look", "wide", "down", "side", "left"):
             h = 4 if eyes != "wide" else 5
             white = rect(x0 - 2, ey - 2, 4, h) - {(x0 - 2, ey - 2), (x0 + 1, ey - 2), (x0 - 2, ey - 3 + h), (x0 + 1, ey - 3 + h)}
             cv.fill(white, "W")
@@ -116,6 +116,8 @@ def head(cv, cx, cy, eyes="look", brows="flat", mouth="frown", face="F", tilt=0)
                 cv.fill(rect(x0 - 1 + i, ey, 2, 2), "P")
             elif eyes == "side":
                 cv.fill(rect(x0, ey - 1, 2, 2), "P")
+            elif eyes == "left":
+                cv.fill(rect(x0 - 2, ey - 1, 2, 2), "P")
             else:
                 cv.fill(rect(x0 - 1 + i, ey - 1, 2, 2), "P")
         elif eyes == "blink":
