@@ -15,7 +15,7 @@ Huruf gerbang tidak berurutan dengan urutan kerja. Urutan kerja sebenarnya: A, B
 | 5 | E | Hacker (3), Detective (4), Lawyer (3) | 10 | disetujui, dikunci di commit persiapan G | `3eb2cdc`, tag `fase2-gate-E` |
 | 6 | G | Gamer (7), Normal-GBLK (8) | 15 | selesai, validasi lulus; hash di `sha256-dibuat.txt`; laporan `pack/reports/gate-G.md` | `1d52710`, tag `fase2-gate-G` |
 | 7 | H | Knight (6), Viking (6), Pirate (6), Wizard (6) | 24 | selesai, validasi lulus; hash di `sha256-dibuat.txt`; laporan `pack/reports/gate-H.md` | `bd42c0c`, tag `fase2-gate-H` |
-| 8 | I | Pak Haji, Priest | 10 | belum | |
+| 8 | I | Pak Haji (5), Priest (5), audit 7.2 otomatis `[VT]` | 10 | selesai, validasi lulus; idle lebih dulu, pemeriksaan i-vi lulus sebelum state lain; hash di `sha256-dibuat.txt`; laporan `pack/reports/gate-I.md` | commit Gerbang I, tag `fase2-gate-I` |
 | 9 | J | 12 varian kelas × idle, attack, victory | 36 | belum | |
 | 10 | F | sisa sel 12 kostum lama (14 wajib + 22 opsional), audit, dokumentasi | 36 | belum | |
 
@@ -71,9 +71,9 @@ Dibangkitkan oleh `python3 tools/progress_table.py` dari `pack/manifest.json`. J
 | `pirate-sharpshooter ← pirate` | fantasy | 3 | 0 | idle, victory | attack |
 | `pirate-buccaneer ← pirate` | fantasy | 3 | 0 | idle, victory | attack |
 | `wizard` | fantasy | 6 | 6 | - | - |
-| `pak-haji` | theology | 5 | 0 | idle, thinking, victory, defeated | happy |
-| `priest` | theology | 5 | 0 | idle, thinking, victory, defeated | happy |
-| **Total** | | **163** | **81** | | |
+| `pak-haji` | theology | 5 | 5 | - | - |
+| `priest` | theology | 5 | 5 | - | - |
+| **Total** | | **163** | **91** | | |
 <!-- tabel-sel:selesai -->
 
 ## Cara melanjutkan

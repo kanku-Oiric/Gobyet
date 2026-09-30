@@ -698,3 +698,16 @@ $ repo Bertahan-Bukan-hidup
 status: 0 baris; origin/main 26e3cb3; diff vs origin/main: 0 baris
 ```
 
+
+## Keputusan yang perlu pemilik
+
+Bagian ini ditambahkan saat Gerbang I, karena format bagian 12 memintanya dan versi awal laporan ini belum memuatnya.
+
+1. **Topi menutupi mata di Pirate defeated dan Wizard defeated:** saya mengikuti deskripsi state, tetapi ini bertentangan dengan "wajah terlihat penuh". Pertahankan, atau buka matanya?
+2. **Pita emas mendatar di perisai Knight** dipilih sebagai emblem netral. Diterima?
+3. **Frame kunci `wizard-thinking`** sekarang di tahap "..." (f6). Pindahkan ke f9 supaya "?" terlihat? Ini hanya mengubah manifest, bukan GIF.
+4. **Pirate tanpa penutup mata.** Brief membolehkannya asal satu mata tetap terlihat. Tambahkan?
+
+---
+
+Lanjut otomatis ke Gerbang I.

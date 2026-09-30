@@ -190,6 +190,16 @@ NEW = {
     ("wizard", "attack"): ("wizard-attack", 4, "H"),
     ("wizard", "victory"): ("wizard-victory", 6, "H"),
     ("wizard", "defeated"): ("wizard-defeated", 8, "H"),
+    ("pak-haji", "idle"): ("pak-haji-idle", 0, "I"),
+    ("pak-haji", "thinking"): ("pak-haji-thinking", 6, "I"),
+    ("pak-haji", "happy"): ("pak-haji-happy", 4, "I"),
+    ("pak-haji", "victory"): ("pak-haji-victory", 6, "I"),
+    ("pak-haji", "defeated"): ("pak-haji-defeated", 8, "I"),
+    ("priest", "idle"): ("priest-idle", 0, "I"),
+    ("priest", "thinking"): ("priest-thinking", 6, "I"),
+    ("priest", "happy"): ("priest-happy", 4, "I"),
+    ("priest", "victory"): ("priest-victory", 6, "I"),
+    ("priest", "defeated"): ("priest-defeated", 8, "I"),
 }
 
 # Profil export. Aset gerbang A-C (dan semua aset asli) diekspor dengan pengaturan lama: palet PAL saja,

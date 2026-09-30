@@ -119,6 +119,15 @@ node tools/e2e_preview.js                      # uji browser (Playwright, alat d
   - proyeksi ukuran melewati anggaran 16 MB.
 - Ambang seam loop = 1,25 × selisih piksel terbesar antar-frame berurutan di aset itu sendiri. Aset yang terkunci hash dan melewati ambang dilaporkan **DIKETAHUI**, bukan GAGAL, karena tidak boleh diubah.
 - Warna dominan dihitung dari piksel kostum saja, yaitu piksel frame kunci yang berbeda dari Normal idle pada posisi sama. Warna tubuh (bulu, kulit, garis tepi) tidak dihitung. Jaraknya CIE76 ΔE di ruang Lab.
+  - Untuk Pak Haji dan Priest, piksel aura juga tidak dihitung. Posisinya diambil dari `theology.aura_mask` untuk frame kunci. Aura sengaja identik untuk keduanya (7.2e), jadi tidak bisa menjadi pembeda. Kalau dihitung, `n` aura menjadi dominan Pak Haji dan menyamakan keduanya.
+- **Audit teologi `[VT]`** (keputusan pemilik 11c) selalu dijalankan dan wajib lulus. `python3 src/validate_pack.py --theology-only` menjalankan audit ini saja; dipakai di Gerbang I sebelum state selain idle dibuat.
+  - (i) Mask aura kedua kostum identik per state dan frame, digambar paling awal (di belakang badan), hanya C/n/O, dan tidak naik di atas pusat kepala.
+  - (ii) Jumlah state, jumlah frame, dan durasi identik.
+  - (iii) Tidak ada teks selain ".". Titik gelembung thinking digambar sebagai piksel, jadi `mini_text` tidak dipanggil sama sekali.
+  - (iv) Warna kalung salib `y` tidak muncul di Pak Haji, dan di Priest hanya sebagai salib 3×4. Buku Priest hanya berwarna sampul, halaman, dan tepi.
+  - (v) Zona dagu tanpa warna janggut putih atau abu, dan zona di atas alis tanpa hijau daun.
+  - (vi) Zona kopiah tanpa hitam, tidak ada warna batik, dan kopiah putih Pak Haji utuh.
+  - Kontrol positif: pemeriksaan yang sama dijalankan pada Greek (janggut dan daun) dan `kondangan` (peci hitam dan batik). Kalau tidak terdeteksi di sana, validator GAGAL karena pemeriksaannya rusak.
 
 ### Aturan teks
 
@@ -218,6 +227,20 @@ Aturan 3 (kostum yang sudah punya tampilan memakai tampilan itu) menang atas bri
 - **Tidak masuk integritas.** `abr.py verify` hanya meng-hash `fighters.jsonl`, `population.json`, `seeding.json`, `map.json`, `dossiers.json`, `rounds/`, dan laporan, jadi sidecar tidak memengaruhi hasil maupun pemeriksaan integritas.
 - **Tidak dihitung ulang saat render.** Arena membaca nilai yang tersimpan, jadi replay menampilkan kostum yang sama seperti aslinya. Run lama tanpa sidecar tampil sebagai `normal`.
 - **Override manual:** tulis `"source": "manual"` dengan kostum pilihan. Mekanisme resminya, misalnya satu perintah CLI, diputuskan saat integrasi.
+
+## Kostum teologi: presentasi, bukan penilaian (aturan 7.2)
+
+- Pak Haji dan Priest adalah **kostum presentasi**. Kostum ini tidak menilai tradisi mana pun.
+- **Menang atau kalah tidak boleh diartikan benar atau salah secara teologis.** Seperti `champion` di bagian Nada, state `victory` berarti "klaim bertahan di bawah rubrik simulasi ini". State `defeated` pada kostum teologi digambar sebagai tenang menerima: badan tegak, senyum tipis, aura meredup sesaat lalu kembali.
+- Kedua kostum diperlakukan identik: state, jumlah frame, durasi, ritme angguk, ekspresi, dan aura sama persis. Validator memeriksanya (`[VT]` i dan ii).
+- Tidak ada aksara Arab, kutipan kitab, kaligrafi, atau simbol suci selain kalung salib polos kecil Priest. Tidak ada gestur ritual: tasbih hanya digeser, buku hanya dipegang tertutup. Tidak menari dan tidak slapstick.
+
+**Rancangan Fase 3 (belum diimplementasikan):**
+
+- Pemetaan state untuk kostum teologi harus netral. Kostum teologi tidak dipetakan ke `w` (pemenang) atau ke hasil duel secara khusus. Kalau kostum teologi dipakai, dua tokoh mendapat state yang sama untuk acara yang sama.
+- Kostum teologi hanya dipakai bila topik **menyebut satu tradisi secara eksplisit** (mis. "menurut fikih ..." atau "dalam teologi Katolik ..."). Untuk pertanyaan teologis yang tidak menyebut satu tradisi, sistem **tidak boleh otomatis memilih salah satu tokoh**. Pilihannya: tampilkan keduanya berdampingan dengan state identik, atau jatuh ke `normal`. Pilihan di antara keduanya diputuskan saat integrasi.
+- Kostum teologi tidak dipakai untuk peran turnamen (`referee`, `judge`, `skeptic`, `champion`).
+- Tokoh teologi tradisi lain (mis. Biksu, Pandita) ada di backlog. Kalau ditambahkan, berlaku aturan identik yang sama, termasuk aura yang sama persis.
 
 ## Nada
 

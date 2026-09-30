@@ -65,6 +65,8 @@ Diturunkan dari rig di `src/monkey.py` dan dari aset yang sudah disetujui. Dipak
 | Viking | kapak 10×15, perisai bundar kayu 12×12, helm bertanduk 26×11 dengan pita kulit `D` |
 | Pirate | cutlass 9×13 (bilah bertepi `s`), teropong 15×4 (tingginya di bawah target), tricorn 25×8, peti 20×8, koin 4×4 |
 | Wizard | tongkat 7×27 dengan permata bersinar, topi runcing 25×12 berbintang, buku mantra 13×7 |
+| Pak Haji | kopiah putih polos 18×6, tasbih kayu 9 butir 2×2 (untaian 8×8), koko putih `S` berkerah pendek, sarung kotak `V`/`v` |
+| Priest | buku polos tertutup 9×7 (sampul `D`, tepi halaman `C`, tanpa tanda apa pun), kalung salib polos 3×4 (`y`) bertali cokelat `N` (bersama tali 6×5, sengaja kecil sesuai brief), kerah putih 6×2 |
 
 Prop utama sebaiknya berada di luar siluet badan (samping bahu, di atas kepala, atau di lantai) supaya terbaca di 1×. Contoh: idle Mathematician versi pertama (batu tulis dan jangka di pangkuan) memberi IoU 0,90 dengan Referee. Setelah jangka dipindah ke samping bahu, IoU-nya turun ke 0,84.
 
@@ -106,6 +108,8 @@ Prop utama sebaiknya berada di luar siluet badan (samping bahu, di atas kepala, 
 | Viking | cokelat tua `D`, rompi tertutup dan pita helm | 33%. Versi pertama: helm abu `s` dominan |
 | Pirate | marun `i` (PAL_EXT), mantel | 44%; ΔE 24,9 dari Knight |
 | Wizard | biru kerajaan `3` (PAL_EXT), jubah | 68% |
+| Pak Haji | hijau `V`, sarung kotak | piksel aura tidak dihitung (identik untuk keduanya). Sarung sengaja dipakai agak tinggi supaya hijau, bukan koko putih, yang dominan |
+| Priest | abu `g`, jubah (bayangan `5`) | piksel aura tidak dihitung |
 
 ### Alokasi warna global (sebelum Gerbang G)
 
@@ -126,6 +130,22 @@ Dicari lewat kombinasi yang memaksimalkan ΔE minimum terhadap 12 dominan yang a
 - **Pak Haji:** koko putih atau krem selalu < 15 dari Academic (`C` 11,2; `S`, `H`, `m` < 7). Karena itu warna dominannya harus sarung hijau: sarung dibuat lebih luas daripada koko.
 - **Priest:** jubah abu (bukan hitam) supaya jauh dari Judge `L`.
 - **Aksen varian** (ΔE ≥ 10 dari saudara sefaksi) ditetapkan di Gerbang J dan dicatat di bawah.
+
+### Aura kostum teologi (Gerbang I)
+
+- Aura digambar oleh satu fungsi, `theology.aura_mask(level, pulse, shimmer)`, di kanvas yang masih kosong, jadi selalu paling belakang.
+- **Bentuk:** elips 19×13 berpusat di badan `(CX, TOP+7)`. Tepi atasnya di sekitar y 16-17, sejajar telinga, jauh di bawah puncak kepala. Tidak ada lingkaran di atas kepala, tidak ada sinar, tidak ada nyala.
+- **Lapisan dithering:**
+  - Luar: `C` 25%, atau 50% saat victory.
+  - Tengah: `n` 50% dengan titik `O` saat happy dan victory.
+  - Dalam: sebagian besar tertutup badan.
+- **Level per state:**
+  - idle 1, berdenyut ±1 px dalam 16 frame.
+  - thinking 1.
+  - happy 2.
+  - victory 3.
+  - defeated: 1, turun ke 0 (redup) di f4-f11, lalu kembali ke 1.
+- Pak Haji dan Priest selalu memanggil aura dengan argumen yang sama untuk state dan frame yang sama. Validator `[VT]` (i) membuktikan mask-nya identik.
 
 ## Aksi khas victory
 
@@ -148,6 +168,8 @@ Setiap victory baru wajib punya minimal satu elemen yang belum dipakai kostum la
 | Viking | Garis teriakan dari mulut yang terbuka lebar, gelembung "!" | H |
 | Pirate | Koin emas memercik lalu jatuh. Lempar topi diminta brief, tetapi mirip lempar toga Academic, jadi tidak dihitung sebagai elemen khas | H |
 | Wizard | Hujan bintang emas dari tongkat yang terangkat | H |
+| Pak Haji | Aura menguat (lapisan luar lebih rapat) dengan titik emas yang bergeser pelan. Tanpa konfeti, tanpa lompat. Sama persis dengan Priest karena 7.2e | I |
+| Priest | Sama persis dengan Pak Haji (7.2e) | I |
 
 ## Teks
 

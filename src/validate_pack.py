@@ -42,6 +42,7 @@ sys.path.insert(0, HERE)
 import monkey  # noqa: E402
 import pack  # noqa: E402
 import export  # noqa: E402  (mendaftarkan semua modul adegan)
+from costumes import CX, CY  # noqa: E402
 
 W, H = monkey.W, monkey.H
 PAL_RGB = {tuple(v) for v in monkey.PAL.values()}
@@ -348,13 +349,27 @@ def costume_colors(m, costume):
     state = "idle" if "idle" in row else sorted(row, key=order.index)[0]
     ref = pixels(keyframe_image(m["cells"]["normal"]["idle"]))
     cur = pixels(keyframe_image(row[state]))
-    counts = Counter(REV[p[:3]] for p, q in zip(cur, ref) if p[3] and p != q)
+    fx = effect_mask(costume, state, row[state]["keyframe"])
+    counts = Counter(REV[p[:3]] for i, (p, q) in enumerate(zip(cur, ref))
+                     if p[3] and p != q and fx.get((i % W, i // W)) != REV[p[:3]])
     for k in list(counts):
         if k in BODY_KEYS:
             del counts[k]
     for k, n in EYE_PIXELS.items():
         counts[k] = max(0, counts[k] - n)
     return state, +counts
+
+
+def effect_mask(costume, state, keyframe):
+    """Piksel efek bersama yang bukan pakaian, per posisi: aura kostum teologi (identik untuk Pak Haji dan
+    Priest menurut 7.2e, jadi tidak bisa menjadi pembeda warna). Kostum lain: kosong."""
+    try:
+        import theology
+    except ModuleNotFoundError:
+        return {}
+    if costume not in theology.COSTUMES:
+        return {}
+    return theology.aura_mask(*theology.aura_params(state, keyframe))
 
 
 def dominants(m):
@@ -376,6 +391,7 @@ def check_colors(m):
     print("\n[V6] Warna dominan dari piksel kostum saja dan jarak warna (CIE76 Delta E; target >= 15)")
     print("  metode: frame kunci idle (atau sel pertama bila belum ada idle); piksel yang berbeda dari Normal idle")
     print("  pada posisi sama; warna tubuh (%s) tidak dihitung; 16 W + 8 P (mata) dikurangkan." % "".join(sorted(BODY_KEYS)))
+    print("  Kostum teologi: piksel aura (mask identik untuk keduanya, 7.2e) tidak dihitung sebagai pakaian.")
     print("  Normal tidak berkostum: warnanya bulu B.")
     dom = dominants(m)
     for c in base_costumes(m):
@@ -606,6 +622,199 @@ def check_texts_and_beats(m, gate, show_all):
                 span, ms_, key[0], key[1], key[2], ("  teks=" + key[3]) if key[3] else ""))
 
 
+# ------------------------------------------------------------------ audit teologi (keputusan pemilik 11c)
+THEO_TEXT_ALLOWED = {"."}
+CROSS_KEY = "y"  # warna kalung salib Priest; tidak boleh muncul di mana pun selain salib itu
+BATIK_KEYS = set("Uu")  # kain batik kondangan
+DARK_CAP_KEYS = set("Llq")  # peci atau kopiah hitam
+BEARD_KEYS = set("HhmWSgG")  # rambut atau janggut putih dan abu (janggut Greek: H/h)
+LEAF_KEYS = set("VvkZ")  # daun zaitun Greek (V/v) dan hijau lain
+CHIN_ZONE = {(x, y) for x in range(CX - 5, CX + 5) for y in range(CY + 5, CY + 8)}  # di dalam kepala, di bawah mulut
+CROWN_ZONE = {(x, y) for x in range(CX - 13, CX + 14) for y in range(0, CY - 3)}  # di atas alis
+CAP_ZONE = {(x, y) for x in range(CX - 10, CX + 11) for y in range(0, CY - 4)}
+
+
+def theology_frames(scenes_all, names):
+    """Render semua frame sambil mencatat setiap panggilan aura: [(nama, i, px, [(kosong_sebelum, mask)])]."""
+    import theology
+    real = theology.aura
+    calls = []
+
+    def spy(cv, level=1, pulse=0, shimmer=0):
+        empty = not cv.px
+        mask = real(cv, level, pulse, shimmer)
+        calls.append((empty, dict(mask)))
+        return mask
+    patched = _patch_everywhere(real, spy)
+    out = []
+    try:
+        for name in names:
+            fn, n, ms = scenes_all[name]
+            for i in range(n):
+                del calls[:]
+                cv = fn(i)
+                out.append((name, i, dict(cv.px), list(calls)))
+    finally:
+        for d, key in patched:
+            d[key] = real
+    return out
+
+
+def zone_hits(px, zone, keys):
+    return sorted(p for p in zone if px.get(p) in keys)
+
+
+def check_theology():
+    print("\n[VT] Audit teologi 7.2 (keputusan pemilik 11c: pemeriksaan i-vi, wajib lulus)")
+    try:
+        import theology
+    except ModuleNotFoundError:
+        print("  belum ada modul teologi")
+        return
+    scenes_all = export.all_scenes()
+    a, b = theology.COSTUMES
+    st = {c: sorted(n[len(c) + 1:] for n in scenes_all if n.startswith(c + "-")) for c in (a, b)}
+    print("  state %s: %s | %s: %s" % (a, ", ".join(st[a]) or "-", b, ", ".join(st[b]) or "-"))
+    if not st[a] and not st[b]:
+        print("  belum ada aset teologi")
+        return
+
+    # (ii) jumlah state, frame, dan durasi identik
+    bad = [] if st[a] == st[b] else ["daftar state berbeda"]
+    for s_ in sorted(set(st[a]) & set(st[b])):
+        (_, na, ma), (_, nb, mb) = scenes_all["%s-%s" % (a, s_)], scenes_all["%s-%s" % (b, s_)]
+        da, db = [int(ma(i)) for i in range(na)], [int(mb(i)) for i in range(nb)]
+        if na != nb or da != db:
+            bad.append("%s: %d frame %s vs %d frame %s" % (s_, na, da[:4], nb, db[:4]))
+        else:
+            print("  (ii) %-9s %2d frame, durasi %s ms, sama untuk keduanya" % (s_, na, sorted(set(da))))
+    for x in bad:
+        fail("teologi (ii): " + x)
+    print("  (ii) %s" % ("lulus" if not bad else "GAGAL"))
+
+    names = ["%s-%s" % (c, s_) for c in (a, b) for s_ in st[c]]
+    frames = theology_frames(scenes_all, names)
+    by = {(name, i): (px, calls) for name, i, px, calls in frames}
+
+    # (i) mask aura identik, digambar paling awal, warna C/n/O, tidak di atas kepala
+    bad = []
+    for s_ in sorted(set(st[a]) & set(st[b])):
+        n = scenes_all["%s-%s" % (a, s_)][1]
+        vis = {a: 0, b: 0}
+        sizes = []
+        for i in range(n):
+            ca, cb = by[("%s-%s" % (a, s_), i)][1], by[("%s-%s" % (b, s_), i)][1]
+            if len(ca) != 1 or len(cb) != 1:
+                bad.append("%s f%d: aura digambar %d/%d kali (harus 1)" % (s_, i, len(ca), len(cb)))
+                continue
+            (ea, ma), (eb, mb) = ca[0], cb[0]
+            if ma != mb:
+                bad.append("%s f%d: mask aura berbeda (%d vs %d piksel)" % (s_, i, len(ma), len(mb)))
+            if not (ea and eb):
+                bad.append("%s f%d: aura tidak digambar paling awal (bukan di belakang badan)" % (s_, i))
+            if set(ma.values()) - set(theology.AURA_COLORS):
+                bad.append("%s f%d: warna aura di luar C/n/O: %s" % (s_, i, sorted(set(ma.values()) - set("CnO"))))
+            if ma and min(y for _, y in ma) < CY:
+                bad.append("%s f%d: aura naik di atas pusat kepala (y %d)" % (s_, i, min(y for _, y in ma)))
+            sizes.append(len(ma))
+            for c in (a, b):
+                px, calls = by[("%s-%s" % (c, s_), i)]
+                vis[c] += sum(1 for p, col in calls[0][1].items() if px.get(p) == col)
+        if sizes:
+            print("  (i)  %-9s mask aura %d-%d piksel per frame, identik di %d frame; terlihat rata-rata %s %d, %s %d" % (
+                s_, min(sizes), max(sizes), n, a, vis[a] // n, b, vis[b] // n))
+    for x in bad:
+        fail("teologi (i): " + x)
+    print("  (i)  %s" % ("lulus" if not bad else "GAGAL"))
+
+    # (iii) teks hanya "." (dan hanya di thinking)
+    bad = []
+    for name in names:
+        rows = instrumented(*scenes_all[name])
+        texts = {s for r in rows for s, _, _ in r[5]}
+        state = name.split("-", 2)[-1] if name.startswith("pak-haji") else name.split("-", 1)[1]
+        extra = {t for t in texts if set(t) - THEO_TEXT_ALLOWED}
+        if extra or (texts and state != "thinking"):
+            bad.append("%s: teks %s" % (name, sorted(texts)))
+        print("  (iii) %-20s teks mini_text: %s" % (name, ", ".join(repr(t) for t in sorted(texts)) or "tidak ada (titik digambar sebagai piksel)"))
+    for x in bad:
+        fail("teologi (iii): " + x)
+    print("  (iii) %s" % ("lulus" if not bad else "GAGAL"))
+
+    # (iv) warna salib hanya di Priest, sekitar 3x4; buku polos
+    bad = []
+    boxes = set()
+    for (name, i), (px, _) in sorted(by.items()):
+        ys = [p for p, c in px.items() if c == CROSS_KEY]
+        if name.startswith(a):
+            if ys:
+                bad.append("%s f%d: %d piksel warna salib" % (name, i, len(ys)))
+            continue
+        if not ys:
+            bad.append("%s f%d: salib tidak terlihat" % (name, i))
+            continue
+        w = max(x for x, _ in ys) - min(x for x, _ in ys) + 1
+        h = max(y for _, y in ys) - min(y for _, y in ys) + 1
+        boxes.add((w, h, len(ys)))
+        if w > 3 or h > 4 or len(ys) > 6:
+            bad.append("%s f%d: piksel warna salib %dx%d (%d piksel), lebih dari 3x4" % (name, i, w, h, len(ys)))
+    book = monkey.Canvas()
+    theology.plain_book(book, 20, 20)
+    book_keys = set(book.px.values())
+    if book_keys - set("DCK"):
+        bad.append("buku Priest memuat warna selain sampul/halaman/tepi: %s" % sorted(book_keys - set("DCK")))
+    print("  (iv) warna salib %r: %s 0 piksel di semua frame; %s kotak %s; buku polos warna %s" % (
+        CROSS_KEY, a, b, ", ".join("%dx%d (%d px)" % bx for bx in sorted(boxes)) or "-", "".join(sorted(book_keys))))
+    for x in bad:
+        fail("teologi (iv): " + x)
+    print("  (iv) %s (glyph: hanya lewat mini_text yang diinstrumentasi di iii)" % ("lulus" if not bad else "GAGAL"))
+
+    # (v) tanpa janggut putih panjang dan tanpa mahkota daun; (vi) tanpa kopiah hitam dan tanpa batik
+    bad5, bad6 = [], []
+    white_cap = []
+    for (name, i), (px, _) in sorted(by.items()):
+        beard = zone_hits(px, CHIN_ZONE, BEARD_KEYS)
+        crown = zone_hits(px, CROWN_ZONE, LEAF_KEYS)
+        if beard:
+            bad5.append("%s f%d: %d piksel putih/abu di dagu" % (name, i, len(beard)))
+        if crown:
+            bad5.append("%s f%d: %d piksel hijau daun di atas alis" % (name, i, len(crown)))
+        dark = zone_hits(px, CAP_ZONE, DARK_CAP_KEYS)
+        batik = [p for p, c in px.items() if c in BATIK_KEYS]
+        if dark:
+            bad6.append("%s f%d: %d piksel hitam di area kopiah" % (name, i, len(dark)))
+        if batik:
+            bad6.append("%s f%d: %d piksel warna batik" % (name, i, len(batik)))
+        if name.startswith(a):
+            white_cap.append(len(zone_hits(px, CAP_ZONE, set("W"))))
+    if white_cap and min(white_cap) < 20:
+        bad6.append("kopiah putih %s tidak terlihat utuh (min %d piksel W)" % (a, min(white_cap)))
+    # kontrol positif: pemeriksaan yang sama pada aset lama yang memang berjanggut, bermahkota, berpeci, berbatik
+    ctrl = {}
+    for src in ("greek-philosopher-idle", "kondangan"):  # kepala Greek di cx 36 (zona digeser +4)
+        if src in scenes_all:
+            px = scenes_all[src][0](0).px
+            ctrl[src] = (len(zone_hits(px, {(x + 4, y) for x, y in CHIN_ZONE}, BEARD_KEYS)),
+                         len(zone_hits(px, {(x + 4, y) for x, y in CROWN_ZONE}, LEAF_KEYS)),
+                         len(zone_hits(px, CAP_ZONE, DARK_CAP_KEYS)), sum(1 for c in px.values() if c in BATIK_KEYS))
+    print("  (v)  dagu (%d piksel zona) tanpa %s; di atas alis tanpa %s: %s" % (
+        len(CHIN_ZONE), "".join(sorted(BEARD_KEYS)), "".join(sorted(LEAF_KEYS)), "lulus" if not bad5 else "GAGAL"))
+    print("  (vi) area kopiah tanpa %s, tanpa warna batik %s; kopiah putih %s min %s piksel W: %s" % (
+        "".join(sorted(DARK_CAP_KEYS)), "".join(sorted(BATIK_KEYS)), a, min(white_cap) if white_cap else "-",
+        "lulus" if not bad6 else "GAGAL"))
+    expect = {"greek-philosopher-idle": (0, 1), "kondangan": (2, 3)}  # indeks yang harus > 0 di aset lama itu
+    for src, hits in ctrl.items():
+        need = [hits[k] for k in expect[src]]
+        print("  kontrol positif %-22s janggut %d, daun %d, kopiah hitam %d, batik %d piksel -> %s" % (
+            (src,) + hits + ("terdeteksi" if all(need) else "TIDAK terdeteksi",)))
+        if not all(need):
+            fail("teologi: pemeriksaan tidak mendeteksi kontrol positif %s (pemeriksaan rusak)" % src)
+    for x in bad5:
+        fail("teologi (v): " + x)
+    for x in bad6:
+        fail("teologi (vi): " + x)
+
+
 # ------------------------------------------------------------------ V9
 def check_dances(m):
     print("\n[V9] Audit tarian (dance-*: %d frame x %d ms, pose besar di beat f0/f4/f8/f12)" % (DANCE_FRAMES, DANCE_MS))
@@ -699,6 +908,10 @@ def check_sizes(m, gate):
 def main():
     gate = sys.argv[sys.argv.index("--gate") + 1] if "--gate" in sys.argv else None
     show_all = "--all" in sys.argv
+    if "--theology-only" in sys.argv:  # pemeriksaan i-vi saja (dipakai sebelum state teologi lain dibuat)
+        check_theology()
+        print("\nHASIL: %s" % ("LULUS" if not FAILS else "%d GAGAL" % len(FAILS)))
+        sys.exit(1 if FAILS else 0)
     m = load_manifest()
     check_hashes()
     check_manifest_and_palette(m)
@@ -709,6 +922,7 @@ def main():
         palette_study(m)
     check_props()
     check_texts_and_beats(m, gate, show_all)
+    check_theology()
     check_dances(m)
     check_sizes(m, gate)
     print("\nHASIL: %s" % ("LULUS" if not FAILS else "%d GAGAL" % len(FAILS)))

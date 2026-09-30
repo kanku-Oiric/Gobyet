@@ -539,3 +539,15 @@ $ repo Bertahan-Bukan-hidup
 status: 0 baris; origin/main 26e3cb3; diff vs origin/main: 0 baris
 ```
 
+
+## Keputusan yang perlu pemilik
+
+Bagian ini ditambahkan saat Gerbang I, karena format bagian 12 memintanya dan versi awal laporan ini belum memuatnya.
+
+1. **Tiga tarian GBLK memakai pola yang sama:** papan di atas kepala dengan dua tangan. Pembedanya hanya arah gerak. Diterima, atau salah satunya perlu pose lain?
+2. **"Lidah sedikit keluar" di idle Gamer** hanya 2 piksel dan mungkin tidak terlihat di 1×. Diterima, atau diperbesar?
+3. **Kaleng Gamer 4×6** di bawah target prop 6×6. Diterima sebagai prop sekunder?
+
+---
+
+Lanjut otomatis ke Gerbang H.
