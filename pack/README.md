@@ -129,24 +129,54 @@ node tools/e2e_preview.js                      # uji browser (Playwright, alat d
   - Papan tanda `GBLK` milik `normal-gblk` (Gerbang G).
 - `GG` milik Gamer tidak perlu pengecualian karena hanya 2 karakter.
 
-### Known issues (Gerbang C, disetujui apa adanya)
+### Pengecualian warna yang diketahui (diterima pemilik)
 
-- `academic/victory`: topi toga terpotong 1 baris di tepi atas kanvas pada puncak lemparan.
-- `academic/defeated`: di 1× hanya berbeda 1-2 px dari idle (badan turun, topi miring, mata). IoU siluet frame kunci defeated vs idle 0,75.
+Pasangan kostum dasar dengan ΔE di bawah 15. Semuanya melibatkan tampilan asli yang terkunci, jadi tidak diubah:
+
+| Pasangan | Dominan | ΔE |
+|---|---|---:|
+| Referee – Academic | `W` – `W` (kaus wasit putih, kemeja wisuda putih) | 0,0 |
+| Judge – Hacker | `L` – `q` (jubah hitam, hoodie abu gelap) | 7,2 |
+| Normal – Detective | `B` – `d` (bulu, mantel cokelat) | 12,2 |
+
+Pembeda pasangan ini adalah siluet dan prop, bukan warna.
+
+### Known issues (disetujui apa adanya, tanpa revisi)
+
+- `academic/victory` (C): topi toga terpotong 1 baris di tepi atas kanvas pada puncak lemparan.
+- `academic/defeated` (C): di 1× hanya berbeda 1-2 px dari idle (badan turun, topi miring, mata). IoU siluet frame kunci defeated vs idle 0,75.
+- `hacker/thinking` (E): mata yang menyipit di balik kacamata yang diturunkan hampir tidak terlihat; kesan menyipit dibawa alis.
+- Jangka Mathematician (D): kaki 1 px abu terang, tipis di 1×.
+- Dasi Lawyer (E): 2×8, di bawah target prop 6×6 (prop sekunder).
+- Audit teks V8: nama yang menunjuk ke `mini_text` di semua modul ditangkap. Pemanggilan lewat closure atau argumen default secara teori bisa lolos; belum ada kasusnya di kode.
 
 ## Anggaran ukuran
 
-- Batas pertambahan `gif/` + `sheets/`: **16 MB** dari kondisi awal Fase 2 lanjutan (commit `dd78be8`). Validator V10 menghitung pertambahan dan proyeksinya sampai semua sel terisi.
+- Batas pertambahan `gif/` + `sheets/`: **16 MB** dari kondisi awal Fase 2 lanjutan (commit `dd78be8`). **Ambang peringatan 15 MB:** bila proyeksi melewatinya, validator GAGAL (STOP-DARURAT).
+- V10 memisahkan total GIF dan total sheet, masing-masing dengan pertambahan dan proyeksi sampai semua sel terisi. Contoh sebelum Gerbang G (42 dari 163 sel terisi):
+
+  | | di `dd78be8` | sekarang | pertambahan | proyeksi akhir |
+  |---|---:|---:|---:|---:|
+  | GIF | 3.029.800 | 4.593.307 | 1.563.507 | 13.387.528 |
+  | sheet | 365.586 | 422.018 | 56.432 | 483.199 |
+
+  Proyeksi total 13,23 MB. Pada profil baru, GIF menyumbang sekitar 96% ukuran aset (rata-rata 97.719 B GIF vs 3.527 B sheet 1×).
 - Opsi A (sheet4x opsional) dan B (GIF `optimize=True`) berlaku untuk aset baru mulai Gerbang D. Aset A, B, dan C tidak diekspor ulang.
 
 ### Rancangan opsi D: GIF dibuat saat rilis (belum diimplementasikan)
 
-GIF menyumbang sekitar 89% ukuran aset. Preview dan resolver hanya butuh `sheet` 1× dan manifest, jadi GIF bisa dibuat saat rilis, tidak disimpan di repo:
+Preview dan resolver hanya butuh `sheet` 1× dan manifest, jadi GIF bisa dibuat saat rilis, tidak disimpan di repo.
+
+**Angka hemat (V10):** GIF aset profil baru yang sudah ada 1.563.507 B. Di akhir Fase 2, proyeksinya sekitar 13,4 MB tidak perlu masuk riwayat git. Yang tetap disimpan hanya sheet 1× (proyeksi pertambahan sekitar 0,5 MB).
+
+Langkahnya:
 
 1. Repo menyimpan resep (`src/*.py`), sheet 1×, dan manifest. Field `gif` di manifest tetap ada, tetapi menunjuk ke berkas rilis.
 2. Workflow rilis menjalankan `python3 src/export.py`, memverifikasi hash GIF aset terkunci terhadap daftar hash yang tersimpan, lalu mengunggah GIF sebagai aset rilis (pola yang sama dengan paket skill di repo Bertahan).
 3. README memakai URL aset rilis, bukan path di repo.
 4. Risiko: embed `raw.githubusercontent.com/.../main/gif/...` yang sudah beredar akan rusak kalau GIF dihapus dari `main`. Karena itu GIF lama tetap disimpan, dan hanya GIF baru yang pindah ke rilis.
+
+**Catatan untuk Fase 3 (arena):** jangan memuat seluruh manifest dan semua sheet sekaligus. Arena cukup memuat manifest (sekitar 40-60 KB JSON), lalu mengambil sheet 1× **per kostum** yang benar-benar dipakai turnamen itu: satu kostum domain, empat kostum peran, dan Normal sebagai fallback. Satu sheet 1× rata-rata sekitar 3,5 KB, jadi satu kostum lengkap kurang dari 30 KB. GIF tidak dibutuhkan arena.
 
 ## Keputusan gaya dari pemilik
 

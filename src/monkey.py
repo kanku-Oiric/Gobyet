@@ -27,6 +27,12 @@ PAL = {
 PAL_EXT = {
     "p": (98, 58, 140), "j": (70, 40, 104),  # ungu: rompi Mathematician (Gerbang D)
     "J": (40, 56, 104), "w": (28, 38, 74),  # biru jas: jas Lawyer (Gerbang E)
+    # Alokasi warna global untuk kostum Gerbang G-J (ditambahkan sekaligus sebelum Gerbang G).
+    "o": (238, 142, 52), "t": (196, 104, 32),  # oranye: kaus Gamer
+    "z": (164, 32, 40), "1": (120, 20, 30),  # merah tua: tabard Knight
+    "i": (122, 32, 52), "2": (88, 20, 38),  # marun: mantel Pirate
+    "3": (66, 110, 220), "4": (44, 78, 170),  # biru kerajaan: jubah Wizard
+    "5": (112, 112, 124),  # bayangan abu untuk jubah Priest (g)
 }
 
 

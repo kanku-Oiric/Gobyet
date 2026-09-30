@@ -44,6 +44,7 @@ function serve() {
   const base = "http://127.0.0.1:" + server.address().port;
   const browser = await chromium.launch();
   const report = {}, fails = [];
+  const manifestData = JSON.parse(fs.readFileSync(path.join(ROOT, "pack", "manifest.json"), "utf8"));
   const check = (ok, msg) => { if (!ok) fails.push(msg); };
 
   async function open(opts) {
@@ -79,6 +80,30 @@ function serve() {
     }
     return { canvases: cs.length, frame_mismatch: frameMismatch, pixel_mismatch: pixelMismatch };
   });
+  // Filter panel banding: tiap pilihan menampilkan tepat sel gerbangnya; gabungan semua gerbang = semua sel bergerbang.
+  const filterCheck = async (p, measure) => {
+    const opts = await p.$$eval("#cmpFilter option", (os) => os.map((o) => o.value));
+    const out = { options: opts, per_option: {}, union_ok: false, max_gate_height: 0 };
+    const union = new Set();
+    for (const v of opts) {
+      await p.selectOption("#cmpFilter", v);
+      await p.waitForTimeout(200);
+      const cellsShown = await p.$$eval("#compare figure", (fs) => fs.map((f) => f.dataset.cell));
+      const h = await p.$eval('section[aria-labelledby="cmpTitle"]', (e) => Math.round(e.getBoundingClientRect().height));
+      out.per_option[v] = { figures: cellsShown.length, height_px: h };
+      if (/^[A-Z]$/.test(v)) { cellsShown.forEach((c) => union.add(c)); out.max_gate_height = Math.max(out.max_gate_height, h); }
+    }
+    const gated = [];
+    for (const [costume, row] of Object.entries(manifestData.cells)) for (const [state, cell] of Object.entries(row)) if (cell.gate) gated.push(costume + "/" + state);
+    out.gated_cells = gated.length;
+    out.union_ok = gated.length === union.size && gated.every((c) => union.has(c));
+    const perGate = {};
+    for (const c of Object.values(manifestData.cells).flatMap((r) => Object.values(r))) if (c.gate) perGate[c.gate] = (perGate[c.gate] || 0) + 1;
+    out.counts_ok = Object.entries(perGate).every(([g, n]) => out.per_option[g] && out.per_option[g].figures === n);
+    await p.selectOption("#cmpFilter", "semua");
+    await p.waitForTimeout(600);
+    return out;
+  };
   const blindState = (p) => p.$$eval("#blind figure", (fs) => fs.map((f) => ({ costume: f.dataset.costume, caption: f.querySelector("figcaption").textContent })));
 
   // ---- desktop
@@ -93,7 +118,7 @@ function serve() {
     rows: document.querySelectorAll("#matrix tbody tr:not(.group)").length,
     stats: document.getElementById("stats").innerText.replace(/\n/g, " | "),
   }));
-  const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, "pack", "manifest.json"), "utf8"));
+  const manifest = manifestData;
   const expected = { cells: 0, applicable: 0 };
   for (const row of Object.values(manifest.cells)) expected.cells += Object.keys(row).length;
   for (const c of manifest.costumes) expected.applicable += Object.keys(c.applies || {}).length;
@@ -109,6 +134,8 @@ function serve() {
   check(report.blank_cells === 0, "ada sel matriks yang kosong");
   report.blind_before = await blindState(d.p);
   check(report.blind_before.every((b) => /^#\d+$/.test(b.caption)), "label tes buta terlihat sebelum tombol ditekan");
+  report.filter_desktop = await filterCheck(d.p);
+  check(report.filter_desktop.union_ok && report.filter_desktop.counts_ok, "filter panel banding menghilangkan atau salah menghitung sel");
   await d.p.click("#btnStatic");
   await d.p.waitForTimeout(600);
   report.static_desktop = await staticCheck(d.p);
@@ -159,11 +186,17 @@ function serve() {
   const r1 = await hashOf(m.p, realSel); await m.p.waitForTimeout(1200); const r2 = await hashOf(m.p, realSel);
   report.reduced_motion_static = r1 === r2;
   check(report.reduced_motion_static, "reduced motion masih bergerak");
+  report.filter_phone = await filterCheck(m.p);
+  check(report.filter_phone.union_ok && report.filter_phone.counts_ok, "filter panel banding (ponsel) menghilangkan sel");
+  check(report.filter_phone.max_gate_height <= 3000, "tampilan satu gerbang di ponsel > 3000 px");
+  await m.p.waitForTimeout(600);
   report.static_phone = await staticCheck(m.p);
   check(!report.static_phone.frame_mismatch.length && !report.static_phone.pixel_mismatch.length, "reduced motion != frame kunci (ponsel)");
   report.phone_overflow = await m.p.evaluate(() => document.documentElement.scrollWidth - innerWidth);
   check(report.phone_overflow === 0, "scroll horizontal di ponsel");
   await m.p.screenshot({ path: path.join(OUT, "preview-phone.png") });
+  const latest = report.filter_phone.options.filter((o) => /^[A-Z]$/.test(o))[0];
+  if (latest) { await m.p.selectOption("#cmpFilter", latest); await m.p.waitForTimeout(600); }
   await m.p.locator('section[aria-labelledby="cmpTitle"]').screenshot({ path: path.join(OUT, "compare-phone.png") });
   await m.p.locator('section[aria-labelledby="blindTitle"]').screenshot({ path: path.join(OUT, "blind-phone.png") });
   report.phone_errors = m.errors; report.phone_bad_requests = m.bad;

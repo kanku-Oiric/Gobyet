@@ -48,11 +48,13 @@ PAL_RGB = {tuple(v) for v in monkey.PAL.values()}
 EXT_RGB = PAL_RGB | {tuple(v) for v in monkey.PAL_EXT.values()}
 REV = {tuple(v): k for k, v in list(monkey.PAL.items()) + list(monkey.PAL_EXT.items())}
 FAILS = []
-LOCK_FILES = ("sha256-asli.txt", "sha256-disetujui.txt")
+LOCK_FILES = ("sha256-asli.txt", "sha256-disetujui.txt")  # terkunci: seam di atas ambang = DIKETAHUI
+MADE_FILE = "sha256-dibuat.txt"  # aset gerbang yang sudah dibuat tetapi belum disetujui: hash wajib tetap
 GROUPS = ("core", "role", "domain", "fantasy", "theology", "special")
 SEAM_FACTOR = 1.25
 DANCE_FRAMES, DANCE_MS = 16, 120
 BUDGET_BYTES = 16 * 1024 * 1024
+WARN_BYTES = 15 * 1024 * 1024  # ambang peringatan pemilik: proyeksi di atasnya = STOP-DARURAT
 BUDGET_BASE_COMMIT = "dd78be8"  # kondisi awal Fase 2 lanjutan (Gerbang C terkunci)
 
 # V8: pengecualian aturan <= 3 karakter yang disahkan pemilik, per awalan nama animasi.
@@ -126,8 +128,8 @@ def base_costumes(m):
 
 # ------------------------------------------------------------------ V1
 def check_hashes():
-    print("\n[V1] Hash aset yang dikunci")
-    for name in LOCK_FILES:
+    print("\n[V1] Hash aset yang dikunci dan aset yang sudah dibuat")
+    for name in LOCK_FILES + (MADE_FILE,):
         path = os.path.join(ROOT, "pack", name)
         if not os.path.exists(path):
             print("  %s: tidak ada (dilewati)" % name)
@@ -626,26 +628,33 @@ def check_sizes(m, gate):
         fail("gerbang %s tidak punya aset di manifest" % gate)
     applicable = sum(len(c.get("applies", {})) for c in m["costumes"])
     filled = sum(1 for _ in cells(m))
-    modern_rows = [r for g, rows in per_gate.items() if g not in pack.LEGACY_GATES for r in rows]
-    legacy_rows = [r for g, rows in per_gate.items() if g in pack.LEGACY_GATES for r in rows]
-    if modern_rows:
-        avg, basis = sum(r[2] for r in modern_rows) / float(len(modern_rows)), "aset profil baru (optimize, tanpa sheet4x)"
-    else:
-        avg, basis = sum(r[2] for r in legacy_rows) / float(len(legacy_rows)), "aset gerbang A-C (belum ada aset profil baru)"
-    current = sum(os.path.getsize(os.path.join(ROOT, d, f)) for d in ("gif", "sheets") for f in os.listdir(os.path.join(ROOT, d)))
-    base = git_sizes(BUDGET_BASE_COMMIT)
-    grown = current - base if base is not None else None
     remaining = applicable - filled
-    projection = (grown or 0) + avg * remaining
-    print("  sel berlaku %d, terisi %d, tersisa %d; rata-rata %d byte per aset (%s)" % (applicable, filled, remaining, avg, basis))
-    if base is None:
+    modern = [c for _, _, c in cells(m) if is_modern(c)]
+    basis = modern or [c for _, _, c in cells(m) if c["origin"] == "baru"]
+    avg_gif = sum(os.path.getsize(cell_path(c["gif"])) for c in basis) / float(len(basis))
+    avg_sheet = sum(os.path.getsize(cell_path(c[k])) for c in basis for k in ("sheet", "sheet4x") if k in c) / float(len(basis))
+
+    def dir_total(d):
+        return sum(os.path.getsize(os.path.join(ROOT, d, f)) for f in os.listdir(os.path.join(ROOT, d)))
+    now_gif, now_sheet = dir_total("gif"), dir_total("sheets")
+    base_gif, base_sheet = git_sizes(BUDGET_BASE_COMMIT, ("gif/",)), git_sizes(BUDGET_BASE_COMMIT, ("sheets/",))
+    print("  sel berlaku %d, terisi %d, tersisa %d" % (applicable, filled, remaining))
+    print("  rata-rata per aset profil baru: GIF %d byte, sheet %d byte (%d aset)" % (avg_gif, avg_sheet, len(basis)))
+    if base_gif is None:
         print("  anggaran: tidak terbukti (git ls-tree %s gagal)" % BUDGET_BASE_COMMIT)
         return
-    print("  gif/ + sheets/ sekarang %d byte; di %s %d byte; pertambahan %d byte" % (current, BUDGET_BASE_COMMIT, base, grown))
-    print("  proyeksi pertambahan sampai semua sel terisi: %d byte (%.1f MB) dari anggaran %.0f MB" % (
-        projection, projection / 1048576.0, BUDGET_BYTES / 1048576.0))
-    if projection > BUDGET_BYTES:
-        fail("proyeksi ukuran %d byte melewati anggaran %d byte (STOP-DARURAT)" % (projection, BUDGET_BYTES))
+    grown_gif, grown_sheet = now_gif - base_gif, now_sheet - base_sheet
+    proj_gif, proj_sheet = grown_gif + avg_gif * remaining, grown_sheet + avg_sheet * remaining
+    projection = proj_gif + proj_sheet
+    print("  %-7s %10s %10s %12s %14s" % ("", "dd78be8", "sekarang", "pertambahan", "proyeksi akhir"))
+    print("  %-7s %10d %10d %12d %14d" % ("GIF", base_gif, now_gif, grown_gif, proj_gif))
+    print("  %-7s %10d %10d %12d %14d" % ("sheet", base_sheet, now_sheet, grown_sheet, proj_sheet))
+    print("  proyeksi pertambahan total: %d byte (%.2f MB); ambang peringatan %.0f MB, batas keras %.0f MB" % (
+        projection, projection / 1048576.0, WARN_BYTES / 1048576.0, BUDGET_BYTES / 1048576.0))
+    print("  opsi D (GIF aset baru dibuat saat rilis, tidak disimpan): hemat %d byte sekarang, %d byte di akhir" % (
+        sum(os.path.getsize(cell_path(c["gif"])) for c in modern), sum(os.path.getsize(cell_path(c["gif"])) for c in modern) + avg_gif * remaining))
+    if projection > WARN_BYTES:
+        fail("proyeksi ukuran %d byte melewati ambang peringatan %d byte (STOP-DARURAT)" % (projection, WARN_BYTES))
 
 
 def main():

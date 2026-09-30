@@ -11,15 +11,28 @@ Huruf gerbang tidak berurutan dengan urutan kerja. Urutan kerja sebenarnya: A, B
 | 1 | A | Referee: idle, thinking | 2 | disetujui, dikunci | `06bc433` |
 | 2 | B | Judge, Skeptic, Champion (revisi medali di `73c034b`) | 8 | disetujui, dikunci setelah bagian 3 terverifikasi | `6875e4e`, `73c034b`, kunci di commit persiapan D |
 | 3 | C | Greek Philosopher, Academic, Normal | 9 | disetujui, dikunci | `73c034b`, kunci `dd78be8` |
-| 4 | D | Scientist (idle, shocked, victory), Mathematician (idle, thinking, victory) | 6 | validasi lulus (AUTO); menunggu tinjauan di STOP-1 | `056e0dc` |
-| 5 | E | Hacker (3), Detective (4), Lawyer (3); STOP-1 | 10 | validasi lulus; **STOP-1: menunggu persetujuan gaya D dan E** | `3eb2cdc` |
-| 6 | G | Gamer (7), Normal-GBLK (8); STOP-2 | 15 | belum | |
-| 7 | H | Knight, Viking, Pirate, Wizard; STOP-3 | 24 | belum | |
-| 8 | I | Pak Haji, Priest (STOP-4 setelah idle keduanya) | 10 | belum | |
+| 4 | D | Scientist (idle, shocked, victory), Mathematician (idle, thinking, victory) | 6 | disetujui, dikunci di commit persiapan G | `056e0dc`, tag `fase2-gate-D` |
+| 5 | E | Hacker (3), Detective (4), Lawyer (3) | 10 | disetujui, dikunci di commit persiapan G | `3eb2cdc`, tag `fase2-gate-E` |
+| 6 | G | Gamer (7), Normal-GBLK (8) | 15 | belum | |
+| 7 | H | Knight, Viking, Pirate, Wizard | 24 | belum | |
+| 8 | I | Pak Haji, Priest | 10 | belum | |
 | 9 | J | 12 varian kelas × idle, attack, victory | 36 | belum | |
-| 10 | F | sisa sel 12 kostum lama (14 wajib + 22 opsional), audit, dokumentasi; STOP-5 | 36 | belum | |
+| 10 | F | sisa sel 12 kostum lama (14 wajib + 22 opsional), audit, dokumentasi | 36 | belum | |
 
-Mode kerja: tiap gerbang = produksi, validasi, commit (pesan menyebut gerbang), perbarui file ini dan `STYLE.md`, lalu terbitkan ulang preview. Lanjut otomatis bila validasi lulus, kecuali di titik STOP.
+**Mode kerja (keputusan pemilik setelah STOP-1):** G, H, I, J, lalu F dijalankan berurutan tanpa berhenti. Yang tetap berlaku hanya STOP-DARURAT dan STOP final setelah F. Syarat lanjut otomatis: validasi bagian 11 lulus. GAGAL baru diperbaiki di dalam gerbang itu tanpa menyentuh aset yang sudah dikunci atau ditandai. STOP-DARURAT berlaku bila:
+- GAGAL tidak bisa diperbaiki;
+- hash aset terkunci atau aset yang sudah dibuat berubah;
+- proyeksi ukuran melewati 15 MB;
+- perubahan terpaksa menyentuh file di luar `pack/`, `src/`, dan `tools/`;
+- palet tidak cukup tanpa menyentuh aset lama.
+
+Pengaman per gerbang:
+1. Laporan lengkap di `pack/reports/gate-<X>.md`.
+2. Commit tersendiri dengan tag `fase2-gate-<X>`.
+3. Hash aset gerbang itu ditambahkan ke `pack/sha256-dibuat.txt`.
+4. File ini dan `STYLE.md` diperbarui, lalu preview diterbitkan ulang.
+
+Kalau sesi terputus, lanjutkan dari gerbang terakhir yang punya tag dan baris "selesai" di tabel ini.
 
 ## Sel
 
@@ -74,12 +87,26 @@ node tools/e2e_preview.js                      # butuh Playwright di luar proyek
 python3 tools/progress_table.py                # perbarui tabel sel di atas
 ```
 
-Mengunci gerbang yang disetujui: tambahkan `sha256sum` dari `gif/<nama>.gif`, `sheets/<nama>.png`, dan `sheets/<nama>@4x.png` (bila ada) ke `pack/sha256-disetujui.txt`. Kerjakan hanya setelah pemilik menyetujui.
+File hash:
+- **`pack/sha256-asli.txt`:** 27 file pra-Fase 2.
+- **`pack/sha256-disetujui.txt`:** aset gerbang yang disetujui pemilik (A-E). Tambahkan `sha256sum` dari `gif/<nama>.gif`, `sheets/<nama>.png`, dan `sheets/<nama>@4x.png` (bila ada) hanya setelah pemilik menyetujui.
+- **`pack/sha256-dibuat.txt`:** aset gerbang G ke atas yang sudah dibuat tetapi belum disetujui. Tiap gerbang berikutnya memverifikasi bahwa file-file ini tidak berubah. Mengubahnya hanya lewat protokol revisi (bagian 10), dengan memperbarui hash secara eksplisit.
+
+Mengembalikan satu gerbang: `git checkout fase2-gate-<X> -- gif sheets src pack` (lalu `python3 src/export.py` dan validator), atau `git revert` commit gerbang itu.
 
 ## Catatan yang harus diingat
 
 - **README di `main`.** Commit `a7a6d21` (README saja, atas permintaan pemilik) menampilkan galeri Fase 2 dengan URL gambar `raw.githubusercontent.com/.../claude/gobyet-fase2/gif/...`. Setelah PR di-merge, README di branch (path relatif) menggantikannya. Sebelum merge, pastikan tidak ada URL yang masih menunjuk ke branch. Jangan push ke `main` lagi.
 - **Profil export.** Aset gerbang A-C dan aset asli memakai jalur lama (palet `PAL`, `optimize=False`, sheet 1× dan 4×). Aset baru mulai D memakai palet lokal (`PAL` + `PAL_EXT`), `optimize=True`, dan hanya sheet 1×. Lihat `pack.modern()` dan `export.local_palette()`.
-- **`PAL_EXT`.** Kunci yang sudah dipakai: `p`, `j` (ungu, rompi Mathematician) dan `J`, `w` (biru jas Lawyer, (40,56,104)). Wizard butuh biru atau ungu lain dengan ΔE ≥ 15 dari keduanya; biru baja (58,84,140) hanya 12,4 dari jas Lawyer, jadi harus digeser. Kunci bebas: `t z i o` dan angka.
+- **`PAL_EXT`:** 13 kunci.
+  - `p j`: ungu Mathematician.
+  - `J w`: jas Lawyer.
+  - `o t`: oranye Gamer.
+  - `z 1`: merah tua Knight.
+  - `i 2`: marun Pirate.
+  - `3 4`: biru kerajaan Wizard.
+  - `5`: bayangan abu Priest.
+
+  Semuanya ditambahkan sekaligus sebelum Gerbang G; 116 file aset lama tetap identik. Tabel alokasinya ada di `STYLE.md`.
 - **Pengecualian teks.** `E=mc` (papan Scientist, statis) dan `GBLK` (papan normal-gblk). Selain itu maksimal 3 karakter per gelembung.
 - **Known issues Gerbang C:** topi Academic terpotong 1 baris di puncak lemparan; `academic/defeated` di 1× hanya berbeda 1-2 px dari idle.

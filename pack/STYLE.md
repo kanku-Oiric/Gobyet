@@ -96,7 +96,41 @@ Prop utama sebaiknya berada di luar siluet badan (samping bahu, di atas kepala, 
 
 | Lawyer | biru jas `J` (40,56,104) (PAL_EXT) | ΔE 25,6 dari Hacker, 30,3 dari Judge, 67,1 dari Detective |
 
-Rencana gerbang berikutnya: Wizard butuh biru atau ungu dengan ΔE ≥ 15 dari rompi `p` dan jas `J`.
+### Alokasi warna global (sebelum Gerbang G)
+
+Dicari lewat kombinasi yang memaksimalkan ΔE minimum terhadap 12 dominan yang ada dan antar-kostum baru. ΔE minimum yang tercapai: 23,1.
+
+| Kostum | Dominan | Kunci | Terdekat |
+|---|---|---|---|
+| Gamer | oranye (238,142,52), kaus | `o`/`t` (PAL_EXT) | Champion ΔE 34,8 |
+| Normal-GBLK | krem-kuning `n`, papan | PAL | Greek ΔE 23,1 |
+| Knight | merah tua (164,32,40), tabard | `z`/`1` (PAL_EXT) | Pirate ΔE 24,9 |
+| Viking | cokelat tua `D`, rompi kulit | PAL | Normal ΔE 25,2 |
+| Pirate | marun (122,32,52), mantel | `i`/`2` (PAL_EXT) | Knight ΔE 24,9 |
+| Wizard | biru kerajaan (66,110,220), jubah | `3`/`4` (PAL_EXT) | Mathematician ΔE 29,9 |
+| Pak Haji | hijau `V`, sarung kotak `V`/`v` (koko krem `C`) | PAL | Skeptic ΔE 23,8 |
+| Priest | abu `g`, jubah (bayangan `5`) | PAL + `5` | Greek ΔE 30,1 |
+
+- **Wizard, tiga kandidat:** kobalt (40,84,196) ΔE 25,8; **biru kerajaan (66,110,220) ΔE 29,9, dipilih**; indigo terang (92,80,200) ΔE 23,8. Cadangan teal tua (20,100,110) ΔE 20,5.
+- **Pak Haji:** koko putih atau krem selalu < 15 dari Academic (`C` 11,2; `S`, `H`, `m` < 7). Karena itu warna dominannya harus sarung hijau: sarung dibuat lebih luas daripada koko.
+- **Priest:** jubah abu (bukan hitam) supaya jauh dari Judge `L`.
+- **Aksen varian** (ΔE ≥ 10 dari saudara sefaksi) ditetapkan di Gerbang J dan dicatat di bawah.
+
+## Aksi khas victory
+
+Setiap victory baru wajib punya minimal satu elemen yang belum dipakai kostum lain, selain pola "lengan naik + prop naik + lompat 1 px". Tabel ini diperbarui tiap gerbang.
+
+| Kostum | Aksi khas victory | Gerbang |
+|---|---|---|
+| Champion | Piala diangkat dengan konfeti piksel (konfeti pertama) | B |
+| Greek Philosopher | Gulungan dibuka menjuntai dari rol di atas kepala | C |
+| Academic | Topi toga dilempar berputar melambung, lalu ditangkap | C |
+| Normal | Pisang diangkat seperti piala | C |
+| Scientist | Menulis "!" di papan tulis, lidah menjulur | D |
+| Mathematician | Menggoreskan centang `v` di batu tulis lalu mengangkatnya | D |
+| Hacker | Semua baris terminal berubah hijau, gelembung "OK" | E |
+| Detective | Kilau berpindah di lensa kaca pembesar | E |
+| Lawyer | Map diangkat. Tidak ada elemen khas di luar pola dasar (dicatat; aset E tidak direvisi) | E |
 
 ## Teks
 
