@@ -48,7 +48,7 @@ Aset baru dibuat bertahap. Setiap gerbang berhenti dulu sampai gayanya disetujui
 |---|---|---|
 | A | Referee: idle, thinking | disetujui |
 | B | Judge: idle, thinking, judging · Skeptic: idle, suspicious, attack · Champion: idle, victory (laurel emas diganti medali) | revisi Champion selesai, menunggu konfirmasi |
-| C | Greek Philosopher: idle, victory, defeated · Academic: thinking, victory, defeated · Normal: thinking, victory, defeated | menunggu persetujuan gaya |
+| C | Greek Philosopher: idle, victory, defeated · Academic: thinking, victory, defeated · Normal: thinking, victory, defeated | disetujui |
 | D | Scientist, Mathematician | belum |
 | E | Hacker, Detective, Lawyer | belum |
 | F | Sel sisanya, audit, dokumentasi | belum |

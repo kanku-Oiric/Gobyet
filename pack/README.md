@@ -92,7 +92,7 @@ node --test pack/resolver.test.js        # resolver dan manifest
 ```
 
 - `pack/sha256-asli.txt` mengunci 27 file `gif/` dan `sheets/` yang ada sebelum Fase 2.
-- `pack/sha256-disetujui.txt` mengunci aset baru yang gayanya sudah disetujui pemilik (saat ini Gerbang A).
+- `pack/sha256-disetujui.txt` mengunci aset baru yang gayanya sudah disetujui pemilik (saat ini Gerbang A dan C).
 - Validator keluar dengan kode 1 bila ada hash berubah, warna di luar `PAL`, piksel semi-transparan, ukuran salah, atau seam loop aset baru melebihi ambang.
 - Ambang seam loop = 1,25 × selisih piksel terbesar antar-frame berurutan di aset itu sendiri. Aset yang terkunci hash dan melewati ambang dilaporkan **DIKETAHUI**, bukan GAGAL, karena tidak boleh diubah.
 - Jarak warna dominan antar-kostum dihitung sebagai CIE76 ΔE di ruang Lab, setelah warna bulu, kulit, dan garis tepi yang sama di semua kostum dikeluarkan.
