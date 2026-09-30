@@ -2,6 +2,8 @@
 
 Gerbang C: Greek Philosopher (idle, victory, defeated), Academic (thinking, victory, defeated),
 Normal (thinking, victory, defeated).
+Gerbang D: Scientist (idle, shocked, victory) dengan tampilan rambut-einstein asli; Mathematician
+(idle, thinking, victory), kostum baru: rompi ungu (PAL_EXT p/j), batu tulis genggam, jangka.
 
 Tampilan kostum mengikuti aset asli yang terkunci, tanpa desain ulang: Greek Philosopher memakai
 toga, janggut, laurel hijau, gulungan, dan tiang dari filsuf-yunani; Academic memakai kemeja putih,
@@ -9,8 +11,12 @@ dasi merah, topi toga, dan ijazah dari wisuda; Normal adalah Gobyet tanpa kostum
 makan-pisang. Fungsi gambar kostum dipakai ulang dari src/costumes.py. Satu-satunya bentuk baru
 adalah pose rebah (lying_body) untuk defeated.
 """
-from monkey import Canvas, head, arm, tail, sitting_body, banana, puff, ellipse, capsule, rect, solid
-from costumes import CX, CY, TOP, dressed_body, inner, confetti, mortarboard, laurel, beard, scroll, column
+import math
+
+from monkey import (Canvas, head, arm, tail, sitting_body, banana, puff, spark_lines, mini_text, bubble, ellipse,
+                    capsule, rect, solid)
+from costumes import (CX, CY, TOP, dressed_body, inner, confetti, mortarboard, laurel, beard, scroll, column,
+                      chalkboard, wild_hair, einstein_moustache)
 from roles import dots_or_mark
 
 
@@ -332,6 +338,227 @@ def normal_defeated_frame(i):
     return cv
 
 
+# ================================================================== Gerbang D: Scientist
+SX = 21  # sama dengan rambut-einstein asli: tokoh di kiri, papan tulis di kanan
+
+
+def scientist_base(cv, t, eyes, brows, dx=0, bob=0, bounce=0, tongue=False):
+    """Papan tulis asli (E=mc, statis), rambut putih awut-awutan, sweter abu, kumis tebal."""
+    chalkboard(cv, 34, 6, 29, 16, "E=mc", 4)
+    x, top, cy = SX + dx, TOP + bob, CY + bob
+    tail(cv, (x - 5, top + 14), phase=t * 0.5, flip=-1, length=7)
+    wild_hair(cv, x, cy, bounce=bounce)
+    dressed_body(cv, x, top, "h", "g", pants="g", pants_shade="q")
+    head(cv, x, cy, eyes=eyes, brows=brows, mouth="flat")
+    wild_hair(cv, x, cy, back=False)
+    einstein_moustache(cv, x, cy)
+    if tongue:  # lidah menjulur seperti akhir rambut-einstein asli
+        cv.fill(rect(x - 1, int(cy + 8), 3, 3), "T")
+        cv.fill({(x - 1, int(cy + 10)), (x + 1, int(cy + 10))}, "M")
+
+
+def chalk(cv, x, y):
+    cv.fill(rect(int(x) - 1, int(y) - 1, 2, 2), "W")
+
+
+def scientist_idle_frame(i):
+    """Menggaruk rambut sambil menatap rumus di papan, kapur di tangan kanan; sesekali menoleh dan berkedip."""
+    cv = Canvas()
+    t = i % 16
+    eyes = ("side", "side", "side", "side", "side", "blink", "side", "side",
+            "look", "look", "look", "side", "side", "side", "side", "side")[t]
+    scratch = (t // 2) % 2
+    scientist_base(cv, t, eyes, "flat", bounce=scratch)
+    arm(cv, (SX - 7, TOP + 3), (SX - 7, CY - 8 + scratch), elbow=(SX - 13, CY + 2), fur="h")
+    arm(cv, (SX + 7, TOP + 3), (SX + 12, TOP + 7), elbow=(SX + 11, TOP + 10), fur="h")
+    chalk(cv, SX + 13, TOP + 5)
+    return cv
+
+
+# (fase, dorong mundur, rambut, ukuran kepulan 0 = tidak ada)
+SCI_SHOCK = [("write", 0, 0, 0), ("write", 0, 0, 0), ("write", 0, 0, 0), ("write", 0, 0, 0), ("poof", 0, 1, 1),
+             ("shock", -2, 3, 2), ("shock", -2, 3, 3), ("shock", -2, 2, 3), ("shock", -2, 3, 4), ("shock", -1, 2, 4),
+             ("shock", -1, 2, 3), ("calm", -1, 1, 2), ("calm", 0, 1, 1), ("calm", 0, 0, 0), ("write", 0, 0, 0),
+             ("write", 0, 0, 0)]
+
+
+def scientist_shocked_frame(i):
+    """Kapur menyentuh papan, kepulan asap kecil meletup, rambut makin liar, mata lebar, "!", lalu tenang lagi."""
+    cv = Canvas()
+    t = i % 16
+    phase, dx, hair, smoke = SCI_SHOCK[t]
+    face = {"write": ("side", "flat"), "poof": ("wide", "up"), "shock": ("wide", "up"), "calm": ("look", "worried")}[phase]
+    scientist_base(cv, t, face[0], face[1], dx=dx, bounce=hair)
+    px, py = 44, 18  # titik kapur di papan
+    if phase in ("write", "poof"):
+        arm(cv, (SX + 7, TOP + 3), (px, py + (t % 2)), elbow=(SX + 15, TOP + 2), fur="h")
+        chalk(cv, px + 1, py - 1 + (t % 2))
+    else:
+        arm(cv, (SX + 7 + dx, TOP + 3), (SX + 12 + dx, TOP + 1), elbow=(SX + 13 + dx, TOP + 6), fur="h")
+        chalk(cv, SX + 13 + dx, TOP - 1)
+    arm(cv, (SX - 7 + dx, TOP + 3), (SX - 9 + dx, TOP + 10), elbow=(SX - 10 + dx, TOP + 6), fur="h")
+    if smoke:  # kepulan naik dan membesar dari titik kapur, garis kaget di sampingnya
+        rise = max(0, smoke - 1)
+        puff(cv, px + 2, py + 3 - rise, 1.0 + smoke * 0.45)
+        if smoke >= 3:
+            puff(cv, px + 6, py + 1 - rise, 0.8 + smoke * 0.3)
+    if phase == "shock":
+        spark_lines(cv, SX - 14 + dx, 6)
+        spark_lines(cv, SX + 13 + dx, 4)
+        bubble(cv, 50, 25, 9, 9, fill="R", tail_dir=-1)
+        mini_text(cv, "!", 52, 27, "W")
+    return cv
+
+
+# (fase lengan, lompat)
+SCI_VICTORY = [("write", 0), ("write", 0), ("up", 1), ("up", 0), ("up", 1), ("up", 0), ("up", 1), ("up", 0),
+               ("up", 1), ("up", 0), ("up", 1), ("up", 0), ("mid", 0), ("mid", 0), ("write", 0), ("write", 0)]
+
+
+def scientist_victory_frame(i):
+    """Menulis "!" di pojok papan, lalu kapur diangkat tinggi, lompat kecil, lidah menjulur seperti aslinya."""
+    cv = Canvas()
+    t = i % 16
+    phase, hop = SCI_VICTORY[t]
+    up = phase == "up"
+    scientist_base(cv, t, "happy" if up else "side", "up" if up else "flat", bob=-hop, bounce=hop, tongue=up and t % 2 == 1)
+    if t >= 1:
+        mini_text(cv, "!", 50, 7, "W")
+    if phase == "write":
+        hx, hy = 58, 13 + (t % 2)
+        arm(cv, (SX + 7, TOP + 3), (hx, hy), elbow=(SX + 17, TOP + 1), fur="h")
+        chalk(cv, hx + 1, hy - 1)
+        arm(cv, (SX - 7, TOP + 3), (SX - 9, TOP + 10), elbow=(SX - 10, TOP + 6), fur="h")
+    elif phase == "mid":
+        arm(cv, (SX + 7, TOP + 3), (SX + 12, TOP - 2), elbow=(SX + 13, TOP + 4), fur="h")
+        chalk(cv, SX + 12, TOP - 5)
+        arm(cv, (SX - 7, TOP + 3), (SX - 11, TOP + 2), elbow=(SX - 12, TOP + 7), fur="h")
+    else:
+        arm(cv, (SX + 7, TOP + 3 - hop), (SX + 12, 7 - hop), elbow=(SX + 13, TOP - 2 - hop), fur="h")
+        chalk(cv, SX + 12, 4 - hop)
+        arm(cv, (SX - 7, TOP + 3 - hop), (SX - 13, 9 - hop), elbow=(SX - 13, TOP - 1 - hop), fur="h")
+        if t % 4 == 2:
+            cv.fill({(SX + 16, 2), (SX + 15, 2), (SX + 17, 2), (SX + 16, 1), (SX + 16, 3)}, "W")
+    return cv
+
+
+# ================================================================== Gerbang D: Mathematician
+def math_vest(cv, cx, top):
+    """Rompi ungu (PAL_EXT p/j) di atas badan berbulu: kerah V, belahan tengah, tiga kancing emas."""
+    dressed_body(cv, cx, top, "p", "j", pants="L", pants_shade="q")
+    cv.fill({(cx - 2, top), (cx - 1, top + 1), (cx, top + 1), (cx + 1, top), (cx - 1, top), (cx, top),
+             (cx - 1, top + 2), (cx, top + 2)}, "B")
+    cv.fill({(cx, y) for y in range(top + 3, top + 11)}, "j")
+    for y in (top + 4, top + 7, top + 10):
+        cv.put(cx - 1, y, "O")
+
+
+def slate(cv, x, y, mark=None, arc=0):
+    """Batu tulis genggam 11x9: bingkai kayu, permukaan abu gelap. mark = glyph yang tertulis (v),
+    arc = jumlah titik lingkaran yang sudah digambar jangka (0-12)."""
+    solid(cv, rect(x, y, 11, 9), "X", None)
+    cv.fill(rect(x + 2, y + 2, 7, 5), "l")
+    cx, cy = x + 5, y + 4
+    for k in range(min(arc, 12)):
+        a = k / 12.0 * 2 * math.pi
+        cv.put(int(round(cx + 2.4 * math.cos(a))), int(round(cy + 1.6 * math.sin(a))), "W")
+    if mark:
+        mini_text(cv, mark, x + 3, y + 2, "W")
+
+
+def compass(cv, hx, hy, deg, spread=24):
+    """Jangka: engsel emas di (hx, hy), dua kaki perak sepanjang 7 yang membuka +-spread derajat dari arah deg."""
+    for s in (-1, 1):
+        a = math.radians(deg + s * spread)
+        ex, ey = hx + 7 * math.cos(a), hy + 7 * math.sin(a)
+        cv.fill(capsule((hx, hy), (ex, ey), 0.5), "G")
+        cv.put(int(round(ex)), int(round(ey)), "K" if s > 0 else "s")
+    cv.fill(rect(int(hx) - 1, int(hy) - 1, 2, 2), "O")
+    cv.put(int(hx), int(hy) - 2, "x")
+
+
+def math_base(cv, t, eyes, brows, mouth, bob=0):
+    tail(cv, (CX - 7, TOP + 14), phase=t * 0.45, flip=-1, length=8)
+    math_vest(cv, CX, TOP + bob)
+    head(cv, CX, CY + bob, eyes=eyes, brows=brows, mouth=mouth)
+
+
+def math_idle_frame(i):
+    """Batu tulis bergambar lingkaran di pangkuan; jangka diangkat di samping bahu dan diputar pelan
+    sambil menatap batu tulis; sesekali melirik jangka dan berkedip."""
+    cv = Canvas()
+    t = i % 16
+    eyes = "blink" if t == 9 else ("side" if t in (12, 13) else "down")
+    math_base(cv, t, eyes, "flat", "flat")
+    sx, sy = CX - 5, TOP + 8
+    slate(cv, sx, sy, arc=12)
+    arm(cv, (CX - 7, TOP + 3), (sx, sy + 5), elbow=(CX - 11, TOP + 7))
+    hx, hy = CX + 15, TOP - 3
+    compass(cv, hx, hy, 90 + 22.5 * t, spread=16)  # satu putaran penuh per 16 frame
+    arm(cv, (CX + 7, TOP + 3), (hx - 1, hy + 1), elbow=(CX + 13, TOP + 5))
+    return cv
+
+
+def math_thinking_frame(i):
+    """Batu tulis diturunkan ke pangkuan, ujung jangka mengetuk dagu; gelembung "..." lalu "?"."""
+    cv = Canvas()
+    t = i % 16
+    eyes = "blink" if t == 4 else "side"
+    math_base(cv, t, eyes, "worried", "frown" if t >= 8 else "flat")
+    slate(cv, CX - 5, TOP + 9, arc=12)
+    arm(cv, (CX - 7, TOP + 3), (CX - 5, TOP + 13), elbow=(CX - 11, TOP + 8))
+    tap = t % 2 if 5 <= t <= 13 else 0
+    hx, hy = CX + 8, CY + 5 + tap
+    compass(cv, hx, hy, 160, spread=10)
+    arm(cv, (CX + 7, TOP + 3), (hx + 1, hy + 1), elbow=(CX + 12, TOP + 6))
+    if 5 <= t <= 13:
+        dots_or_mark(cv, CX + 12, 0, 5, t, "?")
+    return cv
+
+
+# (fase, lompat): menulis centang di batu tulis, lalu mengangkatnya tinggi
+MATH_VICTORY = [("write", 0), ("write", 0), ("mid", 0), ("up", 1), ("up", 0), ("up", 1), ("up", 0), ("up", 1),
+                ("up", 0), ("up", 1), ("up", 0), ("up", 1), ("mid", 0), ("mid", 0), ("write", 0), ("write", 0)]
+
+
+def math_victory_frame(i):
+    """Jangka menggoreskan centang v di batu tulis, lalu batu tulis diangkat tinggi dengan bangga, lompat kecil."""
+    cv = Canvas()
+    t = i % 16
+    phase, hop = MATH_VICTORY[t]
+    up = phase == "up"
+    math_base(cv, t, "happy" if up else "down", "up" if up else "flat", ("o" if t % 2 else "smile") if up else "smile", bob=-hop)
+    mark = "v" if t >= 1 else None
+    if phase == "write":
+        sx, sy = CX - 5, TOP + 7
+        slate(cv, sx, sy, mark=mark)
+        arm(cv, (CX - 7, TOP + 3), (sx, sy + 6), elbow=(CX - 11, TOP + 7))
+        compass(cv, sx + 9, sy - 3 + (t % 2), 110, spread=14)
+        arm(cv, (CX + 7, TOP + 3), (sx + 10, sy - 4 + (t % 2)), elbow=(CX + 11, TOP + 7))
+    elif phase == "mid":
+        sx, sy = CX - 22, TOP - 6
+        slate(cv, sx, sy, mark=mark)
+        arm(cv, (CX - 7, TOP + 3), (sx + 9, sy + 7), elbow=(CX - 13, TOP + 5))
+        compass(cv, CX + 12, TOP + 2, 80, spread=16)
+        arm(cv, (CX + 7, TOP + 3), (CX + 12, TOP + 3), elbow=(CX + 12, TOP + 7))
+    else:
+        sx, sy = CX - 24, 2 - hop
+        slate(cv, sx, sy, mark=mark)
+        arm(cv, (CX - 7, TOP + 3 - hop), (sx + 9, sy + 8), elbow=(CX - 14, TOP - 1 - hop))
+        compass(cv, CX + 14, 6 - hop, 70, spread=18)
+        arm(cv, (CX + 7, TOP + 3 - hop), (CX + 14, 7 - hop), elbow=(CX + 14, TOP - 1 - hop))
+        if t % 4 == 1:
+            cv.fill({(sx - 2, sy + 1), (sx - 3, sy + 1), (sx - 1, sy + 1), (sx - 2, sy), (sx - 2, sy + 2)}, "W")
+    return cv
+
+
+PROPS = {
+    "scientist: papan tulis (asli)": lambda cv: chalkboard(cv, 20, 10, 29, 16, "E=mc", 4),
+    "mathematician: batu tulis": lambda cv: slate(cv, 26, 20, mark="v"),
+    "mathematician: jangka": lambda cv: compass(cv, 30, 20, 90, spread=24),
+}
+
+
 SCENES = {
     "greek-philosopher-idle": (greek_idle_frame, 16, lambda i: 190 if i % 16 != 4 else 120),
     "greek-philosopher-victory": (greek_victory_frame, 16, lambda i: 150 if i % 16 in (0, 1, 13, 14, 15) else 120),
@@ -342,4 +569,10 @@ SCENES = {
     "normal-thinking": (normal_thinking_frame, 16, lambda i: 170),
     "normal-victory": (normal_victory_frame, 16, lambda i: 110 if 2 <= i % 16 <= 11 else 150),
     "normal-defeated": (normal_defeated_frame, 16, lambda i: 260 if 6 <= i % 16 <= 9 else 200),
+    "scientist-idle": (scientist_idle_frame, 16, lambda i: 170 if i % 16 != 5 else 120),
+    "scientist-shocked": (scientist_shocked_frame, 16, lambda i: 150 if i % 16 < 4 else (110 if i % 16 == 4 else (220 if i % 16 in (5, 6) else 150))),
+    "scientist-victory": (scientist_victory_frame, 16, lambda i: 160 if i % 16 in (0, 1, 12, 13, 14, 15) else 110),
+    "mathematician-idle": (math_idle_frame, 16, lambda i: 170 if i % 16 != 9 else 120),
+    "mathematician-thinking": (math_thinking_frame, 16, lambda i: 170 if i % 16 != 4 else 120),
+    "mathematician-victory": (math_victory_frame, 16, lambda i: 150 if i % 16 in (0, 1, 2, 12, 13, 14, 15) else 110),
 }

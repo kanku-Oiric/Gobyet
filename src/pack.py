@@ -135,6 +135,12 @@ NEW = {
     ("normal", "thinking"): ("normal-thinking", 10, "C"),
     ("normal", "victory"): ("normal-victory", 4, "C"),
     ("normal", "defeated"): ("normal-defeated", 0, "C"),
+    ("scientist", "idle"): ("scientist-idle", 0, "D"),
+    ("scientist", "shocked"): ("scientist-shocked", 6, "D"),
+    ("scientist", "victory"): ("scientist-victory", 4, "D"),
+    ("mathematician", "idle"): ("mathematician-idle", 0, "D"),
+    ("mathematician", "thinking"): ("mathematician-thinking", 10, "D"),
+    ("mathematician", "victory"): ("mathematician-victory", 5, "D"),
 }
 
 # Profil export. Aset gerbang A-C (dan semua aset asli) diekspor dengan pengaturan lama: palet PAL saja,

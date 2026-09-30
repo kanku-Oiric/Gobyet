@@ -55,8 +55,10 @@ Diturunkan dari rig di `src/monkey.py` dan dari aset yang sudah disetujui. Dipak
 | Greek | gulungan terbuka 10×11 |
 | Academic | topi toga 21×10, ijazah terbuka 15×8, ijazah kusut 8×6 |
 | Normal | pisang 6×17 |
+| Scientist | papan tulis asli 29×16 (statis, `E=mc`), kapur 2×2 |
+| Mathematician | batu tulis 11×9, jangka 7×9 (diputar di samping bahu supaya di luar siluet) |
 
-Prop utama sebaiknya berada di luar siluet badan (samping bahu, di atas kepala, atau di lantai) supaya terbaca di 1×.
+Prop utama sebaiknya berada di luar siluet badan (samping bahu, di atas kepala, atau di lantai) supaya terbaca di 1×. Contoh: idle Mathematician versi pertama (batu tulis dan jangka di pangkuan) memberi IoU 0,90 dengan Referee. Setelah jangka dipindah ke samping bahu, IoU-nya turun ke 0,84.
 
 ## Pola pose per state
 

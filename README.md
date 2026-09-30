@@ -49,7 +49,7 @@ Aset baru dibuat bertahap per gerbang. Urutan kerjanya A, B, C, D, E, G, H, I, J
 | A | Referee: idle, thinking | disetujui |
 | B | Judge: idle, thinking, judging · Skeptic: idle, suspicious, attack · Champion: idle, victory (laurel emas diganti medali) | disetujui |
 | C | Greek Philosopher: idle, victory, defeated · Academic: thinking, victory, defeated · Normal: thinking, victory, defeated | disetujui |
-| D | Scientist: idle, shocked, victory · Mathematician: idle, thinking, victory | belum |
+| D | Scientist: idle, shocked, victory · Mathematician: idle, thinking, victory | dibuat, menunggu tinjauan pemilik (STOP-1) |
 | E | Hacker: thinking, shocked, victory · Detective: idle, suspicious, shocked, victory · Lawyer: idle, thinking, victory | belum |
 | G | Gamer (7 state), Normal-GBLK (8 state) | belum |
 | H | Knight, Viking, Pirate, Wizard | belum |
@@ -57,7 +57,7 @@ Aset baru dibuat bertahap per gerbang. Urutan kerjanya A, B, C, D, E, G, H, I, J
 | J | 12 varian kelas Knight, Viking, Pirate | belum |
 | F | Sisa sel 12 kostum lama, audit, dokumentasi | belum |
 
-Terisi 26 dari 163 sel yang berlaku: 7 aset asli dan 19 aset baru. Sel lainnya memakai fallback.
+Terisi 32 dari 163 sel yang berlaku: 7 aset asli dan 25 aset baru. Sel lainnya memakai fallback.
 
 **Kostum peran (idle)**
 

@@ -11,7 +11,7 @@ Huruf gerbang tidak berurutan dengan urutan kerja. Urutan kerja sebenarnya: A, B
 | 1 | A | Referee: idle, thinking | 2 | disetujui, dikunci | `06bc433` |
 | 2 | B | Judge, Skeptic, Champion (revisi medali di `73c034b`) | 8 | disetujui, dikunci setelah bagian 3 terverifikasi | `6875e4e`, `73c034b`, kunci di commit persiapan D |
 | 3 | C | Greek Philosopher, Academic, Normal | 9 | disetujui, dikunci | `73c034b`, kunci `dd78be8` |
-| 4 | D | Scientist (idle, shocked, victory), Mathematician (idle, thinking, victory) | 6 | belum | |
+| 4 | D | Scientist (idle, shocked, victory), Mathematician (idle, thinking, victory) | 6 | validasi lulus (AUTO); ditinjau pemilik di STOP-1 | commit Gerbang D |
 | 5 | E | Hacker (3), Detective (4), Lawyer (3); STOP-1 | 10 | belum | |
 | 6 | G | Gamer (7), Normal-GBLK (8); STOP-2 | 15 | belum | |
 | 7 | H | Knight, Viking, Pirate, Wizard; STOP-3 | 24 | belum | |
@@ -36,8 +36,8 @@ Dibangkitkan oleh `python3 tools/progress_table.py` dari `pack/manifest.json`. J
 | `champion` | role | 7 | 2 | thinking, defeated | shocked, happy, dance-a |
 | `greek-philosopher` | domain | 6 | 4 | - | shocked, happy |
 | `academic` | domain | 6 | 4 | - | shocked, happy |
-| `scientist` | domain | 6 | 1 | idle, victory, defeated | shocked, happy |
-| `mathematician` | domain | 6 | 0 | idle, thinking, victory, defeated | shocked, happy |
+| `scientist` | domain | 6 | 4 | defeated | happy |
+| `mathematician` | domain | 6 | 3 | defeated | shocked, happy |
 | `lawyer` | domain | 6 | 0 | idle, thinking, victory, defeated | shocked, happy |
 | `hacker` | domain | 6 | 1 | thinking, victory, defeated | shocked, happy |
 | `detective` | domain | 7 | 1 | idle, victory, defeated | shocked, happy, suspicious |
@@ -60,7 +60,7 @@ Dibangkitkan oleh `python3 tools/progress_table.py` dari `pack/manifest.json`. J
 | `wizard` | fantasy | 6 | 0 | idle, thinking, victory, defeated | shocked, attack |
 | `pak-haji` | theology | 5 | 0 | idle, thinking, victory, defeated | happy |
 | `priest` | theology | 5 | 0 | idle, thinking, victory, defeated | happy |
-| **Total** | | **163** | **26** | | |
+| **Total** | | **163** | **32** | | |
 <!-- tabel-sel:selesai -->
 
 ## Cara melanjutkan
