@@ -243,6 +243,14 @@ Pembeda pasangan ini adalah siluet dan prop, bukan warna.
   | sheet | 365.586 | 422.018 | 56.432 | 483.199 |
 
   Proyeksi total 13,23 MB. Pada profil baru, GIF menyumbang sekitar 96% ukuran aset (rata-rata 97.719 B GIF vs 3.527 B sheet 1×).
+- **Akhir Fase 2 (163/163 sel, nyata):**
+
+  | | di `dd78be8` | akhir | pertambahan |
+  |---|---:|---:|---:|
+  | GIF | 3.029.800 | 13.799.243 | 10.769.443 |
+  | sheet | 365.586 | 803.533 | 437.947 |
+
+  Total pertambahan 11.207.390 B (10,69 MB), di bawah ambang 15 MB dan batas 16 MB. Proyeksi awal 13,23 MB turun karena aset baru rata-rata lebih kecil (GIF 78.609 B).
 - Opsi A (sheet4x opsional) dan B (GIF `optimize=True`) berlaku untuk aset baru mulai Gerbang D. Aset A, B, dan C tidak diekspor ulang.
 
 ### Rancangan opsi D: GIF dibuat saat rilis (belum diimplementasikan)
