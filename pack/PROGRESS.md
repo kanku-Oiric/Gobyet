@@ -13,7 +13,7 @@ Huruf gerbang tidak berurutan dengan urutan kerja. Urutan kerja sebenarnya: A, B
 | 3 | C | Greek Philosopher, Academic, Normal | 9 | disetujui, dikunci | `73c034b`, kunci `dd78be8` |
 | 4 | D | Scientist (idle, shocked, victory), Mathematician (idle, thinking, victory) | 6 | disetujui, dikunci di commit persiapan G | `056e0dc`, tag `fase2-gate-D` |
 | 5 | E | Hacker (3), Detective (4), Lawyer (3) | 10 | disetujui, dikunci di commit persiapan G | `3eb2cdc`, tag `fase2-gate-E` |
-| 6 | G | Gamer (7), Normal-GBLK (8) | 15 | selesai, validasi lulus; hash di `sha256-dibuat.txt`; laporan `pack/reports/gate-G.md` | commit Gerbang G, tag `fase2-gate-G` |
+| 6 | G | Gamer (7), Normal-GBLK (8) | 15 | selesai, validasi lulus; hash di `sha256-dibuat.txt`; laporan `pack/reports/gate-G.md` | `1d52710`, tag `fase2-gate-G` |
 | 7 | H | Knight, Viking, Pirate, Wizard | 24 | belum | |
 | 8 | I | Pak Haji, Priest | 10 | belum | |
 | 9 | J | 12 varian kelas × idle, attack, victory | 36 | belum | |
