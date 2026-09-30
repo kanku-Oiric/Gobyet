@@ -1,4 +1,5 @@
-"""Ekspor Gobyet (animasi dasar + kostum): GIF transparan (x8) ke gif/ dan sprite sheet PNG (x1, x4) ke sheets/.
+"""Ekspor Gobyet (animasi dasar + kostum): GIF transparan (x8) ke gif/, sprite sheet PNG (x1, x4) ke sheets/,
+dan pack/manifest.json (peta kostum x state, lihat src/pack.py).
 
     pip install Pillow
     python3 src/export.py
@@ -11,6 +12,7 @@ from PIL import Image
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from monkey import PAL, W, H  # noqa: E402
 import costumes  # noqa: E402
+import pack  # noqa: E402
 import scenes  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -43,6 +45,21 @@ def main():
                 sheet.paste(cv.image(scale), (i * W * scale, 0))
             sheet.save(os.path.join(ROOT, "sheets", "%s%s.png" % (name, "" if scale == 1 else "@4x")))
         print("%-13s %2d frame  %.1f detik  %d KB" % (name, n, sum(ms(i) for i in range(n)) / 1000, os.path.getsize(path) // 1024))
+    write_manifest()
+
+
+def write_manifest():
+    """pack/manifest.json: peta kostum x state -> asset, dengan frame dan durasi dari SCENES."""
+    import json
+
+    os.makedirs(os.path.join(ROOT, "pack"), exist_ok=True)
+    data = pack.manifest({**scenes.SCENES, **costumes.SCENES})
+    path = os.path.join(ROOT, "pack", "manifest.json")
+    with open(path, "w", encoding="utf-8") as fh:
+        json.dump(data, fh, ensure_ascii=False, indent=2)
+        fh.write("\n")
+    n = sum(len(v) for v in data["cells"].values())
+    print("pack/manifest.json  %d sel asli, %d kostum, %d state" % (n, len(data["costumes"]), len(data["states"])))
 
 
 if __name__ == "__main__":

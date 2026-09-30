@@ -1,0 +1,384 @@
+{
+  "format": "gobyet-pack/1",
+  "generated_by": "src/export.py (dari src/pack.py)",
+  "paths": "relatif terhadap file manifest ini",
+  "canvas": {
+    "w": 64,
+    "h": 48
+  },
+  "gif_scale": 8,
+  "costumes": [
+    {
+      "id": "normal",
+      "label": "Normal",
+      "group": "core"
+    },
+    {
+      "id": "referee",
+      "label": "Referee",
+      "group": "role"
+    },
+    {
+      "id": "judge",
+      "label": "Judge",
+      "group": "role"
+    },
+    {
+      "id": "skeptic",
+      "label": "Skeptic",
+      "group": "role"
+    },
+    {
+      "id": "champion",
+      "label": "Champion",
+      "group": "role"
+    },
+    {
+      "id": "greek-philosopher",
+      "label": "Greek Philosopher",
+      "group": "domain"
+    },
+    {
+      "id": "academic",
+      "label": "Academic",
+      "group": "domain"
+    },
+    {
+      "id": "scientist",
+      "label": "Scientist",
+      "group": "domain"
+    },
+    {
+      "id": "mathematician",
+      "label": "Mathematician",
+      "group": "domain"
+    },
+    {
+      "id": "lawyer",
+      "label": "Lawyer",
+      "group": "domain"
+    },
+    {
+      "id": "hacker",
+      "label": "Hacker",
+      "group": "domain"
+    },
+    {
+      "id": "detective",
+      "label": "Detective",
+      "group": "domain"
+    }
+  ],
+  "states": [
+    {
+      "id": "idle",
+      "label": "idle",
+      "required": true
+    },
+    {
+      "id": "thinking",
+      "label": "thinking",
+      "required": true
+    },
+    {
+      "id": "victory",
+      "label": "victory",
+      "required": true
+    },
+    {
+      "id": "defeated",
+      "label": "defeated",
+      "required": true
+    },
+    {
+      "id": "judging",
+      "label": "judging",
+      "required": false,
+      "costumes": [
+        "judge"
+      ]
+    },
+    {
+      "id": "suspicious",
+      "label": "suspicious",
+      "required": false,
+      "costumes": [
+        "skeptic"
+      ]
+    },
+    {
+      "id": "attack",
+      "label": "attack",
+      "required": false,
+      "costumes": [
+        "skeptic"
+      ]
+    },
+    {
+      "id": "shocked",
+      "label": "shocked",
+      "required": false
+    },
+    {
+      "id": "happy",
+      "label": "happy",
+      "required": false
+    }
+  ],
+  "fallback": [
+    "costume+state",
+    "costume+idle",
+    "normal+state",
+    "normal+idle",
+    "placeholder"
+  ],
+  "cells": {
+    "normal": {
+      "idle": {
+        "status": "final",
+        "source": "ngopi-santai",
+        "sheet": "../sheets/ngopi-santai.png",
+        "sheet4x": "../sheets/ngopi-santai@4x.png",
+        "gif": "../gif/ngopi-santai.gif",
+        "frames": 16,
+        "durations_ms": [
+          160,
+          160,
+          160,
+          160,
+          160,
+          160,
+          160,
+          160,
+          160,
+          160,
+          240,
+          240,
+          240,
+          160,
+          160,
+          160
+        ],
+        "loop": true,
+        "keyframe": 0
+      },
+      "happy": {
+        "status": "final",
+        "source": "makan-pisang",
+        "sheet": "../sheets/makan-pisang.png",
+        "sheet4x": "../sheets/makan-pisang@4x.png",
+        "gif": "../gif/makan-pisang.gif",
+        "frames": 25,
+        "durations_ms": [
+          150,
+          150,
+          200,
+          200,
+          150,
+          150,
+          150,
+          200,
+          200,
+          150,
+          150,
+          110,
+          110,
+          110,
+          110,
+          110,
+          110,
+          110,
+          150,
+          200,
+          200,
+          150,
+          150,
+          150,
+          150
+        ],
+        "loop": true,
+        "keyframe": 4
+      }
+    },
+    "greek-philosopher": {
+      "thinking": {
+        "status": "final",
+        "source": "filsuf-yunani",
+        "sheet": "../sheets/filsuf-yunani.png",
+        "sheet4x": "../sheets/filsuf-yunani@4x.png",
+        "gif": "../gif/filsuf-yunani.gif",
+        "frames": 20,
+        "durations_ms": [
+          170,
+          170,
+          170,
+          170,
+          170,
+          170,
+          170,
+          170,
+          170,
+          170,
+          170,
+          170,
+          170,
+          170,
+          320,
+          170,
+          170,
+          170,
+          170,
+          170
+        ],
+        "loop": true,
+        "keyframe": 10
+      }
+    },
+    "academic": {
+      "victory": {
+        "status": "final",
+        "source": "wisuda",
+        "sheet": "../sheets/wisuda.png",
+        "sheet4x": "../sheets/wisuda@4x.png",
+        "gif": "../gif/wisuda.gif",
+        "frames": 18,
+        "durations_ms": [
+          160,
+          160,
+          160,
+          160,
+          160,
+          160,
+          160,
+          160,
+          160,
+          160,
+          110,
+          110,
+          110,
+          110,
+          160,
+          160,
+          160,
+          160
+        ],
+        "loop": true,
+        "keyframe": 11
+      }
+    },
+    "scientist": {
+      "thinking": {
+        "status": "final",
+        "source": "rambut-einstein",
+        "sheet": "../sheets/rambut-einstein.png",
+        "sheet4x": "../sheets/rambut-einstein@4x.png",
+        "gif": "../gif/rambut-einstein.gif",
+        "frames": 22,
+        "durations_ms": [
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          150,
+          150,
+          150,
+          150,
+          150,
+          150,
+          150,
+          150,
+          150,
+          150
+        ],
+        "loop": true,
+        "keyframe": 8
+      }
+    },
+    "hacker": {
+      "idle": {
+        "status": "final",
+        "source": "hacker",
+        "sheet": "../sheets/hacker.png",
+        "sheet4x": "../sheets/hacker@4x.png",
+        "gif": "../gif/hacker.gif",
+        "frames": 16,
+        "durations_ms": [
+          130,
+          130,
+          130,
+          130,
+          130,
+          130,
+          130,
+          130,
+          130,
+          130,
+          130,
+          130,
+          130,
+          130,
+          130,
+          130
+        ],
+        "loop": true,
+        "keyframe": 2
+      }
+    },
+    "detective": {
+      "thinking": {
+        "status": "final",
+        "source": "detektif-bug",
+        "sheet": "../sheets/detektif-bug.png",
+        "sheet4x": "../sheets/detektif-bug@4x.png",
+        "gif": "../gif/detektif-bug.gif",
+        "frames": 20,
+        "durations_ms": [
+          140,
+          140,
+          140,
+          140,
+          140,
+          140,
+          140,
+          140,
+          140,
+          140,
+          140,
+          140,
+          300,
+          140,
+          140,
+          140,
+          140,
+          140,
+          140,
+          140
+        ],
+        "loop": true,
+        "keyframe": 6
+      }
+    }
+  },
+  "extras": [
+    {
+      "source": "marah-debug",
+      "note": "Normal: ngamuk ke laptop. Tidak cocok dengan state standar (campuran shocked dan marah).",
+      "gif": "../gif/marah-debug.gif",
+      "sheet": "../sheets/marah-debug.png"
+    },
+    {
+      "source": "kondangan",
+      "note": "Kostum peci + batik, di luar 12 kostum MVP.",
+      "gif": "../gif/kondangan.gif",
+      "sheet": "../sheets/kondangan.png"
+    }
+  ]
+}

@@ -30,6 +30,16 @@ Semua GIF transparan, 512×384, dan berulang terus, jadi aman di tema terang mau
 | <img src="gif/hacker.gif" width="256" alt="Gobyet berhoodie dan kacamata hitam mengetik di laptop dengan terminal hijau di belakangnya"> | <img src="gif/detektif-bug.gif" width="256" alt="Gobyet bertopi detektif menyapu lantai dengan kaca pembesar sampai menemukan bug"> | <img src="gif/kondangan.gif" width="256" alt="Gobyet berpeci dan berbatik joget sambil mengangkat tangan bergantian"> |
 | Hoodie dan kacamata hitam, terminal hijau bergulir, lalu `OK`. | Topi detektif dan kaca pembesar. Bug merayap, ketemu, matanya membesar di balik lensa. | Peci dan batik, joget kiri-kanan diiringi not musik. |
 
+## Character pack
+
+Sistem kostum × state untuk dipakai di aplikasi (misalnya arena Battle Royale Argumen) ada di [`pack/`](pack):
+
+- `manifest.json`: peta kostum × state.
+- `resolver.js`: resolver dengan fallback berantai.
+- `preview.html`: matriks semua kostum × state, dengan placeholder yang ditandai jelas.
+
+Detailnya di [`pack/README.md`](pack/README.md).
+
 ## Pasang Gobyet di project lain
 
 Tempel di README atau halaman mana pun:

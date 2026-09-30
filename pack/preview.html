@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gobyet Character Pack</title>
+<style>
+/* Tata letak: kepala halaman, uji resolver, lalu matriks kostum x state dalam wadah
+   yang bisa digulir mendatar. Sel ASLI berbingkai tegas; sel PLACEHOLDER berlatar
+   arsir dan menampilkan hasil fallback yang diredupkan. */
+:root {
+  --bg: #f6f1e8; --panel: #fffaf2; --ink: #2b1a10; --muted: #6f5646; --line: #e3d4c0;
+  --fur: #8b5a37; --real: #2f7d4f; --ph: #b0691f; --ph-bg: #f3e3cc; --stage: #fdf7ec;
+  --f-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --f-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #17120e; --panel: #211a14; --ink: #f3e9dc; --muted: #bba592; --line: #3a2e24;
+    --fur: #d59a6a; --real: #5ccb8a; --ph: #f0a654; --ph-bg: #2e2217; --stage: #1d1712; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #17120e; --panel: #211a14; --ink: #f3e9dc; --muted: #bba592; --line: #3a2e24;
+  --fur: #d59a6a; --real: #5ccb8a; --ph: #f0a654; --ph-bg: #2e2217; --stage: #1d1712; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 var(--f-body); }
+.wrap { max-width: 1400px; margin: 0 auto; padding-inline: 16px; padding-block: 24px 48px; display: grid; gap: 20px; }
+.wrap > * { min-width: 0; }
+h1 { margin: 0; font-size: clamp(24px, 5vw, 34px); line-height: 1.15; color: var(--fur); }
+h2 { margin: 0 0 10px; font-size: 18px; }
+p { margin: 0; }
+.muted { color: var(--muted); }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.chip { display: inline-flex; align-items: center; gap: 6px; font: 600 12px/1 var(--f-mono); padding: 6px 9px; border-radius: 6px; }
+.chip.real { color: var(--real); border: 2px solid var(--real); }
+.chip.ph { color: var(--ph); border: 2px dashed var(--ph); background: repeating-linear-gradient(45deg, var(--ph-bg) 0 6px, transparent 6px 12px); }
+.chip.na { color: var(--muted); border: 1px solid var(--line); }
+.stats { display: flex; flex-wrap: wrap; gap: 8px 18px; font-variant-numeric: tabular-nums; }
+.stats b { font-size: 20px; }
+button, select { font: inherit; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; min-height: 40px; }
+button[aria-pressed="true"] { background: var(--fur); color: var(--panel); border-color: var(--fur); }
+button:focus-visible, select:focus-visible { outline: 2px solid var(--ph); outline-offset: 2px; }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+.play { display: grid; gap: 14px; grid-template-columns: auto 1fr; align-items: start; }
+@media (max-width: 560px) { .play { grid-template-columns: 1fr; } }
+.play label { display: grid; gap: 4px; font-size: 13px; color: var(--muted); }
+.chain { margin: 0; padding: 0; list-style: none; display: grid; gap: 4px; font: 13px/1.4 var(--f-mono); }
+.chain li.hit { color: var(--real); font-weight: 600; }
+.chain li.miss { color: var(--muted); text-decoration: line-through; }
+.chain li.end { color: var(--ph); font-weight: 600; }
+.scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); }
+table { border-collapse: separate; border-spacing: 0; min-width: 100%; }
+th, td { border-bottom: 1px solid var(--line); padding: 8px; vertical-align: top; }
+thead th { position: sticky; top: 0; background: var(--panel); font: 600 12px/1.3 var(--f-mono); text-align: left; white-space: nowrap; z-index: 1; }
+thead th small { display: block; font-weight: 400; color: var(--muted); }
+tbody th { position: sticky; left: 0; background: var(--panel); text-align: left; font-size: 14px; white-space: nowrap; z-index: 1; min-width: 132px; }
+tbody th small { display: block; font: 11px/1.2 var(--f-mono); color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+tr.group td, tr.group th { background: var(--bg); font: 700 11px/1 var(--f-mono); letter-spacing: 0.08em; color: var(--muted); padding: 8px; }
+.cell { width: 140px; display: grid; gap: 4px; justify-items: start; }
+.frame { width: 128px; height: 96px; border-radius: 6px; background: var(--stage); position: relative; display: grid; place-items: center; overflow: hidden; }
+.frame canvas { width: 128px; height: 96px; image-rendering: pixelated; image-rendering: crisp-edges; display: block; }
+.cell.real .frame { outline: 2px solid var(--real); outline-offset: -2px; }
+.cell.ph .frame { outline: 2px dashed var(--ph); outline-offset: -2px; background: repeating-linear-gradient(45deg, var(--ph-bg) 0 8px, var(--stage) 8px 16px); }
+.cell.ph canvas { opacity: 0.35; filter: grayscale(1); }
+.cell.css .frame::after { content: "?"; font: 700 36px/1 var(--f-mono); color: var(--ph); }
+.tag { font: 700 10px/1 var(--f-mono); letter-spacing: 0.06em; padding: 3px 5px; border-radius: 4px; }
+.cell.real .tag { background: var(--real); color: var(--panel); }
+.cell.ph .tag { border: 1px dashed var(--ph); color: var(--ph); }
+.note { font: 11px/1.3 var(--f-mono); color: var(--muted); max-width: 140px; overflow-wrap: anywhere; }
+.na-cell { width: 140px; height: 96px; display: grid; place-items: center; color: var(--muted); font-size: 12px; border: 1px dotted var(--line); border-radius: 6px; }
+#playNote { max-width: 60ch; font-size: 12px; }
+.err { border-color: var(--ph); color: var(--ph); }
+.big canvas { width: 256px; height: 192px; }
+.big { width: 256px; height: 192px; }
+.play-cell { width: auto; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header style="display:grid;gap:8px">
+    <h1>Gobyet Character Pack</h1>
+    <p class="muted">Kostum menentukan siapa Gobyet, state menentukan dia sedang apa. Setiap sel diselesaikan oleh resolver dengan fallback berantai: kostum+state → kostum+idle → normal+state → normal+idle → placeholder.</p>
+    <div class="row">
+      <span class="chip real">ASLI</span><span class="muted">asset sendiri</span>
+      <span class="chip ph">PLACEHOLDER</span><span class="muted">belum ada asset; yang tampil adalah hasil fallback, diredupkan</span>
+      <span class="chip na">—</span><span class="muted">state tidak berlaku untuk kostum ini</span>
+    </div>
+    <div class="row">
+      <span class="muted" id="motionLabel">Gerak</span>
+      <button type="button" id="btnAnim" aria-pressed="true">Animasi</button>
+      <button type="button" id="btnStatic" aria-pressed="false">Statis</button>
+    </div>
+  </header>
+
+  <p class="panel err" id="loadError" hidden></p>
+
+  <section class="panel" aria-labelledby="statsTitle">
+    <h2 id="statsTitle">Cakupan</h2>
+    <div class="stats" id="stats"></div>
+  </section>
+
+  <section class="panel" aria-labelledby="playTitle">
+    <h2 id="playTitle">Uji resolver</h2>
+    <div class="play">
+      <div class="cell play-cell" id="playCell"><div class="frame big"><canvas id="playCanvas" width="64" height="48"></canvas></div></div>
+      <div style="display:grid;gap:10px">
+        <div class="row">
+          <label>Kostum <select id="selCostume"></select></label>
+          <label>State <select id="selState"></select></label>
+          <label><span>Manifest</span>
+            <select id="selManifest">
+              <option value="real">asli</option>
+              <option value="broken">rusak (simulasi)</option>
+            </select>
+          </label>
+        </div>
+        <ol class="chain" id="chain" aria-live="polite"></ol>
+        <p class="note" id="playNote"></p>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="matrixTitle" style="display:grid;gap:10px">
+    <h2 id="matrixTitle">Matriks kostum × state</h2>
+    <div class="scroll"><table id="matrix"></table></div>
+  </section>
+</main>
+
+<script src="resolver.js"></script>
+<script>
+(function () {
+  "use strict";
+  var P = window.GobyetPack;
+  var $ = function (id) { return document.getElementById(id); };
+  var reduced = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  var still = reduced;
+  var manifest = null, manifestUrl = null;
+  var images = {};   // url -> Image
+  var cells = [];    // {canvas, cell, url, last}
+  var BROKEN = { cells: { normal: "rusak" } };
+
+  function setMotion(isStill) {
+    still = isStill;
+    $("btnAnim").setAttribute("aria-pressed", String(!still));
+    $("btnStatic").setAttribute("aria-pressed", String(still));
+    cells.forEach(function (c) { c.last = -1; });
+  }
+  $("btnAnim").addEventListener("click", function () { setMotion(false); });
+  $("btnStatic").addEventListener("click", function () { setMotion(true); });
+
+  function assetUrl(rel) { return new URL(rel, manifestUrl).href; }
+  function image(url) {
+    if (!images[url]) {
+      var im = new Image();
+      im.onerror = function () { im.failed = true; };
+      im.src = url;
+      images[url] = im;
+    }
+    return images[url];
+  }
+
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+
+  function cellView(result) {
+    var wrap = el("div", "cell");
+    var frame = el("div", "frame");
+    var cv = el("canvas"); cv.width = 64; cv.height = 48;
+    frame.appendChild(cv);
+    wrap.appendChild(frame);
+    var tag, note;
+    if (result.kind === "exact") {
+      wrap.classList.add("real");
+      tag = "ASLI";
+      note = result.cell.source + " · " + result.cell.frames + " frame";
+    } else if (result.kind === "fallback") {
+      wrap.classList.add("ph");
+      tag = "PLACEHOLDER";
+      note = "fallback → " + result.resolved.costume + "/" + result.resolved.state;
+    } else {
+      wrap.classList.add("ph", "css");
+      tag = "PLACEHOLDER";
+      note = "CSS · " + result.reason;
+      cv.hidden = true;
+    }
+    wrap.appendChild(el("span", "tag", tag));
+    wrap.appendChild(el("span", "note", note));
+    wrap.setAttribute("aria-label", result.requested.costume + " " + result.requested.state + ": " + tag + ", " + note);
+    wrap.setAttribute("role", "img");
+    if (result.cell) cells.push({ canvas: cv, cell: result.cell, url: assetUrl(result.cell.sheet), last: -1, wrap: wrap });
+    return wrap;
+  }
+
+  function buildMatrix() {
+    var mx = P.matrix(manifest);
+    var table = $("matrix");
+    table.textContent = "";
+    var thead = el("thead"), hr = el("tr");
+    hr.appendChild(el("th", null, "Kostum"));
+    mx.states.forEach(function (s) {
+      var th = el("th", null, s.label);
+      th.scope = "col";
+      th.appendChild(el("small", null, s.required ? "wajib" : "opsional" + (s.costumes ? " · " + s.costumes.join(", ") : "")));
+      hr.appendChild(th);
+    });
+    thead.appendChild(hr);
+    table.appendChild(thead);
+    var tbody = el("tbody"), group = null;
+    var count = { real: 0, ph: 0, reqReal: 0, req: 0, applicable: 0 };
+    mx.costumes.forEach(function (c) {
+      if (c.group !== group) {
+        group = c.group;
+        var gr = el("tr", "group"), gth = el("th", null, group.toUpperCase());
+        gth.colSpan = mx.states.length + 1;
+        gr.appendChild(gth);
+        tbody.appendChild(gr);
+      }
+      var tr = el("tr");
+      var th = el("th", null, c.label);
+      th.scope = "row";
+      th.appendChild(el("small", null, c.id));
+      tr.appendChild(th);
+      mx.states.forEach(function (s) {
+        var td = el("td");
+        if (!P.applies(s, c.id)) {
+          var na = el("div", "na-cell", "—");
+          na.setAttribute("aria-label", c.label + " " + s.label + ": tidak berlaku");
+          td.appendChild(na);
+        } else {
+          var r = P.resolve(manifest, c.id, s.id);
+          td.appendChild(cellView(r));
+          count.applicable++;
+          if (s.required) count.req++;
+          if (r.kind === "exact") { count.real++; if (s.required) count.reqReal++; } else count.ph++;
+        }
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    var st = $("stats");
+    st.textContent = "";
+    [[count.real, "sel asli"], [count.ph, "placeholder"], [count.reqReal + " / " + count.req, "state wajib terisi"],
+     [mx.costumes.length + " × " + mx.states.length, "kostum × state"]].forEach(function (p) {
+      var d = el("div"); d.appendChild(el("b", null, String(p[0]))); d.appendChild(document.createTextNode(" " + p[1])); st.appendChild(d);
+    });
+  }
+
+  // ---- uji resolver
+  var play = { canvas: $("playCanvas"), cell: null, url: null, last: -1 };
+  function fillSelects() {
+    var mx = P.matrix(manifest);
+    mx.costumes.concat([{ id: "pirate", label: "pirate (tidak ada)" }]).forEach(function (c) {
+      var o = el("option", null, c.label); o.value = c.id; $("selCostume").appendChild(o);
+    });
+    mx.states.concat([{ id: "dancing", label: "dancing (tidak ada)" }]).forEach(function (s) {
+      var o = el("option", null, s.label); o.value = s.id; $("selState").appendChild(o);
+    });
+    $("selCostume").value = "greek-philosopher";
+    $("selState").value = "victory";
+  }
+  function updatePlay() {
+    var m = $("selManifest").value === "broken" ? BROKEN : manifest;
+    var r = P.resolve(m, $("selCostume").value, $("selState").value);
+    var list = $("chain");
+    list.textContent = "";
+    r.tried.forEach(function (key, i) {
+      var hit = r.resolved && key === r.resolved.costume + "/" + r.resolved.state;
+      list.appendChild(el("li", hit ? "hit" : "miss", (i + 1) + ". " + key + (hit ? "  ✓ dipakai" : "  ✗ tidak ada")));
+    });
+    if (r.kind === "placeholder") list.appendChild(el("li", "end", (r.tried.length + 1) + ". placeholder CSS  ✓ dipakai"));
+    var box = $("playCell");
+    box.className = "cell play-cell " + (r.kind === "exact" ? "real" : r.kind === "fallback" ? "ph" : "ph css");
+    play.canvas.hidden = r.kind === "placeholder";
+    $("playNote").textContent = r.kind === "exact" ? "ASLI: " + r.cell.source
+      : r.kind === "fallback" ? "PLACEHOLDER: belum ada asset untuk " + r.requested.costume + "/" + r.requested.state + ", tampil " + r.resolved.costume + "/" + r.resolved.state
+      : "PLACEHOLDER CSS: " + r.reason;
+    play.cell = r.cell; play.url = r.cell ? assetUrl(r.cell.sheet) : null; play.last = -1;
+    var ctx = play.canvas.getContext("2d"); ctx.clearRect(0, 0, 64, 48);
+  }
+  ["selCostume", "selState", "selManifest"].forEach(function (id) { $(id).addEventListener("change", updatePlay); });
+
+  // ---- satu loop gambar untuk semua sel
+  var t0 = performance.now();
+  function draw(c, t) {
+    if (!c.cell || !c.url) return;
+    var im = image(c.url);
+    if (im.failed) { if (c.wrap && !c.wrap.classList.contains("css")) { c.wrap.classList.add("ph", "css"); c.canvas.hidden = true; } return; }
+    if (!im.complete || !im.naturalWidth) return;
+    var f = P.frameAt(c.cell, t, still);
+    if (f === c.last) return;
+    c.last = f;
+    var ctx = c.canvas.getContext("2d");
+    ctx.imageSmoothingEnabled = false;
+    ctx.clearRect(0, 0, 64, 48);
+    ctx.drawImage(im, f * 64, 0, 64, 48, 0, 0, 64, 48);
+  }
+  function tick(now) {
+    var t = now - t0;
+    cells.forEach(function (c) { draw(c, t); });
+    draw(play, t);
+    requestAnimationFrame(tick);
+  }
+
+  function start(m, url) {
+    manifest = m; manifestUrl = url;
+    buildMatrix();
+    fillSelects();
+    updatePlay();
+    setMotion(reduced);
+    requestAnimationFrame(tick);
+    document.documentElement.setAttribute("data-ready", "1");
+  }
+
+  var url = new URL("manifest.json", document.baseURI).href;
+  fetch(url, { cache: "no-store" })
+    .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+    .then(function (m) { start(m, url); })
+    .catch(function (e) {
+      $("loadError").hidden = false;
+      $("loadError").textContent = "manifest.json tidak bisa dimuat (" + e.message + "). Matriks tidak bisa dibangun tanpa daftar kostum; uji resolver tetap jalan dan jatuh ke placeholder. Buka halaman ini lewat server, misalnya python3 -m http.server di akar repo, lalu /pack/preview.html";
+      start(null, url);
+    });
+})();
+</script>
+</body>
+</html>
