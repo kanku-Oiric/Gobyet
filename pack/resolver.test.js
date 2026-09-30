@@ -67,6 +67,36 @@ test("pemetaan Gerbang B: wisuda di academic/idle, academic/victory bukan wisuda
   assert.ok(!(v.kind === "exact" && v.cell.source === "wisuda"), "wisuda masih terpetakan ke academic/victory");
 });
 
+test("Gerbang C: sembilan sel baru terpetakan exact dan bergerbang C, sel asli di baris yang sama tidak tergeser", () => {
+  const want = [["greek-philosopher", "idle"], ["greek-philosopher", "victory"], ["greek-philosopher", "defeated"],
+    ["academic", "thinking"], ["academic", "victory"], ["academic", "defeated"],
+    ["normal", "thinking"], ["normal", "victory"], ["normal", "defeated"]];
+  for (const [c, s] of want) {
+    const r = P.resolve(M, c, s);
+    assert.equal(r.kind, "exact", c + "/" + s);
+    assert.equal(r.cell.gate, "C", c + "/" + s);
+    assert.equal(r.cell.source, c + "-" + s);
+  }
+  assert.equal(P.resolve(M, "greek-philosopher", "thinking").cell.source, "filsuf-yunani");
+  assert.equal(P.resolve(M, "academic", "idle").cell.source, "wisuda");
+  assert.equal(P.resolve(M, "normal", "idle").cell.source, "ngopi-santai");
+  assert.equal(P.resolve(M, "normal", "happy").cell.source, "makan-pisang");
+});
+
+test("keyframe: setiap sel punya frame kunci valid dan reduced motion selalu menampilkan frame itu", () => {
+  for (const [costume, row] of Object.entries(M.cells)) {
+    for (const [state, cell] of Object.entries(row)) {
+      const tag = costume + "/" + state;
+      assert.ok(Number.isInteger(cell.keyframe), tag + ": keyframe bukan bilangan bulat");
+      assert.ok(cell.keyframe >= 0 && cell.keyframe < cell.frames, tag + ": keyframe di luar rentang frame");
+      const total = cell.durations_ms.reduce((a, b) => a + b, 0);
+      for (const t of [0, 1, 99, Math.floor(total / 3), total - 1, total, total * 7 + 13]) {
+        assert.equal(P.frameAt(cell, t, true), cell.keyframe, tag + " t=" + t);
+      }
+    }
+  }
+});
+
 test("input dinormalkan: spasi, huruf besar, kosong, bukan string", () => {
   assert.equal(P.resolve(M, "  Normal ", "IDLE").kind, "exact");
   assert.deepEqual(P.resolve(M, "", "").resolved, { costume: "normal", state: "idle" });

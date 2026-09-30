@@ -12,6 +12,7 @@ from PIL import Image
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from monkey import PAL, W, H  # noqa: E402
 import costumes  # noqa: E402
+import domains  # noqa: E402
 import pack  # noqa: E402
 import roles  # noqa: E402
 import scenes  # noqa: E402
@@ -34,7 +35,7 @@ def indexed(cv, scale):
 def main():
     os.makedirs(os.path.join(ROOT, "gif"), exist_ok=True)
     os.makedirs(os.path.join(ROOT, "sheets"), exist_ok=True)
-    for name, (fn, n, ms) in {**scenes.SCENES, **costumes.SCENES, **roles.SCENES}.items():
+    for name, (fn, n, ms) in {**scenes.SCENES, **costumes.SCENES, **roles.SCENES, **domains.SCENES}.items():
         frames = [fn(i) for i in range(n)]
         gif = [indexed(cv, 8) for cv in frames]
         path = os.path.join(ROOT, "gif", name + ".gif")
@@ -54,7 +55,7 @@ def write_manifest():
     import json
 
     os.makedirs(os.path.join(ROOT, "pack"), exist_ok=True)
-    data = pack.manifest({**scenes.SCENES, **costumes.SCENES, **roles.SCENES})
+    data = pack.manifest({**scenes.SCENES, **costumes.SCENES, **roles.SCENES, **domains.SCENES})
     path = os.path.join(ROOT, "pack", "manifest.json")
     with open(path, "w", encoding="utf-8") as fh:
         json.dump(data, fh, ensure_ascii=False, indent=2)

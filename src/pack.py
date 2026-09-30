@@ -51,11 +51,12 @@ ORIGINAL = {
     ("detective", "thinking"): ("detektif-bug", 6),
 }
 
-# Aset baru hasil Fase 2, per gerbang persetujuan. Dibuat dengan rig yang sama (src/roles.py).
+# Aset baru hasil Fase 2, per gerbang persetujuan. Dibuat dengan rig yang sama (src/roles.py untuk
+# kostum ROLE, src/domains.py untuk Normal dan kostum DOMAIN). Angka kedua = frame kunci: frame yang
+# ditampilkan saat reduced motion / mode statis, dipilih sebagai pose yang paling mewakili state.
 NEW = {
     ("referee", "idle"): ("referee-idle", 2, "A"),
     ("referee", "thinking"): ("referee-thinking", 12, "A"),
-    # Gerbang B: frame kunci 0 (frame pertama = pose tetap yang jelas).
     ("judge", "idle"): ("judge-idle", 0, "B"),
     ("judge", "thinking"): ("judge-thinking", 0, "B"),
     ("judge", "judging"): ("judge-judging", 0, "B"),
@@ -64,6 +65,15 @@ NEW = {
     ("skeptic", "attack"): ("skeptic-attack", 0, "B"),
     ("champion", "idle"): ("champion-idle", 0, "B"),
     ("champion", "victory"): ("champion-victory", 0, "B"),
+    ("greek-philosopher", "idle"): ("greek-philosopher-idle", 0, "C"),
+    ("greek-philosopher", "victory"): ("greek-philosopher-victory", 6, "C"),
+    ("greek-philosopher", "defeated"): ("greek-philosopher-defeated", 7, "C"),
+    ("academic", "thinking"): ("academic-thinking", 10, "C"),
+    ("academic", "victory"): ("academic-victory", 4, "C"),
+    ("academic", "defeated"): ("academic-defeated", 0, "C"),
+    ("normal", "thinking"): ("normal-thinking", 10, "C"),
+    ("normal", "victory"): ("normal-victory", 4, "C"),
+    ("normal", "defeated"): ("normal-defeated", 0, "C"),
 }
 
 # Animasi yang ada tetapi sengaja tidak dimasukkan ke matriks MVP.

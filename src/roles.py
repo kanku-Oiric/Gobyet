@@ -2,11 +2,11 @@
 
 Gerbang A: Referee (idle, thinking).
 Gerbang B: Judge (idle, thinking, judging), Skeptic (idle, suspicious, attack),
-Champion (idle, victory).
+Champion (idle, victory). Revisi Gerbang B: laurel emas Champion diganti medali emas di selempang.
 
 Semua memakai rig yang sama dengan aset asli: kanvas 64x48, palet PAL, garis tepi K,
 kepala dan badan duduk yang sama. Kostum hanya lapisan di atasnya. Setiap prop dimiliki
-satu kostum saja; frame 0 setiap loop adalah pose tetap yang jelas.
+satu kostum saja. Tampilan statis (reduced motion) memakai frame kunci di manifest.
 """
 import math
 
@@ -333,23 +333,21 @@ def skeptic_attack_frame(i):
 
 # ================================================================== Gerbang B: Champion
 def champion_body(cv, cx, top):
-    """Badan berbulu Gobyet (seperti Normal) dengan selempang merah menyilang."""
+    """Badan berbulu Gobyet (seperti Normal) dengan selempang merah menyilang dan medali emas di dada."""
     sitting_body(cv, cx, top)
     torso = ellipse(cx, top + 6.5, 8.2, 7.2)
     body = inner(torso)
     band = {(x, y) for (x, y) in body if abs((x - cx) + (y - top) - 4) <= 1 and y < top + 11}
     cv.fill(band, "R")
     cv.fill({(x, y) for (x, y) in band if (x - 1, y - 1) not in band}, "r")
+    medal(cv, cx - 0.5, top + 5.5)
 
 
-def gold_laurel(cv, cx, cy):
-    """Mahkota laurel EMAS (laurel hijau milik filsuf-yunani asli; emas membedakan Champion)."""
-    for k in range(15):
-        a = math.pi + k / 14 * math.pi
-        x, y = cx + 9.8 * math.cos(a), cy - 0.5 + 8.4 * math.sin(a)
-        cv.put(x, y, "O")
-        cv.put(x + (1 if k < 7 else -1), y - 1, "y" if k % 2 else "O")
-        cv.put(x, y - 1, "O")
+def medal(cv, x, y):
+    """Medali emas bulat di selempang (revisi Gerbang B, pengganti laurel emas). (x, y) = pusat; 7x7 bila pusat di tengah piksel."""
+    disc = ellipse(x, y, 3.3, 3.3)
+    solid(cv, disc, "O", "y", shade_off=(1, 1))
+    cv.put(int(x) - 1, int(y) - 1, "W")
 
 
 def trophy(cv, x, y, sparkle=None):
@@ -370,7 +368,6 @@ def champion_base(cv, t, eyes, mouth, bob=0):
     tail(cv, (CX - 6, TOP + 14), phase=t * 0.5, flip=-1, length=8)
     champion_body(cv, CX, TOP)
     head(cv, CX, CY + bob, eyes=eyes, brows="flat", mouth=mouth)
-    gold_laurel(cv, CX, CY + bob)
 
 
 TX, TY = CX + 10, TOP - 4  # piala dipamerkan setinggi bahu kanan (siluet beda dari kostum lain)
