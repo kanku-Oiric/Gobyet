@@ -1,4 +1,4 @@
-"""Ekspor Gobyet: GIF transparan (x8) ke gif/ dan sprite sheet PNG (x1, x4) ke sheets/.
+"""Ekspor Gobyet (animasi dasar + kostum): GIF transparan (x8) ke gif/ dan sprite sheet PNG (x1, x4) ke sheets/.
 
     pip install Pillow
     python3 src/export.py
@@ -10,6 +10,7 @@ from PIL import Image
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from monkey import PAL, W, H  # noqa: E402
+import costumes  # noqa: E402
 import scenes  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -30,7 +31,7 @@ def indexed(cv, scale):
 def main():
     os.makedirs(os.path.join(ROOT, "gif"), exist_ok=True)
     os.makedirs(os.path.join(ROOT, "sheets"), exist_ok=True)
-    for name, (fn, n, ms) in scenes.SCENES.items():
+    for name, (fn, n, ms) in {**scenes.SCENES, **costumes.SCENES}.items():
         frames = [fn(i) for i in range(n)]
         gif = [indexed(cv, 8) for cv in frames]
         path = os.path.join(ROOT, "gif", name + ".gif")
