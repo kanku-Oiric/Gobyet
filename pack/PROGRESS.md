@@ -16,7 +16,7 @@ Huruf gerbang tidak berurutan dengan urutan kerja. Urutan kerja sebenarnya: A, B
 | 6 | G | Gamer (7), Normal-GBLK (8) | 15 | selesai, validasi lulus; hash di `sha256-dibuat.txt`; laporan `pack/reports/gate-G.md` | `1d52710`, tag `fase2-gate-G` |
 | 7 | H | Knight (6), Viking (6), Pirate (6), Wizard (6) | 24 | selesai, validasi lulus; hash di `sha256-dibuat.txt`; laporan `pack/reports/gate-H.md` | `bd42c0c`, tag `fase2-gate-H` |
 | 8 | I | Pak Haji (5), Priest (5), audit 7.2 otomatis `[VT]` | 10 | selesai, validasi lulus; idle lebih dulu, pemeriksaan i-vi lulus sebelum state lain; hash di `sha256-dibuat.txt`; laporan `pack/reports/gate-I.md` | `316fe79`, tag `fase2-gate-I` |
-| 9 | J | 12 varian kelas × idle, attack, victory | 36 | selesai, validasi lulus; hash di `sha256-dibuat.txt`; laporan `pack/reports/gate-J.md` | commit Gerbang J, tag `fase2-gate-J` |
+| 9 | J | 12 varian kelas × idle, attack, victory | 36 | selesai, validasi lulus; hash di `sha256-dibuat.txt`; laporan `pack/reports/gate-J.md` | `13fe94f`, tag `fase2-gate-J` |
 | 10 | F | sisa sel 12 kostum lama (14 wajib + 22 opsional), audit, dokumentasi | 36 | belum | |
 
 **Mode kerja (keputusan pemilik setelah STOP-1):** G, H, I, J, lalu F dijalankan berurutan tanpa berhenti. Yang tetap berlaku hanya STOP-DARURAT dan STOP final setelah F. Syarat lanjut otomatis: validasi bagian 11 lulus. GAGAL baru diperbaiki di dalam gerbang itu tanpa menyentuh aset yang sudah dikunci atau ditandai. STOP-DARURAT berlaku bila:
