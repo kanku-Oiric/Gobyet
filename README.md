@@ -40,6 +40,46 @@ Sistem kostum × state untuk dipakai di aplikasi (misalnya arena Battle Royale A
 
 Detailnya di [`pack/README.md`](pack/README.md).
 
+### Update: Fase 2, aset per gerbang
+
+Aset baru dibuat bertahap. Setiap gerbang berhenti dulu sampai gayanya disetujui. Semuanya masih di branch [`claude/gobyet-fase2`](https://github.com/kanku-Oiric/Gobyet/tree/claude/gobyet-fase2) ([PR #1](https://github.com/kanku-Oiric/Gobyet/pull/1), draft) dan belum digabung ke `main`.
+
+| Gerbang | Isi | Status |
+|---|---|---|
+| A | Referee: idle, thinking | disetujui |
+| B | Judge: idle, thinking, judging · Skeptic: idle, suspicious, attack · Champion: idle, victory (laurel emas diganti medali) | revisi Champion selesai, menunggu konfirmasi |
+| C | Greek Philosopher: idle, victory, defeated · Academic: thinking, victory, defeated · Normal: thinking, victory, defeated | menunggu persetujuan gaya |
+| D | Scientist, Mathematician | belum |
+| E | Hacker, Detective, Lawyer | belum |
+| F | Sel sisanya, audit, dokumentasi | belum |
+
+Terisi 26 dari 75 sel yang berlaku: 7 aset asli dan 19 aset baru. Sel lainnya memakai fallback.
+
+**Kostum peran (idle)**
+
+| Referee | Judge | Skeptic | Champion |
+|:---:|:---:|:---:|:---:|
+| <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/gif/referee-idle.gif" width="192" alt="Gobyet berkaus wasit bergaris dengan peluit, tangan di pinggang, menoleh kiri-kanan"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/gif/judge-idle.gif" width="192" alt="Gobyet berjubah hakim hitam memegang palu di samping landasan"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/gif/skeptic-idle.gif" width="192" alt="Gobyet bersweter hijau dan bermonokel emas, bersedekap dengan satu alis naik"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/gif/champion-idle.gif" width="192" alt="Gobyet berselempang merah dengan medali emas, memamerkan piala"> |
+| juga: `thinking` | juga: `thinking`, `judging` | juga: `suspicious`, `attack` | juga: `victory` |
+
+**Gerbang C**
+
+| | idle / thinking | victory | defeated |
+|---|:---:|:---:|:---:|
+| Greek Philosopher | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/gif/greek-philosopher-idle.gif" width="192" alt="Filsuf Gobyet mengelus janggut sambil membawa gulungan"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/gif/greek-philosopher-victory.gif" width="192" alt="Filsuf Gobyet mengangkat gulungan yang terbuka sambil melompat kecil"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/gif/greek-philosopher-defeated.gif" width="192" alt="Filsuf Gobyet rebah, gulungannya menggelinding menjauh"> |
+| Academic | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/gif/academic-thinking.gif" width="192" alt="Gobyet bertopi toga membaca ijazah lalu memegang dagu"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/gif/academic-victory.gif" width="192" alt="Gobyet melempar topi toga tinggi-tinggi lalu menangkapnya lagi"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/gif/academic-defeated.gif" width="192" alt="Gobyet bertopi toga miring duduk lunglai memegang ijazah kusut"> |
+| Normal | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/gif/normal-thinking.gif" width="192" alt="Gobyet menggaruk kepala dengan gelembung tanda tanya"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/gif/normal-victory.gif" width="192" alt="Gobyet mengangkat pisang tinggi-tinggi seperti piala"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/gif/normal-defeated.gif" width="192" alt="Gobyet rebah menyamping dan menghela napas"> |
+
+Baris Greek Philosopher kolom pertama adalah `idle`; baris Academic dan Normal adalah `thinking` (idle keduanya sudah ada: `wisuda` dan `ngopi-santai`).
+
+Cek sendiri di branch-nya:
+
+```bash
+git checkout claude/gobyet-fase2
+python3 src/validate_pack.py --gate C    # hash aset lama, palet, seam loop, siluet, ukuran, warna
+node --test pack/resolver.test.js        # resolver dan manifest
+```
+
 ## Pasang Gobyet di project lain
 
 Tempel di README atau halaman mana pun:
@@ -49,6 +89,8 @@ Tempel di README atau halaman mana pun:
 ```
 
 Ganti `marah-debug` dengan nama animasi lain: `makan-pisang`, `ngopi-santai`, `wisuda`, `filsuf-yunani`, `rambut-einstein`, `hacker`, `detektif-bug`, atau `kondangan`. Atur ukurannya lewat `width` (kelipatan 64 paling tajam: 128, 256, 512).
+
+Aset character pack Fase 2 (`referee-idle`, `judge-judging`, dan seterusnya) baru bisa dipakai lewat URL `main` di atas setelah Fase 2 digabung ke `main`.
 
 ## Sprite sheet
 
