@@ -14,7 +14,7 @@ Huruf gerbang tidak berurutan dengan urutan kerja. Urutan kerja sebenarnya: A, B
 | 4 | D | Scientist (idle, shocked, victory), Mathematician (idle, thinking, victory) | 6 | disetujui, dikunci di commit persiapan G | `056e0dc`, tag `fase2-gate-D` |
 | 5 | E | Hacker (3), Detective (4), Lawyer (3) | 10 | disetujui, dikunci di commit persiapan G | `3eb2cdc`, tag `fase2-gate-E` |
 | 6 | G | Gamer (7), Normal-GBLK (8) | 15 | selesai, validasi lulus; hash di `sha256-dibuat.txt`; laporan `pack/reports/gate-G.md` | `1d52710`, tag `fase2-gate-G` |
-| 7 | H | Knight (6), Viking (6), Pirate (6), Wizard (6) | 24 | selesai, validasi lulus; hash di `sha256-dibuat.txt`; laporan `pack/reports/gate-H.md` | commit Gerbang H, tag `fase2-gate-H` |
+| 7 | H | Knight (6), Viking (6), Pirate (6), Wizard (6) | 24 | selesai, validasi lulus; hash di `sha256-dibuat.txt`; laporan `pack/reports/gate-H.md` | `bd42c0c`, tag `fase2-gate-H` |
 | 8 | I | Pak Haji, Priest | 10 | belum | |
 | 9 | J | 12 varian kelas × idle, attack, victory | 36 | belum | |
 | 10 | F | sisa sel 12 kostum lama (14 wajib + 22 opsional), audit, dokumentasi | 36 | belum | |
