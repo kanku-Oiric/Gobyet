@@ -11,4 +11,5 @@ tag fase2-gate-G 1d52710 "Gerbang G: Gamer dan Normal-GBLK (15 aset, termasuk 4 
 tag fase2-gate-H bd42c0c "Gerbang H: Knight, Viking, Pirate, Wizard (24 aset, termasuk 2 tarian)"
 tag fase2-gate-I 316fe79 "Gerbang I: Pak Haji dan Priest (10 aset, audit teologi 7.2)"
 tag fase2-gate-J 13fe94f "Gerbang J: 12 varian kelas Knight, Viking, Pirate (36 aset)"
+tag fase2-gate-F 7fc8b43 "Gerbang F: 36 sel sisa kostum lama, dokumentasi bagian 14 (163/163 sel terisi)"
 git push origin --tags
