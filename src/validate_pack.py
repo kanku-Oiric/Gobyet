@@ -62,7 +62,8 @@ TEXT_EXCEPTIONS = {
     "scientist-": {"E=mc"},     # papan tulis asli rambut-einstein, statis (tidak ditulis ulang per frame)
     "normal-gblk-": {"GBLK"},   # papan tanda GBLK
 }
-STATIC_TEXT = {"E=mc", "GBLK"}  # harus di posisi yang sama pada setiap frame yang memuatnya
+STATIC_TEXT = {"E=mc"}  # papan Scientist: harus di posisi yang sama pada setiap frame yang memuatnya
+VISIBLE_AT_KEYFRAME = {"GBLK"}  # papan GBLK boleh bergerak, tetapi di frame kunci tidak boleh tertutup
 
 
 def pixels(im):
@@ -496,7 +497,7 @@ def instrumented(fn, n, ms):
         return real_head(cv, cx, cy, eyes=eyes, brows=brows, mouth=mouth, face=face, tilt=tilt)
 
     def mini_text(cv, s, x, y, c):
-        log.append(("text", s, x, y))
+        log.append(("text", s, x, y, c))
         if all(ch in monkey.MINI for ch in s):
             return real_text(cv, s, x, y, c)
         return None
@@ -509,7 +510,7 @@ def instrumented(fn, n, ms):
             fn(i)
             heads = [e for e in log if e[0] == "head"]
             h = heads[-1] if heads else ("head", "-", "-", "-")
-            texts = [e[1:] for e in log if e[0] == "text"]
+            texts = [e[1:4] for e in log if e[0] == "text"]
             rows.append((i, int(ms(i)), h[1], h[2], h[3], texts))
     finally:
         for d, key in patched:
@@ -539,6 +540,32 @@ def text_violations(name, rows):
     return out
 
 
+def hidden_text_pixels(fn, keyframe, text):
+    """Jumlah piksel glyph `text` yang tertimpa gambar lain di frame kunci (0 = terbaca utuh)."""
+    real = monkey.mini_text
+    spots = []
+
+    def spy(cv, s, x, y, c):
+        if s == text:
+            spots.append((x, y, c))
+        return real(cv, s, x, y, c)
+    patched = _patch_everywhere(real, spy)
+    try:
+        cv = fn(keyframe)
+    finally:
+        for d, key in patched:
+            d[key] = real
+    covered = 0
+    for x, y, c in spots:
+        for i, ch in enumerate(text):
+            for ry, row in enumerate(monkey.MINI[ch]):
+                for rx, v in enumerate(row):
+                    p = (x + i * 6 + rx, y + ry)
+                    if v == "1" and 0 <= p[0] < W and 0 <= p[1] < H and cv.px.get(p) != c:
+                        covered += 1
+    return len(spots), covered
+
+
 def check_texts_and_beats(m, gate, show_all):
     print("\n[V8] Audit teks (semua pemanggil mini_text diinstrumentasi) dan beat per rentang frame")
     scenes_all = export.all_scenes()
@@ -549,6 +576,12 @@ def check_texts_and_beats(m, gate, show_all):
         texts = sorted({s for r in rows for s, _, _ in r[5]})
         for v in text_violations(cell["source"], rows):
             fail("%s/%s: %s" % (costume, state, v))
+        for special_text in VISIBLE_AT_KEYFRAME & set(texts):
+            found, covered = hidden_text_pixels(scenes_all[cell["source"]][0], cell["keyframe"], special_text)
+            if not found or covered:
+                fail("%s/%s: teks %r di frame kunci f%d tertutup %d piksel (atau tidak ada)" % (costume, state, special_text, cell["keyframe"], covered))
+            elif not show_all and gate and cell.get("gate") == gate:
+                print("  %s/%s: %r utuh di frame kunci f%d" % (costume, state, special_text, cell["keyframe"]))
         if not show_all and (not gate or cell.get("gate") != gate):
             continue
         print("  %s/%s  (%d frame, %d ms, kunci f%d)  teks: %s" % (

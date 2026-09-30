@@ -13,7 +13,7 @@ Huruf gerbang tidak berurutan dengan urutan kerja. Urutan kerja sebenarnya: A, B
 | 3 | C | Greek Philosopher, Academic, Normal | 9 | disetujui, dikunci | `73c034b`, kunci `dd78be8` |
 | 4 | D | Scientist (idle, shocked, victory), Mathematician (idle, thinking, victory) | 6 | disetujui, dikunci di commit persiapan G | `056e0dc`, tag `fase2-gate-D` |
 | 5 | E | Hacker (3), Detective (4), Lawyer (3) | 10 | disetujui, dikunci di commit persiapan G | `3eb2cdc`, tag `fase2-gate-E` |
-| 6 | G | Gamer (7), Normal-GBLK (8) | 15 | belum | |
+| 6 | G | Gamer (7), Normal-GBLK (8) | 15 | selesai, validasi lulus; hash di `sha256-dibuat.txt`; laporan `pack/reports/gate-G.md` | commit Gerbang G, tag `fase2-gate-G` |
 | 7 | H | Knight, Viking, Pirate, Wizard | 24 | belum | |
 | 8 | I | Pak Haji, Priest | 10 | belum | |
 | 9 | J | 12 varian kelas × idle, attack, victory | 36 | belum | |
@@ -42,7 +42,7 @@ Dibangkitkan oleh `python3 tools/progress_table.py` dari `pack/manifest.json`. J
 | Kostum | group | Berlaku | Terisi | Belum terisi (wajib) | Belum terisi (opsional) |
 |---|---|---:|---:|---|---|
 | `normal` | core | 7 | 5 | - | shocked, dance-a |
-| `normal-gblk ← normal` | special | 8 | 0 | idle, victory, defeated | reveal, happy, dance-a, dance-b, dance-c |
+| `normal-gblk ← normal` | special | 8 | 8 | - | - |
 | `referee` | role | 6 | 2 | victory, defeated | shocked, happy |
 | `judge` | role | 7 | 3 | victory, defeated | shocked, happy |
 | `skeptic` | role | 8 | 3 | thinking, victory, defeated | shocked, happy |
@@ -54,7 +54,7 @@ Dibangkitkan oleh `python3 tools/progress_table.py` dari `pack/manifest.json`. J
 | `lawyer` | domain | 6 | 3 | defeated | shocked, happy |
 | `hacker` | domain | 6 | 4 | defeated | happy |
 | `detective` | domain | 7 | 5 | defeated | happy |
-| `gamer` | domain | 7 | 0 | idle, thinking, victory, defeated | happy, shocked, dance-a |
+| `gamer` | domain | 7 | 7 | - | - |
 | `knight` | fantasy | 6 | 0 | idle, thinking, victory, defeated | shocked, attack |
 | `knight-heavy ← knight` | fantasy | 3 | 0 | idle, victory | attack |
 | `knight-archer ← knight` | fantasy | 3 | 0 | idle, victory | attack |
@@ -73,7 +73,7 @@ Dibangkitkan oleh `python3 tools/progress_table.py` dari `pack/manifest.json`. J
 | `wizard` | fantasy | 6 | 0 | idle, thinking, victory, defeated | shocked, attack |
 | `pak-haji` | theology | 5 | 0 | idle, thinking, victory, defeated | happy |
 | `priest` | theology | 5 | 0 | idle, thinking, victory, defeated | happy |
-| **Total** | | **163** | **42** | | |
+| **Total** | | **163** | **57** | | |
 <!-- tabel-sel:selesai -->
 
 ## Cara melanjutkan

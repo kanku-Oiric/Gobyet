@@ -59,6 +59,8 @@ Diturunkan dari rig di `src/monkey.py` dan dari aset yang sudah disetujui. Dipak
 | Mathematician | batu tulis 11×9, jangka 7×9 (diputar di samping bahu supaya di luar siluet) |
 | Detective | kaca pembesar asli 12×13; saat suspicious di depan mata dengan mata menyipit |
 | Lawyer | map tertutup 10×9, map terbuka 16×8, dasi hitam 2×8 (prop sekunder, di bawah target) |
+| Gamer | gamepad 14×6, headset 26×19 (cincin di kepala = siluet pembeda dari Hacker), kaleng 4×6 (prop sekunder, hanya di idle) |
+| Normal-GBLK | papan GBLK 27×11 bertongkat, teks 23×5 kontras tinggi (K di atas `n`) |
 
 Prop utama sebaiknya berada di luar siluet badan (samping bahu, di atas kepala, atau di lantai) supaya terbaca di 1×. Contoh: idle Mathematician versi pertama (batu tulis dan jangka di pangkuan) memberi IoU 0,90 dengan Referee. Setelah jangka dipindah ke samping bahu, IoU-nya turun ke 0,84.
 
@@ -72,7 +74,7 @@ Prop utama sebaiknya berada di luar siluet badan (samping bahu, di atas kepala, 
 | defeated | Lunglai atau rebah. Mata `relief`, alis `worried`, helaan napas `puff()`. Tidak brutal, tanpa simbol kematian. |
 | shocked | `eyes=wide`, `brows=up`, `mouth=o`, mundur sedikit, efek kecil (`puff`, `spark_lines`, `!`). |
 | attack | Metafora: menghentak atau menancapkan prop ke lantai atau ke kertas. Tidak pernah diarahkan ke karakter. |
-| dance-* | Tepat 16 frame × 120 ms. Perubahan pose besar pada f0, f4, f8, f12. |
+| dance-* | Tepat 16 frame × 120 ms. Perubahan pose besar pada f0, f4, f8, f12; di dalam beat hanya ekor yang bergerak halus. Badan duduk bergoyang, meniru cara `kondangan` (tanpa badan berdiri). Papan atau prop tidak boleh keluar dari kanvas di frame mana pun. |
 
 - Loop 12-20 frame.
 - Seam: selisih frame terakhir ke frame pertama ≤ 1,25 × selisih antar-frame terbesar.
@@ -131,6 +133,8 @@ Setiap victory baru wajib punya minimal satu elemen yang belum dipakai kostum la
 | Hacker | Semua baris terminal berubah hijau, gelembung "OK" | E |
 | Detective | Kilau berpindah di lensa kaca pembesar | E |
 | Lawyer | Map diangkat. Tidak ada elemen khas di luar pola dasar (dicatat; aset E tidak direvisi) | E |
+| Gamer | Gamepad bergetar (garis getar di kedua sisi) dan gelembung "GG" | G |
+| Normal-GBLK | Tulisan papan berkedip merah dan gelap bergantian | G |
 
 ## Teks
 

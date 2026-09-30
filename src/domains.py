@@ -6,6 +6,7 @@ Gerbang D: Scientist (idle, shocked, victory) dengan tampilan rambut-einstein as
 (idle, thinking, victory), kostum baru: rompi ungu (PAL_EXT p/j), batu tulis genggam, jangka.
 Gerbang E: Hacker (thinking, shocked, victory) dan Detective (idle, suspicious, shocked, victory) dengan
 tampilan asli; Lawyer (idle, thinking, victory), kostum baru: jas biru (PAL_EXT J/w), dasi hitam, map cokelat U.
+Gerbang G: Gamer (7 state), kostum baru: kaus oranye (PAL_EXT o/t), headset, gamepad, kaleng minuman kecil.
 
 Tampilan kostum mengikuti aset asli yang terkunci, tanpa desain ulang: Greek Philosopher memakai
 toga, janggut, laurel hijau, gulungan, dan tiang dari filsuf-yunani; Academic memakai kemeja putih,
@@ -885,6 +886,228 @@ def lawyer_victory_frame(i):
     return cv
 
 
+# ================================================================== Gerbang G: Gamer
+def gamer_body(cv, t, dx=0, bob=0):
+    """Badan duduk dengan kaus oranye (PAL_EXT o/t, bukan hoodie) dan celana pendek hitam."""
+    tail(cv, (CX - 7 + dx, TOP + 14 + bob), phase=t * 0.5, flip=-1, length=8)
+    top = TOP + bob
+    dressed_body(cv, CX + dx, top, "o", "t", pants="L", pants_shade="q")
+    cv.fill({(CX + dx - 2, top), (CX + dx - 1, top + 1), (CX + dx, top + 1), (CX + dx + 1, top)}, "t")  # kerah bulat
+
+
+def headset(cv, cx, cy, mic=True):
+    """Headset besar: ikat kepala hitam melengkung di atas kepala, dua earcup, mik di kiri."""
+    pts = [(cx + 10.0 * math.cos(math.radians(a)), cy - 0.8 + 9.6 * math.sin(math.radians(a))) for a in range(190, 351, 16)]
+    cv.fill(chain_px(pts, 0.8), "L")
+    for s in (-1, 1):
+        solid(cv, ellipse(cx + s * 10.6, cy + 1.6, 2.4, 3.0), "L", None)
+        cv.put(int(cx + s * 10.6) - (1 if s < 0 else 0), int(cy + 0.6), "l")
+    if mic:
+        cv.fill(capsule((cx - 10, cy + 4), (cx - 5, cy + 7), 0.5), "l")
+        cv.fill(rect(int(cx) - 6, int(cy) + 6, 2, 2), "L")
+
+
+def chain_px(points, r):
+    out = set()
+    for a, b in zip(points, points[1:]):
+        out |= capsule(a, b, r)
+    return out
+
+
+def gamepad(cv, x, y):
+    """Gamepad 14x6: badan abu gelap, dua pegangan bulat, d-pad putih, empat tombol berwarna."""
+    body = rect(x + 2, y, 10, 4) | ellipse(x + 2.5, y + 3, 2.5, 2.6) | ellipse(x + 11.5, y + 3, 2.5, 2.6)
+    solid(cv, body, "l", None)
+    cv.fill({(x + 3, y + 1), (x + 2, y + 2), (x + 3, y + 2), (x + 4, y + 2), (x + 3, y + 3)}, "W")
+    for (bx, by), c in (((x + 11, y + 1), "R"), ((x + 12, y + 2), "Z"), ((x + 10, y + 2), "I"), ((x + 11, y + 3), "O")):
+        cv.put(bx, by, c)
+
+
+def soda_can(cv, x, y):
+    """Kaleng minuman kecil 4x6 (prop sekunder, hanya di idle)."""
+    solid(cv, rect(x, y, 4, 6), "R", "u", shade_off=(1, 1))
+    cv.fill(rect(x + 1, y, 2, 1), "G")
+    cv.put(x + 1, y + 2, "W")
+
+
+def tongue_out(cv, cx, cy):
+    cv.fill({(cx - 1, int(cy) + 6), (cx, int(cy) + 6)}, "T")
+
+
+def gg_bubble(cv, x, y):
+    """Gelembung "GG" (glyph G ditambahkan di Gerbang G)."""
+    bubble(cv, x, y, 17, 9, fill="W", tail_dir=-1)
+    mini_text(cv, "GG", x + 3, y + 2, "t")
+
+
+def gamer_idle_frame(i):
+    """Menatap layar imajiner, jempol menekan tombol, lidah sedikit keluar; sesekali menyeruput kaleng."""
+    cv = Canvas()
+    t = i % 16
+    sip = 10 <= t <= 12
+    gamer_body(cv, t)
+    head(cv, CX, CY, eyes="blink" if t == 6 else ("happy" if sip else "look"), brows="flat", mouth="flat")
+    if not sip:
+        tongue_out(cv, CX, CY)
+    headset(cv, CX, CY)
+    gx, gy = CX - 7, TOP + 4
+    gamepad(cv, gx, gy)
+    press = t % 2
+    arm(cv, (CX + 7, TOP + 3), (gx + 12, gy + 3 + press), elbow=(CX + 11, TOP + 8), fur="o")
+    if sip:
+        soda_can(cv, CX - 12, CY + 5)
+        arm(cv, (CX - 7, TOP + 3), (CX - 10, CY + 9), elbow=(CX - 13, TOP + 5), fur="o")
+    else:
+        soda_can(cv, CX - 20, TOP + 9)
+        arm(cv, (CX - 7, TOP + 3), (gx + 2, gy + 4 - press), elbow=(CX - 11, TOP + 8), fur="o")
+    return cv
+
+
+def gamer_thinking_frame(i):
+    """Gamepad diturunkan ke pangkuan, garuk pipi, gelembung "..." lalu "?"."""
+    cv = Canvas()
+    t = i % 12
+    ponder = 2 <= t <= 10
+    gamer_body(cv, t)
+    head(cv, CX, CY, eyes="blink" if t == 8 else ("side" if ponder else "look"), brows="worried" if ponder else "flat",
+         mouth="frown" if ponder else "flat")
+    headset(cv, CX, CY)
+    gx, gy = CX - 7, TOP + 9
+    gamepad(cv, gx, gy)
+    arm(cv, (CX - 7, TOP + 3), (gx + 2, gy + 3), elbow=(CX - 11, TOP + 8), fur="o")
+    if ponder:
+        arm(cv, (CX + 7, TOP + 3), (CX + 8, CY + 5 + (t % 2)), elbow=(CX + 12, TOP + 5), fur="o")
+        dots_or_mark(cv, CX + 14, 0, 2, t, "?")
+    else:
+        arm(cv, (CX + 7, TOP + 3), (gx + 12, gy + 3), elbow=(CX + 11, TOP + 8), fur="o")
+    return cv
+
+
+def gamer_happy_frame(i):
+    """Kepalan kecil naik-turun dengan senyum, gelembung "GG"."""
+    cv = Canvas()
+    t = i % 12
+    pump = t in (2, 3, 6, 7)
+    gamer_body(cv, t)
+    head(cv, CX, CY, eyes="happy" if 2 <= t <= 9 else "look", brows="flat", mouth="smile")
+    headset(cv, CX, CY)
+    gx, gy = CX - 9, TOP + 6
+    gamepad(cv, gx, gy)
+    arm(cv, (CX - 7, TOP + 3), (gx + 3, gy + 3), elbow=(CX - 12, TOP + 7), fur="o")
+    arm(cv, (CX + 7, TOP + 3), (CX + 12, TOP - 4) if pump else (CX + 12, TOP + 1), elbow=(CX + 13, TOP + 5), fur="o")
+    if 2 <= t <= 9:
+        gg_bubble(cv, CX + 14, 1)
+    return cv
+
+
+# (fase, tinggi gamepad di atas tangan)
+GAMER_SHOCK = [("play", 0), ("play", 0), ("scare", 12), ("scare", 20), ("scare", 23), ("scare", 21), ("scare", 15),
+               ("scare", 7), ("catch", 0), ("calm", 0), ("calm", 0), ("play", 0)]
+
+
+def gamer_shocked_frame(i):
+    """Jump-scare: gamepad terlepas terangkat ke udara, mata lebar, "!", lalu ditangkap lagi."""
+    cv = Canvas()
+    t = i % 12
+    phase, fly = GAMER_SHOCK[t]
+    scare = phase == "scare"
+    dx = -1 if scare else 0
+    gamer_body(cv, t, dx=dx)
+    face = {"play": ("look", "flat", "flat"), "scare": ("wide", "up", "o"), "catch": ("wide", "up", "flat"),
+            "calm": ("look", "worried", "flat")}[phase]
+    head(cv, CX + dx, CY, eyes=face[0], brows=face[1], mouth=face[2])
+    headset(cv, CX + dx, CY)
+    gx, gy = CX - 7, TOP + 4 - fly
+    gamepad(cv, gx + (min(fly, 13) if scare else 0), gy)  # melambung ke kanan atas, tidak menutupi wajah
+    if scare:
+        arm(cv, (CX - 7 + dx, TOP + 3), (CX - 13, TOP - 4), elbow=(CX - 13, TOP + 2), fur="o")
+        arm(cv, (CX + 7 + dx, TOP + 3), (CX + 13, TOP - 4), elbow=(CX + 13, TOP + 2), fur="o")
+        bubble(cv, 48, 16, 9, 9, fill="R", tail_dir=-1)
+        mini_text(cv, "!", 50, 18, "W")
+        spark_lines(cv, CX - 16, CY - 2)
+    else:
+        arm(cv, (CX - 7, TOP + 3), (gx + 2, gy + 4), elbow=(CX - 11, TOP + 8), fur="o")
+        arm(cv, (CX + 7, TOP + 3), (gx + 12, gy + 3), elbow=(CX + 11, TOP + 8), fur="o")
+    return cv
+
+
+GAMER_VICTORY = [("play", 0), ("play", 0), ("up", 1), ("up", 0), ("up", 1), ("up", 0), ("up", 1), ("up", 0),
+                 ("up", 1), ("up", 0), ("up", 1), ("up", 0), ("mid", 0), ("mid", 0), ("play", 0), ("play", 0)]
+
+
+def gamer_victory_frame(i):
+    """Melompat, gamepad diangkat tinggi dengan dua tangan dan bergetar (garis getar), gelembung "GG"."""
+    cv = Canvas()
+    t = i % 16
+    phase, hop = GAMER_VICTORY[t]
+    up = phase == "up"
+    gamer_body(cv, t, bob=-hop)
+    head(cv, CX, CY - hop, eyes="happy" if up else "look", brows="flat", mouth=("o" if t % 2 else "smile") if up else "smile")
+    headset(cv, CX, CY - hop)
+    if phase == "play":
+        gx, gy = CX - 7, TOP + 4
+    elif phase == "mid":
+        gx, gy = CX - 7, TOP - 4
+    else:
+        gx, gy = CX - 7, 1 - hop
+    gamepad(cv, gx, gy)
+    arm(cv, (CX - 7, TOP + 3 - hop), (gx + 2, gy + 4), elbow=(CX - 12, TOP + (1 if up else 7) - hop), fur="o")
+    arm(cv, (CX + 7, TOP + 3 - hop), (gx + 12, gy + 4), elbow=(CX + 12, TOP + (1 if up else 7) - hop), fur="o")
+    if up:
+        shake = 1 if t % 2 else 0
+        for s in (-1, 1):  # garis getar di kiri-kanan gamepad
+            x0 = gx - 3 - shake if s < 0 else gx + 16 + shake
+            cv.fill({(x0, gy + 1), (x0, gy + 3), (x0 + s, gy + 2)}, "K")
+        gg_bubble(cv, CX + 12, 11)
+    return cv
+
+
+def gamer_defeated_frame(i):
+    """Bahu turun, kepala menunduk, gamepad di pangkuan mengepul asap kecil, "..."; tanpa melempar gamepad."""
+    cv = Canvas()
+    t = i % 16
+    gamer_body(cv, t, bob=1)
+    head(cv, CX, CY + 3, eyes="blink" if t == 12 else "relief", brows="worried", mouth="frown")
+    headset(cv, CX, CY + 3)
+    gx, gy = CX - 7, TOP + 10
+    gamepad(cv, gx, gy)
+    arm(cv, (CX - 7, TOP + 4), (CX - 12, TOP + 14), elbow=(CX - 12, TOP + 9), fur="o")
+    arm(cv, (CX + 7, TOP + 4), (gx + 12, gy + 2), elbow=(CX + 11, TOP + 9), fur="o")
+    if 5 <= t <= 11:
+        k = (t - 5) // 2
+        puff(cv, gx + 7 + k, gy - 2 - k * 2, 1.0 + k * 0.4)
+    if 8 <= t <= 14:
+        thought_dots(cv, CX + 12, 3, 1 + min(2, (t - 8) // 2))
+    return cv
+
+
+# dance-a: goyang pinggul bergantian, gamepad terangkat di kiri lalu kanan (beat di f0, f4, f8, f12)
+GAMER_DANCE = [(-2, "left"), (0, "low"), (2, "right"), (0, "low")]
+
+
+def gamer_dance_a_frame(i):
+    cv = Canvas()
+    t = i % 16
+    beat = t // 4
+    dx, where = GAMER_DANCE[beat]
+    tail(cv, (CX - 7 + dx, TOP + 14), phase=beat * 1.6 + (t % 4) * 0.25, flip=-1, length=8)
+    dressed_body(cv, CX + dx, TOP, "o", "t", pants="L", pants_shade="q")
+    head(cv, CX + dx, CY, eyes="happy", brows="flat", mouth="smile" if beat % 2 == 0 else "o")
+    headset(cv, CX + dx, CY)
+    if where == "low":
+        gx, gy = CX - 7 + dx, TOP + 5
+        gamepad(cv, gx, gy)
+        arm(cv, (CX - 7 + dx, TOP + 3), (gx + 2, gy + 4), elbow=(CX - 11 + dx, TOP + 8), fur="o")
+        arm(cv, (CX + 7 + dx, TOP + 3), (gx + 12, gy + 4), elbow=(CX + 11 + dx, TOP + 8), fur="o")
+    else:
+        s = -1 if where == "left" else 1
+        gx, gy = CX + dx + s * 13 - 7, TOP - 9
+        gamepad(cv, gx, gy)
+        arm(cv, (CX + 7 * s + dx, TOP + 3), (gx + 7, gy + 5), elbow=(CX + 13 * s + dx, TOP + 1), fur="o")
+        arm(cv, (CX - 7 * s + dx, TOP + 3), (CX - 12 * s + dx, TOP + 8), elbow=(CX - 12 * s + dx, TOP + 4), fur="o")
+    return cv
+
+
 PROPS = {
     "scientist: papan tulis (asli)": lambda cv: chalkboard(cv, 20, 10, 29, 16, "E=mc", 4),
     "mathematician: batu tulis": lambda cv: slate(cv, 26, 20, mark="v"),
@@ -894,6 +1117,9 @@ PROPS = {
     "lawyer: map tertutup": lambda cv: folder(cv, 26, 20),
     "lawyer: map terbuka": lambda cv: open_folder(cv, 22, 20, 0),
     "lawyer: dasi": lambda cv: lawyer_suit_tie_only(cv),
+    "gamer: gamepad": lambda cv: gamepad(cv, 24, 20),
+    "gamer: headset": lambda cv: headset(cv, 32, 24),
+    "gamer: kaleng": lambda cv: soda_can(cv, 30, 20),
 }
 
 
@@ -932,4 +1158,11 @@ SCENES = {
     "lawyer-idle": (lawyer_idle_frame, 16, lambda i: 180 if i % 16 != 11 else 120),
     "lawyer-thinking": (lawyer_thinking_frame, 16, lambda i: 170 if i % 16 != 8 else 120),
     "lawyer-victory": (lawyer_victory_frame, 16, lambda i: 150 if i % 16 in (0, 1, 12, 13, 14, 15) else 110),
+    "gamer-idle": (gamer_idle_frame, 16, lambda i: 140 if i % 16 < 10 else 200),
+    "gamer-thinking": (gamer_thinking_frame, 12, lambda i: 170),
+    "gamer-happy": (gamer_happy_frame, 12, lambda i: 130),
+    "gamer-shocked": (gamer_shocked_frame, 12, lambda i: 90 if 2 <= i % 12 <= 7 else 160),
+    "gamer-victory": (gamer_victory_frame, 16, lambda i: 150 if i % 16 in (0, 1, 12, 13, 14, 15) else 110),
+    "gamer-defeated": (gamer_defeated_frame, 16, lambda i: 200),
+    "gamer-dance-a": (gamer_dance_a_frame, 16, lambda i: 120),
 }
