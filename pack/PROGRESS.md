@@ -11,8 +11,8 @@ Huruf gerbang tidak berurutan dengan urutan kerja. Urutan kerja sebenarnya: A, B
 | 1 | A | Referee: idle, thinking | 2 | disetujui, dikunci | `06bc433` |
 | 2 | B | Judge, Skeptic, Champion (revisi medali di `73c034b`) | 8 | disetujui, dikunci setelah bagian 3 terverifikasi | `6875e4e`, `73c034b`, kunci di commit persiapan D |
 | 3 | C | Greek Philosopher, Academic, Normal | 9 | disetujui, dikunci | `73c034b`, kunci `dd78be8` |
-| 4 | D | Scientist (idle, shocked, victory), Mathematician (idle, thinking, victory) | 6 | validasi lulus (AUTO); ditinjau pemilik di STOP-1 | commit Gerbang D |
-| 5 | E | Hacker (3), Detective (4), Lawyer (3); STOP-1 | 10 | belum | |
+| 4 | D | Scientist (idle, shocked, victory), Mathematician (idle, thinking, victory) | 6 | validasi lulus (AUTO); menunggu tinjauan di STOP-1 | `056e0dc` |
+| 5 | E | Hacker (3), Detective (4), Lawyer (3); STOP-1 | 10 | validasi lulus; **STOP-1: menunggu persetujuan gaya D dan E** | commit Gerbang E |
 | 6 | G | Gamer (7), Normal-GBLK (8); STOP-2 | 15 | belum | |
 | 7 | H | Knight, Viking, Pirate, Wizard; STOP-3 | 24 | belum | |
 | 8 | I | Pak Haji, Priest (STOP-4 setelah idle keduanya) | 10 | belum | |
@@ -38,9 +38,9 @@ Dibangkitkan oleh `python3 tools/progress_table.py` dari `pack/manifest.json`. J
 | `academic` | domain | 6 | 4 | - | shocked, happy |
 | `scientist` | domain | 6 | 4 | defeated | happy |
 | `mathematician` | domain | 6 | 3 | defeated | shocked, happy |
-| `lawyer` | domain | 6 | 0 | idle, thinking, victory, defeated | shocked, happy |
-| `hacker` | domain | 6 | 1 | thinking, victory, defeated | shocked, happy |
-| `detective` | domain | 7 | 1 | idle, victory, defeated | shocked, happy, suspicious |
+| `lawyer` | domain | 6 | 3 | defeated | shocked, happy |
+| `hacker` | domain | 6 | 4 | defeated | happy |
+| `detective` | domain | 7 | 5 | defeated | happy |
 | `gamer` | domain | 7 | 0 | idle, thinking, victory, defeated | happy, shocked, dance-a |
 | `knight` | fantasy | 6 | 0 | idle, thinking, victory, defeated | shocked, attack |
 | `knight-heavy ← knight` | fantasy | 3 | 0 | idle, victory | attack |
@@ -60,7 +60,7 @@ Dibangkitkan oleh `python3 tools/progress_table.py` dari `pack/manifest.json`. J
 | `wizard` | fantasy | 6 | 0 | idle, thinking, victory, defeated | shocked, attack |
 | `pak-haji` | theology | 5 | 0 | idle, thinking, victory, defeated | happy |
 | `priest` | theology | 5 | 0 | idle, thinking, victory, defeated | happy |
-| **Total** | | **163** | **32** | | |
+| **Total** | | **163** | **42** | | |
 <!-- tabel-sel:selesai -->
 
 ## Cara melanjutkan
@@ -80,6 +80,6 @@ Mengunci gerbang yang disetujui: tambahkan `sha256sum` dari `gif/<nama>.gif`, `s
 
 - **README di `main`.** Commit `a7a6d21` (README saja, atas permintaan pemilik) menampilkan galeri Fase 2 dengan URL gambar `raw.githubusercontent.com/.../claude/gobyet-fase2/gif/...`. Setelah PR di-merge, README di branch (path relatif) menggantikannya. Sebelum merge, pastikan tidak ada URL yang masih menunjuk ke branch. Jangan push ke `main` lagi.
 - **Profil export.** Aset gerbang A-C dan aset asli memakai jalur lama (palet `PAL`, `optimize=False`, sheet 1× dan 4×). Aset baru mulai D memakai palet lokal (`PAL` + `PAL_EXT`), `optimize=True`, dan hanya sheet 1×. Lihat `pack.modern()` dan `export.local_palette()`.
-- **`PAL_EXT`.** Kunci yang sudah dipakai: `p`, `j` (ungu, rompi Mathematician). Rencana: `J` (jas Lawyer, biru gelap), biru baja untuk Wizard. Kunci bebas: `t w z i o` dan angka.
+- **`PAL_EXT`.** Kunci yang sudah dipakai: `p`, `j` (ungu, rompi Mathematician) dan `J`, `w` (biru jas Lawyer, (40,56,104)). Wizard butuh biru atau ungu lain dengan ΔE ≥ 15 dari keduanya; biru baja (58,84,140) hanya 12,4 dari jas Lawyer, jadi harus digeser. Kunci bebas: `t z i o` dan angka.
 - **Pengecualian teks.** `E=mc` (papan Scientist, statis) dan `GBLK` (papan normal-gblk). Selain itu maksimal 3 karakter per gelembung.
 - **Known issues Gerbang C:** topi Academic terpotong 1 baris di puncak lemparan; `academic/defeated` di 1× hanya berbeda 1-2 px dari idle.

@@ -4,6 +4,8 @@ Gerbang C: Greek Philosopher (idle, victory, defeated), Academic (thinking, vict
 Normal (thinking, victory, defeated).
 Gerbang D: Scientist (idle, shocked, victory) dengan tampilan rambut-einstein asli; Mathematician
 (idle, thinking, victory), kostum baru: rompi ungu (PAL_EXT p/j), batu tulis genggam, jangka.
+Gerbang E: Hacker (thinking, shocked, victory) dan Detective (idle, suspicious, shocked, victory) dengan
+tampilan asli; Lawyer (idle, thinking, victory), kostum baru: jas biru (PAL_EXT J/w), dasi hitam, map cokelat U.
 
 Tampilan kostum mengikuti aset asli yang terkunci, tanpa desain ulang: Greek Philosopher memakai
 toga, janggut, laurel hijau, gulungan, dan tiang dari filsuf-yunani; Academic memakai kemeja putih,
@@ -13,10 +15,10 @@ adalah pose rebah (lying_body) untuk defeated.
 """
 import math
 
-from monkey import (Canvas, head, arm, tail, sitting_body, banana, puff, spark_lines, mini_text, bubble, ellipse,
-                    capsule, rect, solid)
+from monkey import (Canvas, head, arm, tail, sitting_body, banana, laptop, puff, spark_lines, mini_text, bubble,
+                    ellipse, capsule, rect, solid)
 from costumes import (CX, CY, TOP, dressed_body, inner, confetti, mortarboard, laurel, beard, scroll, column,
-                      chalkboard, wild_hair, einstein_moustache)
+                      chalkboard, wild_hair, einstein_moustache, hood, sunglasses, deerstalker, magnifier, CODE)
 from roles import dots_or_mark
 
 
@@ -552,11 +554,356 @@ def math_victory_frame(i):
     return cv
 
 
+# ================================================================== Gerbang E: Hacker
+HX, HY = 22, 16  # sama dengan hacker asli: tokoh di kiri, jendela terminal di kanan
+
+
+def terminal(cv, t, scroll=True, color=None, cursor=False):
+    """Jendela terminal asli: baris kode bergulir; color = warna semua baris (mis. R saat error)."""
+    solid(cv, rect(36, 2, 27, 26), "q", None)
+    cv.fill(rect(37, 3, 25, 2), "Q")
+    for k, c in enumerate("RYZ"):
+        cv.put(38 + k * 2, 3, c)
+    last = 0
+    for row in range(6):
+        line = CODE[(row + (t // 2 if scroll else 0)) % len(CODE)]
+        w = min((len(line) * 7) % 20 + 4, 22)
+        cv.fill(rect(38, 7 + row * 3, w, 1), color or ("Z" if row % 2 == 0 else "V"))
+        last = w
+    if cursor:
+        cv.fill(rect(39 + last, 22, 2, 1), "W")
+
+
+def hacker_base(cv, t, eyes, brows, mouth, glasses_dy=0, laptop_dy=0, hands=None, bob=0):
+    """Hoodie, kacamata hitam, laptop dari hacker asli. glasses_dy menggeser kacamata (turun = mengintip, naik = di dahi)."""
+    tail(cv, (HX - 7, 37), phase=t * 0.5, flip=-1, length=6)
+    solid(cv, ellipse(HX, 32 + bob, 9.5, 7.5), "Q", "q")
+    head(cv, HX, HY + bob, eyes=eyes, brows=brows, mouth=mouth)
+    hood(cv, HX, HY + bob)
+    sunglasses(cv, HX, HY + bob + glasses_dy, glint=t % 4)
+    laptop(cv, HX - 10, 29 - laptop_dy, glow="Z")
+    if hands is not None:
+        arm(cv, (HX - 7, 27 + bob), hands[0], elbow=(HX - 11, 31 + bob), fur="Q")
+        arm(cv, (HX + 7, 27 + bob), hands[1], elbow=(HX + 11, 31 + bob), fur="Q")
+    cv.fill({(HX - 1, 25 + bob), (HX - 1, 26 + bob), (HX + 1, 25 + bob), (HX + 1, 26 + bob)}, "W")
+
+
+def typing(t):
+    return ((HX - 5, 28 - (t % 2)), (HX + 5, 27 + (t % 2)))
+
+
+def thought_dots(cv, x, y, n):
+    """Gelembung pikiran kecil dengan n titik (tanpa glyph)."""
+    bubble(cv, x, y, 13, 7, fill="W", tail_dir=-1)
+    for k in range(n):
+        cv.put(x + 3 + k * 3, y + 4, "K")
+
+
+def hacker_thinking_frame(i):
+    """Jari berhenti di atas keyboard, kacamata turun sedikit dan mata menyipit di baliknya, kode berhenti, "..."."""
+    cv = Canvas()
+    t = i % 16
+    stop = 2 <= t <= 13
+    peek = 2 if 3 <= t <= 12 else (1 if t in (2, 13) else 0)
+    terminal(cv, t if not stop else 2, scroll=not stop, cursor=stop and t % 2 == 0)
+    hands = ((HX - 5, 27), (HX + 5, 27)) if stop else typing(t)
+    hacker_base(cv, t, "relief" if peek == 2 else "down", "worried" if stop else "flat", "flat", glasses_dy=peek, hands=hands)
+    if 4 <= t <= 12:
+        thought_dots(cv, 44, 31, 1 + min(2, (t - 4) // 2))
+    return cv
+
+
+# (fase, laptop naik, kacamata)
+HACK_SHOCK = [("type", 0, 0), ("type", 0, 0), ("type", 0, 0), ("type", 0, 0), ("error", 0, 0), ("shock", 2, -5),
+              ("shock", 3, -5), ("shock", 2, -5), ("shock", 3, -5), ("shock", 2, -5), ("shock", 1, -5), ("calm", 0, -5),
+              ("calm", 0, -5), ("calm", 0, -2), ("type", 0, 0), ("type", 0, 0)]
+
+
+def hacker_shocked_frame(i):
+    """Layar berubah merah, laptop terangkat kecil, kacamata terdorong ke dahi, mata lebar, "!"."""
+    cv = Canvas()
+    t = i % 16
+    phase, lift, gdy = HACK_SHOCK[t]
+    terminal(cv, t, scroll=phase == "type", color="R" if phase in ("error", "shock") else None)
+    face = {"type": ("down", "flat", "flat"), "error": ("wide", "up", "flat"), "shock": ("wide", "up", "o"),
+            "calm": ("look", "worried", "flat")}[phase]
+    hands = typing(t) if phase == "type" else ((HX - 6, 26 - lift), (HX + 6, 26 - lift))
+    hacker_base(cv, t, face[0], face[1], face[2], glasses_dy=gdy, laptop_dy=lift, hands=hands)
+    if phase == "shock":
+        bubble(cv, 46, 30, 9, 9, fill="R", tail_dir=-1)
+        mini_text(cv, "!", 48, 32, "W")
+        spark_lines(cv, HX - 14, 10)
+        spark_lines(cv, HX + 12, 8)
+    return cv
+
+
+# (fase lengan, lompat)
+HACK_VICTORY = [("type", 0), ("type", 0), ("enter", 0), ("up", 1), ("up", 0), ("up", 1), ("up", 0), ("up", 1),
+                ("up", 0), ("up", 1), ("up", 0), ("up", 1), ("mid", 0), ("mid", 0), ("type", 0), ("type", 0)]
+
+
+def hacker_victory_frame(i):
+    """Enter ditekan, kedua tangan naik, gelembung hijau "OK" seperti hacker asli, lompat kecil."""
+    cv = Canvas()
+    t = i % 16
+    phase, hop = HACK_VICTORY[t]
+    terminal(cv, t, scroll=phase == "type", color="Z" if phase in ("up", "mid") else None)
+    if phase == "type":
+        hands = typing(t)
+    elif phase == "enter":
+        hands = ((HX - 5, 28), (HX + 6, 24))
+    elif phase == "mid":
+        hands = ((HX - 12, 22), (HX + 12, 22))
+    else:
+        hands = ((HX - 13, 12 - hop), (HX + 13, 12 - hop))
+    hacker_base(cv, t, "down" if phase in ("type", "enter") else "happy", "flat", "smile", hands=hands, bob=-hop)
+    if phase in ("up", "mid"):
+        bubble(cv, 41, 30, 16, 9, fill="Z", tail_dir=-1)
+        mini_text(cv, "OK", 44, 32, "q")
+    return cv
+
+
+# ================================================================== Gerbang E: Detective
+def detective_base(cv, t, eyes, brows, mouth, dx=0, bob=0, hat_lift=0):
+    """Mantel cokelat berkancing, kerah, topi deerstalker dari detektif-bug asli."""
+    x, top, cy = CX + dx, TOP + bob, CY + bob
+    tail(cv, (26 + dx, top + 14), phase=t * 0.5, flip=-1, length=8)
+    dressed_body(cv, x, top, "d", "e", pants="e", pants_shade="x")
+    for y in (top + 3, top + 6, top + 9):
+        cv.put(x, y, "K")
+    cv.fill({(x - 3, top), (x - 2, top + 1), (x - 1, top + 2), (x + 3, top), (x + 2, top + 1), (x + 1, top + 2)}, "e")
+    head(cv, x, cy, eyes=eyes, brows=brows, mouth=mouth)
+    deerstalker(cv, x, cy - hat_lift)
+
+
+def squint_lens(cv, x, y, look=0):
+    """Kaca pembesar di depan mata yang menyipit: mata besar setengah tertutup kelopak."""
+    lens = ellipse(x, y, 4.2, 4.2)
+    cv.fill(capsule((x + 3, y + 3), (x + 7, y + 8), 1.1), "N")
+    solid(cv, lens, "I", None, outline="g")
+    cv.fill(ellipse(x, y + 0.6, 3.0, 1.8), "W")
+    cv.fill(rect(int(x) - 1 + look, int(y), 3, 2), "P")
+    cv.fill(rect(int(x) - 3, int(y) - 1, 6, 1), "K")
+
+
+def detective_idle_frame(i):
+    """Mengangguk pelan sambil menggenggam kaca pembesar di depan dada; sesekali berkedip."""
+    cv = Canvas()
+    t = i % 16
+    nod = 1 if t in (4, 5, 12, 13) else 0
+    detective_base(cv, t, "blink" if t == 9 else "look", "flat", "flat", bob=0)
+    if nod:  # kepala mengangguk: gambar ulang kepala dan topi 1 px lebih rendah
+        head(cv, CX, CY + 1, eyes="look", brows="flat", mouth="flat")
+        deerstalker(cv, CX, CY + 1)
+    lx, ly = CX + 12, TOP + 2
+    magnifier(cv, lx, ly)
+    arm(cv, (CX + 7, TOP + 3), (lx + 4, ly + 5), elbow=(CX + 9, TOP + 8), fur="d")
+    arm(cv, (CX - 7, TOP + 3), (CX - 9, TOP + 10), elbow=(CX - 10, TOP + 6), fur="d")
+    return cv
+
+
+def detective_suspicious_frame(i):
+    """Condong ke depan, kaca pembesar diangkat ke depan mata yang menyipit, alis turun; kaca berkilau."""
+    cv = Canvas()
+    t = i % 16
+    rise = min(t, 3) if t < 13 else 16 - t
+    lean = 1 if 3 <= t <= 12 else 0
+    detective_base(cv, t, "relief", "angry" if lean else "flat", "flat", dx=lean, bob=lean)
+    lx, ly = CX + 4 + lean + (1 if t in (7, 8) else 0), CY + 0.5 + lean + (3 - rise) * 3
+    if rise >= 3:
+        squint_lens(cv, lx, ly, look=(1 if t in (6, 7, 8) else 0))
+        if t in (5, 10):
+            cv.fill({(int(lx) - 2, int(ly) - 3), (int(lx) - 1, int(ly) - 4)}, "W")
+    else:
+        magnifier(cv, lx, ly)
+    arm(cv, (CX + 7 + lean, TOP + 3 + lean), (lx + 5, ly + 7), elbow=(CX + 12 + lean, TOP + 4 + lean), fur="d")
+    arm(cv, (CX - 7 + lean, TOP + 3 + lean), (CX - 9 + lean, TOP + 10 + lean), elbow=(CX - 10 + lean, TOP + 6 + lean), fur="d")
+    return cv
+
+
+# (fase, mundur, topi terangkat)
+DET_SHOCK = [("calm", 0, 0), ("calm", 0, 0), ("calm", 0, 0), ("calm", 0, 0), ("jolt", -2, 3), ("shock", -2, 2),
+             ("shock", -3, 2), ("shock", -2, 2), ("shock", -3, 2), ("shock", -2, 2), ("shock", -2, 1), ("calm", -1, 1),
+             ("calm", -1, 0), ("calm", 0, 0), ("calm", 0, 0), ("calm", 0, 0)]
+
+
+def detective_shocked_frame(i):
+    """Tersentak mundur, topi meloncat, mata lebar, kaca pembesar merosot di tangan, "!"."""
+    cv = Canvas()
+    t = i % 16
+    phase, dx, hat = DET_SHOCK[t]
+    face = ("look", "flat", "flat") if phase == "calm" else ("wide", "up", "o")
+    detective_base(cv, t, face[0], face[1], face[2], dx=dx, hat_lift=hat)
+    if phase == "calm":
+        lx, ly = CX + 12 + dx, TOP + 2
+        arm_to = (lx + 4, ly + 5)
+    else:
+        lx, ly = CX + 13 + dx, TOP + 8  # kaca merosot
+        arm_to = (lx + 4, ly + 5)
+    magnifier(cv, lx, ly)
+    arm(cv, (CX + 7 + dx, TOP + 3), arm_to, elbow=(CX + 9 + dx, TOP + 8), fur="d")
+    arm(cv, (CX - 7 + dx, TOP + 3), (CX - 12 + dx, TOP + 5) if phase != "calm" else (CX - 9 + dx, TOP + 10),
+        elbow=(CX - 11 + dx, TOP + 8) if phase != "calm" else (CX - 10 + dx, TOP + 6), fur="d")
+    if phase in ("jolt", "shock"):
+        bubble(cv, 46, 3, 9, 9, fill="R", tail_dir=1)
+        mini_text(cv, "!", 48, 5, "W")
+        spark_lines(cv, CX - 15 + dx, 6)
+    return cv
+
+
+# (fase, lompat)
+DET_VICTORY = [("hold", 0), ("mid", 0), ("up", 1), ("up", 0), ("up", 1), ("up", 0), ("up", 1), ("up", 0), ("up", 1),
+               ("up", 0), ("up", 1), ("up", 0), ("mid", 0), ("mid", 0), ("hold", 0), ("hold", 0)]
+
+
+def detective_victory_frame(i):
+    """Kaca pembesar diangkat tinggi dan berkilau, tangan lain mengepal, lompat kecil."""
+    cv = Canvas()
+    t = i % 16
+    phase, hop = DET_VICTORY[t]
+    up = phase == "up"
+    detective_base(cv, t, "happy" if up else "look", "flat", ("o" if t % 2 else "smile") if up else "smile", bob=-hop)
+    if phase == "hold":
+        lx, ly = CX + 12, TOP + 2
+        magnifier(cv, lx, ly)
+        arm(cv, (CX + 7, TOP + 3), (lx + 4, ly + 5), elbow=(CX + 9, TOP + 8), fur="d")
+        arm(cv, (CX - 7, TOP + 3), (CX - 9, TOP + 10), elbow=(CX - 10, TOP + 6), fur="d")
+    elif phase == "mid":
+        lx, ly = CX + 14, TOP - 6
+        magnifier(cv, lx, ly)
+        arm(cv, (CX + 7, TOP + 3), (lx + 3, ly + 5), elbow=(CX + 12, TOP + 5), fur="d")
+        arm(cv, (CX - 7, TOP + 3), (CX - 11, TOP + 2), elbow=(CX - 12, TOP + 7), fur="d")
+    else:
+        lx, ly = CX + 15, 7 - hop
+        magnifier(cv, lx, ly)
+        arm(cv, (CX + 7, TOP + 3 - hop), (lx + 3, ly + 5), elbow=(CX + 13, TOP - 1 - hop), fur="d")
+        arm(cv, (CX - 7, TOP + 3 - hop), (CX - 13, 8 - hop), elbow=(CX - 13, TOP - 1 - hop), fur="d")
+        if t % 4 == 2:  # kilau di lensa
+            cv.fill({(lx - 6, ly - 4), (lx - 7, ly - 4), (lx - 5, ly - 4), (lx - 6, ly - 5), (lx - 6, ly - 3)}, "W")
+    return cv
+
+
+# ================================================================== Gerbang E: Lawyer
+def lawyer_suit(cv, cx, top):
+    """Jas biru (PAL_EXT J/w) dengan kerah jas gelap, kemeja putih di leher, dasi hitam, celana senada."""
+    dressed_body(cv, cx, top, "J", "w", pants="J", pants_shade="w")
+    cv.fill({(cx - 2, top), (cx - 1, top), (cx, top), (cx + 1, top), (cx - 1, top + 1), (cx, top + 1),
+             (cx - 2, top + 1), (cx + 1, top + 1)}, "W")
+    cv.fill({(cx - 3, top), (cx - 3, top + 1), (cx - 2, top + 2), (cx - 2, top + 3), (cx - 1, top + 4),
+             (cx + 2, top), (cx + 2, top + 1), (cx + 1, top + 2), (cx + 1, top + 3), (cx, top + 4)}, "w")
+    cv.fill({(cx - 1, top + 1), (cx, top + 1)}, "P")  # simpul dasi
+    cv.fill({(cx - 1, y) for y in range(top + 2, top + 8)} | {(cx, top + 6), (cx, top + 7), (cx - 1, top + 8)}, "P")
+
+
+def folder(cv, x, y, lift=0):
+    """Map cokelat tertutup 10x8 (U/u) dengan tab dan tepi kertas krem."""
+    y -= lift
+    solid(cv, rect(x, y, 10, 8), "U", "u", shade_off=(1, 1))
+    cv.fill(rect(x + 1, y - 1, 4, 1), "U")
+    cv.put(x, y - 1, "K"); cv.put(x + 5, y - 1, "K")
+    cv.fill(rect(x + 6, y + 1, 3, 1), "C")
+
+
+def open_folder(cv, x, y, flip):
+    """Map terbuka 16x8 di pangkuan; flip 0-3 = posisi halaman yang sedang dibalik."""
+    solid(cv, rect(x, y, 16, 8), "U", "u", shade_off=(1, 1))
+    for hx in (x + 1, x + 9):
+        cv.fill(rect(hx, y + 1, 6, 6), "C")
+        for k in range(3):
+            cv.fill(rect(hx + 1, y + 2 + k * 2, 4 - (k % 2), 1), "c")
+    cv.fill({(x + 8, yy) for yy in range(y + 1, y + 7)}, "u")
+    if flip:  # halaman yang sedang dibalik: berdiri di tengah lalu jatuh ke kiri
+        px = x + 9 - 2 * flip
+        cv.fill(rect(px, y - 2, 2, 7), "C")
+        cv.fill({(px, y - 3), (px + 1, y - 3)}, "C")
+        cv.fill({(px - 1, yy) for yy in range(y - 2, y + 5)}, "c")
+
+
+def lawyer_base(cv, t, eyes, brows, mouth, bob=0, tilt=0):
+    tail(cv, (CX - 7, TOP + 14), phase=t * 0.45, flip=-1, length=8)
+    lawyer_suit(cv, CX, TOP + bob)
+    head(cv, CX, CY + bob, eyes=eyes, brows=brows, mouth=mouth, tilt=tilt)
+
+
+def lawyer_idle_frame(i):
+    """Merapikan simpul dasi dengan satu tangan, map cokelat dikepit di sisi; sesekali melirik dan berkedip."""
+    cv = Canvas()
+    t = i % 16
+    eyes = "blink" if t == 11 else ("side" if t in (7, 8) else "look")
+    fix = 3 <= t <= 10
+    lawyer_base(cv, t, eyes, "flat", "smile" if t in (9, 10) else "flat", tilt=1 if fix else 0)
+    folder(cv, CX - 20, TOP + 3)
+    arm(cv, (CX - 7, TOP + 3), (CX - 11, TOP + 8), elbow=(CX - 12, TOP + 5), fur="J")
+    if fix:
+        arm(cv, (CX + 7, TOP + 3), (CX + 2, TOP + 1 + (t % 2)), elbow=(CX + 11, TOP + 6), fur="J")
+    else:
+        arm(cv, (CX + 7, TOP + 3), (CX + 9, TOP + 10), elbow=(CX + 10, TOP + 6), fur="J")
+    return cv
+
+
+def lawyer_thinking_frame(i):
+    """Map terbuka di pangkuan, halaman dibolak-balik, mata menelusuri; gelembung "..." lalu "?"."""
+    cv = Canvas()
+    t = i % 16
+    flip = {3: 1, 4: 2, 5: 3, 10: 1, 11: 2, 12: 3}.get(t, 0)
+    lawyer_base(cv, t, "blink" if t == 8 else ("down" if t < 7 else "side"), "worried" if t >= 7 else "flat",
+                "frown" if 9 <= t <= 13 else "flat")
+    open_folder(cv, CX - 8, TOP + 8, flip)
+    arm(cv, (CX - 7, TOP + 3), (CX - 8, TOP + 11), elbow=(CX - 11, TOP + 7), fur="J")
+    arm(cv, (CX + 7, TOP + 3), (CX + 8, TOP + 11), elbow=(CX + 11, TOP + 7), fur="J")
+    if 6 <= t <= 13:
+        dots_or_mark(cv, CX + 12, 0, 6, t, "?")
+    return cv
+
+
+# (fase, lompat)
+LAW_VICTORY = [("hold", 0), ("mid", 0), ("up", 1), ("up", 0), ("up", 1), ("up", 0), ("up", 1), ("up", 0), ("up", 1),
+               ("up", 0), ("up", 1), ("up", 0), ("mid", 0), ("mid", 0), ("hold", 0), ("hold", 0)]
+
+
+def lawyer_victory_frame(i):
+    """Map cokelat diangkat tinggi seperti berkas yang menang, tangan lain mengepal, lompat kecil."""
+    cv = Canvas()
+    t = i % 16
+    phase, hop = LAW_VICTORY[t]
+    up = phase == "up"
+    lawyer_base(cv, t, "happy" if up else "look", "flat", ("o" if t % 2 else "smile") if up else "smile", bob=-hop)
+    if phase == "hold":
+        folder(cv, CX - 20, TOP + 3)
+        arm(cv, (CX - 7, TOP + 3), (CX - 11, TOP + 8), elbow=(CX - 12, TOP + 5), fur="J")
+        arm(cv, (CX + 7, TOP + 3), (CX + 9, TOP + 10), elbow=(CX + 10, TOP + 6), fur="J")
+    elif phase == "mid":
+        folder(cv, CX - 21, TOP - 6)
+        arm(cv, (CX - 7, TOP + 3), (CX - 13, TOP - 1), elbow=(CX - 13, TOP + 5), fur="J")
+        arm(cv, (CX + 7, TOP + 3), (CX + 11, TOP + 2), elbow=(CX + 12, TOP + 7), fur="J")
+    else:
+        folder(cv, CX - 22, 2 - hop)
+        arm(cv, (CX - 7, TOP + 3 - hop), (CX - 14, 9 - hop), elbow=(CX - 14, TOP - 1 - hop), fur="J")
+        arm(cv, (CX + 7, TOP + 3 - hop), (CX + 13, 9 - hop), elbow=(CX + 13, TOP - 1 - hop), fur="J")
+        if t % 4 == 2:
+            cv.fill({(CX - 24, 1), (CX - 25, 1), (CX - 23, 1), (CX - 24, 0), (CX - 24, 2)}, "W")
+    return cv
+
+
 PROPS = {
     "scientist: papan tulis (asli)": lambda cv: chalkboard(cv, 20, 10, 29, 16, "E=mc", 4),
     "mathematician: batu tulis": lambda cv: slate(cv, 26, 20, mark="v"),
     "mathematician: jangka": lambda cv: compass(cv, 30, 20, 90, spread=24),
+    "detective: kaca pembesar (asli)": lambda cv: magnifier(cv, 30, 20),
+    "hacker: laptop (asli)": lambda cv: laptop(cv, 20, 20),
+    "lawyer: map tertutup": lambda cv: folder(cv, 26, 20),
+    "lawyer: map terbuka": lambda cv: open_folder(cv, 22, 20, 0),
+    "lawyer: dasi": lambda cv: lawyer_suit_tie_only(cv),
 }
+
+
+def lawyer_suit_tie_only(cv):
+    """Dasi saja (untuk ukuran prop V7): gambar jas lalu ambil hanya piksel dasi hitam."""
+    tmp = Canvas()
+    lawyer_suit(tmp, 32, 20)
+    for p, c in tmp.px.items():
+        if c == "P":
+            cv.put(p[0], p[1], c)
 
 
 SCENES = {
@@ -575,4 +922,14 @@ SCENES = {
     "mathematician-idle": (math_idle_frame, 16, lambda i: 170 if i % 16 != 9 else 120),
     "mathematician-thinking": (math_thinking_frame, 16, lambda i: 170 if i % 16 != 4 else 120),
     "mathematician-victory": (math_victory_frame, 16, lambda i: 150 if i % 16 in (0, 1, 2, 12, 13, 14, 15) else 110),
+    "hacker-thinking": (hacker_thinking_frame, 16, lambda i: 170),
+    "hacker-shocked": (hacker_shocked_frame, 16, lambda i: 130 if i % 16 < 4 else (200 if i % 16 in (4, 5) else 150)),
+    "hacker-victory": (hacker_victory_frame, 16, lambda i: 150 if i % 16 in (0, 1, 2, 12, 13, 14, 15) else 110),
+    "detective-idle": (detective_idle_frame, 16, lambda i: 180 if i % 16 != 9 else 120),
+    "detective-suspicious": (detective_suspicious_frame, 16, lambda i: 150 if i % 16 not in (7, 8) else 260),
+    "detective-shocked": (detective_shocked_frame, 16, lambda i: 150 if i % 16 != 4 else 110),
+    "detective-victory": (detective_victory_frame, 16, lambda i: 150 if i % 16 in (0, 1, 12, 13, 14, 15) else 110),
+    "lawyer-idle": (lawyer_idle_frame, 16, lambda i: 180 if i % 16 != 11 else 120),
+    "lawyer-thinking": (lawyer_thinking_frame, 16, lambda i: 170 if i % 16 != 8 else 120),
+    "lawyer-victory": (lawyer_victory_frame, 16, lambda i: 150 if i % 16 in (0, 1, 12, 13, 14, 15) else 110),
 }

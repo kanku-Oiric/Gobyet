@@ -141,6 +141,16 @@ NEW = {
     ("mathematician", "idle"): ("mathematician-idle", 0, "D"),
     ("mathematician", "thinking"): ("mathematician-thinking", 10, "D"),
     ("mathematician", "victory"): ("mathematician-victory", 5, "D"),
+    ("hacker", "thinking"): ("hacker-thinking", 8, "E"),
+    ("hacker", "shocked"): ("hacker-shocked", 6, "E"),
+    ("hacker", "victory"): ("hacker-victory", 5, "E"),
+    ("detective", "idle"): ("detective-idle", 0, "E"),
+    ("detective", "suspicious"): ("detective-suspicious", 8, "E"),
+    ("detective", "shocked"): ("detective-shocked", 5, "E"),
+    ("detective", "victory"): ("detective-victory", 5, "E"),
+    ("lawyer", "idle"): ("lawyer-idle", 6, "E"),
+    ("lawyer", "thinking"): ("lawyer-thinking", 10, "E"),
+    ("lawyer", "victory"): ("lawyer-victory", 5, "E"),
 }
 
 # Profil export. Aset gerbang A-C (dan semua aset asli) diekspor dengan pengaturan lama: palet PAL saja,

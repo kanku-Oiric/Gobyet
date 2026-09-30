@@ -57,6 +57,8 @@ Diturunkan dari rig di `src/monkey.py` dan dari aset yang sudah disetujui. Dipak
 | Normal | pisang 6×17 |
 | Scientist | papan tulis asli 29×16 (statis, `E=mc`), kapur 2×2 |
 | Mathematician | batu tulis 11×9, jangka 7×9 (diputar di samping bahu supaya di luar siluet) |
+| Detective | kaca pembesar asli 12×13; saat suspicious di depan mata dengan mata menyipit |
+| Lawyer | map tertutup 10×9, map terbuka 16×11, dasi hitam |
 
 Prop utama sebaiknya berada di luar siluet badan (samping bahu, di atas kepala, atau di lantai) supaya terbaca di 1×. Contoh: idle Mathematician versi pertama (batu tulis dan jangka di pangkuan) memberi IoU 0,90 dengan Referee. Setelah jangka dipindah ke samping bahu, IoU-nya turun ke 0,84.
 
@@ -92,9 +94,9 @@ Prop utama sebaiknya berada di luar siluet badan (samping bahu, di atas kepala, 
 | Detective | `d` | |
 | Mathematician | ungu `p`/`j` (PAL_EXT) | ΔE 48,6 dari dominan terdekat; lebih jauh dari `T` (33,2) |
 
-Rencana gerbang berikutnya:
-- Lawyer: jas biru gelap `J` (PAL_EXT).
-- Wizard: biru baja (PAL_EXT).
+| Lawyer | biru jas `J` (40,56,104) (PAL_EXT) | ΔE 25,6 dari Hacker, 30,3 dari Judge, 67,1 dari Detective |
+
+Rencana gerbang berikutnya: Wizard butuh biru atau ungu dengan ΔE ≥ 15 dari rompi `p` dan jas `J`.
 
 ## Teks
 

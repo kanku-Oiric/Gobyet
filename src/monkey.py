@@ -26,6 +26,7 @@ PAL = {
 # dengan kunci PAL. Kunci yang masih bebas: J j p t w z i o dan angka.
 PAL_EXT = {
     "p": (98, 58, 140), "j": (70, 40, 104),  # ungu: rompi Mathematician (Gerbang D)
+    "J": (40, 56, 104), "w": (28, 38, 74),  # biru jas: jas Lawyer (Gerbang E)
 }
 
 
