@@ -55,9 +55,9 @@ Aset baru dibuat bertahap per gerbang. Urutan kerjanya A, B, C, D, E, G, H, I, J
 | H | Knight, Viking, Pirate, Wizard (masing-masing 6 state, termasuk 2 tarian) | dibuat, validasi lulus, menunggu persetujuan akhir |
 | I | Pak Haji, Priest (masing-masing idle, thinking, happy, victory, defeated; perlakuan dan aura identik, aturan 7.2) | dibuat, validasi lulus, menunggu persetujuan akhir |
 | J | 12 varian kelas Knight, Viking, Pirate (masing-masing idle, attack, victory) | dibuat, validasi lulus, menunggu persetujuan akhir |
-| F | Sisa sel 12 kostum lama, audit, dokumentasi | belum |
+| F | Sisa sel 12 kostum lama (14 wajib + 22 opsional), dokumentasi | dibuat, validasi lulus, menunggu persetujuan akhir |
 
-Terisi 127 dari 163 sel yang berlaku: 7 aset asli dan 120 aset baru. Sel lainnya memakai fallback.
+Semua 163 sel yang berlaku terisi: 7 aset asli dan 156 aset baru. Laporan akhir Fase 2: [`pack/reports/final.md`](pack/reports/final.md).
 
 **Kostum peran (idle)**
 

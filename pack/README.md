@@ -92,9 +92,82 @@ Animasi lama berisi beberapa beat, jadi pemetaannya ke state adalah kecocokan te
 Setiap sel di manifest punya field `origin`:
 
 - `"asli"`: 7 aset yang sudah ada sebelum Fase 2.
-- `"baru"`: aset yang dibuat di Fase 2 dengan rig yang sama, kanvas 64×48, palet `PAL`, dan garis tepi yang sama. Kodenya ada di `src/roles.py` (kostum ROLE) dan `src/domains.py` (Normal dan kostum DOMAIN).
+- `"baru"`: aset yang dibuat di Fase 2 dengan rig yang sama, kanvas 64×48, palet `PAL` (+ `PAL_EXT` mulai Gerbang D), dan garis tepi yang sama. Kodenya per modul:
+
+  | Modul | Isi |
+  |---|---|
+  | `src/roles.py` | Referee, Judge, Skeptic, Champion (gerbang A, B) |
+  | `src/domains.py` | Normal dan kostum domain, termasuk Gamer (gerbang C, D, E, G) |
+  | `src/special.py` | Normal-GBLK (G) |
+  | `src/fantasy.py` | Knight, Viking, Pirate, Wizard (H) |
+  | `src/theology.py` | Pak Haji, Priest (I) |
+  | `src/variants.py` | 12 varian kelas (J) |
+  | `src/pelengkap.py` | sel sisa kostum lama (F) |
 
 Aset baru juga punya field `gate`, yaitu gerbang persetujuan tempat aset itu dibuat, dan nama file `<kostum>-<state>`. Preview menandai aset baru dengan label **BARU** (biru), berbeda dari **ASLI** (hijau).
+
+## Format manifest lengkap
+
+`pack/manifest.json` (format `gobyet-pack/1`) dibangkitkan dari `src/pack.py`. Field tingkat atas:
+
+| Field | Isi |
+|---|---|
+| `format` | `"gobyet-pack/1"` |
+| `generated_by`, `paths` | keterangan asal dan basis path (relatif terhadap manifest) |
+| `canvas` | `{ "w": 64, "h": 48 }` |
+| `gif_scale` | `8` (GIF 512×384) |
+| `costumes[]` | `{ id, label, group, base?, caption?, applies }`. `group` adalah kategori (`core`, `special`, `role`, `domain`, `fantasy`, `theology`). `base` = kostum induk untuk fallback varian. `caption` = keterangan (mis. kepanjangan GBLK). `applies` = `{ state: "required" \| "optional" }`. |
+| `states[]` | `{ id, label, required, costumes? }`. Diturunkan dari `applies`, hanya untuk kompatibilitas manifest lama. |
+| `fallback` | urutan langkah resolver (lihat Resolver) |
+| `cells` | `{ kostum: { state: sel } }` hanya untuk sel yang punya aset |
+| `extras[]` | aset di luar matriks: `{ source, note, gif, sheet }` (`marah-debug`, `kondangan`) |
+
+Isi satu sel:
+
+```json
+{ "status": "final", "origin": "baru", "source": "knight-idle", "gate": "H",
+  "sheet": "../sheets/knight-idle.png", "gif": "../gif/knight-idle.gif",
+  "frames": 12, "durations_ms": [180, 180, 180, 180, 180, 180, 180, 120, 180, 180, 180, 180],
+  "loop": true, "keyframe": 0 }
+```
+
+`sheet4x` hanya ada di aset lama (asli dan gerbang A-C). `gate` hanya ada di aset baru.
+
+## Menambah kostum, state, atau varian
+
+1. **Kostum baru:**
+   - Tambahkan `(id, label, group)` ke `COSTUMES` di `src/pack.py`, plus `base` dan `caption` di `COSTUME_META` bila perlu.
+   - Tentukan sel yang berlaku di `APPLIES`, minimal `idle` wajib.
+   - Pilih warna dominan dengan ΔE ≥ 15 dari semua kostum dasar (lihat tabel alokasi di `STYLE.md`). Warna baru masuk `PAL_EXT`, dengan kunci yang tidak bertabrakan dengan `PAL`.
+2. **Gambar di modul kostumnya:**
+   - Pakai rig `head()`, `sitting_body()` atau `dressed_body()`, dan `arm()` apa adanya. Wajah dan badan Gobyet terkunci; kostum hanya lapisan.
+   - Daftarkan `SCENES = {"<kostum>-<state>": (fungsi_frame, jumlah_frame, fungsi_durasi)}` dan `PROPS` untuk V7.
+   - Modul baru didaftarkan di `export.all_scenes()` dan di `props()` pada validator.
+3. **Petakan sel:** tambahkan `(kostum, state): ("<kostum>-<state>", frame_kunci, "<gerbang>")` ke `NEW`. Frame kunci adalah pose yang paling informatif, dan untuk state non-idle harus jelas berbeda dari idle.
+4. **Jalankan:** `python3 src/export.py`, lalu `python3 src/validate_pack.py --gate <X>`, `node --test pack/resolver.test.js`, dan `node tools/e2e_preview.js`.
+   - Sebelum dan sesudah export, verifikasi `sha256sum -c` untuk `pack/sha256-asli.txt`, `pack/sha256-disetujui.txt`, dan `pack/sha256-dibuat.txt`. Aset lain tidak boleh berubah byte.
+5. **Varian:** kostum dengan `base` = kostum faksi. Varian mewarisi fallback ke kostum dasarnya dan hanya mengubah prop, aksesori, dan warna aksen (ΔE ≥ 10 dari saudara sefaksi).
+6. **State baru:** tambahkan ke `STATE_IDS` di `src/pack.py`, lalu ke `APPLIES` untuk kostum yang memakainya. Resolver tidak perlu diubah.
+
+## Aturan tarian
+
+- `dance-*` tepat 16 frame × 120 ms.
+- Pose besar berganti di f0, f4, f8, dan f12. Di dalam beat hanya ekor yang bergerak halus. V9 memeriksa bahwa perubahan di transisi beat lebih besar daripada di transisi lain, dan seam lulus.
+- Badan tetap duduk dan bergoyang, meniru cara `kondangan`. Tidak ada badan berdiri baru.
+- Prop tidak boleh keluar dari kanvas atau menutupi wajah di frame mana pun.
+- Yang menari: Normal, Champion, Gamer, Normal-GBLK (tiga tarian), Viking, dan Pirate.
+- Role netral (Referee, Judge, Skeptic) dan kostum teologi tidak pernah menari (7.2d, 7.3).
+
+## Guardrail konten
+
+- **7.1 Senjata (fantasi dan varian):**
+  - Gaya kartun. Tanpa darah, luka, proyektil melayang, kilatan tembakan, atau asap laras.
+  - `attack` adalah metafora: prop dihentak atau ditancapkan ke lantai, balok, atau papan kayu; pose membidik ke papan sasaran bulat tanpa melepas anak panah; atau senapan diarahkan ke atas.
+  - Tidak ada yang diarahkan ke karakter lain. Senjata api hanya prop yang dipegang.
+  - Nama kelas adalah arketipe generik; tidak meniru seni atau UI game mana pun.
+- **7.2 Teologi:** lihat bagian "Kostum teologi" di bawah dan audit `[VT]` di Validasi.
+- **7.3 Role netral** (Referee, Judge, Skeptic) tidak menari dan tidak dibuat konyol. Victory mereka tanpa lompat dan tanpa konfeti. Champion boleh menari.
+- **7.4 Defeated:** tidak brutal dan tidak merendahkan. Tanpa darah, tengkorak, atau simbol kematian; cukup lunglai atau rebah, prop terjatuh, dan helaan napas.
 
 ## Validasi
 
@@ -217,6 +290,12 @@ Aturan 3 (kostum yang sudah punya tampilan memakai tampilan itu) menang atas bri
 - **Metode:** berbasis aturan kata kunci per kostum, deterministik, tanpa LLM. Hanya satu kostum dengan skor tertinggi yang dipakai, termasuk untuk topik campuran.
 - **Jatuh ke `normal`:** bila tidak ada yang cocok, skor di bawah ambang, atau dua kostum teratas seri.
 
+**Kostum lain (rancangan, belum diimplementasikan):**
+
+- **Fantasi dan Gamer** hanya untuk topik bertema, misalnya pertanyaan tentang abad pertengahan, bajak laut, atau game. Pemilihannya memakai aturan kata kunci yang sama dengan kostum domain, dipilih sekali per turnamen, dan varian kelas hanya bila topiknya menyebut kelas itu.
+- **Teologi** netral (lihat bagian Kostum teologi).
+- **Normal-GBLK** adalah maskot spesial. Tidak dipilih otomatis oleh aturan topik; hanya dipakai lewat override manual atau acara khusus yang diputuskan saat integrasi.
+
 **Disimpan tanpa mengubah schema:** di file sidecar `RUN_DIR/presentation.json`, bukan di `state.json`.
 
 ```json
@@ -241,6 +320,13 @@ Aturan 3 (kostum yang sudah punya tampilan memakai tampilan itu) menang atas bri
 - Kostum teologi hanya dipakai bila topik **menyebut satu tradisi secara eksplisit** (mis. "menurut fikih ..." atau "dalam teologi Katolik ..."). Untuk pertanyaan teologis yang tidak menyebut satu tradisi, sistem **tidak boleh otomatis memilih salah satu tokoh**. Pilihannya: tampilkan keduanya berdampingan dengan state identik, atau jatuh ke `normal`. Pilihan di antara keduanya diputuskan saat integrasi.
 - Kostum teologi tidak dipakai untuk peran turnamen (`referee`, `judge`, `skeptic`, `champion`).
 - Tokoh teologi tradisi lain (mis. Biksu, Pandita) ada di backlog. Kalau ditambahkan, berlaku aturan identik yang sama, termasuk aura yang sama persis.
+
+## Backlog (hanya dicatat, tidak dikerjakan di Fase 2)
+
+- **Kostum domain:** Historian, Economist, Psychologist, Sociologist, Journalist, Doctor, Engineer, Professor, Archivist.
+- **Tokoh teologi tradisi lain** (mis. Biksu, Pandita), dengan aturan 7.2 yang sama dan aura yang identik.
+- **Kostum absurd lain.**
+- Opsi D (GIF dibuat saat rilis), bila anggaran ukuran menjadi masalah.
 
 ## Nada
 

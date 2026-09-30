@@ -61,6 +61,9 @@ Diturunkan dari rig di `src/monkey.py` dan dari aset yang sudah disetujui. Dipak
 | Lawyer | map tertutup 10×9, map terbuka 16×8, dasi hitam 2×8 (prop sekunder, di bawah target) |
 | Gamer | gamepad 14×6, headset 26×19 (cincin di kepala = siluet pembeda dari Hacker), kaleng 4×6 (prop sekunder, hanya di idle) |
 | Normal-GBLK | papan GBLK 27×11 bertongkat, teks 23×5 kontras tinggi (K di atas `n`) |
+| Judge (victory, F) | timbangan emas kecil 13×12 |
+| Skeptic (defeated/shocked/victory, F) | monokel tergantung di rantai, sapu tangan putih 4×4 |
+| Champion (happy, F) | hati kecil 5×4 |
 | Knight | pedang 4×15 (bilah bertepi `s` supaya kontras dengan latar krem; lebarnya di bawah target, panjangnya yang membuatnya terbaca), perisai layang-layang 9×11 dengan pita emas mendatar, helm terbuka 20×8, panji emas 8×5 (hanya di victory) |
 | Viking | kapak 10×15, perisai bundar kayu 12×12, helm bertanduk 26×11 dengan pita kulit `D` |
 | Pirate | cutlass 9×13 (bilah bertepi `s`), teropong 15×4 (tingginya di bawah target), tricorn 25×8, peti 20×8, koin 4×4 |
@@ -200,6 +203,9 @@ Setiap victory baru wajib punya minimal satu elemen yang belum dipakai kostum la
 | Pirate-Skirmisher | Bergelantung di tali dari atas dan berayun kiri-kanan | J |
 | Pirate-Sharpshooter | Tricorn berputar di ujung laras senapan yang diangkat tegak | J |
 | Pirate-Buccaneer | Jangkar diangkat satu tangan dengan garis tenaga | J |
+| Referee | Lengan diangkat lurus sebagai isyarat akhir pertandingan, peluit ditiup dengan nada `n` yang naik. Tanpa lompat, tanpa konfeti (role netral) | F |
+| Judge | Timbangan emas kecil diangkat, berayun lalu seimbang dan berkilau; palu terangkat. Tanpa lompat, tanpa konfeti | F |
+| Skeptic | Monokel dilepas dan digosok sapu tangan putih di depan dada, stempel terangkat. Tanpa lompat, tanpa konfeti | F |
 
 ## Teks
 
