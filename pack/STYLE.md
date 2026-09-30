@@ -41,7 +41,7 @@ Diturunkan dari rig di `src/monkey.py` dan dari aset yang sudah disetujui. Dipak
 
 - **Badan:** `sitting_body` (bulu) atau `dressed_body` (baju). Torso elips 8,2 × 7,2 di `top + 6,5`, dua paha, dan dua telapak kaki.
 - **Lengan:** `arm(cv, bahu, tangan, elbow=siku, fur=warna_lengan)`, tebal r 1,8, telapak r 2,0. Lengan jubah lebar r 2,2. Bahu di `(CX ± 7, TOP + 3)`.
-- **Ekor:** `tail()` keriting, digambar paling awal (di belakang badan).
+- **Ekor:** `tail()` keriting, digambar paling awal (di belakang badan). Mulai Gerbang H, fase ekor memakai `wag(t, n)` (`src/fantasy.py`): satu putaran penuh per n frame, jadi frame terakhir menyambung mulus ke frame 0. Aset lama tidak diubah.
 - **Pose rebah (defeated):** `lying_body()` di `src/domains.py`. Badan menyamping ke kanan, kepala tetap menghadap kamera.
 
 ## Prop yang berhasil (ukuran di 1×, target heuristik ≥ 6×6)
@@ -61,6 +61,10 @@ Diturunkan dari rig di `src/monkey.py` dan dari aset yang sudah disetujui. Dipak
 | Lawyer | map tertutup 10×9, map terbuka 16×8, dasi hitam 2×8 (prop sekunder, di bawah target) |
 | Gamer | gamepad 14×6, headset 26×19 (cincin di kepala = siluet pembeda dari Hacker), kaleng 4×6 (prop sekunder, hanya di idle) |
 | Normal-GBLK | papan GBLK 27×11 bertongkat, teks 23×5 kontras tinggi (K di atas `n`) |
+| Knight | pedang 4×15 (bilah bertepi `s` supaya kontras dengan latar krem; lebarnya di bawah target, panjangnya yang membuatnya terbaca), perisai layang-layang 9×11 dengan pita emas mendatar, helm terbuka 20×8, panji emas 8×5 (hanya di victory) |
+| Viking | kapak 10×15, perisai bundar kayu 12×12, helm bertanduk 26×11 dengan pita kulit `D` |
+| Pirate | cutlass 9×13 (bilah bertepi `s`), teropong 15×4 (tingginya di bawah target), tricorn 25×8, peti 20×8, koin 4×4 |
+| Wizard | tongkat 7×27 dengan permata bersinar, topi runcing 25×12 berbintang, buku mantra 13×7 |
 
 Prop utama sebaiknya berada di luar siluet badan (samping bahu, di atas kepala, atau di lantai) supaya terbaca di 1×. Contoh: idle Mathematician versi pertama (batu tulis dan jangka di pangkuan) memberi IoU 0,90 dengan Referee. Setelah jangka dipindah ke samping bahu, IoU-nya turun ke 0,84.
 
@@ -95,8 +99,13 @@ Prop utama sebaiknya berada di luar siluet badan (samping bahu, di atas kepala, 
 | Hacker | `q` | |
 | Detective | `d` | |
 | Mathematician | ungu `p`/`j` (PAL_EXT) | ΔE 48,6 dari dominan terdekat; lebih jauh dari `T` (33,2) |
-
 | Lawyer | biru jas `J` (40,56,104) (PAL_EXT) | ΔE 25,6 dari Hacker, 30,3 dari Judge, 67,1 dari Detective |
+| Gamer | oranye `o` (PAL_EXT), kaus | 38% piksel kostum |
+| Normal-GBLK | krem-kuning `n`, papan | 84%; ΔE 23,1 dari Greek |
+| Knight | merah tua `z` (PAL_EXT), tabard | 36%. Lengan zirah rantai `s` dan tabard selebar badan supaya baja `G` tidak dominan (versi pertama: `G` 40%, ΔE 13,4 dari Referee/Academic). ΔE 24,9 dari Pirate |
+| Viking | cokelat tua `D`, rompi tertutup dan pita helm | 33%. Versi pertama: helm abu `s` dominan |
+| Pirate | marun `i` (PAL_EXT), mantel | 44%; ΔE 24,9 dari Knight |
+| Wizard | biru kerajaan `3` (PAL_EXT), jubah | 68% |
 
 ### Alokasi warna global (sebelum Gerbang G)
 
@@ -135,6 +144,10 @@ Setiap victory baru wajib punya minimal satu elemen yang belum dipakai kostum la
 | Lawyer | Map diangkat. Tidak ada elemen khas di luar pola dasar (dicatat; aset E tidak direvisi) | E |
 | Gamer | Gamepad bergetar (garis getar di kedua sisi) dan gelembung "GG" | G |
 | Normal-GBLK | Tulisan papan berkedip merah dan gelap bergantian | G |
+| Knight | Panji emas kecil berkibar di ujung pedang. Kilau yang menyapu bilah diminta brief, tetapi kilau berpindah sudah dipakai Detective, jadi tidak dihitung sebagai elemen khas | H |
+| Viking | Garis teriakan dari mulut yang terbuka lebar, gelembung "!" | H |
+| Pirate | Koin emas memercik lalu jatuh. Lempar topi diminta brief, tetapi mirip lempar toga Academic, jadi tidak dihitung sebagai elemen khas | H |
+| Wizard | Hujan bintang emas dari tongkat yang terangkat | H |
 
 ## Teks
 

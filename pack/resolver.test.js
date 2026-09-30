@@ -54,8 +54,11 @@ test("state hilang tanpa idle kostum: jatuh ke normal+state, lalu normal+idle", 
 
 test("kostum hilang atau tidak dikenal: jatuh ke normal", () => {
   assert.equal(P.resolve(FIX, "judge", "judging").step, "normal+idle");
-  assert.equal(P.resolve(M, "pirate", "happy").step, "normal+state");
-  assert.equal(P.resolve(M, "pirate", "tidak-ada").step, "normal+idle");
+  // Kostum yang tidak dikenal manifest (contoh ini dulu memakai "pirate", yang sejak Gerbang H punya idle sendiri).
+  assert.equal(P.resolve(M, "kostum-tak-dikenal", "happy").step, "normal+state");
+  assert.equal(P.resolve(M, "kostum-tak-dikenal", "tidak-ada").step, "normal+idle");
+  // Kostum yang sudah punya idle: state tanpa aset jatuh ke idle kostum itu sendiri, bukan ke normal.
+  assert.equal(P.resolve(M, "pirate", "happy").step, "costume+idle");
 });
 
 test("pemetaan Gerbang B: wisuda di academic/idle, academic/victory bukan wisuda", () => {

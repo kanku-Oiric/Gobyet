@@ -52,12 +52,12 @@ Aset baru dibuat bertahap per gerbang. Urutan kerjanya A, B, C, D, E, G, H, I, J
 | D | Scientist: idle, shocked, victory · Mathematician: idle, thinking, victory | disetujui |
 | E | Hacker: thinking, shocked, victory · Detective: idle, suspicious, shocked, victory · Lawyer: idle, thinking, victory | disetujui |
 | G | Gamer (7 state), Normal-GBLK (8 state) | dibuat, validasi lulus, menunggu persetujuan akhir |
-| H | Knight, Viking, Pirate, Wizard | belum |
+| H | Knight, Viking, Pirate, Wizard (masing-masing 6 state, termasuk 2 tarian) | dibuat, validasi lulus, menunggu persetujuan akhir |
 | I | Pak Haji, Priest | belum |
 | J | 12 varian kelas Knight, Viking, Pirate | belum |
 | F | Sisa sel 12 kostum lama, audit, dokumentasi | belum |
 
-Terisi 57 dari 163 sel yang berlaku: 7 aset asli dan 50 aset baru. Sel lainnya memakai fallback.
+Terisi 81 dari 163 sel yang berlaku: 7 aset asli dan 74 aset baru. Sel lainnya memakai fallback.
 
 **Kostum peran (idle)**
 

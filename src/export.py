@@ -17,6 +17,7 @@ import pack  # noqa: E402
 import roles  # noqa: E402
 import scenes  # noqa: E402
 import special  # noqa: E402
+import fantasy  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 KEYS = sorted(PAL)
@@ -47,7 +48,7 @@ def indexed(cv, scale, index=None, palette=None):
 
 def all_scenes():
     merged = {}
-    for mod in (scenes, costumes, roles, domains, special):
+    for mod in (scenes, costumes, roles, domains, special, fantasy):
         for name in mod.SCENES:
             assert name not in merged, "nama animasi ganda: " + name
         merged.update(mod.SCENES)
