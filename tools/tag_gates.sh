@@ -9,4 +9,5 @@ tag fase2-gate-D 056e0dc "Gerbang D: Scientist, Mathematician"
 tag fase2-gate-E 3eb2cdc "Gerbang E: Hacker, Detective, Lawyer"
 tag fase2-gate-G 1d52710 "Gerbang G: Gamer dan Normal-GBLK (15 aset, termasuk 4 tarian)"
 tag fase2-gate-H bd42c0c "Gerbang H: Knight, Viking, Pirate, Wizard (24 aset, termasuk 2 tarian)"
+tag fase2-gate-I 316fe79 "Gerbang I: Pak Haji dan Priest (10 aset, audit teologi 7.2)"
 git push origin --tags
