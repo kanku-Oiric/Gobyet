@@ -28,7 +28,7 @@ Huruf gerbang tidak berurutan dengan urutan kerja. Urutan kerja sebenarnya: A, B
 
 Pengaman per gerbang:
 1. Laporan lengkap di `pack/reports/gate-<X>.md`.
-2. Commit tersendiri dengan tag `fase2-gate-<X>`.
+2. Commit tersendiri dengan tag `fase2-gate-<X>`. Tag dibuat di sesi, tetapi **tidak bisa di-push** dari sesi Claude (remote menolak push selain branch kerja). Karena itu pemetaan gerbang → commit dicatat di tabel di atas dan di `tools/tag_gates.sh`; jalankan `sh tools/tag_gates.sh` dari mesinmu untuk membuat dan mem-push semua tag.
 3. Hash aset gerbang itu ditambahkan ke `pack/sha256-dibuat.txt`.
 4. File ini dan `STYLE.md` diperbarui, lalu preview diterbitkan ulang.
 
@@ -92,7 +92,7 @@ File hash:
 - **`pack/sha256-disetujui.txt`:** aset gerbang yang disetujui pemilik (A-E). Tambahkan `sha256sum` dari `gif/<nama>.gif`, `sheets/<nama>.png`, dan `sheets/<nama>@4x.png` (bila ada) hanya setelah pemilik menyetujui.
 - **`pack/sha256-dibuat.txt`:** aset gerbang G ke atas yang sudah dibuat tetapi belum disetujui. Tiap gerbang berikutnya memverifikasi bahwa file-file ini tidak berubah. Mengubahnya hanya lewat protokol revisi (bagian 10), dengan memperbarui hash secara eksplisit.
 
-Mengembalikan satu gerbang: `git checkout fase2-gate-<X> -- gif sheets src pack` (lalu `python3 src/export.py` dan validator), atau `git revert` commit gerbang itu.
+Mengembalikan satu gerbang: `git checkout fase2-gate-<X> -- gif sheets src pack` (atau hash commit gerbang dari tabel di atas) (lalu `python3 src/export.py` dan validator), atau `git revert` commit gerbang itu.
 
 ## Catatan yang harus diingat
 
