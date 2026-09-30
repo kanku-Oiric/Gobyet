@@ -18,5 +18,8 @@ Skrip ini menyalakan server statis kecil memakai modul bawaan Node, jadi tidak p
 - Tampilan 4× (sheet 1× diperbesar tanpa smoothing) sama per piksel dengan `sheet4x`, untuk sel yang masih punya file itu.
 - Tes buta: label tersembunyi sampai tombol ditekan, dan urutannya tetap setelah halaman dimuat ulang.
 - Tidak ada scroll horizontal di viewport ponsel 390 px.
+- Filter panel banding: gabungan semua pilihan gerbang sama dengan semua sel bergerbang, jumlah per gerbang cocok, dan tinggi satu tampilan gerbang di ponsel ≤ 3000 px.
+  - Gerbang dengan lebih dari 24 aset (J dan F) dipecah menjadi beberapa pilihan per keluarga atau faksi, misalnya `J:knight` dan `F:peran`.
+  - Jumlah per gerbang dihitung dari semua pilihan dengan huruf gerbang yang sama.
 
 Hasilnya ditulis ke `e2e.json` beserta screenshot (`compare-static.png`, `blind-*.png`, `preview-*.png`). Skrip keluar dengan kode 1 bila ada pemeriksaan yang gagal. Folder `tools/out/` diabaikan git.

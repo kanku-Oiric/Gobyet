@@ -329,6 +329,7 @@ details.fam > .scroll { border: 0; border-top: 1px solid var(--line); border-rad
 
   // ---- banding gaya: 1x dan 4x dari sheet 1x yang sama (tanpa smoothing), dibangkitkan dari manifest
   var GATE_ORDER = ["A", "B", "C", "D", "E", "G", "H", "I", "J", "F"];  // urutan kerja sebenarnya
+  var SPLIT_OVER = 24;
   function isBaseCostume(c) { return !c.base || c.group === "special"; }
   function compareGroups() {
     var mx = P.matrix(manifest);
@@ -340,7 +341,28 @@ details.fam > .scroll { border: 0; border-top: 1px solid var(--line); border-rad
         if (r.kind === "exact" && r.cell.gate) (byGate[r.cell.gate] = byGate[r.cell.gate] || []).push([c.id, s.id]);
       });
     });
-    GATE_ORDER.slice().reverse().forEach(function (g) { if (byGate[g]) groups.push([g, "Gerbang " + g + " (" + byGate[g].length + " aset)", byGate[g]]); });
+    // Gerbang dengan lebih dari SPLIT_OVER aset dipecah per keluarga (atau per faksi bila satu keluarga saja),
+    // supaya satu tampilan tetap <= 3000 px di ponsel. Nilai pilihan: "<gerbang>:<kunci>".
+    var byId = {};
+    mx.costumes.forEach(function (c) { byId[c.id] = c; });
+    GATE_ORDER.slice().reverse().forEach(function (g) {
+      var list = byGate[g];
+      if (!list) return;
+      if (list.length <= SPLIT_OVER) { groups.push([g, "Gerbang " + g + " (" + list.length + " aset)", list]); return; }
+      var fam = function (pair) { var c = byId[pair[0]]; return FAMILY_OF[c.group] || c.group; };
+      var keyOf = list.every(function (pair) { return fam(pair) === fam(list[0]); })
+        ? function (pair) { var c = byId[pair[0]]; return c.base || c.id; } : fam;
+      var parts = [];
+      list.forEach(function (pair) {
+        var k = keyOf(pair), part = parts.filter(function (x) { return x[0] === k; })[0];
+        if (!part) parts.push(part = [k, []]);
+        part[1].push(pair);
+      });
+      parts.forEach(function (part) {
+        var slug = part[0].toLowerCase().replace(/[^a-z0-9]+/g, "-");
+        groups.push([g + ":" + slug, "Gerbang " + g + " · " + part[0] + " (" + part[1].length + " dari " + list.length + " aset)", part[1]]);
+      });
+    });
     return groups;
   }
   var cmpCells = [];

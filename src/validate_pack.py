@@ -474,7 +474,7 @@ def props():
     }
     table.update(getattr(domains, "PROPS", {}))
     import importlib
-    for mod in ("special", "fantasy", "theology"):  # modul kostum Gerbang G dan sesudahnya (yang sudah ada)
+    for mod in ("special", "fantasy", "theology", "variants"):  # modul kostum Gerbang G dan sesudahnya (yang sudah ada)
         try:
             table.update(getattr(importlib.import_module(mod), "PROPS", {}))
         except ModuleNotFoundError:

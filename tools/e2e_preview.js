@@ -91,7 +91,8 @@ function serve() {
       const cellsShown = await p.$$eval("#compare figure", (fs) => fs.map((f) => f.dataset.cell));
       const h = await p.$eval('section[aria-labelledby="cmpTitle"]', (e) => Math.round(e.getBoundingClientRect().height));
       out.per_option[v] = { figures: cellsShown.length, height_px: h };
-      if (/^[A-Z]$/.test(v)) { cellsShown.forEach((c) => union.add(c)); out.max_gate_height = Math.max(out.max_gate_height, h); }
+      // pilihan gerbang: "J", atau "J:<keluarga>" bila gerbang besar dipecah per keluarga
+      if (/^[A-Z](:[a-z0-9-]+)?$/.test(v)) { cellsShown.forEach((c) => union.add(c)); out.max_gate_height = Math.max(out.max_gate_height, h); }
     }
     const gated = [];
     for (const [costume, row] of Object.entries(manifestData.cells)) for (const [state, cell] of Object.entries(row)) if (cell.gate) gated.push(costume + "/" + state);
@@ -99,7 +100,9 @@ function serve() {
     out.union_ok = gated.length === union.size && gated.every((c) => union.has(c));
     const perGate = {};
     for (const c of Object.values(manifestData.cells).flatMap((r) => Object.values(r))) if (c.gate) perGate[c.gate] = (perGate[c.gate] || 0) + 1;
-    out.counts_ok = Object.entries(perGate).every(([g, n]) => out.per_option[g] && out.per_option[g].figures === n);
+    const shownPerGate = {};
+    for (const [v, o] of Object.entries(out.per_option)) if (/^[A-Z](:[a-z0-9-]+)?$/.test(v)) shownPerGate[v[0]] = (shownPerGate[v[0]] || 0) + o.figures;
+    out.counts_ok = Object.entries(perGate).every(([g, n]) => shownPerGate[g] === n);
     await p.selectOption("#cmpFilter", "semua");
     await p.waitForTimeout(600);
     return out;
@@ -195,7 +198,7 @@ function serve() {
   report.phone_overflow = await m.p.evaluate(() => document.documentElement.scrollWidth - innerWidth);
   check(report.phone_overflow === 0, "scroll horizontal di ponsel");
   await m.p.screenshot({ path: path.join(OUT, "preview-phone.png") });
-  const latest = report.filter_phone.options.filter((o) => /^[A-Z]$/.test(o))[0];
+  const latest = report.filter_phone.options.filter((o) => /^[A-Z](:[a-z0-9-]+)?$/.test(o))[0];
   if (latest) { await m.p.selectOption("#cmpFilter", latest); await m.p.waitForTimeout(600); }
   await m.p.locator('section[aria-labelledby="cmpTitle"]').screenshot({ path: path.join(OUT, "compare-phone.png") });
   await m.p.locator('section[aria-labelledby="blindTitle"]').screenshot({ path: path.join(OUT, "blind-phone.png") });

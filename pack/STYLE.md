@@ -67,6 +67,18 @@ Diturunkan dari rig di `src/monkey.py` dan dari aset yang sudah disetujui. Dipak
 | Wizard | tongkat 7×27 dengan permata bersinar, topi runcing 25×12 berbintang, buku mantra 13×7 |
 | Pak Haji | kopiah putih polos 18×6, tasbih kayu 9 butir 2×2 (untaian 8×8), koko putih `S` berkerah pendek, sarung kotak `V`/`v` |
 | Priest | buku polos tertutup 9×7 (sampul `D`, tepi halaman `C`, tanpa tanda apa pun), kalung salib polos 3×4 (`y`) bertali cokelat `N` (bersama tali 6×5, sengaja kecil sesuai brief), kerah putih 6×2 |
+| Knight-Heavy | pedang besar 6×19 (berdiri di sisi kanan, tidak di depan badan), pelindung bahu 8×6, lengan baja `G` |
+| Knight-Archer | busur panjang 5×25, tabung panah 7×14 di bahu kiri, papan sasaran bulat 10×22 (attack dan victory) |
+| Knight-Manatarms | halberd 6×30, gada 8×13 |
+| Knight-Assassin | tudung dan jubah gelap `l`, belati 4×9, bom asap abu 4×6 di sabuk |
+| Viking-Berserker | dua kapak, ikat kepala bulu 18×3 (tanpa helm), mantel bulu `c`, mata melebar |
+| Viking-Huscarl | kapak besar 6×22, perisai bundar, baju zirah rantai `s` |
+| Viking-Gestir | tombak lempar 3×29 (dipegang, tidak dilempar), rompi hijau `k` |
+| Viking-Bondi | busur pendek 4×16, seax bersarung 7×4, rompi `d` |
+| Pirate-Captain | topi kapten 28×9 berbulu merah, blunderbuss 7×18 (prop, tidak ditembakkan), burung beo 8×10 (victory) |
+| Pirate-Skirmisher | bandana 25×9, kaus belang `W`/`R`, pedang lurus, tong mesiu 5×6 (tertutup, tanpa sumbu menyala), tali (victory) |
+| Pirate-Sharpshooter | senapan panjang 11×26 (prop; tanpa kilatan atau asap laras), mantel `k` |
+| Pirate-Buccaneer | palu besar 10×16, jangkar 14×15, dua sabuk kulit menyilang (aksesori besar, proporsi Gobyet tetap) |
 
 Prop utama sebaiknya berada di luar siluet badan (samping bahu, di atas kepala, atau di lantai) supaya terbaca di 1×. Contoh: idle Mathematician versi pertama (batu tulis dan jangka di pangkuan) memberi IoU 0,90 dengan Referee. Setelah jangka dipindah ke samping bahu, IoU-nya turun ke 0,84.
 
@@ -129,7 +141,13 @@ Dicari lewat kombinasi yang memaksimalkan ΔE minimum terhadap 12 dominan yang a
 - **Wizard, tiga kandidat:** kobalt (40,84,196) ΔE 25,8; **biru kerajaan (66,110,220) ΔE 29,9, dipilih**; indigo terang (92,80,200) ΔE 23,8. Cadangan teal tua (20,100,110) ΔE 20,5.
 - **Pak Haji:** koko putih atau krem selalu < 15 dari Academic (`C` 11,2; `S`, `H`, `m` < 7). Karena itu warna dominannya harus sarung hijau: sarung dibuat lebih luas daripada koko.
 - **Priest:** jubah abu (bukan hitam) supaya jauh dari Judge `L`.
-- **Aksen varian** (ΔE ≥ 10 dari saudara sefaksi) ditetapkan di Gerbang J dan dicatat di bawah.
+- **Aksen varian** (ΔE ≥ 10 dari saudara sefaksi) ditetapkan di Gerbang J. Aksen = warna dominan varian (piksel kostum idle, metode V6).
+
+| Faksi | Varian dan aksen | ΔE terkecil antar saudara |
+|---|---|---|
+| Knight | Heavy baja `G`, Archer hijau `v`, Manatarms biru `J`, Assassin arang `l` | Manatarms–Assassin 25,4 |
+| Viking | Berserker krem bulu `c`, Huscarl abu rantai `s`, Gestir hijau tua `k`, Bondi cokelat `d` | Berserker–Huscarl 20,1 |
+| Pirate | Captain biru laut `w`, Skirmisher merah `R`, Sharpshooter hijau tua `k`, Buccaneer kulit `x` | Sharpshooter–Buccaneer 35,4 |
 
 ### Aura kostum teologi (Gerbang I)
 
@@ -170,6 +188,18 @@ Setiap victory baru wajib punya minimal satu elemen yang belum dipakai kostum la
 | Wizard | Hujan bintang emas dari tongkat yang terangkat | H |
 | Pak Haji | Aura menguat (lapisan luar lebih rapat) dengan titik emas yang bergeser pelan. Tanpa konfeti, tanpa lompat. Sama persis dengan Priest karena 7.2e | I |
 | Priest | Sama persis dengan Pak Haji (7.2e) | I |
+| Knight-Heavy | Tiap mendarat, kepulan debu besar menyembur di kedua sisi | J |
+| Knight-Archer | Bintang emas berkedip di tengah papan sasaran di samping (tanpa anak panah) | J |
+| Knight-Manatarms | Halberd diputar di atas kepala dengan jejak busur putaran | J |
+| Knight-Assassin | Cincin asap berongga naik dan membesar dari bom asap | J |
+| Viking-Berserker | Dua kapak diadu di atas kepala dengan percikan kilau di titik temu | J |
+| Viking-Huscarl | Perisai dipukul gagang kapak, garis bunyi melengkung di sekitarnya | J |
+| Viking-Gestir | Tombak diseimbangkan tegak di ujung jari dan bergoyang | J |
+| Viking-Bondi | Tali busur dipetik, garis getar berganti sisi | J |
+| Pirate-Captain | Burung beo terbang hinggap di bahu dan mengepakkan sayap | J |
+| Pirate-Skirmisher | Bergelantung di tali dari atas dan berayun kiri-kanan | J |
+| Pirate-Sharpshooter | Tricorn berputar di ujung laras senapan yang diangkat tegak | J |
+| Pirate-Buccaneer | Jangkar diangkat satu tangan dengan garis tenaga | J |
 
 ## Teks
 
