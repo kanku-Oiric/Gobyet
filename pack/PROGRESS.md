@@ -12,7 +12,7 @@ Huruf gerbang tidak berurutan dengan urutan kerja. Urutan kerja sebenarnya: A, B
 | 2 | B | Judge, Skeptic, Champion (revisi medali di `73c034b`) | 8 | disetujui, dikunci setelah bagian 3 terverifikasi | `6875e4e`, `73c034b`, kunci di commit persiapan D |
 | 3 | C | Greek Philosopher, Academic, Normal | 9 | disetujui, dikunci | `73c034b`, kunci `dd78be8` |
 | 4 | D | Scientist (idle, shocked, victory), Mathematician (idle, thinking, victory) | 6 | validasi lulus (AUTO); menunggu tinjauan di STOP-1 | `056e0dc` |
-| 5 | E | Hacker (3), Detective (4), Lawyer (3); STOP-1 | 10 | validasi lulus; **STOP-1: menunggu persetujuan gaya D dan E** | commit Gerbang E |
+| 5 | E | Hacker (3), Detective (4), Lawyer (3); STOP-1 | 10 | validasi lulus; **STOP-1: menunggu persetujuan gaya D dan E** | `3eb2cdc` |
 | 6 | G | Gamer (7), Normal-GBLK (8); STOP-2 | 15 | belum | |
 | 7 | H | Knight, Viking, Pirate, Wizard; STOP-3 | 24 | belum | |
 | 8 | I | Pak Haji, Priest (STOP-4 setelah idle keduanya) | 10 | belum | |
