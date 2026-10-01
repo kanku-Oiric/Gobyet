@@ -12,6 +12,8 @@ Aturan:
   laptop; Pendidikan + Teknologi -> Academic + laptop). Teknologi menjadi primer hanya bila berdiri sendiri.
   Maksimum satu primary + satu secondary (aksesori kecil), tidak pernah tiga kostum.
 - Tanpa kecocokan: normal-gblk (karakter default).
+- Kata yang muncul di semua teks turnamen (argumen, premis, klaim) sengaja bukan kata kunci, supaya tidak menarik
+  semua petarung ke satu karakter.
 - Teologi: hanya kata yang jelas merujuk tradisi tertentu yang memilih Pak Haji atau Priest. Kata umum (agama, Tuhan,
   teologi) mengarah ke Philosopher supaya tidak ada tradisi yang diistimewakan (aturan 7.2). Aksesori sekunder untuk
   kedua tradisi sama jenisnya (buku polos).
@@ -32,7 +34,7 @@ DOMAINS = {
         "utilitarian", "utilitarianisme", "deontologi", "kebajikan", "virtue", "agama", "religion", "tuhan", "god", "teologi",
         "theology", "jiwa", "soul", "pikiran", "mind", "memahami", "pemahaman", "understanding", "makna", "meaning", "semantik",
         "semantics", "intensionalitas", "intentionality", "qualia", "fungsionalisme", "functionalism", "kamar cina",
-        "chinese room", "grounding", "symbol grounding", "argumen", "premis", "premise", "dilema", "dilemma"]),
+        "chinese room", "grounding", "symbol grounding"]),
     "academic": ("academic", "book", [
         "pendidikan", "education", "sekolah", "school", "universitas", "university", "kampus", "campus", "kuliah", "mahasiswa",
         "student", "kurikulum", "curriculum", "akademik", "akademis", "academic", "gelar", "degree", "dosen", "guru", "teacher",

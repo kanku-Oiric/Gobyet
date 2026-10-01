@@ -284,6 +284,10 @@ class Context(unittest.TestCase):
         self.assertEqual((s["alt"], s["alt_accessory"]), ("hacker", "scroll"))
         self.assertIsNone(context2.select("Kenapa kucing suka kotak?")["alt"])
 
+    def test_tournament_words_are_not_keywords(self):
+        for w in ("argumen", "premis", "klaim", "argument", "premise", "claim"):
+            self.assertEqual(context2.select("Argumen contoh: " + w)["primary"], "normal-gblk", w)
+
     def test_roles_are_registered(self):
         for role, cid in context2.ROLES.items():
             self.assertIn(cid, CH, role)

@@ -1,0 +1,949 @@
+{
+ "karakter": 38,
+ "state": 305,
+ "frame": 3871,
+ "iou_siluet_dalam_faksi": {
+  "knights": {
+   "maks": 0.753,
+   "pasangan": {
+    "knight-heavy vs knight-archer": 0.573,
+    "knight-heavy vs knight-man-at-arms": 0.628,
+    "knight-heavy vs knight-assassin": 0.583,
+    "knight-archer vs knight-man-at-arms": 0.753,
+    "knight-archer vs knight-assassin": 0.67,
+    "knight-man-at-arms vs knight-assassin": 0.61
+   }
+  },
+  "vikings": {
+   "maks": 0.773,
+   "pasangan": {
+    "viking vs viking-berserker": 0.587,
+    "viking vs viking-huscarl": 0.701,
+    "viking vs viking-gestir": 0.707,
+    "viking vs viking-bondi": 0.677,
+    "viking-berserker vs viking-huscarl": 0.524,
+    "viking-berserker vs viking-gestir": 0.652,
+    "viking-berserker vs viking-bondi": 0.66,
+    "viking-huscarl vs viking-gestir": 0.62,
+    "viking-huscarl vs viking-bondi": 0.565,
+    "viking-gestir vs viking-bondi": 0.773
+   }
+  },
+  "pirates": {
+   "maks": 0.705,
+   "pasangan": {
+    "pirate-captain vs pirate-skirmisher": 0.659,
+    "pirate-captain vs pirate-sharpshooter": 0.701,
+    "pirate-captain vs pirate-buccaneer": 0.705,
+    "pirate-skirmisher vs pirate-sharpshooter": 0.666,
+    "pirate-skirmisher vs pirate-buccaneer": 0.617,
+    "pirate-sharpshooter vs pirate-buccaneer": 0.639
+   }
+  }
+ },
+ "pasangan_bagian_54": {
+  "knight-heavy vs viking-huscarl": {
+   "iou_siluet": 0.703,
+   "selisih_grayscale": 87.4
+  },
+  "pirate-captain vs pirate-sharpshooter": {
+   "iou_siluet": 0.701,
+   "selisih_grayscale": 91.3
+  },
+  "scientist vs academic": {
+   "iou_siluet": 0.793,
+   "selisih_grayscale": 84.0
+  }
+ },
+ "pengenalan_siluet_semua": {
+  "100%": {
+   "benar": 92,
+   "total": 107,
+   "akurasi": 0.86,
+   "salah": [
+    "knight-man-at-arms/attack->pirate-skirmisher",
+    "knight-assassin/victory->fantasy-knight",
+    "viking-berserker/victory->pirate-sharpshooter",
+    "pirate-skirmisher/victory->knight-archer",
+    "academic/attack->mathematician",
+    "lawyer/victory->researcher",
+    "historian/attack->viking-bondi",
+    "historian/victory->normal-gblk",
+    "economist/victory->researcher",
+    "sociologist/victory->researcher",
+    "researcher/attack->skeptic",
+    "priest/attack->champion",
+    "priest/victory->researcher",
+    "skeptic/victory->researcher",
+    "normal-gblk/victory->researcher"
+   ]
+  },
+  "75%": {
+   "benar": 91,
+   "total": 107,
+   "akurasi": 0.85,
+   "salah": [
+    "knight-man-at-arms/attack->pirate-skirmisher",
+    "knight-assassin/victory->pirate-sharpshooter",
+    "viking-berserker/victory->pirate-sharpshooter",
+    "pirate-skirmisher/victory->knight-archer",
+    "academic/attack->mathematician",
+    "mathematician/victory->sociologist",
+    "lawyer/victory->researcher",
+    "historian/attack->philosopher",
+    "historian/victory->normal-gblk",
+    "economist/victory->researcher",
+    "sociologist/victory->researcher",
+    "researcher/attack->skeptic",
+    "priest/attack->referee",
+    "priest/victory->researcher",
+    "skeptic/victory->researcher",
+    "normal-gblk/victory->researcher"
+   ]
+  },
+  "50%": {
+   "benar": 89,
+   "total": 107,
+   "akurasi": 0.832,
+   "salah": [
+    "knight-man-at-arms/attack->pirate-skirmisher",
+    "knight-assassin/victory->pirate-sharpshooter",
+    "viking-berserker/victory->pirate-sharpshooter",
+    "pirate-skirmisher/victory->knight-archer",
+    "academic/attack->mathematician",
+    "mathematician/victory->sociologist",
+    "lawyer/victory->researcher",
+    "historian/attack->philosopher",
+    "historian/victory->normal-gblk",
+    "economist/attack->mathematician",
+    "economist/victory->researcher",
+    "sociologist/victory->researcher",
+    "engineer/victory->knight-archer",
+    "researcher/attack->skeptic",
+    "priest/attack->champion",
+    "priest/victory->researcher",
+    "skeptic/victory->researcher",
+    "normal-gblk/victory->researcher"
+   ]
+  },
+  "25%": {
+   "benar": 80,
+   "total": 107,
+   "akurasi": 0.748,
+   "salah": [
+    "knight-man-at-arms/attack->academic",
+    "knight-assassin/victory->philosopher",
+    "viking-berserker/victory->philosopher",
+    "viking-gestir/idle->fantasy-pirate",
+    "viking-gestir/attack->scientist",
+    "viking-gestir/victory->fantasy-pirate",
+    "viking-bondi/victory->knight-archer",
+    "pirate-skirmisher/victory->knight-archer",
+    "fantasy-pirate/victory->viking-gestir",
+    "philosopher/attack->scientist",
+    "academic/attack->mathematician",
+    "scientist/victory->knight-archer",
+    "mathematician/victory->sociologist",
+    "lawyer/victory->researcher",
+    "historian/attack->scientist",
+    "historian/victory->normal-gblk",
+    "economist/victory->researcher",
+    "sociologist/victory->researcher",
+    "engineer/victory->pirate-sharpshooter",
+    "detective/victory->knight-archer",
+    "researcher/attack->skeptic",
+    "researcher/victory->normal-gblk",
+    "pak-haji/attack->champion",
+    "priest/attack->skeptic",
+    "priest/victory->researcher",
+    "skeptic/victory->researcher",
+    "normal-gblk/victory->scientist"
+   ]
+  }
+ },
+ "pengenalan_siluet_petarung": {
+  "100%": {
+   "benar": 87,
+   "total": 99,
+   "akurasi": 0.879,
+   "salah": [
+    "knight-man-at-arms/attack->pirate-skirmisher",
+    "knight-assassin/victory->fantasy-knight",
+    "viking-berserker/victory->pirate-sharpshooter",
+    "pirate-skirmisher/victory->knight-archer",
+    "academic/attack->mathematician",
+    "lawyer/victory->researcher",
+    "historian/attack->viking-bondi",
+    "historian/victory->normal-gblk",
+    "economist/victory->researcher",
+    "sociologist/victory->researcher",
+    "priest/victory->researcher",
+    "normal-gblk/victory->researcher"
+   ]
+  },
+  "75%": {
+   "benar": 86,
+   "total": 99,
+   "akurasi": 0.869,
+   "salah": [
+    "knight-man-at-arms/attack->pirate-skirmisher",
+    "knight-assassin/victory->pirate-sharpshooter",
+    "viking-berserker/victory->pirate-sharpshooter",
+    "pirate-skirmisher/victory->knight-archer",
+    "academic/attack->mathematician",
+    "mathematician/victory->sociologist",
+    "lawyer/victory->researcher",
+    "historian/attack->philosopher",
+    "historian/victory->normal-gblk",
+    "economist/victory->researcher",
+    "sociologist/victory->researcher",
+    "priest/victory->researcher",
+    "normal-gblk/victory->researcher"
+   ]
+  },
+  "50%": {
+   "benar": 83,
+   "total": 99,
+   "akurasi": 0.838,
+   "salah": [
+    "knight-man-at-arms/attack->pirate-skirmisher",
+    "knight-assassin/victory->pirate-sharpshooter",
+    "viking-berserker/victory->pirate-sharpshooter",
+    "pirate-skirmisher/victory->knight-archer",
+    "academic/attack->mathematician",
+    "mathematician/victory->sociologist",
+    "lawyer/victory->researcher",
+    "historian/attack->philosopher",
+    "historian/victory->normal-gblk",
+    "economist/attack->mathematician",
+    "economist/victory->researcher",
+    "sociologist/victory->researcher",
+    "engineer/victory->knight-archer",
+    "priest/attack->detective",
+    "priest/victory->researcher",
+    "normal-gblk/victory->researcher"
+   ]
+  },
+  "25%": {
+   "benar": 74,
+   "total": 99,
+   "akurasi": 0.747,
+   "salah": [
+    "knight-man-at-arms/attack->academic",
+    "knight-assassin/victory->philosopher",
+    "viking-berserker/victory->philosopher",
+    "viking-gestir/idle->fantasy-pirate",
+    "viking-gestir/attack->scientist",
+    "viking-gestir/victory->fantasy-pirate",
+    "viking-bondi/victory->knight-archer",
+    "pirate-skirmisher/victory->knight-archer",
+    "fantasy-pirate/victory->viking-gestir",
+    "philosopher/attack->scientist",
+    "academic/attack->mathematician",
+    "scientist/victory->knight-archer",
+    "mathematician/victory->sociologist",
+    "lawyer/victory->researcher",
+    "historian/attack->scientist",
+    "historian/victory->normal-gblk",
+    "economist/victory->researcher",
+    "sociologist/victory->researcher",
+    "engineer/victory->pirate-sharpshooter",
+    "detective/victory->knight-archer",
+    "researcher/victory->normal-gblk",
+    "pak-haji/attack->detective",
+    "priest/attack->researcher",
+    "priest/victory->researcher",
+    "normal-gblk/victory->scientist"
+   ]
+  }
+ },
+ "pengenalan_siluet_roster": {
+  "100%": {
+   "benar": 97,
+   "total": 107,
+   "akurasi": 0.907,
+   "salah": [
+    "knight-assassin/attack->economist",
+    "fantasy-knight/attack->knight-man-at-arms",
+    "viking/attack->pirate-skirmisher",
+    "viking-berserker/attack->knight-assassin",
+    "viking-huscarl/attack->knight-heavy",
+    "viking-gestir/attack->academic",
+    "fantasy-viking/attack->knight-assassin",
+    "pirate-captain/attack->knight-man-at-arms",
+    "pirate-buccaneer/attack->psychologist",
+    "fantasy-pirate/attack->pirate-skirmisher"
+   ]
+  },
+  "75%": {
+   "benar": 96,
+   "total": 107,
+   "akurasi": 0.897,
+   "salah": [
+    "knight-assassin/attack->economist",
+    "fantasy-knight/attack->champion",
+    "viking/attack->knight-assassin",
+    "viking-berserker/attack->knight-assassin",
+    "viking-huscarl/attack->psychologist",
+    "viking-gestir/attack->academic",
+    "fantasy-viking/attack->knight-assassin",
+    "pirate-captain/attack->pirate-skirmisher",
+    "pirate-buccaneer/attack->psychologist",
+    "fantasy-pirate/attack->pirate-skirmisher",
+    "economist/attack->mathematician"
+   ]
+  },
+  "50%": {
+   "benar": 95,
+   "total": 107,
+   "akurasi": 0.888,
+   "salah": [
+    "knight-archer/attack->fantasy-pirate",
+    "knight-man-at-arms/attack->psychologist",
+    "knight-assassin/attack->economist",
+    "fantasy-knight/attack->knight-man-at-arms",
+    "viking/attack->knight-assassin",
+    "viking-berserker/attack->knight-assassin",
+    "viking-huscarl/attack->knight-heavy",
+    "viking-gestir/attack->pak-haji",
+    "fantasy-viking/attack->knight-assassin",
+    "pirate-captain/attack->pirate-skirmisher",
+    "pirate-buccaneer/attack->psychologist",
+    "fantasy-pirate/attack->pirate-skirmisher"
+   ]
+  },
+  "25%": {
+   "benar": 88,
+   "total": 107,
+   "akurasi": 0.822,
+   "salah": [
+    "knight-archer/attack->engineer",
+    "knight-man-at-arms/attack->champion",
+    "knight-assassin/attack->economist",
+    "fantasy-knight/attack->knight-archer",
+    "viking/attack->psychologist",
+    "viking-berserker/attack->knight-assassin",
+    "viking-huscarl/attack->fantasy-viking",
+    "viking-gestir/idle->fantasy-pirate",
+    "viking-gestir/attack->detective",
+    "viking-bondi/attack->engineer",
+    "fantasy-viking/attack->pak-haji",
+    "pirate-captain/attack->psychologist",
+    "pirate-buccaneer/attack->psychologist",
+    "fantasy-pirate/attack->pirate-skirmisher",
+    "lawyer/attack->philosopher",
+    "historian/attack->detective",
+    "economist/attack->mathematician",
+    "skeptic/idle->researcher",
+    "skeptic/attack->researcher"
+   ]
+  }
+ },
+ "baseline_identitas": {
+  "di_bawah_lantai": [],
+  "idle_baseline_bergeser": [],
+  "frame_kosong": [
+   "knight-assassin/disappear f11",
+   "defeated/leave f14",
+   "defeated/leave f15"
+  ],
+  "piksel_wajah_min_terendah": [
+   [
+    "knight-assassin/disappear",
+    0
+   ],
+   [
+    "knight-assassin/defeat",
+    0
+   ],
+   [
+    "defeated/leave",
+    0
+   ],
+   [
+    "referee/enter",
+    4
+   ],
+   [
+    "fantasy-pirate/defeat",
+    28
+   ],
+   [
+    "hacker/success",
+    29
+   ],
+   [
+    "skeptic/contradiction_found",
+    32
+   ],
+   [
+    "wizard/defeat",
+    34
+   ],
+   [
+    "hacker/idle",
+    35
+   ],
+   [
+    "hacker/typing",
+    35
+   ],
+   [
+    "researcher/idle",
+    37
+   ],
+   [
+    "researcher/hit",
+    37
+   ]
+  ],
+  "piksel_wajah_min_global": 0
+ },
+ "seam": [
+  {
+   "sel": "knight-heavy/idle",
+   "maks": 626,
+   "median": 33,
+   "seam": 619,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "knight-heavy/walk",
+   "maks": 765,
+   "median": 141,
+   "seam": 802,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "knight-heavy/victory",
+   "maks": 552,
+   "median": 47,
+   "seam": 532,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "knight-archer/idle",
+   "maks": 236,
+   "median": 19,
+   "seam": 239,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "knight-archer/aim",
+   "maks": 289,
+   "median": 30,
+   "seam": 292,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "knight-man-at-arms/idle",
+   "maks": 486,
+   "median": 18,
+   "seam": 478,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "fantasy-knight/idle",
+   "maks": 294,
+   "median": 26,
+   "seam": 278,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "viking/idle",
+   "maks": 245,
+   "median": 0,
+   "seam": 236,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "viking-huscarl/idle",
+   "maks": 591,
+   "median": 0,
+   "seam": 591,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "viking-huscarl/victory",
+   "maks": 544,
+   "median": 0,
+   "seam": 544,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "viking-gestir/idle",
+   "maks": 222,
+   "median": 89,
+   "seam": 249,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "viking-bondi/idle",
+   "maks": 178,
+   "median": 17,
+   "seam": 184,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "fantasy-viking/idle",
+   "maks": 241,
+   "median": 10,
+   "seam": 229,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "pirate-captain/idle",
+   "maks": 244,
+   "median": 12,
+   "seam": 234,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "pirate-skirmisher/run",
+   "maks": 511,
+   "median": 197,
+   "seam": 509,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "pirate-sharpshooter/idle",
+   "maks": 191,
+   "median": 21,
+   "seam": 191,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "pirate-buccaneer/idle",
+   "maks": 464,
+   "median": 9,
+   "seam": 478,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "pirate-buccaneer/victory",
+   "maks": 496,
+   "median": 7,
+   "seam": 495,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "wizard/idle",
+   "maks": 197,
+   "median": 56,
+   "seam": 212,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "wizard/read",
+   "maks": 207,
+   "median": 67,
+   "seam": 225,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "philosopher/idle",
+   "maks": 145,
+   "median": 13,
+   "seam": 150,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "philosopher/reading",
+   "maks": 181,
+   "median": 11,
+   "seam": 186,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "academic/idle",
+   "maks": 137,
+   "median": 16,
+   "seam": 155,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "academic/read",
+   "maks": 153,
+   "median": 20,
+   "seam": 175,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "academic/lecture",
+   "maks": 253,
+   "median": 18,
+   "seam": 234,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "scientist/idle",
+   "maks": 179,
+   "median": 15,
+   "seam": 190,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "mathematician/idle",
+   "maks": 134,
+   "median": 18,
+   "seam": 143,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "mathematician/erase",
+   "maks": 214,
+   "median": 25,
+   "seam": 207,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "lawyer/idle",
+   "maks": 188,
+   "median": 10,
+   "seam": 190,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "lawyer/read",
+   "maks": 195,
+   "median": 14,
+   "seam": 205,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "historian/idle",
+   "maks": 151,
+   "median": 16,
+   "seam": 161,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "historian/read_archive",
+   "maks": 193,
+   "median": 14,
+   "seam": 203,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "historian/search",
+   "maks": 431,
+   "median": 140,
+   "seam": 415,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "economist/idle",
+   "maks": 192,
+   "median": 6,
+   "seam": 195,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "economist/graph",
+   "maks": 148,
+   "median": 9,
+   "seam": 155,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "economist/check",
+   "maks": 181,
+   "median": 20,
+   "seam": 191,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "psychologist/analyze",
+   "maks": 114,
+   "median": 10,
+   "seam": 111,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "sociologist/idle",
+   "maks": 185,
+   "median": 13,
+   "seam": 197,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "sociologist/analyze",
+   "maks": 180,
+   "median": 14,
+   "seam": 174,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "engineer/idle",
+   "maks": 176,
+   "median": 12,
+   "seam": 187,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "engineer/inspect",
+   "maks": 485,
+   "median": 136,
+   "seam": 476,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "detective/idle",
+   "maks": 191,
+   "median": 11,
+   "seam": 186,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "detective/search",
+   "maks": 418,
+   "median": 129,
+   "seam": 411,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "researcher/idle",
+   "maks": 214,
+   "median": 18,
+   "seam": 224,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "researcher/search",
+   "maks": 420,
+   "median": 141,
+   "seam": 404,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "researcher/read",
+   "maks": 177,
+   "median": 16,
+   "seam": 191,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "researcher/write",
+   "maks": 157,
+   "median": 122,
+   "seam": 161,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "researcher/archive",
+   "maks": 109,
+   "median": 38,
+   "seam": 102,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "pak-haji/idle",
+   "maks": 189,
+   "median": 14,
+   "seam": 195,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "pak-haji/read",
+   "maks": 214,
+   "median": 16,
+   "seam": 224,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "pak-haji/calm",
+   "maks": 208,
+   "median": 10,
+   "seam": 192,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "pak-haji/victory",
+   "maks": 192,
+   "median": 18,
+   "seam": 192,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "priest/idle",
+   "maks": 159,
+   "median": 14,
+   "seam": 165,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "priest/read",
+   "maks": 165,
+   "median": 16,
+   "seam": 175,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "priest/calm",
+   "maks": 177,
+   "median": 10,
+   "seam": 163,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "priest/victory",
+   "maks": 139,
+   "median": 18,
+   "seam": 139,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "hacker/idle",
+   "maks": 168,
+   "median": 131,
+   "seam": 166,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "hacker/panic",
+   "maks": 473,
+   "median": 470,
+   "seam": 467,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "referee/idle",
+   "maks": 182,
+   "median": 17,
+   "seam": 194,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "skeptic/idle",
+   "maks": 231,
+   "median": 11,
+   "seam": 236,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "champion/idle",
+   "maks": 286,
+   "median": 33,
+   "seam": 296,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "champion/trophy_raise",
+   "maks": 309,
+   "median": 56,
+   "seam": 339,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "champion/dance",
+   "maks": 741,
+   "median": 44,
+   "seam": 678,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "defeated/sit",
+   "maks": 200,
+   "median": 8,
+   "seam": 214,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "normal-gblk/idle",
+   "maks": 328,
+   "median": 14,
+   "seam": 337,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "normal-gblk/dance_01",
+   "maks": 774,
+   "median": 21,
+   "seam": 779,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "normal-gblk/dance_03",
+   "maks": 665,
+   "median": 20,
+   "seam": 632,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "normal-gblk/victory_dance",
+   "maks": 707,
+   "median": 84,
+   "seam": 695,
+   "gagal": false,
+   "pop": true
+  }
+ ],
+ "seam_jumlah_loop": 167
+}
