@@ -158,8 +158,8 @@ def defeat_fall(base, drops=(), n=16, lie_extra=None, sit_pose=None, early_drop=
 
 def victory_raise(base, up, n=16, hop=True, sparkle_hand=1, extra=None):
     def fn(t):
-        keys = [(0, dict(base)), (4, dict(up)), (8, dict(up, crouch=up.get("crouch", 0) + 1, eyes="happy")), (12, dict(up)),
-                (15, dict(up))]
+        low = dict(up, crouch=up.get("crouch", 0) + 1, eyes="happy")
+        keys = [(0, dict(up)), (4, low), (8, dict(up)), (12, low)]
         p = kf(t, keys, n)
         p.update(tail=wag(t, n, 2), plume=wag(t, n, 2), cape=wag(t, n, 2))
         if hop and t in (9, 10, 11):

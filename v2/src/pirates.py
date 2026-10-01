@@ -130,7 +130,7 @@ class Captain(Char):
                 p["fx"] = [fx_mark("!", dx=-22, dy=-18)]
             return p
         self.add("command", 12, command, ms=110, loop=False, label="memberi perintah, cutlass menunjuk ke depan")
-        self.add("sword", 12, slash_fn(base), ms=85, loop=False, core="attack", label="tebasan cutlass")
+        self.add("sword", 12, slash_fn(base), ms=90, loop=False, core="attack", label="tebasan cutlass")
         aim = dict(base, lh=(12, -4), lwa=0, rh=(6, 4), rwa=-80, eyes="side", brows="angry", mouth="flat", lean=0)
         self.add("pistol", 12, gun_fn(base, aim, muzzle=(RX + 31, 33)), ms=100, loop=False,
                  label="membidik pistol, kepulan asap kartun")
@@ -207,7 +207,7 @@ class Skirmisher(Char):
                 p["fx"] = [fx_speed(RX - 4 + (t - 3) * 4, 40, 4, 9, -1), fx_dust(RX - 2 + (t - 3) * 3, BASE - 1, t - 3)]
             return p
         self.add("dash", 10, dash, ms=70, loop=False, label="melesat ke depan")
-        self.add("attack", 10, slash_fn(base, n=10, reach=(13, 0), ang_hit=0, impact_at=(RX + 38, 40)), ms=75, loop=False,
+        self.add("attack", 10, slash_fn(base, n=10, reach=(13, 0), ang_hit=0, impact_at=(RX + 38, 40)), ms=80, loop=False,
                  core="attack", label="sayatan cepat")
 
         def throw(t):
@@ -373,7 +373,7 @@ class Buccaneer(Char):
             if t in (6, 7, 8):
                 p["fx"] = [fx_impact(RX + 40, 44, t - 6)]
             return p
-        self.add("heavy_attack", 14, heavy_attack, ms=95, loop=False, label="ayunan palu menyamping")
+        self.add("heavy_attack", 14, heavy_attack, ms=100, loop=False, label="ayunan palu menyamping")
 
         def smash(t):
             up = dict(ready, rh=(4, -14), rwa=-100, lh=(-2, -12), lean=-2, dy=0, mouth="shout", rw_back=True)
@@ -395,7 +395,7 @@ class Buccaneer(Char):
             if t in (6, 7, 8):
                 p["fx"] = [fx_impact(RX + 44, 46, t - 6)]
             return p
-        self.add("anchor_attack", 14, anchor_attack, ms=95, loop=False, label="jangkar diayunkan seperti gada")
+        self.add("anchor_attack", 14, anchor_attack, ms=100, loop=False, label="jangkar diayunkan seperti gada")
         self.add("hit", 10, hit_fn(base, recoil=dict(rwa=70)), ms=110, loop=False, core="hit", label="nyaris tak bergeming")
         up = dict(base, rh=(9, -14), rwa=-95, rw_back=False, lh=(-12, -6), mouth="smile")
         self.add("victory", 16, victory_raise(base, up, sparkle_hand=None, hop=False), ms=120, core="victory",
@@ -446,7 +446,7 @@ class FantasyPirate(Char):
                 p.update(lw="telescope", lh=(-2, -7), lwa=-10)
             return p
         self.add("idle", 12, idle, ms=130, core="idle", label="peta harta, sesekali meneropong")
-        self.add("attack", 12, slash_fn(base), ms=85, loop=False, core="attack", label="tebasan cutlass")
+        self.add("attack", 12, slash_fn(base), ms=90, loop=False, core="attack", label="tebasan cutlass")
         self.add("hit", 10, hit_fn(base), ms=100, loop=False, core="hit", label="terhuyung")
         up = dict(base, rh=(8, -14), rwa=-80, lh=(-10, -8), mouth="smile")
         self.add("victory", 16, victory_raise(base, up, sparkle_hand=0), ms=110, core="victory", label="peta harta diangkat")

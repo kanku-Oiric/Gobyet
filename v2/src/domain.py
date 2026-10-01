@@ -316,6 +316,9 @@ class DomainChar(Char):
         R.arm(cv, g, i, sleeve=self.sleeve, r=1.9)
 
     def core_states(self, base, attack_state, victory_up, drops, hit_kw=None):
+        victory_up = dict(victory_up)
+        if "rh" in victory_up:
+            victory_up["rh"] = (max(victory_up["rh"][0], 12), min(victory_up["rh"][1], -15))
         self.add("hit", 10, hit_fn(base, recoil=hit_kw), ms=100, loop=False, core="hit", label="tersentak mundur")
         self.add("victory", 16, victory_raise(base, victory_up, sparkle_hand=1), ms=110, core="victory",
                  label="prop diangkat, lompat kecil")
@@ -553,7 +556,7 @@ class Lawyer(DomainChar):
     id = "lawyer"
     name = "Lawyer Gobyet"
     role = "law"
-    silhouette = ["dark_suit_red_tie", "thick_law_book", "documents"]
+    silhouette = ["dark_suit_red_tie", "thick_law_book", "briefcase", "documents"]
     sleeve = "J"
 
     def legs(self, cv, g):
@@ -569,7 +572,7 @@ class Lawyer(DomainChar):
         cv.fill({(cx + 4, top + 4), (cx + 5, top + 4)}, "W")
 
     def build(self):
-        base = dict(sx=3, rh=(9, 2), rw="book_closed", sym="law", cover=("le1", "le2"), lh=(-9, 4), lw="papers")
+        base = dict(sx=3, rh=(9, 2), rw="book_closed", sym="law", cover=("le1", "le2"), lh=(-10, 3), lw="briefcase")
         self.add("idle", 12, idle_loop(base, 12, look=(4, 6)), ms=140, core="idle", label="jas gelap, kitab hukum, berkas")
         self.add("read", 12, st_read(dict(base, lw=None), "papers"), ms=140, label="membaca berkas")
 
@@ -718,8 +721,12 @@ class Psychologist(DomainChar):
     id = "psychologist"
     name = "Psychologist Gobyet"
     role = "psychology"
-    silhouette = ["cardigan", "big_glasses", "notebook", "inkblot_card"]
+    silhouette = ["wingback_armchair_seated", "cardigan", "big_glasses", "notebook", "inkblot_card"]
     sleeve = "tl1"
+    SEAT_DY = -7
+
+    def back(self, cv, g):
+        P.armchair(cv, R.RX, int(R.BASE - 2 + self.SEAT_DY + 1))
 
     def legs(self, cv, g):
         trousers(cv, g, ("e", "x"), ("le2", "K"))
@@ -737,8 +744,9 @@ class Psychologist(DomainChar):
         glasses(cv, g, c="le2")
 
     def build(self):
-        base = dict(sx=3, rh=(10, 2), rw="pen", rwa=-60, lh=(-8, 2), lw="notebook")
-        self.add("idle", 12, idle_loop(base, 12, look=(4, 6)), ms=140, core="idle", label="kardigan, kacamata besar, buku catatan")
+        base = dict(sx=3, rh=(10, 2), rw="pen", rwa=-60, lh=(-8, 2), lw="notebook", mode="sit", dy=self.SEAT_DY)
+        self.add("idle", 12, idle_loop(base, 12, look=(4, 6)), ms=140, core="idle",
+                 label="duduk di kursi berlengan, kardigan, kacamata besar, buku catatan")
 
         def observe(t):
             pose = dict(base, eyes="side", brows="raised", mouth="flat", lean=1)
@@ -771,6 +779,19 @@ class Psychologist(DomainChar):
         self.add("suspicious", 12, suspicious, ms=130, label="curiga, mata menyipit")
         self.core_states(base, "analyze", dict(base, rh=(6, -14), lh=(-9, -8), mouth="smile"),
                          [("notebook", RX + 12, BASE + 1, 0)])
+
+        def slump(t):
+            pose = dict(base, rw=None, lw=None, rh=(9, 4), lh=(-9, 4), eyes="relief", brows="worried", mouth="frown", hdy=1)
+            p = kf(t, [(0, dict(base)), (2, dict(base, eyes="wide", brows="up", mouth="o")), (5, pose), (15, pose)], 16, loop=False,
+                   smooth=False)
+            p["tail"] = 0.0
+            fx = [fx_item("notebook", RX + 12, BASE + 1, 0)] if t >= 4 else []
+            if t >= 8:
+                k = (t - 8) % 6
+                fx.append(fx_puff(RX + 12 + k, BASE - 33 - k * 2, 1.3 + k * 0.25))
+            p["fx"] = fx
+            return p
+        self.add("defeat", 16, slump, ms=120, loop=False, hold=10, core="defeat", label="lesu di kursi, buku catatan jatuh")
 
 
 # ------------------------------------------------------------------ SOCIOLOGIST
@@ -854,7 +875,7 @@ class Engineer(DomainChar):
 
         def measure(t):
             pose = dict(base, rw=None, rh=(5, 2), lh=(-10, 2), lw="tape_measure", eyes="down", mouth="flat", crouch=1)
-            p = dict(pose, tape=min(t * 3, 22))
+            p = dict(pose, tape=[0, 4, 8, 12, 16, 20, 22, 20, 16, 12, 8, 4][t % 12])
             p["lh"] = (-10, 2)
             p["tail"] = wag(t, 12)
             return p
@@ -989,11 +1010,11 @@ class Researcher(DomainChar):
         self.add("compare", 12, st_compare(base, "papers", "book_open"), ms=130, label="membandingkan sumber")
 
         def write(t):
-            pose = dict(base, rw="laptop_side", rh=(2, 2), lh=(-2, 2), eyes="down", mouth="flat", glow="Z")
+            pose = dict(base, rw="laptop_side", rh=(2, 6), lh=(-2, 6), eyes="down", mouth="flat", glow="Z")
             p = dict(pose)
             p["tail"] = wag(t, 12)
-            p["lh"] = (-2, 2 - (t % 2))
-            p["rh"] = (2, 2 - ((t + 1) % 2))
+            p["lh"] = (-2, 6 - (t % 2))
+            p["rh"] = (2, 6 - ((t + 1) % 2))
             p["fx"] = [lambda cv, g, t=t: P.terminal_window(cv, RX + 16, 10, t)]
             return p
         self.add("write", 12, write, ms=100, label="mengetik catatan di laptop")

@@ -247,7 +247,7 @@ class Huscarl(VikingBase):
             p["tail"] = wag(t, 8)
             return p
         self.add("guard", 8, guard_f, ms=140, label="dinding perisai")
-        self.add("attack", 16, chop_fn(base, n=16, big=True, impact_x=RX + 40), ms=95, loop=False, core="attack",
+        self.add("attack", 16, chop_fn(base, n=16, big=True, impact_x=RX + 40), ms=100, loop=False, core="attack",
                  label="hantaman kapak Dane yang berat")
         self.add("hit", 10, hit_fn(base, recoil=dict(rwa=-85, lh=(-13, 6))), ms=110, loop=False, core="hit",
                  label="tertahan, mundur setapak")
@@ -267,8 +267,8 @@ class Gestir(VikingBase):
     mantle = None
 
     def back(self, cv, g):
-        for k, a in enumerate((-112, -100)):
-            I.javelin(cv, (g.tcx - 5 + k * 2, g.tcy + 4), a, {})
+        for k, a in enumerate((-125, -112)):
+            I.javelin(cv, (g.tcx - 3 + k * 2, g.tcy + 4), a, {})
 
     def torso(self, cv, g):
         G.leather_vest(cv, g, ("tl1", "tl2"), buckle="st1")
@@ -278,7 +278,7 @@ class Gestir(VikingBase):
         G.conical_helm(cv, g)
 
     def build(self):
-        base = dict(sx=5, rh=(11, 3), rw="spear", rwa=-82, lh=(-11, 4), lw="buckler")
+        base = dict(sx=5, rh=(11, 3), rw="spear", rwa=-58, lh=(-11, 4), lw="buckler")
         aim = dict(base, rh=(6, -8), rwa=-5, lh=(-11, 1), eyes="side", brows="angry", mouth="flat", lean=-1, crouch=1,
                    rw="javelin")
         self.add("idle", 12, idle_loop(base, 12, alt=dict(rwa=-80)), ms=130, core="idle",
@@ -315,7 +315,7 @@ class Gestir(VikingBase):
             if t in (4, 5, 6):
                 p["fx"] = [fx_impact(RX + 55, 37, t - 4)]
             return p
-        self.add("melee", 10, melee_f, ms=85, loop=False, label="tusukan tombak jarak dekat")
+        self.add("melee", 10, melee_f, ms=90, loop=False, label="tusukan tombak jarak dekat")
         self.add("hit", 10, hit_fn(base, recoil=dict(rwa=-95)), ms=100, loop=False, core="hit", label="terdorong")
         up = dict(base, rh=(8, -12), rwa=-90, lh=(-11, -3), mouth="smile")
         self.add("victory", 16, victory_raise(base, up, sparkle_hand=None), ms=110, core="victory", label="tombak diacungkan")

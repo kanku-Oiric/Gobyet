@@ -125,7 +125,7 @@ class HeavyKnight(Char):
         vic = dict(base, rh=(9, -15), rwa=-90, lh=(-12, 1), mouth="smile")
 
         def victory(t):
-            keys = [(0, dict(base)), (4, dict(vic)), (8, dict(vic, crouch=1, eyes="happy")), (12, dict(vic)), (15, dict(vic))]
+            keys = [(0, dict(vic)), (4, dict(vic, crouch=1, eyes="happy")), (8, dict(vic)), (12, dict(vic, crouch=1, eyes="happy"))]
             p = kf(t, keys, 16)
             p.update(plume=wag(t, 16, 2), tail=wag(t, 16, 2), glint=(t % 4) / 4.0 if 4 <= t <= 13 else None)
             if 4 <= t <= 13:
@@ -482,7 +482,7 @@ class Assassin(Char):
         cross = dict(base, crouch=0, lean=0, rh=(5, -2), rwa=-50, lh=(-5, -2), lwa=-130, eyes="look", mouth="smirk")
 
         def victory(t):
-            p = kf(t, [(0, dict(base)), (4, dict(cross)), (12, dict(cross, crouch=1)), (15, dict(cross))], 16)
+            p = kf(t, [(0, dict(cross)), (8, dict(cross, crouch=1))], 16)
             p.update(tail=wag(t, 16), cape=wag(t, 16, 2))
             if 5 <= t <= 13:
                 p["fx"] = [fx_sparkle(R.RX + 2, 34, t)]
@@ -555,7 +555,7 @@ class FantasyKnight(Char):
             if t in (5, 6, 7):
                 p["fx"] = [fx_impact(R.RX + 36, 40, t - 5, "W"), fx_speed(R.RX + 18, 28, 3, 7, -1)]
             return p
-        self.add("attack", 12, attack, ms=85, loop=False, core="attack", label="tebasan pedang panjang")
+        self.add("attack", 12, attack, ms=90, loop=False, core="attack", label="tebasan pedang panjang")
         self.add("hit", 10, hit_fn(base, rattle=False), ms=100, loop=False, core="hit", label="tertahan perisai, mundur")
         up = dict(base, rh=(8, -15), rwa=-90, lh=(-11, 0), mouth="smile")
         self.add("victory", 16, victory_raise(base, up, sparkle_hand=None,

@@ -131,7 +131,7 @@ class Hacker(Char):
                 p["fx"] = p.get("fx", []) + [fx_impact(RX + 30, 30, (t - 6) % 3, "glw")]
             return p
         self.add("attack", 12, attack, ms=80, loop=False, core="attack", label="mengetik serangan: kode hijau menyala")
-        up = dict(base, rh=(4, -14), lh=(-4, -14), eyes="happy", mouth="smile")
+        up = dict(base, rh=(12, -1), lh=(-9, -13), eyes="happy", mouth="smile")
         self.add("victory", 16, victory_raise(base, up, sparkle_hand=None,
                                               extra=lambda t, p: term("ok")(t, p)), ms=110, core="victory",
                  label="laptop diangkat, terminal OK")
@@ -572,11 +572,11 @@ class Champion(Char):
         base = dict(sx=4, rh=(10, 0), rw="trophy", lh=(-9, 4), mouth="smile")
 
         def tr(t):
-            up = dict(base, rh=(2, -16), lh=(-3, -15), eyes="happy", mouth="smile")
-            p = kf(t, [(0, dict(base)), (4, up), (8, dict(up, crouch=1)), (12, up), (15, up)], 16)
+            up = dict(base, rh=(2, -19), lh=(-3, -18), eyes="happy", mouth="smile")
+            p = kf(t, [(0, up), (8, dict(up, crouch=1))], 16)
             p["tail"] = wag(t, 16, 2)
             p["cape"] = wag(t, 16, 2)
-            if 4 <= t:
+            if True:
                 p["fx"] = [fx_sparkle(RX + 2 + (t % 3), 2, t)]
             return p
         self.add("idle", 12, idle_loop(base, 12, extra=lambda t, p: p.update(cape=wag(t, 12))), ms=140, core="idle",
@@ -584,7 +584,7 @@ class Champion(Char):
         self.add("trophy_raise", 16, tr, ms=110, core="victory", label="piala diangkat tinggi dengan dua tangan")
 
         def victory(t):
-            p = victory_raise(base, dict(base, rh=(6, -14), lh=(-9, -9), eyes="happy"), sparkle_hand=1)(t)
+            p = victory_raise(base, dict(base, rh=(12, -15), lh=(-9, -9), eyes="happy"), sparkle_hand=1)(t)
             p["cape"] = wag(t, 16, 2)
             return p
         self.add("victory", 16, victory, ms=110, label="piala terangkat, lompat")

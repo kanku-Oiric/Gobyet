@@ -180,7 +180,17 @@ def ground(cv):
     return shift(cv, 0, (BASE - 1) - low)
 
 
+def floor_clip(cv):
+    """Garis tanah: piksel di bawah baseline (y >= BASE) tidak digambar, jadi prop tidak menembus lantai."""
+    cv.px = {k: v for k, v in cv.px.items() if k[1] < BASE}
+    return cv
+
+
 def render(ch, state, i):
+    return floor_clip(_render(ch, state, i))
+
+
+def _render(ch, state, i):
     st = ch.states[state]
     p = R.pose()
     p.update(st.fn(i % st.n))

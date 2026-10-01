@@ -481,3 +481,87 @@ def terminal_window(cv, x0, y0, t=0, kind="terminal", w=24, h=16):
         for k in range(4):
             c = "R" if k == (t % 4) else "Z"
             cv.fill({(x, y0 + 5 + k * 2) for x in range(x0 + 2, x0 + 4 + (k * 5) % 12)}, c)
+
+
+# ------------------------------------------------------------------ ikon aksesori kecil (konteks hibrida)
+def mini_board(cv, grip, ang, p):
+    gx, gy = int(grip[0]), int(grip[1])
+    m = rect(gx - 7, gy - 5, 14, 10)
+    solid(cv, m, "wo1", "wo2", shade_off=(1, 1))
+    cv.fill(inner(m), "k")
+    text3(cv, "x", gx - 5, gy - 3, "W")
+    sup2(cv, gx - 1, gy - 4, "W")
+    text3(cv, "=", gx + 2, gy - 3, "W")
+
+
+def mini_laptop(cv, grip, ang, p):
+    gx, gy = int(grip[0]), int(grip[1])
+    scr = rect(gx - 6, gy - 7, 12, 9)
+    solid(cv, scr, "L", None)
+    cv.fill(inner(scr), "q")
+    for k in range(3):
+        cv.fill({(x, gy - 5 + k * 2) for x in range(gx - 4, gx - 1 + k * 2)}, "Z")
+    solid(cv, rect(gx - 8, gy + 2, 16, 3), "l", None)
+
+
+def mini_network(cv, grip, ang, p):
+    gx, gy = grip
+    nodes = [(gx - 5, gy - 4), (gx + 5, gy - 5), (gx, gy + 1), (gx - 5, gy + 5), (gx + 5, gy + 5)]
+    for a, b in ((0, 2), (1, 2), (2, 3), (2, 4), (0, 1)):
+        cv.fill(chain([nodes[a], nodes[b]], 0.4), "l")
+    for k, (x, y) in enumerate(nodes):
+        solid(cv, ellipse(x, y, 1.9, 1.9), ("R", "3", "V", "go1", "pk1")[k], None)
+
+
+def mini_star(cv, grip, ang, p):
+    gx, gy = grip
+    pts = []
+    for i in range(10):
+        a = -math.pi / 2 + i * math.pi / 5
+        r = 6.5 if i % 2 == 0 else 2.8
+        pts.append((gx + math.cos(a) * r, gy + math.sin(a) * r))
+    solid(cv, poly(pts), "Y", "O", shade_off=(1, 1))
+
+
+def mini_question(cv, grip, ang, p):
+    gx, gy = int(grip[0]), int(grip[1])
+    m = rect(gx - 6, gy - 6, 12, 12)
+    solid(cv, m, "W", "smk", shade_off=(1, 1))
+    mini_text(cv, "?", gx - 2, gy - 3, "R")
+
+
+for _name, _fn in [("mini_board", mini_board), ("mini_laptop", mini_laptop), ("mini_network", mini_network),
+                   ("mini_star", mini_star), ("mini_question", mini_question)]:
+    I.register(_name, _fn, True)
+
+
+def briefcase(cv, grip, ang, p):
+    """Koper kerja Lawyer: kotak 13x9 bergagang, digantung di tangan (grip = gagang)."""
+    gx, gy = int(round(grip[0])), int(round(grip[1]))
+    cv.fill({(gx - 2, gy - 1), (gx - 2, gy), (gx + 2, gy - 1), (gx + 2, gy), (gx - 1, gy - 2), (gx, gy - 2), (gx + 1, gy - 2)}, "K")
+    m = rect(gx - 6, gy + 1, 13, 9)
+    solid(cv, m, "le2", "D", shade_off=(1, 1))
+    cv.fill({(x, gy + 4) for x in range(gx - 5, gx + 6)}, "D")
+    cv.fill(rect(gx - 1, gy + 3, 3, 2), "go1")
+
+
+def armchair(cv, cx, seat_y, c=("le1", "le2")):
+    """Kursi berlengan bersandaran tinggi (Psychologist duduk): siluet khas terapis."""
+    cx = int(round(cx))
+    back = rect(cx - 11, seat_y - 19, 23, 20) - {(cx - 11, seat_y - 19), (cx + 11, seat_y - 19), (cx - 10, seat_y - 19),
+                                                  (cx + 10, seat_y - 19), (cx - 11, seat_y - 18), (cx + 11, seat_y - 18)}
+    solid(cv, back, c[0], c[1], shade_off=(2, 2))
+    for k in range(3):
+        for s in (-1, 1):
+            cv.put(cx + s * 5, seat_y - 15 + k * 5, "go2")
+    for s in (-1, 1):
+        legm = rect(cx + s * 10 - (1 if s < 0 else 0), seat_y + 5, 2, R.BASE - 1 - (seat_y + 5) + 1)
+        solid(cv, legm, "wo2", None)
+    seat = rect(cx - 12, seat_y, 25, 5)
+    solid(cv, seat, c[0], c[1], shade_off=(1, 1))
+    for s in (-1, 1):
+        arm = rect(cx + s * 12 - 2, seat_y - 7, 5, 12) - {(cx + s * 12 - 2, seat_y - 7), (cx + s * 12 + 2, seat_y - 7)}
+        solid(cv, arm, c[0], c[1], shade_off=(1, 1))
+
+
+I.register("briefcase", briefcase, True)
