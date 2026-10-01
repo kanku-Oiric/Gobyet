@@ -75,8 +75,8 @@ def book_closed(cv, grip, ang, p):
 
 def book_stack(cv, grip, ang, p):
     gx, gy = grip
-    cols = [("cr1", "cr2"), ("3", "4"), ("V", "v"), ("go1", "go2")]
-    for k, c in enumerate(cols):
+    cols = [("cr1", "cr2"), ("3", "4"), ("V", "v"), ("go1", "go2"), ("p", "j"), ("tl1", "tl2"), ("cr1", "cr2")]
+    for k, c in enumerate(cols[:int(p.get("books", 4))]):
         x0, y0 = int(round(gx)) - 6 + (k % 2), int(round(gy)) - 4 - k * 4
         solid(cv, rect(x0, y0, 12, 4), c[0], c[1], shade_off=(1, 1))
         cv.fill({(x0 + 11, y0 + 1), (x0 + 11, y0 + 2)}, "W")

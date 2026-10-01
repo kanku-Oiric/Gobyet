@@ -135,7 +135,7 @@ def bow(cv, grip, ang, p, half=15.0, wood=("wo1", "wo2"), arrow=True):
 
 
 def flatbow(cv, grip, ang, p):
-    bow(cv, grip, ang, p, half=12.0, wood=("wo2", "le2"))
+    bow(cv, grip, ang, p, half=13.5, wood=("wo1", "wo2"))
 
 
 def arrow_flying(cv, x, y, length=12):

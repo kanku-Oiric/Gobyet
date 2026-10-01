@@ -214,7 +214,7 @@ class Archer(Char):
         G.pauldron(cv, g.sh[i][0], g.sh[i][1], -1 if i == 0 else 1, big=0.62)
 
     def build(self):
-        base = dict(sx=4, rh=(10, 2), rw="bow", rwa=-8, nock=False, lh=(-9, 4))
+        base = dict(sx=4, rh=(11, 1), rw="bow", rwa=-8, nock=True, lh=(-9, 4))
         aim = dict(base, rh=(14, -3), rwa=0, nock=True, draw=1.0, lh=(5, -3), eyes="side", brows="angry", mouth="flat",
                    sx=5, lean=1)
         full = dict(aim, draw=8.0, lh=(-2, -3))

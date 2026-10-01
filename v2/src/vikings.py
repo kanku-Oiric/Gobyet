@@ -351,7 +351,7 @@ class Bondi(VikingBase):
         R.arm(cv, g, i, sleeve="ol1", r=1.9)
 
     def build(self):
-        base = dict(sx=4, rh=(10, 2), rw="flatbow", rwa=-8, nock=False, lh=(-9, 4))
+        base = dict(sx=4, rh=(11, 1), rw="flatbow", rwa=-8, nock=True, lh=(-9, 4))
         aim = dict(base, rh=(13, -3), rwa=0, nock=True, draw=1.0, lh=(5, -3), eyes="side", brows="angry", mouth="flat")
         full = dict(aim, draw=7.0, lh=(-1, -3))
         self.add("idle", 12, idle_loop(base, 12, alt=dict(rwa=-4), look=(4, 6)), ms=130, core="idle",

@@ -9,6 +9,14 @@
   oleh monyet bodoh yang lagi larping jadi programmer.
 </p>
 
+## v2: rework sistem karakter
+
+Semua karakter Gobyet sedang dirework ke sistem sprite v2 di folder [`v2/`](v2/README.md): 38 karakter berdiri dengan kuda-kuda, senjata, dan siluet sesuai perannya (Knight, Viking, Pirate, Wizard, Hacker, karakter domain, wasit, juri, dan lainnya), 305 state animasi, registry data, fallback berantai, dan pemilih karakter berdasarkan topik. Kepala Gobyet tetap sama persis. Aset di bawah ini (v1) tidak diubah.
+
+<p align="center">
+  <img src="v2/qa/galeri-warna.png" width="560" alt="Galeri 38 karakter Gobyet v2 dikelompokkan FANTASY, DOMAIN, ROLE, SPECIAL">
+</p>
+
 ## Animasi
 
 | Makan pisang | Ngamuk debug | Ngopi santai |

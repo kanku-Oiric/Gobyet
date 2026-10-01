@@ -1003,7 +1003,7 @@ class Researcher(DomainChar):
         glasses(cv, g, round_=False)
 
     def build(self):
-        base = dict(sx=3, rh=(4, 3), rw="book_stack", lh=(-4, 3))
+        base = dict(sx=3, rh=(12, 6), rw="book_stack", books=7, lh=(-9, 4))
         self.add("idle", 12, idle_loop(base, 12, look=(4, 6)), ms=140, core="idle", label="memeluk tumpukan buku")
         self.add("search", 12, st_search(dict(base, lw=None), "magnifier"), ms=120, label="mencari di tumpukan sumber")
         self.add("read", 12, st_read(base, "book_open", cover=("3", "4")), ms=140, label="membaca")

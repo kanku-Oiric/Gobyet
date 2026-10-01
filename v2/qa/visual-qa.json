@@ -4,29 +4,29 @@
  "frame": 3871,
  "iou_siluet_dalam_faksi": {
   "knights": {
-   "maks": 0.753,
+   "maks": 0.724,
    "pasangan": {
-    "knight-heavy vs knight-archer": 0.573,
+    "knight-heavy vs knight-archer": 0.571,
     "knight-heavy vs knight-man-at-arms": 0.628,
     "knight-heavy vs knight-assassin": 0.583,
-    "knight-archer vs knight-man-at-arms": 0.753,
-    "knight-archer vs knight-assassin": 0.67,
+    "knight-archer vs knight-man-at-arms": 0.724,
+    "knight-archer vs knight-assassin": 0.659,
     "knight-man-at-arms vs knight-assassin": 0.61
    }
   },
   "vikings": {
-   "maks": 0.773,
+   "maks": 0.749,
    "pasangan": {
     "viking vs viking-berserker": 0.587,
     "viking vs viking-huscarl": 0.701,
     "viking vs viking-gestir": 0.707,
-    "viking vs viking-bondi": 0.677,
+    "viking vs viking-bondi": 0.664,
     "viking-berserker vs viking-huscarl": 0.524,
     "viking-berserker vs viking-gestir": 0.652,
-    "viking-berserker vs viking-bondi": 0.66,
+    "viking-berserker vs viking-bondi": 0.641,
     "viking-huscarl vs viking-gestir": 0.62,
-    "viking-huscarl vs viking-bondi": 0.565,
-    "viking-gestir vs viking-bondi": 0.773
+    "viking-huscarl vs viking-bondi": 0.553,
+    "viking-gestir vs viking-bondi": 0.749
    }
   },
   "pirates": {
@@ -57,106 +57,104 @@
  },
  "pengenalan_siluet_semua": {
   "100%": {
-   "benar": 92,
+   "benar": 93,
    "total": 107,
-   "akurasi": 0.86,
+   "akurasi": 0.869,
    "salah": [
     "knight-man-at-arms/attack->pirate-skirmisher",
     "knight-assassin/victory->fantasy-knight",
     "viking-berserker/victory->pirate-sharpshooter",
     "pirate-skirmisher/victory->knight-archer",
     "academic/attack->mathematician",
-    "lawyer/victory->researcher",
-    "historian/attack->viking-bondi",
+    "lawyer/victory->scientist",
+    "historian/attack->philosopher",
     "historian/victory->normal-gblk",
-    "economist/victory->researcher",
-    "sociologist/victory->researcher",
+    "economist/victory->scientist",
+    "sociologist/victory->scientist",
     "researcher/attack->skeptic",
     "priest/attack->champion",
-    "priest/victory->researcher",
-    "skeptic/victory->researcher",
-    "normal-gblk/victory->researcher"
+    "skeptic/victory->scientist",
+    "normal-gblk/victory->referee"
    ]
   },
   "75%": {
-   "benar": 91,
+   "benar": 92,
    "total": 107,
-   "akurasi": 0.85,
+   "akurasi": 0.86,
    "salah": [
     "knight-man-at-arms/attack->pirate-skirmisher",
     "knight-assassin/victory->pirate-sharpshooter",
     "viking-berserker/victory->pirate-sharpshooter",
-    "pirate-skirmisher/victory->knight-archer",
+    "pirate-skirmisher/victory->philosopher",
     "academic/attack->mathematician",
     "mathematician/victory->sociologist",
-    "lawyer/victory->researcher",
+    "lawyer/victory->skeptic",
     "historian/attack->philosopher",
     "historian/victory->normal-gblk",
-    "economist/victory->researcher",
-    "sociologist/victory->researcher",
+    "economist/victory->scientist",
+    "sociologist/victory->skeptic",
     "researcher/attack->skeptic",
+    "researcher/victory->normal-gblk",
     "priest/attack->referee",
-    "priest/victory->researcher",
-    "skeptic/victory->researcher",
-    "normal-gblk/victory->researcher"
+    "normal-gblk/victory->scientist"
    ]
   },
   "50%": {
-   "benar": 89,
+   "benar": 90,
    "total": 107,
-   "akurasi": 0.832,
+   "akurasi": 0.841,
    "salah": [
     "knight-man-at-arms/attack->pirate-skirmisher",
     "knight-assassin/victory->pirate-sharpshooter",
     "viking-berserker/victory->pirate-sharpshooter",
-    "pirate-skirmisher/victory->knight-archer",
+    "pirate-skirmisher/victory->pirate-sharpshooter",
     "academic/attack->mathematician",
     "mathematician/victory->sociologist",
-    "lawyer/victory->researcher",
+    "lawyer/victory->scientist",
     "historian/attack->philosopher",
     "historian/victory->normal-gblk",
     "economist/attack->mathematician",
-    "economist/victory->researcher",
-    "sociologist/victory->researcher",
-    "engineer/victory->knight-archer",
+    "economist/victory->scientist",
+    "sociologist/victory->scientist",
     "researcher/attack->skeptic",
+    "researcher/victory->scientist",
     "priest/attack->champion",
-    "priest/victory->researcher",
-    "skeptic/victory->researcher",
-    "normal-gblk/victory->researcher"
+    "skeptic/victory->scientist",
+    "normal-gblk/victory->scientist"
    ]
   },
   "25%": {
-   "benar": 80,
+   "benar": 79,
    "total": 107,
-   "akurasi": 0.748,
+   "akurasi": 0.738,
    "salah": [
+    "knight-archer/idle->viking-bondi",
     "knight-man-at-arms/attack->academic",
     "knight-assassin/victory->philosopher",
     "viking-berserker/victory->philosopher",
     "viking-gestir/idle->fantasy-pirate",
     "viking-gestir/attack->scientist",
     "viking-gestir/victory->fantasy-pirate",
-    "viking-bondi/victory->knight-archer",
-    "pirate-skirmisher/victory->knight-archer",
+    "viking-bondi/victory->philosopher",
+    "pirate-skirmisher/victory->philosopher",
     "fantasy-pirate/victory->viking-gestir",
     "philosopher/attack->scientist",
     "academic/attack->mathematician",
-    "scientist/victory->knight-archer",
+    "scientist/victory->philosopher",
     "mathematician/victory->sociologist",
-    "lawyer/victory->researcher",
+    "lawyer/victory->skeptic",
     "historian/attack->scientist",
     "historian/victory->normal-gblk",
-    "economist/victory->researcher",
-    "sociologist/victory->researcher",
+    "economist/victory->scientist",
+    "sociologist/victory->scientist",
     "engineer/victory->pirate-sharpshooter",
-    "detective/victory->knight-archer",
+    "detective/victory->knight-man-at-arms",
     "researcher/attack->skeptic",
     "researcher/victory->normal-gblk",
     "pak-haji/attack->champion",
     "priest/attack->skeptic",
-    "priest/victory->researcher",
-    "skeptic/victory->researcher",
+    "priest/victory->scientist",
+    "skeptic/victory->normal-gblk",
     "normal-gblk/victory->scientist"
    ]
   }
@@ -172,33 +170,34 @@
     "viking-berserker/victory->pirate-sharpshooter",
     "pirate-skirmisher/victory->knight-archer",
     "academic/attack->mathematician",
-    "lawyer/victory->researcher",
-    "historian/attack->viking-bondi",
+    "lawyer/victory->scientist",
+    "historian/attack->philosopher",
     "historian/victory->normal-gblk",
-    "economist/victory->researcher",
-    "sociologist/victory->researcher",
-    "priest/victory->researcher",
-    "normal-gblk/victory->researcher"
+    "economist/victory->scientist",
+    "sociologist/victory->scientist",
+    "researcher/attack->scientist",
+    "normal-gblk/victory->scientist"
    ]
   },
   "75%": {
-   "benar": 86,
+   "benar": 85,
    "total": 99,
-   "akurasi": 0.869,
+   "akurasi": 0.859,
    "salah": [
     "knight-man-at-arms/attack->pirate-skirmisher",
     "knight-assassin/victory->pirate-sharpshooter",
     "viking-berserker/victory->pirate-sharpshooter",
-    "pirate-skirmisher/victory->knight-archer",
+    "pirate-skirmisher/victory->philosopher",
     "academic/attack->mathematician",
     "mathematician/victory->sociologist",
-    "lawyer/victory->researcher",
+    "lawyer/victory->scientist",
     "historian/attack->philosopher",
     "historian/victory->normal-gblk",
-    "economist/victory->researcher",
-    "sociologist/victory->researcher",
-    "priest/victory->researcher",
-    "normal-gblk/victory->researcher"
+    "economist/victory->scientist",
+    "sociologist/victory->scientist",
+    "researcher/attack->scientist",
+    "researcher/victory->normal-gblk",
+    "normal-gblk/victory->scientist"
    ]
   },
   "50%": {
@@ -209,60 +208,63 @@
     "knight-man-at-arms/attack->pirate-skirmisher",
     "knight-assassin/victory->pirate-sharpshooter",
     "viking-berserker/victory->pirate-sharpshooter",
-    "pirate-skirmisher/victory->knight-archer",
+    "pirate-skirmisher/victory->pirate-sharpshooter",
     "academic/attack->mathematician",
     "mathematician/victory->sociologist",
-    "lawyer/victory->researcher",
+    "lawyer/victory->scientist",
     "historian/attack->philosopher",
     "historian/victory->normal-gblk",
     "economist/attack->mathematician",
-    "economist/victory->researcher",
-    "sociologist/victory->researcher",
-    "engineer/victory->knight-archer",
+    "economist/victory->scientist",
+    "sociologist/victory->scientist",
+    "researcher/attack->scientist",
+    "researcher/victory->scientist",
     "priest/attack->detective",
-    "priest/victory->researcher",
-    "normal-gblk/victory->researcher"
+    "normal-gblk/victory->scientist"
    ]
   },
   "25%": {
-   "benar": 74,
+   "benar": 72,
    "total": 99,
-   "akurasi": 0.747,
+   "akurasi": 0.727,
    "salah": [
+    "knight-archer/idle->viking-bondi",
     "knight-man-at-arms/attack->academic",
     "knight-assassin/victory->philosopher",
     "viking-berserker/victory->philosopher",
     "viking-gestir/idle->fantasy-pirate",
     "viking-gestir/attack->scientist",
     "viking-gestir/victory->fantasy-pirate",
-    "viking-bondi/victory->knight-archer",
-    "pirate-skirmisher/victory->knight-archer",
+    "viking-bondi/victory->philosopher",
+    "pirate-skirmisher/victory->philosopher",
     "fantasy-pirate/victory->viking-gestir",
     "philosopher/attack->scientist",
     "academic/attack->mathematician",
-    "scientist/victory->knight-archer",
+    "scientist/victory->philosopher",
     "mathematician/victory->sociologist",
-    "lawyer/victory->researcher",
+    "lawyer/victory->scientist",
     "historian/attack->scientist",
     "historian/victory->normal-gblk",
-    "economist/victory->researcher",
-    "sociologist/victory->researcher",
+    "economist/victory->scientist",
+    "sociologist/victory->scientist",
     "engineer/victory->pirate-sharpshooter",
-    "detective/victory->knight-archer",
+    "detective/victory->knight-man-at-arms",
+    "researcher/attack->scientist",
     "researcher/victory->normal-gblk",
     "pak-haji/attack->detective",
-    "priest/attack->researcher",
-    "priest/victory->researcher",
+    "priest/attack->detective",
+    "priest/victory->scientist",
     "normal-gblk/victory->scientist"
    ]
   }
  },
  "pengenalan_siluet_roster": {
   "100%": {
-   "benar": 97,
+   "benar": 96,
    "total": 107,
-   "akurasi": 0.907,
+   "akurasi": 0.897,
    "salah": [
+    "knight-man-at-arms/attack->researcher",
     "knight-assassin/attack->economist",
     "fantasy-knight/attack->knight-man-at-arms",
     "viking/attack->pirate-skirmisher",
@@ -276,16 +278,17 @@
    ]
   },
   "75%": {
-   "benar": 96,
+   "benar": 95,
    "total": 107,
-   "akurasi": 0.897,
+   "akurasi": 0.888,
    "salah": [
+    "knight-man-at-arms/attack->researcher",
     "knight-assassin/attack->economist",
     "fantasy-knight/attack->champion",
     "viking/attack->knight-assassin",
     "viking-berserker/attack->knight-assassin",
     "viking-huscarl/attack->psychologist",
-    "viking-gestir/attack->academic",
+    "viking-gestir/attack->researcher",
     "fantasy-viking/attack->knight-assassin",
     "pirate-captain/attack->pirate-skirmisher",
     "pirate-buccaneer/attack->psychologist",
@@ -299,7 +302,7 @@
    "akurasi": 0.888,
    "salah": [
     "knight-archer/attack->fantasy-pirate",
-    "knight-man-at-arms/attack->psychologist",
+    "knight-man-at-arms/attack->researcher",
     "knight-assassin/attack->economist",
     "fantasy-knight/attack->knight-man-at-arms",
     "viking/attack->knight-assassin",
@@ -313,21 +316,20 @@
    ]
   },
   "25%": {
-   "benar": 88,
+   "benar": 89,
    "total": 107,
-   "akurasi": 0.822,
+   "akurasi": 0.832,
    "salah": [
-    "knight-archer/attack->engineer",
-    "knight-man-at-arms/attack->champion",
+    "knight-archer/idle->viking-bondi",
+    "knight-man-at-arms/attack->researcher",
     "knight-assassin/attack->economist",
-    "fantasy-knight/attack->knight-archer",
+    "fantasy-knight/attack->viking-bondi",
     "viking/attack->psychologist",
     "viking-berserker/attack->knight-assassin",
     "viking-huscarl/attack->fantasy-viking",
     "viking-gestir/idle->fantasy-pirate",
     "viking-gestir/attack->detective",
-    "viking-bondi/attack->engineer",
-    "fantasy-viking/attack->pak-haji",
+    "fantasy-viking/attack->viking-bondi",
     "pirate-captain/attack->psychologist",
     "pirate-buccaneer/attack->psychologist",
     "fantasy-pirate/attack->pirate-skirmisher",
@@ -389,12 +391,12 @@
     35
    ],
    [
-    "researcher/idle",
-    37
+    "hacker/attack",
+    39
    ],
    [
-    "researcher/hit",
-    37
+    "knight-assassin/smoke",
+    41
    ]
   ],
   "piksel_wajah_min_global": 0
@@ -426,9 +428,9 @@
   },
   {
    "sel": "knight-archer/idle",
-   "maks": 236,
+   "maks": 270,
    "median": 19,
-   "seam": 239,
+   "seam": 272,
    "gagal": false,
    "pop": true
   },
@@ -490,9 +492,9 @@
   },
   {
    "sel": "viking-bondi/idle",
-   "maks": 178,
+   "maks": 210,
    "median": 17,
-   "seam": 184,
+   "seam": 223,
    "gagal": false,
    "pop": true
   },
@@ -746,16 +748,16 @@
   },
   {
    "sel": "researcher/idle",
-   "maks": 214,
-   "median": 18,
-   "seam": 224,
+   "maks": 322,
+   "median": 16,
+   "seam": 332,
    "gagal": false,
    "pop": true
   },
   {
    "sel": "researcher/search",
    "maks": 420,
-   "median": 141,
+   "median": 140,
    "seam": 404,
    "gagal": false,
    "pop": true
