@@ -55,7 +55,7 @@ class Resolver:
                 st = c["states"][s]
                 if self.exists(st["sheet"]):
                     exact = (k == cid and s == state)
-                    return {"character": k, "state": s, "sheet": st["sheet"], "gif": st["gif"], "frames": st["frames"],
+                    return {"character": k, "state": s, "sheet": st["sheet"], "gif": st.get("gif"), "frames": st["frames"],
                             "ms": st["ms"], "loop": st["loop"], "requested": [cid, state], "exact": exact,
                             "notes": notes}
                 notes.append("berkas hilang: %s" % st["sheet"])

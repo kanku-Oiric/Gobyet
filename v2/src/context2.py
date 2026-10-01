@@ -7,6 +7,9 @@ Battle Royale tanpa dependensi.
 Aturan:
 - Skor domain = jumlah kata kunci yang cocok (batas kata, tanpa beda huruf besar/kecil).
 - Primary = domain dengan skor tertinggi. Secondary = domain kedua bila skornya > 0 dan karakternya berbeda.
+- Teknologi biasanya objek pertanyaan, bukan cara memperdebatkannya: bila ada domain lain yang cocok, teknologi turun
+  menjadi aksesori sekunder (bagian 60: AI + Filsafat -> Philosopher + laptop; AI + Matematika -> Mathematician +
+  laptop; Pendidikan + Teknologi -> Academic + laptop). Teknologi menjadi primer hanya bila berdiri sendiri.
   Maksimum satu primary + satu secondary (aksesori kecil), tidak pernah tiga kostum.
 - Tanpa kecocokan: normal-gblk (karakter default).
 - Teologi: hanya kata yang jelas merujuk tradisi tertentu yang memilih Pak Haji atau Priest. Kata umum (agama, Tuhan,
@@ -27,7 +30,9 @@ DOMAINS = {
         "ontology", "logika", "logic", "eksistensi", "eksistensial", "existential", "kesadaran", "consciousness", "kehendak bebas",
         "free will", "makna hidup", "meaning of life", "estetika", "aesthetics", "stoik", "stoic", "stoikisme", "nihilisme",
         "utilitarian", "utilitarianisme", "deontologi", "kebajikan", "virtue", "agama", "religion", "tuhan", "god", "teologi",
-        "theology", "jiwa", "soul", "pikiran", "mind"]),
+        "theology", "jiwa", "soul", "pikiran", "mind", "memahami", "pemahaman", "understanding", "makna", "meaning", "semantik",
+        "semantics", "intensionalitas", "intentionality", "qualia", "fungsionalisme", "functionalism", "kamar cina",
+        "chinese room", "grounding", "symbol grounding", "argumen", "premis", "premise", "dilema", "dilemma"]),
     "academic": ("academic", "book", [
         "pendidikan", "education", "sekolah", "school", "universitas", "university", "kampus", "campus", "kuliah", "mahasiswa",
         "student", "kurikulum", "curriculum", "akademik", "akademis", "academic", "gelar", "degree", "dosen", "guru", "teacher",
@@ -116,6 +121,9 @@ DOMAINS = {
         "kompetisi", "competition", "liga", "league", "atlet", "athlete", "esports", "e-sport", "piala dunia", "world cup"]),
 }
 
+# domain yang biasanya menjadi objek pertanyaan; jadi primer hanya bila tidak ada domain lain yang cocok
+SUBJECT_ONLY = {"technology"}
+
 # peran turnamen -> karakter (dipakai engine sesuai fase, bukan dari topik)
 ROLES = {"falsification": "skeptic", "evidence": "researcher", "judging": "judge", "tournament": "referee",
          "winner": "champion", "loser": "defeated", "generic": DEFAULT}
@@ -169,14 +177,16 @@ def scores(text):
 def select(topic, extra=""):
     """Pilih satu karakter primer dan paling banyak satu aksesori sekunder untuk sebuah topik."""
     sc = scores(topic + " " + (extra or ""))
-    ranked = sorted(sc.items(), key=lambda kv: (-kv[1], list(DOMAINS).index(kv[0])))
+    ranked = sorted(sc.items(), key=lambda kv: (kv[0] in SUBJECT_ONLY, -kv[1], list(DOMAINS).index(kv[0])))
     if not ranked:
         return {"primary": DEFAULT, "primary_domain": None, "secondary": None, "accessory": None, "scores": {},
-                "reason": "tidak ada domain yang cocok: karakter default"}
+                "reason": "tidak ada domain yang cocok: karakter default", "alt": None, "alt_accessory": None}
     pdom = ranked[0][0]
     primary = DOMAINS[pdom][0]
     secondary, acc = None, None
-    for dom, s in ranked[1:]:
+    # sekunder: skor tertinggi di antara sisanya, tanpa penalti teknologi (teknologi justru aksesori yang wajar)
+    rest = sorted(ranked[1:], key=lambda kv: (-kv[1], list(DOMAINS).index(kv[0])))
+    for dom, s in rest:
         if DOMAINS[dom][0] != primary:
             secondary, acc = dom, DOMAINS[dom][1]
             break
@@ -184,7 +194,10 @@ def select(topic, extra=""):
     if secondary:
         reason += ", sekunder %s (skor %d) sebagai aksesori %s" % (secondary, sc[secondary], acc)
     return {"primary": primary, "primary_domain": pdom, "secondary": secondary, "accessory": acc, "scores": sc,
-            "reason": reason}
+            "reason": reason,
+            # varian tukar peran (dipakai arena bila dua petarung satu duel mendapat karakter sama):
+            # karakter domain sekunder + ikon domain primer; tetap satu primer + satu sekunder
+            "alt": DOMAINS[secondary][0] if secondary else None, "alt_accessory": DOMAINS[pdom][1] if secondary else None}
 
 
 def cast_for(topic, texts, roles=ROLES):

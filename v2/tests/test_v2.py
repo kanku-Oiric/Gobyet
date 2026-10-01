@@ -267,6 +267,23 @@ class Context(unittest.TestCase):
         self.assertEqual(out[0]["primary"], "economist")
         self.assertEqual(out[1]["primary"], "philosopher")
 
+    def test_brief_section_60_examples(self):
+        cases = [("AI dan filsafat: apakah mesin punya kesadaran?", "philosopher", "laptop"),
+                 ("AI dan matematika: pembuktian teorema otomatis", "mathematician", "laptop"),
+                 ("Pendidikan dan teknologi di sekolah", "academic", "laptop"),
+                 ("Hukum dan sejarah: undang-undang kolonial", "lawyer", "oldscroll")]
+        for topic, char, acc in cases:
+            s = context2.select(topic)
+            self.assertEqual((s["primary"], s["accessory"]), (char, acc), topic)
+
+    def test_technology_alone_is_hacker(self):
+        self.assertEqual(context2.select("Bagaimana algoritma enkripsi bekerja?")["primary"], "hacker")
+
+    def test_alt_swaps_roles(self):
+        s = context2.select("Apakah AI bisa punya kesadaran?")
+        self.assertEqual((s["alt"], s["alt_accessory"]), ("hacker", "scroll"))
+        self.assertIsNone(context2.select("Kenapa kucing suka kotak?")["alt"])
+
     def test_roles_are_registered(self):
         for role, cid in context2.ROLES.items():
             self.assertIn(cid, CH, role)
