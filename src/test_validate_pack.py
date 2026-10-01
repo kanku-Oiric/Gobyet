@@ -82,3 +82,53 @@ class TextAudit(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class SeamPop(unittest.TestCase):
+    """V4: SEAM-POP harus menandai loop bergigi gergaji (perubahan besar di sambungan) dan tidak menandai loop
+    mulus. Frame sintetik 64x48 dibandingkan dengan vp.diff, sama seperti sheet sungguhan."""
+
+    @staticmethod
+    def frames(xs, w=30, h=20):
+        from PIL import Image
+        out = []
+        for x in xs:
+            im = Image.new("RGBA", (64, 48), (0, 0, 0, 0))
+            for yy in range(10, 10 + h):
+                for xx in range(x, x + w):
+                    im.putpixel((xx, yy), (226, 58, 48, 255))
+            out.append(im)
+        return out
+
+    def metrics(self, xs, **k):
+        fr = self.frames(xs, **k)
+        steps = [vp.diff(fr[i], fr[i + 1]) for i in range(len(fr) - 1)]
+        return vp.seam_metrics(steps, vp.diff(fr[-1], fr[0]))
+
+    def test_sawtooth_flagged(self):
+        # balok 30x20 bergeser 3 px per frame lalu meloncat kembali ke awal di sambungan loop
+        r = self.metrics([3 * k for k in range(11)])
+        self.assertEqual(r["maks"], 120)
+        self.assertEqual(r["seam"], 1200)
+        self.assertTrue(r["pop"], r)
+        self.assertTrue(r["gagal"], r)
+
+    def test_smooth_loop_not_flagged(self):
+        # gerak bolak-balik kosinus: langkah terbesar di tengah, seam di titik balik yang lambat
+        import math
+        xs = [int(round(15 * (1 - math.cos(2 * math.pi * k / 12)) / 2)) for k in range(12)]
+        r = self.metrics(xs)
+        self.assertGreater(r["maks"], 100)
+        self.assertFalse(r["pop"], r)
+        self.assertFalse(r["gagal"], r)
+
+    def test_small_motion_below_minimum(self):
+        # gigi gergaji kecil (maks <= 100 px) tidak memicu SEAM-POP, tetapi tetap GAGAL lewat ambang 1,25 x maks
+        r = self.metrics([k for k in range(8)], w=6, h=4)
+        self.assertLessEqual(r["maks"], 100)
+        self.assertFalse(r["pop"], r)
+        self.assertTrue(r["gagal"], r)
+
+    def test_static_loop(self):
+        r = self.metrics([5] * 6)
+        self.assertEqual((r["maks"], r["seam"], r["pop"], r["gagal"]), (0, 0, False, False))

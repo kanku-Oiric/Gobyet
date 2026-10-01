@@ -13,7 +13,9 @@ V3  Palet, kanvas, alfa: sheet hanya dari PAL (aset lama) atau PAL + PAL_EXT (as
     sheet4x = sheet 1x diperbesar; setiap frame GIF hasil decode = frame sheet diperbesar 8x, total
     durasi sama, loop tak hingga.
 V4  Loop seam: selisih frame terakhir->pertama <= 1,25 x selisih maksimum antar-frame berurutan.
-    Aset terkunci di atas ambang = DIKETAHUI; aset lain = GAGAL.
+    Aset terkunci di atas ambang = DIKETAHUI; aset lain = GAGAL. Juga dicetak median langkah internal dan
+    seam/median, plus peringatan SEAM-POP bila seam >= 0,9 x maks dan maks > 100 px (aset terkunci =
+    DIKETAHUI). Diagnosis per elemen: python3 tools/seam_diag.py <aset>.
 V5  Siluet (IoU mask buram frame kunci): idle antar kostum dasar (> 0,90 dilaporkan); defeated vs idle
     per kostum (<= 0,85; GAGAL untuk aset baru yang belum terkunci); varian vs saudara sefaksi.
 V6  Warna dominan dari piksel kostum saja (piksel yang berbeda dari Normal idle pada posisi sama, di luar
@@ -29,6 +31,7 @@ Keluar dengan kode 1 bila ada pemeriksaan wajib yang gagal.
 import hashlib
 import json
 import os
+import statistics
 import subprocess
 import sys
 from collections import Counter
@@ -53,6 +56,7 @@ LOCK_FILES = ("sha256-asli.txt", "sha256-disetujui.txt")  # terkunci: seam di at
 MADE_FILE = "sha256-dibuat.txt"  # aset gerbang yang sudah dibuat tetapi belum disetujui: hash wajib tetap
 GROUPS = ("core", "role", "domain", "fantasy", "theology", "special")
 SEAM_FACTOR = 1.25
+POP_RATIO, POP_MIN = 0.9, 100  # SEAM-POP: seam >= 0,9 x maks dan maks > 100 px (peringatan)
 DANCE_FRAMES, DANCE_MS = 16, 120
 BUDGET_BYTES = 16 * 1024 * 1024
 WARN_BYTES = 15 * 1024 * 1024  # ambang peringatan pemilik: proyeksi di atasnya = STOP-DARURAT
@@ -247,22 +251,41 @@ def diff(a, b):
     return sum(1 for p, q in zip(pixels(a), pixels(b)) if p != q)
 
 
+def seam_metrics(steps, seam):
+    """Metrik seam dari selisih langkah internal (f0->f1 ... f[n-2]->f[n-1]) dan seam (f[n-1]->f0).
+    gagal: seam > SEAM_FACTOR x maks. pop (SEAM-POP): seam >= POP_RATIO x maks dan maks > POP_MIN, yaitu
+    seam setara langkah terbesar sehingga perubahan besar jatuh tepat di sambungan loop."""
+    mx = max(steps) if steps else 0
+    med = statistics.median(steps) if steps else 0
+    return {"maks": mx, "median": med, "seam": seam, "ambang": SEAM_FACTOR * mx,
+            "seam_per_maks": seam / mx if mx else 0.0, "seam_per_median": seam / med if med else float(seam > 0),
+            "gagal": seam > SEAM_FACTOR * mx, "pop": seam >= POP_RATIO * mx and mx > POP_MIN}
+
+
 def check_seams(m):
     print("\n[V4] Loop seam (piksel berbeda; seam = frame terakhir -> frame pertama)")
     print("  ambang = %.2f x selisih maksimum antar-frame berurutan di aset itu sendiri" % SEAM_FACTOR)
-    print("  %-26s %-8s %6s %7s %6s  %s" % ("sel", "status", "maks", "ambang", "seam", "hasil"))
+    print("  SEAM-POP (peringatan) = seam >= %.1f x maks dan maks > %d px; seam/med = seam dibagi median langkah internal"
+          % (POP_RATIO, POP_MIN))
+    print("  %-26s %-8s %6s %6s %7s %6s %7s  %s" % ("sel", "status", "maks", "median", "ambang", "seam", "seam/med", "hasil"))
     locked = locked_files()
+    pops = []
     for costume, state, cell in cells(m):
         fr = frames_of(cell_path(cell["sheet"]))
         steps = [diff(fr[i], fr[i + 1]) for i in range(len(fr) - 1)]
-        seam = diff(fr[-1], fr[0])
-        limit = SEAM_FACTOR * max(steps)
+        r = seam_metrics(steps, diff(fr[-1], fr[0]))
         lk = is_locked(cell, locked)
-        ok = seam <= limit
-        verdict = "lulus" if ok else ("DIKETAHUI (terkunci, tidak diubah)" if lk else "GAGAL")
-        print("  %-26s %-8s %6d %7.1f %6d  %s" % (costume + "/" + state, "terkunci" if lk else "baru", max(steps), limit, seam, verdict))
-        if not ok and not lk:
-            fail("%s/%s: loop seam %d > %.1f" % (costume, state, seam, limit))
+        verdict = "lulus" if not r["gagal"] else ("DIKETAHUI (terkunci, tidak diubah)" if lk else "GAGAL")
+        if r["pop"]:
+            verdict += "; SEAM-POP " + ("DIKETAHUI (terkunci)" if lk else "PERINGATAN")
+            pops.append((costume + "/" + state, lk))
+        print("  %-26s %-8s %6d %6g %7.1f %6d %8.2f  %s" % (costume + "/" + state, "terkunci" if lk else "baru", r["maks"],
+                                                          r["median"], r["ambang"], r["seam"], r["seam_per_median"], verdict))
+        if r["gagal"] and not lk:
+            fail("%s/%s: loop seam %d > %.1f" % (costume, state, r["seam"], r["ambang"]))
+    new_pops = [c for c, lk in pops if not lk]
+    print("  SEAM-POP: %d sel (%d terkunci = DIKETAHUI, %d baru = PERINGATAN)%s" % (
+        len(pops), len(pops) - len(new_pops), len(new_pops), (": " + ", ".join(new_pops)) if new_pops else ""))
 
 
 # ------------------------------------------------------------------ V5

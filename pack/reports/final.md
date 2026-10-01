@@ -296,13 +296,13 @@ Semua sel yang terisi, frame kunci, 2×. Kotak hijau = aset asli. Kolom = state 
 
 ## 5. Validasi final (V1-V13)
 
-Output mentah validator dari commit Gerbang F (`python3 src/validate_pack.py --gate F`). Semua pemeriksaan GAGAL selalu dijalankan untuk seluruh manifest; `--gate` hanya membatasi tabel beat yang dicetak.
+Output mentah validator penuh di HEAD sesudah perbaikan teknis (`python3 src/validate_pack.py`, tanpa `--gate`). Aset tidak berubah sejak commit Gerbang F. Yang berubah hanya laporan V4: median, seam/median, dan peringatan SEAM-POP. Rinciannya di `pack/reports/perbaikan-teknis.md`.
 
 | | Pemeriksaan | Hasil |
 |---|---|---|
-| V1 | Hash aset asli (27), disetujui (89), dan dibuat (242 setelah Gerbang F) | identik; pemeriksaan ulang ada di bagian Tes di bawah |
+| V1 | Hash aset asli (27), disetujui (89), dan dibuat (242) | 27 + 89 + 242 identik dalam satu keluaran validator |
 | V2-V3 | Manifest, schema, palet, kanvas, alfa, isi GIF = sheet | 32 kostum, 13 state, 163/163 sel, 0 gagal |
-| V4 | Seam loop ≤ 1,25× | semua aset baru lulus; 4 aset asli DIKETAHUI |
+| V4 | Seam loop ≤ 1,25×, median, seam/median, dan peringatan SEAM-POP (seam ≥ 0,9 × maks dan maks > 100 px) | semua aset baru lulus ambang; 4 aset asli DIKETAHUI; daftar SEAM-POP ada di output V4 dan `perbaikan-teknis.md` |
 | V5 | IoU siluet | tidak ada defeated > 0,85; idle > 0,90 hanya Pak Haji–Priest 0,93 (dilaporkan) |
 | V6 | Warna dominan dan ΔE | pasangan < 15 hanya tiga pengecualian yang diterima; aksen varian sefaksi ≥ 20,1 |
 | V7 | Ukuran prop | tabel di output; prop di bawah 6×6 ditandai |
@@ -534,177 +534,179 @@ HASIL: LULUS
 [V1] Hash aset yang dikunci dan aset yang sudah dibuat
   sha256-asli.txt: 27 identik, 0 berubah/hilang
   sha256-disetujui.txt: 89 identik, 0 berubah/hilang
-  sha256-dibuat.txt: 170 identik, 0 berubah/hilang
+  sha256-dibuat.txt: 242 identik, 0 berubah/hilang
 
 [V2] Manifest dan schema, [V3] palet, kanvas, alfa, isi GIF
   32 kostum, 13 state, 163 sel berlaku, 163 sel terisi; 0 gagal
 
 [V4] Loop seam (piksel berbeda; seam = frame terakhir -> frame pertama)
   ambang = 1.25 x selisih maksimum antar-frame berurutan di aset itu sendiri
-  sel                        status     maks  ambang   seam  hasil
-  normal/idle                terkunci    237   296.2     37  lulus
-  normal/happy               terkunci    324   405.0    100  lulus
-  normal/thinking            terkunci    158   197.5     34  lulus
-  normal/victory             terkunci    544   680.0     16  lulus
-  normal/defeated            terkunci     45    56.2     36  lulus
-  normal/shocked             baru        687   858.8     19  lulus
-  normal/dance-a             baru        677   846.2    677  lulus
-  greek-philosopher/thinking terkunci    197   246.2    234  lulus
-  greek-philosopher/idle     terkunci     70    87.5     33  lulus
-  greek-philosopher/victory  terkunci    560   700.0      8  lulus
-  greek-philosopher/defeated terkunci    113   141.2     69  lulus
-  greek-philosopher/shocked  baru        702   877.5     17  lulus
-  greek-philosopher/happy    baru        344   430.0     42  lulus
-  academic/idle              terkunci    241   301.2     36  lulus
-  academic/thinking          terkunci    176   220.0     28  lulus
-  academic/victory           terkunci    549   686.2     20  lulus
-  academic/defeated          terkunci    287   358.8     12  lulus
-  academic/shocked           baru        409   511.2     27  lulus
-  academic/happy             baru        420   525.0     31  lulus
-  scientist/thinking         terkunci    140   175.0    239  DIKETAHUI (terkunci, tidak diubah)
-  scientist/idle             terkunci     75    93.8     44  lulus
-  scientist/shocked          terkunci    814  1017.5     30  lulus
-  scientist/victory          terkunci    722   902.5     59  lulus
-  scientist/defeated         baru         46    57.5     36  lulus
-  scientist/happy            baru         99   123.8     69  lulus
-  hacker/idle                terkunci    257   321.2    258  lulus
-  hacker/thinking            terkunci    138   172.5     68  lulus
-  hacker/shocked             terkunci    372   465.0     68  lulus
-  hacker/victory             terkunci    600   750.0     68  lulus
-  hacker/defeated            baru        712   890.0    708  lulus
-  hacker/happy               baru         74    92.5     74  lulus
-  detective/thinking         terkunci    312   390.0    356  lulus
-  detective/idle             terkunci    196   245.0     16  lulus
-  detective/suspicious       terkunci    527   658.8     93  lulus
-  detective/shocked          terkunci    813  1016.2     16  lulus
-  detective/victory          terkunci    689   861.2     16  lulus
-  detective/defeated         baru        246   307.5     16  lulus
-  detective/happy            baru        376   470.0     31  lulus
-  referee/idle               terkunci    216   270.0      8  lulus
-  referee/thinking           terkunci    143   178.8    152  lulus
-  referee/victory            baru        231   288.8     18  lulus
-  referee/defeated           baru        219   273.8     42  lulus
-  referee/shocked            baru        623   778.8     18  lulus
-  referee/happy              baru        173   216.2    102  lulus
-  judge/idle                 terkunci    207   258.8      4  lulus
-  judge/thinking             terkunci    158   197.5     24  lulus
-  judge/judging              terkunci    207   258.8      7  lulus
-  judge/victory              baru        302   377.5     19  lulus
-  judge/defeated             baru        226   282.5     37  lulus
-  judge/shocked              baru        670   837.5     19  lulus
-  judge/happy                baru        374   467.5     19  lulus
-  skeptic/idle               terkunci    221   276.2      8  lulus
-  skeptic/suspicious         terkunci    278   347.5      8  lulus
-  skeptic/attack             terkunci    152   190.0      8  lulus
-  skeptic/thinking           baru        158   197.5     40  lulus
-  skeptic/victory            baru        222   277.5     19  lulus
-  skeptic/defeated           baru        229   286.2     67  lulus
-  skeptic/shocked            baru        587   733.8     19  lulus
-  skeptic/happy              baru        333   416.2     19  lulus
-  champion/idle              terkunci    214   267.5     16  lulus
-  champion/victory           terkunci    513   641.2     16  lulus
-  champion/thinking          baru        154   192.5     41  lulus
-  champion/defeated          baru        218   272.5     42  lulus
-  champion/shocked           baru        763   953.8     18  lulus
-  champion/happy             baru        324   405.0     16  lulus
-  champion/dance-a           baru        721   901.2    721  lulus
-  mathematician/idle         terkunci     59    73.8     23  lulus
-  mathematician/thinking     terkunci    180   225.0     11  lulus
-  mathematician/victory      terkunci    710   887.5     38  lulus
-  mathematician/defeated     baru        217   271.2     42  lulus
-  mathematician/shocked      baru        731   913.8     18  lulus
-  mathematician/happy        baru        281   351.2     55  lulus
-  lawyer/idle                terkunci    105   131.2      8  lulus
-  lawyer/thinking            terkunci    131   163.8     18  lulus
-  lawyer/victory             terkunci    652   815.0      8  lulus
-  lawyer/defeated            baru        217   271.2     38  lulus
-  lawyer/shocked             baru        671   838.8     11  lulus
-  lawyer/happy               baru        331   413.8     11  lulus
-  gamer/idle                 baru        154   192.5     43  lulus
-  gamer/thinking             baru        211   263.8     32  lulus
-  gamer/happy                baru        220   275.0     31  lulus
-  gamer/shocked              baru        620   775.0     32  lulus
-  gamer/victory              baru        803  1003.8     17  lulus
-  gamer/defeated             baru        103   128.8     16  lulus
-  gamer/dance-a              baru        619   773.8    619  lulus
-  normal-gblk/idle           baru        183   228.8    158  lulus
-  normal-gblk/reveal         baru        367   458.8    261  lulus
-  normal-gblk/happy          baru        217   271.2     36  lulus
-  normal-gblk/victory        baru        993  1241.2     16  lulus
-  normal-gblk/defeated       baru        359   448.8     16  lulus
-  normal-gblk/dance-a        baru        873  1091.2    873  lulus
-  normal-gblk/dance-b        baru        834  1042.5    844  lulus
-  normal-gblk/dance-c        baru        962  1202.5    956  lulus
-  knight/idle                baru        356   445.0     11  lulus
-  knight/thinking            baru        138   172.5     28  lulus
-  knight/shocked             baru        728   910.0     11  lulus
-  knight/attack              baru        509   636.2     11  lulus
-  knight/victory             baru        552   690.0     11  lulus
-  knight/defeated            baru         32    40.0     13  lulus
-  viking/idle                baru        396   495.0    395  lulus
-  viking/thinking            baru        114   142.5     27  lulus
-  viking/attack              baru        267   333.8     11  lulus
-  viking/victory             baru        719   898.8     11  lulus
-  viking/defeated            baru         30    37.5     14  lulus
-  viking/dance-a             baru        586   732.5    597  lulus
-  pirate/idle                baru         45    56.2     19  lulus
-  pirate/thinking            baru        272   340.0     43  lulus
-  pirate/attack              baru        277   346.2     19  lulus
-  pirate/victory             baru        652   815.0     19  lulus
-  pirate/defeated            baru         29    36.2     22  lulus
-  pirate/dance-a             baru        548   685.0    559  lulus
-  wizard/idle                baru         37    46.2     17  lulus
-  wizard/thinking            baru        130   162.5    138  lulus
-  wizard/shocked             baru        531   663.8     18  lulus
-  wizard/attack              baru        153   191.2     18  lulus
-  wizard/victory             baru        642   802.5     24  lulus
-  wizard/defeated            baru        120   150.0     32  lulus
-  pak-haji/idle              baru        296   370.0     19  lulus
-  pak-haji/thinking          baru         99   123.8     54  lulus
-  pak-haji/happy             baru        295   368.8     82  lulus
-  pak-haji/victory           baru        136   170.0     48  lulus
-  pak-haji/defeated          baru        153   191.2     19  lulus
-  priest/idle                baru        240   300.0     19  lulus
-  priest/thinking            baru         99   123.8     48  lulus
-  priest/happy               baru        242   302.5     66  lulus
-  priest/victory             baru        100   125.0     35  lulus
-  priest/defeated            baru        126   157.5     19  lulus
-  knight-heavy/idle          baru        441   551.2    435  lulus
-  knight-heavy/attack        baru        555   693.8     19  lulus
-  knight-heavy/victory       baru        504   630.0     19  lulus
-  knight-archer/idle         baru        442   552.5    437  lulus
-  knight-archer/attack       baru        309   386.2     11  lulus
-  knight-archer/victory      baru        523   653.8     11  lulus
-  knight-manatarms/idle      baru        453   566.2    449  lulus
-  knight-manatarms/attack    baru        490   612.5     12  lulus
-  knight-manatarms/victory   baru        551   688.8     12  lulus
-  knight-assassin/idle       baru        469   586.2    463  lulus
-  knight-assassin/attack     baru        384   480.0     19  lulus
-  knight-assassin/victory    baru        501   626.2     19  lulus
-  viking-berserker/idle      baru        489   611.2    483  lulus
-  viking-berserker/attack    baru        667   833.8     19  lulus
-  viking-berserker/victory   baru        558   697.5     19  lulus
-  viking-huscarl/idle        baru        464   580.0    463  lulus
-  viking-huscarl/attack      baru        551   688.8      9  lulus
-  viking-huscarl/victory     baru        694   867.5     11  lulus
-  viking-gestir/idle         baru        475   593.8    469  lulus
-  viking-gestir/attack       baru        558   697.5     19  lulus
-  viking-gestir/victory      baru        578   722.5     19  lulus
-  viking-bondi/idle          baru        489   611.2    487  lulus
-  viking-bondi/attack        baru        259   323.8     12  lulus
-  viking-bondi/victory       baru        541   676.2     12  lulus
-  pirate-captain/idle        baru        522   652.5    515  lulus
-  pirate-captain/attack      baru        646   807.5     15  lulus
-  pirate-captain/victory     baru        600   750.0     15  lulus
-  pirate-skirmisher/idle     baru        517   646.2    516  lulus
-  pirate-skirmisher/attack   baru        683   853.8     32  lulus
-  pirate-skirmisher/victory  baru        501   626.2     32  lulus
-  pirate-sharpshooter/idle   baru        483   603.8    477  lulus
-  pirate-sharpshooter/attack baru        208   260.0     19  lulus
-  pirate-sharpshooter/victory baru        626   782.5     19  lulus
-  pirate-buccaneer/idle      baru        538   672.5    532  lulus
-  pirate-buccaneer/attack    baru        561   701.2     19  lulus
-  pirate-buccaneer/victory   baru        713   891.2     19  lulus
+  SEAM-POP (peringatan) = seam >= 0.9 x maks dan maks > 100 px; seam/med = seam dibagi median langkah internal
+  sel                        status     maks median  ambang   seam seam/med  hasil
+  normal/idle                terkunci    237     42   296.2     37     0.88  lulus
+  normal/happy               terkunci    324   91.5   405.0    100     1.09  lulus
+  normal/thinking            terkunci    158     37   197.5     34     0.92  lulus
+  normal/victory             terkunci    544    395   680.0     16     0.04  lulus
+  normal/defeated            terkunci     45      7    56.2     36     5.14  lulus
+  normal/shocked             baru        687    412   858.8     19     0.05  lulus
+  normal/dance-a             baru        677      7   846.2    677    96.71  lulus; SEAM-POP PERINGATAN
+  greek-philosopher/thinking terkunci    197     20   246.2    234    11.70  lulus; SEAM-POP DIKETAHUI (terkunci)
+  greek-philosopher/idle     terkunci     70     28    87.5     33     1.18  lulus
+  greek-philosopher/victory  terkunci    560    438   700.0      8     0.02  lulus
+  greek-philosopher/defeated terkunci    113     24   141.2     69     2.88  lulus
+  greek-philosopher/shocked  baru        702    401   877.5     17     0.04  lulus
+  greek-philosopher/happy    baru        344     40   430.0     42     1.05  lulus
+  academic/idle              terkunci    241     27   301.2     36     1.33  lulus
+  academic/thinking          terkunci    176     34   220.0     28     0.82  lulus
+  academic/victory           terkunci    549    130   686.2     20     0.15  lulus
+  academic/defeated          terkunci    287     17   358.8     12     0.71  lulus
+  academic/shocked           baru        409    117   511.2     27     0.23  lulus
+  academic/happy             baru        420     36   525.0     31     0.86  lulus
+  scientist/thinking         terkunci    140     37   175.0    239     6.46  DIKETAHUI (terkunci, tidak diubah); SEAM-POP DIKETAHUI (terkunci)
+  scientist/idle             terkunci     75     43    93.8     44     1.02  lulus
+  scientist/shocked          terkunci    814     44  1017.5     30     0.68  lulus
+  scientist/victory          terkunci    722    493   902.5     59     0.12  lulus
+  scientist/defeated         baru         46      7    57.5     36     5.14  lulus
+  scientist/happy            baru         99     45   123.8     69     1.53  lulus
+  hacker/idle                terkunci    257     43   321.2    258     6.00  lulus; SEAM-POP DIKETAHUI (terkunci)
+  hacker/thinking            terkunci    138     25   172.5     68     2.72  lulus
+  hacker/shocked             terkunci    372    118   465.0     68     0.58  lulus
+  hacker/victory             terkunci    600    331   750.0     68     0.21  lulus
+  hacker/defeated            baru        712     11   890.0    708    64.36  lulus; SEAM-POP PERINGATAN
+  hacker/happy               baru         74     61    92.5     74     1.21  lulus
+  detective/thinking         terkunci    312     80   390.0    356     4.45  lulus; SEAM-POP DIKETAHUI (terkunci)
+  detective/idle             terkunci    196     19   245.0     16     0.84  lulus
+  detective/suspicious       terkunci    527     65   658.8     93     1.43  lulus
+  detective/shocked          terkunci    813    100  1016.2     16     0.16  lulus
+  detective/victory          terkunci    689    467   861.2     16     0.03  lulus
+  detective/defeated         baru        246     18   307.5     16     0.89  lulus
+  detective/happy            baru        376     52   470.0     31     0.60  lulus
+  referee/idle               terkunci    216     20   270.0      8     0.40  lulus
+  referee/thinking           terkunci    143     27   178.8    152     5.63  lulus; SEAM-POP DIKETAHUI (terkunci)
+  referee/victory            baru        231     34   288.8     18     0.53  lulus
+  referee/defeated           baru        219      7   273.8     42     6.00  lulus
+  referee/shocked            baru        623    357   778.8     18     0.05  lulus
+  referee/happy              baru        173     41   216.2    102     2.49  lulus
+  judge/idle                 terkunci    207     18   258.8      4     0.22  lulus
+  judge/thinking             terkunci    158     26   197.5     24     0.92  lulus
+  judge/judging              terkunci    207    112   258.8      7     0.06  lulus
+  judge/victory              baru        302     46   377.5     19     0.41  lulus
+  judge/defeated             baru        226      7   282.5     37     5.29  lulus
+  judge/shocked              baru        670    388   837.5     19     0.05  lulus
+  judge/happy                baru        374     36   467.5     19     0.53  lulus
+  skeptic/idle               terkunci    221     18   276.2      8     0.44  lulus
+  skeptic/suspicious         terkunci    278     21   347.5      8     0.38  lulus
+  skeptic/attack             terkunci    152     20   190.0      8     0.40  lulus
+  skeptic/thinking           baru        158     26   197.5     40     1.54  lulus
+  skeptic/victory            baru        222     41   277.5     19     0.46  lulus
+  skeptic/defeated           baru        229     19   286.2     67     3.53  lulus
+  skeptic/shocked            baru        587    340   733.8     19     0.06  lulus
+  skeptic/happy              baru        333     47   416.2     19     0.40  lulus
+  champion/idle              terkunci    214     19   267.5     16     0.84  lulus
+  champion/victory           terkunci    513    286   641.2     16     0.06  lulus
+  champion/thinking          baru        154     22   192.5     41     1.86  lulus
+  champion/defeated          baru        218      7   272.5     42     6.00  lulus
+  champion/shocked           baru        763    463   953.8     18     0.04  lulus
+  champion/happy             baru        324     34   405.0     16     0.47  lulus
+  champion/dance-a           baru        721      7   901.2    721   103.00  lulus; SEAM-POP PERINGATAN
+  mathematician/idle         terkunci     59     37    73.8     23     0.62  lulus
+  mathematician/thinking     terkunci    180     48   225.0     11     0.23  lulus
+  mathematician/victory      terkunci    710    450   887.5     38     0.08  lulus
+  mathematician/defeated     baru        217      8   271.2     42     5.25  lulus
+  mathematician/shocked      baru        731    385   913.8     18     0.05  lulus
+  mathematician/happy        baru        281     62   351.2     55     0.89  lulus
+  lawyer/idle                terkunci    105     27   131.2      8     0.30  lulus
+  lawyer/thinking            terkunci    131     37   163.8     18     0.49  lulus
+  lawyer/victory             terkunci    652    403   815.0      8     0.02  lulus
+  lawyer/defeated            baru        217      8   271.2     38     4.75  lulus
+  lawyer/shocked             baru        671    345   838.8     11     0.03  lulus
+  lawyer/happy               baru        331     39   413.8     11     0.28  lulus
+  gamer/idle                 baru        154     36   192.5     43     1.19  lulus
+  gamer/thinking             baru        211     35   263.8     32     0.91  lulus
+  gamer/happy                baru        220     22   275.0     31     1.41  lulus
+  gamer/shocked              baru        620    107   775.0     32     0.30  lulus
+  gamer/victory              baru        803    443  1003.8     17     0.04  lulus
+  gamer/defeated             baru        103     18   128.8     16     0.89  lulus
+  gamer/dance-a              baru        619      7   773.8    619    88.43  lulus; SEAM-POP PERINGATAN
+  normal-gblk/idle           baru        183     43   228.8    158     3.67  lulus
+  normal-gblk/reveal         baru        367     19   458.8    261    13.74  lulus
+  normal-gblk/happy          baru        217    200   271.2     36     0.18  lulus
+  normal-gblk/victory        baru        993    359  1241.2     16     0.04  lulus
+  normal-gblk/defeated       baru        359     18   448.8     16     0.89  lulus
+  normal-gblk/dance-a        baru        873      7  1091.2    873   124.71  lulus; SEAM-POP PERINGATAN
+  normal-gblk/dance-b        baru        834      7  1042.5    844   120.57  lulus; SEAM-POP PERINGATAN
+  normal-gblk/dance-c        baru        962      7  1202.5    956   136.57  lulus; SEAM-POP PERINGATAN
+  knight/idle                baru        356     14   445.0     11     0.79  lulus
+  knight/thinking            baru        138     32   172.5     28     0.88  lulus
+  knight/shocked             baru        728     19   910.0     11     0.58  lulus
+  knight/attack              baru        509     22   636.2     11     0.50  lulus
+  knight/victory             baru        552    460   690.0     11     0.02  lulus
+  knight/defeated            baru         32     14    40.0     13     0.93  lulus
+  viking/idle                baru        396     21   495.0    395    18.81  lulus; SEAM-POP PERINGATAN
+  viking/thinking            baru        114     29   142.5     27     0.93  lulus
+  viking/attack              baru        267     21   333.8     11     0.52  lulus
+  viking/victory             baru        719    541   898.8     11     0.02  lulus
+  viking/defeated            baru         30     15    37.5     14     0.93  lulus
+  viking/dance-a             baru        586      7   732.5    597    85.29  lulus; SEAM-POP PERINGATAN
+  pirate/idle                baru         45     19    56.2     19     1.00  lulus
+  pirate/thinking            baru        272     15   340.0     43     2.87  lulus
+  pirate/attack              baru        277     32   346.2     19     0.59  lulus
+  pirate/victory             baru        652    596   815.0     19     0.03  lulus
+  pirate/defeated            baru         29     16    36.2     22     1.38  lulus
+  pirate/dance-a             baru        548      7   685.0    559    79.86  lulus; SEAM-POP PERINGATAN
+  wizard/idle                baru         37     13    46.2     17     1.31  lulus
+  wizard/thinking            baru        130     27   162.5    138     5.11  lulus; SEAM-POP PERINGATAN
+  wizard/shocked             baru        531    116   663.8     18     0.16  lulus
+  wizard/attack              baru        153     76   191.2     18     0.24  lulus
+  wizard/victory             baru        642    580   802.5     24     0.04  lulus
+  wizard/defeated            baru        120     10   150.0     32     3.20  lulus
+  pak-haji/idle              baru        296     39   370.0     19     0.49  lulus
+  pak-haji/thinking          baru         99     17   123.8     54     3.18  lulus
+  pak-haji/happy             baru        295     52   368.8     82     1.58  lulus
+  pak-haji/victory           baru        136     45   170.0     48     1.07  lulus
+  pak-haji/defeated          baru        153     15   191.2     19     1.27  lulus
+  priest/idle                baru        240     18   300.0     19     1.06  lulus
+  priest/thinking            baru         99     14   123.8     48     3.43  lulus
+  priest/happy               baru        242     32   302.5     66     2.06  lulus
+  priest/victory             baru        100     26   125.0     35     1.35  lulus
+  priest/defeated            baru        126     14   157.5     19     1.36  lulus
+  knight-heavy/idle          baru        441     32   551.2    435    13.59  lulus; SEAM-POP PERINGATAN
+  knight-heavy/attack        baru        555     40   693.8     19     0.47  lulus
+  knight-heavy/victory       baru        504    474   630.0     19     0.04  lulus
+  knight-archer/idle         baru        442     22   552.5    437    19.86  lulus; SEAM-POP PERINGATAN
+  knight-archer/attack       baru        309     22   386.2     11     0.50  lulus
+  knight-archer/victory      baru        523    446   653.8     11     0.02  lulus
+  knight-manatarms/idle      baru        453     23   566.2    449    19.52  lulus; SEAM-POP PERINGATAN
+  knight-manatarms/attack    baru        490     23   612.5     12     0.52  lulus
+  knight-manatarms/victory   baru        551    506   688.8     12     0.02  lulus
+  knight-assassin/idle       baru        469     32   586.2    463    14.47  lulus; SEAM-POP PERINGATAN
+  knight-assassin/attack     baru        384     47   480.0     19     0.40  lulus
+  knight-assassin/victory    baru        501    471   626.2     19     0.04  lulus
+  viking-berserker/idle      baru        489     32   611.2    483    15.09  lulus; SEAM-POP PERINGATAN
+  viking-berserker/attack    baru        667     96   833.8     19     0.20  lulus
+  viking-berserker/victory   baru        558    460   697.5     19     0.04  lulus
+  viking-huscarl/idle        baru        464     21   580.0    463    22.05  lulus; SEAM-POP PERINGATAN
+  viking-huscarl/attack      baru        551     19   688.8      9     0.47  lulus
+  viking-huscarl/victory     baru        694    592   867.5     11     0.02  lulus
+  viking-gestir/idle         baru        475     32   593.8    469    14.66  lulus; SEAM-POP PERINGATAN
+  viking-gestir/attack       baru        558     32   697.5     19     0.59  lulus
+  viking-gestir/victory      baru        578    514   722.5     19     0.04  lulus
+  viking-bondi/idle          baru        489     22   611.2    487    22.14  lulus; SEAM-POP PERINGATAN
+  viking-bondi/attack        baru        259     21   323.8     12     0.57  lulus
+  viking-bondi/victory       baru        541    490   676.2     12     0.02  lulus
+  pirate-captain/idle        baru        522     27   652.5    515    19.07  lulus; SEAM-POP PERINGATAN
+  pirate-captain/attack      baru        646     77   807.5     15     0.19  lulus
+  pirate-captain/victory     baru        600    529   750.0     15     0.03  lulus
+  pirate-skirmisher/idle     baru        517     32   646.2    516    16.12  lulus; SEAM-POP PERINGATAN
+  pirate-skirmisher/attack   baru        683     32   853.8     32     1.00  lulus
+  pirate-skirmisher/victory  baru        501    298   626.2     32     0.11  lulus
+  pirate-sharpshooter/idle   baru        483     32   603.8    477    14.91  lulus; SEAM-POP PERINGATAN
+  pirate-sharpshooter/attack baru        208     21   260.0     19     0.90  lulus
+  pirate-sharpshooter/victory baru        626    505   782.5     19     0.04  lulus
+  pirate-buccaneer/idle      baru        538     32   672.5    532    16.62  lulus; SEAM-POP PERINGATAN
+  pirate-buccaneer/attack    baru        561     32   701.2     19     0.59  lulus
+  pirate-buccaneer/victory   baru        713    603   891.2     19     0.03  lulus
+  SEAM-POP: 28 sel (5 terkunci = DIKETAHUI, 23 baru = PERINGATAN): normal/dance-a, hacker/defeated, champion/dance-a, gamer/dance-a, normal-gblk/dance-a, normal-gblk/dance-b, normal-gblk/dance-c, viking/idle, viking/dance-a, pirate/dance-a, wizard/thinking, knight-heavy/idle, knight-archer/idle, knight-manatarms/idle, knight-assassin/idle, viking-berserker/idle, viking-huscarl/idle, viking-gestir/idle, viking-bondi/idle, pirate-captain/idle, pirate-skirmisher/idle, pirate-sharpshooter/idle, pirate-buccaneer/idle
 
 [V5] Siluet: IoU mask buram frame kunci
   catatan: semua kostum memakai kepala dan badan yang sama, jadi IoU dasar antar-kostum sudah tinggi
@@ -915,175 +917,6 @@ HASIL: LULUS
   champion: hati kecil            5x4   di bawah 6x6
 
 [V8] Audit teks (semua pemanggil mini_text diinstrumentasi) dan beat per rentang frame
-  normal/shocked  (12 frame, 1520 ms, kunci f4)  teks: '!'
-    f0-1      300 ms  mata=look    alis=flat    mulut=flat  
-    f2-8      770 ms  mata=wide    alis=up      mulut=o       teks=!
-    f9-11     450 ms  mata=look    alis=flat    mulut=flat  
-  normal/dance-a  (16 frame, 1920 ms, kunci f0)  teks: -
-    f0-3      480 ms  mata=happy   alis=flat    mulut=smile 
-    f4-7      480 ms  mata=happy   alis=flat    mulut=o     
-    f8-11     480 ms  mata=happy   alis=flat    mulut=smile 
-    f12-15    480 ms  mata=happy   alis=flat    mulut=o     
-  greek-philosopher/shocked  (12 frame, 1520 ms, kunci f5)  teks: '!'
-    f0-1      300 ms  mata=look    alis=flat    mulut=flat  
-    f2-8      770 ms  mata=wide    alis=up      mulut=flat    teks=!
-    f9-11     450 ms  mata=look    alis=flat    mulut=flat  
-  greek-philosopher/happy  (12 frame, 1800 ms, kunci f4)  teks: -
-    f0-2      450 ms  mata=look    alis=flat    mulut=flat  
-    f3-8      900 ms  mata=happy   alis=flat    mulut=flat  
-    f9        150 ms  mata=look    alis=flat    mulut=flat  
-    f10       150 ms  mata=blink   alis=flat    mulut=flat  
-    f11       150 ms  mata=look    alis=flat    mulut=flat  
-  academic/shocked  (12 frame, 1520 ms, kunci f4)  teks: '!'
-    f0-1      300 ms  mata=look    alis=flat    mulut=flat  
-    f2-8      770 ms  mata=wide    alis=up      mulut=o       teks=!
-    f9-11     450 ms  mata=look    alis=flat    mulut=flat  
-  academic/happy  (12 frame, 1800 ms, kunci f5)  teks: -
-    f0-2      450 ms  mata=look    alis=flat    mulut=smile 
-    f3-8      900 ms  mata=happy   alis=flat    mulut=smile 
-    f9        150 ms  mata=look    alis=flat    mulut=smile 
-    f10       150 ms  mata=blink   alis=flat    mulut=smile 
-    f11       150 ms  mata=look    alis=flat    mulut=smile 
-  scientist/defeated  (16 frame, 3200 ms, kunci f8)  teks: 'E=mc'
-    f0-11    2440 ms  mata=relief  alis=worried mulut=flat    teks=E=mc
-    f12       190 ms  mata=blink   alis=worried mulut=flat    teks=E=mc
-    f13-15    570 ms  mata=relief  alis=worried mulut=flat    teks=E=mc
-  scientist/happy  (12 frame, 1800 ms, kunci f5)  teks: 'E=mc'
-    f0-2      450 ms  mata=look    alis=flat    mulut=smile   teks=E=mc
-    f3-8      900 ms  mata=happy   alis=flat    mulut=smile   teks=E=mc
-    f9        150 ms  mata=look    alis=flat    mulut=smile   teks=E=mc
-    f10       150 ms  mata=blink   alis=flat    mulut=smile   teks=E=mc
-    f11       150 ms  mata=look    alis=flat    mulut=smile   teks=E=mc
-  hacker/defeated  (16 frame, 3200 ms, kunci f8)  teks: -
-    f0-15    3200 ms  mata=relief  alis=worried mulut=frown 
-  hacker/happy  (12 frame, 1800 ms, kunci f5)  teks: -
-    f0-2      450 ms  mata=down    alis=flat    mulut=smile 
-    f3-8      900 ms  mata=happy   alis=flat    mulut=smile 
-    f9-11     450 ms  mata=down    alis=flat    mulut=smile 
-  detective/defeated  (16 frame, 3200 ms, kunci f8)  teks: -
-    f0-11    2440 ms  mata=relief  alis=worried mulut=frown 
-    f12       190 ms  mata=blink   alis=worried mulut=frown 
-    f13-15    570 ms  mata=relief  alis=worried mulut=frown 
-  detective/happy  (12 frame, 1800 ms, kunci f4)  teks: -
-    f0-2      450 ms  mata=look    alis=flat    mulut=smile 
-    f3-8      900 ms  mata=happy   alis=flat    mulut=smile 
-    f9        150 ms  mata=look    alis=flat    mulut=smile 
-    f10       150 ms  mata=blink   alis=flat    mulut=smile 
-    f11       150 ms  mata=look    alis=flat    mulut=smile 
-  referee/victory  (16 frame, 2040 ms, kunci f4)  teks: 'n'
-    f0-1      300 ms  mata=look    alis=flat    mulut=smile 
-    f2-11    1200 ms  mata=happy   alis=flat    mulut=o       teks=n
-    f12-15    540 ms  mata=look    alis=flat    mulut=smile 
-  referee/defeated  (16 frame, 3200 ms, kunci f8)  teks: -
-    f0-11    2440 ms  mata=relief  alis=worried mulut=frown 
-    f12       190 ms  mata=blink   alis=worried mulut=frown 
-    f13-15    570 ms  mata=relief  alis=worried mulut=frown 
-  referee/shocked  (12 frame, 1520 ms, kunci f4)  teks: '!'
-    f0-1      300 ms  mata=look    alis=flat    mulut=flat  
-    f2-8      770 ms  mata=wide    alis=up      mulut=o       teks=!
-    f9-11     450 ms  mata=look    alis=flat    mulut=flat  
-  referee/happy  (12 frame, 1800 ms, kunci f5)  teks: -
-    f0-3      600 ms  mata=down    alis=flat    mulut=smile 
-    f4-8      750 ms  mata=happy   alis=flat    mulut=smile 
-    f9        150 ms  mata=look    alis=flat    mulut=smile 
-    f10       150 ms  mata=blink   alis=flat    mulut=smile 
-    f11       150 ms  mata=look    alis=flat    mulut=smile 
-  judge/victory  (16 frame, 2160 ms, kunci f8)  teks: -
-    f0-1      300 ms  mata=look    alis=flat    mulut=smile 
-    f2-11    1300 ms  mata=happy   alis=flat    mulut=smile 
-    f12-15    560 ms  mata=look    alis=flat    mulut=smile 
-  judge/defeated  (16 frame, 3200 ms, kunci f8)  teks: -
-    f0-11    2440 ms  mata=relief  alis=worried mulut=frown 
-    f12       190 ms  mata=blink   alis=worried mulut=frown 
-    f13-15    570 ms  mata=relief  alis=worried mulut=frown 
-  judge/shocked  (12 frame, 1520 ms, kunci f4)  teks: '!'
-    f0-1      300 ms  mata=look    alis=flat    mulut=flat  
-    f2-8      770 ms  mata=wide    alis=up      mulut=o       teks=!
-    f9-11     450 ms  mata=look    alis=flat    mulut=flat  
-  judge/happy  (12 frame, 1800 ms, kunci f4)  teks: -
-    f0-2      450 ms  mata=look    alis=flat    mulut=smile 
-    f3-8      900 ms  mata=happy   alis=flat    mulut=smile 
-    f9        150 ms  mata=look    alis=flat    mulut=smile 
-    f10       150 ms  mata=blink   alis=flat    mulut=smile 
-    f11       150 ms  mata=look    alis=flat    mulut=smile 
-  skeptic/thinking  (16 frame, 2720 ms, kunci f9)  teks: '?'
-    f0-3      680 ms  mata=side    alis=raised  mulut=flat  
-    f4        170 ms  mata=blink   alis=raised  mulut=flat  
-    f5-7      510 ms  mata=side    alis=raised  mulut=flat  
-    f8-13    1020 ms  mata=side    alis=raised  mulut=smirk   teks=?
-    f14-15    340 ms  mata=side    alis=raised  mulut=smirk 
-  skeptic/victory  (16 frame, 2160 ms, kunci f4)  teks: -
-    f0-1      300 ms  mata=look    alis=raised  mulut=smile 
-    f2-11    1300 ms  mata=happy   alis=raised  mulut=smirk 
-    f12-15    560 ms  mata=look    alis=raised  mulut=smile 
-  skeptic/defeated  (16 frame, 3200 ms, kunci f8)  teks: -
-    f0-11    2440 ms  mata=relief  alis=worried mulut=frown 
-    f12       190 ms  mata=blink   alis=worried mulut=frown 
-    f13-15    570 ms  mata=relief  alis=worried mulut=frown 
-  skeptic/shocked  (12 frame, 1520 ms, kunci f4)  teks: '!'
-    f0-1      300 ms  mata=look    alis=flat    mulut=flat  
-    f2-8      770 ms  mata=wide    alis=up      mulut=o       teks=!
-    f9-11     450 ms  mata=look    alis=flat    mulut=flat  
-  skeptic/happy  (12 frame, 1800 ms, kunci f4)  teks: -
-    f0-2      450 ms  mata=look    alis=raised  mulut=smile 
-    f3-8      900 ms  mata=happy   alis=raised  mulut=smile 
-    f9        150 ms  mata=look    alis=raised  mulut=smile 
-    f10       150 ms  mata=blink   alis=raised  mulut=smile 
-    f11       150 ms  mata=look    alis=raised  mulut=smile 
-  champion/thinking  (16 frame, 2720 ms, kunci f9)  teks: '?'
-    f0-3      680 ms  mata=down    alis=flat    mulut=flat  
-    f4        170 ms  mata=blink   alis=flat    mulut=flat  
-    f5        170 ms  mata=down    alis=flat    mulut=flat  
-    f6-7      340 ms  mata=side    alis=flat    mulut=flat  
-    f8-13    1020 ms  mata=side    alis=flat    mulut=frown   teks=?
-    f14-15    340 ms  mata=side    alis=flat    mulut=frown 
-  champion/defeated  (16 frame, 3200 ms, kunci f8)  teks: -
-    f0-11    2440 ms  mata=relief  alis=worried mulut=frown 
-    f12       190 ms  mata=blink   alis=worried mulut=frown 
-    f13-15    570 ms  mata=relief  alis=worried mulut=frown 
-  champion/shocked  (12 frame, 1520 ms, kunci f4)  teks: '!'
-    f0-1      300 ms  mata=look    alis=flat    mulut=smile 
-    f2-8      770 ms  mata=wide    alis=flat    mulut=o       teks=!
-    f9-11     450 ms  mata=look    alis=flat    mulut=smile 
-  champion/happy  (12 frame, 1800 ms, kunci f5)  teks: -
-    f0-2      450 ms  mata=look    alis=flat    mulut=smile 
-    f3-8      900 ms  mata=happy   alis=flat    mulut=smile 
-    f9        150 ms  mata=look    alis=flat    mulut=smile 
-    f10       150 ms  mata=blink   alis=flat    mulut=smile 
-    f11       150 ms  mata=look    alis=flat    mulut=smile 
-  champion/dance-a  (16 frame, 1920 ms, kunci f0)  teks: -
-    f0-3      480 ms  mata=happy   alis=flat    mulut=smile 
-    f4-7      480 ms  mata=happy   alis=flat    mulut=o     
-    f8-11     480 ms  mata=happy   alis=flat    mulut=smile 
-    f12-15    480 ms  mata=happy   alis=flat    mulut=o     
-  mathematician/defeated  (16 frame, 3200 ms, kunci f8)  teks: -
-    f0-11    2440 ms  mata=relief  alis=worried mulut=frown 
-    f12       190 ms  mata=blink   alis=worried mulut=frown 
-    f13-15    570 ms  mata=relief  alis=worried mulut=frown 
-  mathematician/shocked  (12 frame, 1520 ms, kunci f4)  teks: '!'
-    f0-1      300 ms  mata=look    alis=flat    mulut=flat  
-    f2-8      770 ms  mata=wide    alis=up      mulut=o       teks=!
-    f9-11     450 ms  mata=look    alis=flat    mulut=flat  
-  mathematician/happy  (12 frame, 1800 ms, kunci f5)  teks: -
-    f0-2      450 ms  mata=look    alis=flat    mulut=smile 
-    f3-8      900 ms  mata=happy   alis=flat    mulut=smile 
-    f9        150 ms  mata=look    alis=flat    mulut=smile 
-    f10       150 ms  mata=blink   alis=flat    mulut=smile 
-    f11       150 ms  mata=look    alis=flat    mulut=smile 
-  lawyer/defeated  (16 frame, 3200 ms, kunci f8)  teks: -
-    f0-11    2440 ms  mata=relief  alis=worried mulut=frown 
-    f12       190 ms  mata=blink   alis=worried mulut=frown 
-    f13-15    570 ms  mata=relief  alis=worried mulut=frown 
-  lawyer/shocked  (12 frame, 1520 ms, kunci f4)  teks: '!'
-    f0-1      300 ms  mata=look    alis=flat    mulut=flat  
-    f2-8      770 ms  mata=wide    alis=up      mulut=o       teks=!
-    f9-11     450 ms  mata=look    alis=flat    mulut=flat  
-  lawyer/happy  (12 frame, 1800 ms, kunci f5)  teks: -
-    f0-2      450 ms  mata=look    alis=flat    mulut=smile 
-    f3-8      900 ms  mata=happy   alis=flat    mulut=smile 
-    f9        150 ms  mata=look    alis=flat    mulut=smile 
-    f10       150 ms  mata=blink   alis=flat    mulut=smile 
-    f11       150 ms  mata=look    alis=flat    mulut=smile 
 
 [VT] Audit teologi 7.2 (keputusan pemilik 11c: pemeriksaan i-vi, wajib lulus)
   state pak-haji: defeated, happy, idle, thinking, victory | priest: defeated, happy, idle, thinking, victory
@@ -1156,13 +989,28 @@ exit=0
 ### Tes (V11)
 
 ```
-$ sha256sum -c pack/sha256-asli.txt pack/sha256-disetujui.txt pack/sha256-dibuat.txt
+$ python3 src/export.py
+pack/manifest.json  163 sel (7 asli, 156 baru), 32 kostum, 13 state
+$ git status --short gif sheets pack/manifest.json (harus kosong)
+0
+$ sha256sum -c
   sha256-asli.txt: 27 file identik
   sha256-disetujui.txt: 89 file identik
   sha256-dibuat.txt: 242 file identik
 
-$ python3 -m unittest src/test_validate_pack.py
-Ran 5 tests in 0.005s
+$ python3 -m unittest src/test_validate_pack.py -v
+test_sawtooth_flagged (src.test_validate_pack.SeamPop.test_sawtooth_flagged) ... ok
+test_small_motion_below_minimum (src.test_validate_pack.SeamPop.test_small_motion_below_minimum) ... ok
+test_smooth_loop_not_flagged (src.test_validate_pack.SeamPop.test_smooth_loop_not_flagged) ... ok
+test_static_loop (src.test_validate_pack.SeamPop.test_static_loop) ... ok
+test_alias_import_with_glyph_outside_mini (src.test_validate_pack.TextAudit.test_alias_import_with_glyph_outside_mini) ... ok
+test_direct_import_too_long (src.test_validate_pack.TextAudit.test_direct_import_too_long) ... ok
+test_exception_only_for_its_owner_and_static (src.test_validate_pack.TextAudit.test_exception_only_for_its_owner_and_static) ... ok
+test_module_attribute_call (src.test_validate_pack.TextAudit.test_module_attribute_call) ... ok
+test_patch_is_restored (src.test_validate_pack.TextAudit.test_patch_is_restored) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.039s
 
 OK
 
@@ -1170,8 +1018,7 @@ $ node --test pack/resolver.test.js
 # tests 19
 # pass 19
 # fail 0
-
-$ node tools/e2e_preview.js (commit Gerbang F)
+e2e exit=0
 E2E: LULUS
 ```
 
@@ -1300,18 +1147,10 @@ Uji browser (`node tools/e2e_preview.js`, Playwright + Chromium, desktop 1280 px
 
 ```
 $ git log --oneline origin/main..HEAD | wc -l
-22
+23
 $ git diff --stat origin/main..HEAD (ringkas)
- 386 files changed, 17130 insertions(+), 270 deletions(-)
-$ file berubah per folder
-      1 .gitignore
-      1 README.md
-    156 gif
-     37 pack
-    175 sheets
-     12 src
-      4 tools
-origin/main: a7a6d21; HEAD: f079a42 (branch claude/gobyet-fase2)
+ 387 files changed, 18704 insertions(+), 270 deletions(-)
+origin/main: a7a6d21; HEAD: 4590f60 + perubahan perbaikan teknis (belum di-commit saat laporan dibuat)
 $ repo Bertahan-Bukan-hidup
 status: 0 baris; diff vs origin/main: 0 baris (tidak berubah)
 ```
@@ -1555,10 +1394,6 @@ Fase 2 Gobyet Character Pack selesai: **semua 163 sel yang berlaku terisi** (7 a
 - `node tools/e2e_preview.js`: LULUS (0 console error, 0 request gagal, mode statis cocok per piksel, 0 px scroll horizontal di ponsel).
 
 Tag gerbang dibuat lewat `sh tools/tag_gates.sh` dari mesin pemilik; sesi Claude tidak bisa mem-push tag.
-
-🤖 Generated with [Claude Code](https://claude.com/claude-code)
-
-https://claude.ai/code/session_013bdXrtZ61JtYd9YBcWvXQb
 ```
 
 ---
