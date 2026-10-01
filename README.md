@@ -9,6 +9,82 @@
   oleh monyet bodoh yang lagi larping jadi programmer.
 </p>
 
+## Gobyet Universe
+
+Satu monyet, banyak dunia. Rework v2 membuat setiap karakter Gobyet berdiri dengan kuda-kuda, senjata, dan siluet sesuai perannya, sementara kepala, wajah, telinga, dan ekornya tetap Gobyet yang sama.
+
+**38 karakter · 305 state animasi · 3.871 frame · kanvas 64×64**
+
+### Animasi andalan
+
+| Heavy Knight | Berserker | Pirate Skirmisher | Wizard |
+|:---:|:---:|:---:|:---:|
+| <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/knight-heavy/attack.gif" width="128" alt="Heavy Knight: ancang-ancang, ayunan pedang besar, hantaman"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/viking-berserker/rage.gif" width="128" alt="Berserker: mode amuk: lebih rendah, wajah memerah, kapak terangkat, lebih cepat"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/pirate-skirmisher/explosion.gif" width="128" alt="Pirate Skirmisher: tong meledak kartun, menutup telinga"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/wizard/spell_fail.gif" width="128" alt="Wizard: mantra gagal: POOF, wajah jelaga, bingung"> |
+| `attack` | `rage` | `explosion` | `spell_fail` |
+
+| Hacker | Skeptic | Normal GBLK | Champion |
+|:---:|:---:|:---:|:---:|
+| <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/hacker/error.gif" width="128" alt="Hacker: layar error, menatap layar, diam, lalu menatap penonton"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/skeptic/inspect.gif" width="128" alt="Skeptic: melihat klaim, diam, menyipit, menunjuk premis"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/normal-gblk/victory_dance.gif" width="128" alt="Normal GBLK: tarian kemenangan dengan konfeti"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/champion/trophy_raise.gif" width="128" alt="Champion: piala diangkat tinggi dengan dua tangan"> |
+| `error` | `inspect` | `victory_dance` | `trophy_raise` |
+
+### FANTASY (17)
+
+| Heavy Knight | Archer | Man-at-Arms | Assassin |
+|:---:|:---:|:---:|:---:|
+| <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/knight-heavy/idle.gif" width="128" alt="Heavy Knight: berdiri berat, zirah naik-turun pelan"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/knight-archer/idle.gif" width="128" alt="Archer: busur panjang di sisi, tabung panah di punggung"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/knight-man-at-arms/idle.gif" width="128" alt="Man-at-Arms: halberd tegak, berat badan berpindah"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/knight-assassin/idle.gif" width="128" alt="Assassin: kuda-kuda rendah, dua belati terbalik"> |
+
+| Fantasy Knight | Viking | Berserker | Huscarl |
+|:---:|:---:|:---:|:---:|
+| <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/fantasy-knight/idle.gif" width="128" alt="Fantasy Knight: pedang panjang, perisai layang-layang biru, jubah biru"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/viking/idle.gif" width="128" alt="Viking: kapak dan perisai bundar"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/viking-berserker/idle.gif" width="128" alt="Berserker: memantul tak sabar, dua kapak siap"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/viking-huscarl/idle.gif" width="128" alt="Huscarl: kapak Dane besar dan perisai bundar besar"> |
+
+| Gestir | Bondi | Fantasy Viking | Pirate Captain |
+|:---:|:---:|:---:|:---:|
+| <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/viking-gestir/idle.gif" width="128" alt="Gestir: tombak panjang tegak, lembing di punggung"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/viking-bondi/idle.gif" width="128" alt="Bondi: busur pendek, seax di sabuk, pakaian sederhana"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/fantasy-viking/idle.gif" width="128" alt="Fantasy Viking: kapak dan perisai bundar"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/pirate-captain/idle.gif" width="128" alt="Pirate Captain: dada membusung, cutlass dan pistol"> |
+
+| Pirate Skirmisher | Pirate Sharpshooter | Pirate Buccaneer | Fantasy Pirate |
+|:---:|:---:|:---:|:---:|
+| <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/pirate-skirmisher/idle.gif" width="128" alt="Pirate Skirmisher: memantul ringan, tong mesiu di tangan"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/pirate-sharpshooter/idle.gif" width="128" alt="Pirate Sharpshooter: senapan panjang di bahu, topi lebar"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/pirate-buccaneer/idle.gif" width="128" alt="Pirate Buccaneer: bertumpu pada palu raksasa, jangkar di punggung"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/fantasy-pirate/idle.gif" width="128" alt="Fantasy Pirate: peta harta, sesekali meneropong"> |
+
+| Wizard |
+|:---:|
+| <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/wizard/idle.gif" width="128" alt="Wizard: topi runcing tinggi, jubah sampai lantai, tongkat bercahaya"> |
+
+### DOMAIN (15)
+
+| Philosopher | Academic | Scientist | Mathematician |
+|:---:|:---:|:---:|:---:|
+| <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/philosopher/idle.gif" width="128" alt="Philosopher: gulungan di tangan, toga"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/academic/idle.gif" width="128" alt="Academic: toga hitam, buku tebal"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/scientist/idle.gif" width="128" alt="Scientist: jas lab panjang, labu bergelembung, papan klip"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/mathematician/idle.gif" width="128" alt="Mathematician: papan tulis berkaki dengan rumus di samping"> |
+
+| Lawyer | Historian | Economist | Psychologist |
+|:---:|:---:|:---:|:---:|
+| <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/lawyer/idle.gif" width="128" alt="Lawyer: jas gelap, kitab hukum, berkas"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/historian/idle.gif" width="128" alt="Historian: jaket wol, kacamata bundar, kotak arsip"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/economist/idle.gif" width="128" alt="Economist: pelindung mata hijau, kalkulator, buku besar, grafik"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/psychologist/idle.gif" width="128" alt="Psychologist: duduk di kursi berlengan, kardigan, kacamata besar, buku catatan"> |
+
+| Sociologist | Engineer | Detective | Researcher |
+|:---:|:---:|:---:|:---:|
+| <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/sociologist/idle.gif" width="128" alt="Sociologist: papan diagram jaringan, papan klip, syal"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/engineer/idle.gif" width="128" alt="Engineer: helm proyek, rompi oranye, kunci pas"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/detective/idle.gif" width="128" alt="Detective: topi deerstalker, mantel berjubah, kaca pembesar"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/researcher/idle.gif" width="128" alt="Researcher: memeluk tumpukan buku"> |
+
+| Pak Haji | Priest | Hacker |
+|:---:|:---:|:---:|
+| <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/pak-haji/idle.gif" width="128" alt="Pak Haji: tenang, aura halus"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/priest/idle.gif" width="128" alt="Priest: tenang, aura halus"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/hacker/idle.gif" width="128" alt="Hacker: hoodie, laptop, terminal hijau bergulir"> |
+
+### ROLE (5)
+
+| Referee | Judge | Skeptic | Champion |
+|:---:|:---:|:---:|:---:|
+| <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/referee/idle.gif" width="128" alt="Referee: kaus belang, peluit, bendera"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/judge/idle.gif" width="128" alt="Judge: jubah hakim di balik meja"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/skeptic/idle.gif" width="128" alt="Skeptic: alis terangkat, monokel, kaca pembesar"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/champion/idle.gif" width="128" alt="Champion: memamerkan piala, jubah merah, medali"> |
+
+| Defeated |
+|:---:|
+| <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/defeated/sit.gif" width="128" alt="Defeated: duduk lesu, pedang di lantai, menghela napas"> |
+
+### SPECIAL (1)
+
+| Normal GBLK |
+|:---:|
+| <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-fase2/v2/gif/normal-gblk/idle.gif" width="128" alt="Normal GBLK: papan GBLK besar"> |
+
+Semua karakter v2 masih di branch [`claude/gobyet-fase2`](https://github.com/kanku-Oiric/Gobyet/tree/claude/gobyet-fase2) ([PR #1](https://github.com/kanku-Oiric/Gobyet/pull/1), draft) dan belum digabung ke `main`; gambar di atas diambil dari branch itu. Detail: [`v2/README.md`](https://github.com/kanku-Oiric/Gobyet/blob/claude/gobyet-fase2/v2/README.md), tata bahasa visual [`v2/STYLE.md`](https://github.com/kanku-Oiric/Gobyet/blob/claude/gobyet-fase2/v2/STYLE.md), laporan [`v2/reports/rework-v2.md`](https://github.com/kanku-Oiric/Gobyet/blob/claude/gobyet-fase2/v2/reports/rework-v2.md). Galeri interaktif (semua state, mode siluet dan grayscale, uji skala) ada di [`v2/gallery.html`](https://github.com/kanku-Oiric/Gobyet/blob/claude/gobyet-fase2/v2/gallery.html); buka dari folder `v2/` di komputer setelah checkout branch-nya.
+
 ## Animasi
 
 | Makan pisang | Ngamuk debug | Ngopi santai |
