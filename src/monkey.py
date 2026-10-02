@@ -36,17 +36,27 @@ PAL_EXT = {
 }
 
 
+# Palet kostum khusus yang kanvasnya bukan 64x48 (mis. berserker-hero 128x96). Aditif: kosong secara bawaan, diisi
+# modul kostum itu saat diimpor. Kunci tidak boleh sama dengan PAL atau PAL_EXT.
+PAL_HERO = {}
+
+
 def rgb(c):
-    """Warna untuk kunci palet: PAL dulu, lalu PAL_EXT."""
-    return PAL[c] if c in PAL else PAL_EXT[c]
+    """Warna untuk kunci palet: PAL dulu, lalu PAL_EXT, lalu PAL_HERO."""
+    if c in PAL:
+        return PAL[c]
+    return PAL_EXT[c] if c in PAL_EXT else PAL_HERO[c]
 
 
 class Canvas:
-    def __init__(self):
+    """Kanvas piksel. Bawaan 64x48 (W, H); kostum berkanvas lain memberi w dan h (aditif, bawaan tidak berubah)."""
+
+    def __init__(self, w=None, h=None):
+        self.w, self.h = w or W, h or H
         self.px = {}
 
     def put(self, x, y, c):
-        if 0 <= x < W and 0 <= y < H and c:
+        if 0 <= x < self.w and 0 <= y < self.h and c:
             self.px[(int(x), int(y))] = c
 
     def fill(self, pts, c):
@@ -54,10 +64,10 @@ class Canvas:
             self.put(p[0], p[1], c)
 
     def image(self, scale=1, bg=None):
-        im = Image.new("RGBA", (W, H), bg + (255,) if bg else (0, 0, 0, 0))
+        im = Image.new("RGBA", (self.w, self.h), bg + (255,) if bg else (0, 0, 0, 0))
         for (x, y), c in self.px.items():
             im.putpixel((x, y), rgb(c) + (255,))
-        return im.resize((W * scale, H * scale), Image.NEAREST) if scale != 1 else im
+        return im.resize((self.w * scale, self.h * scale), Image.NEAREST) if scale != 1 else im
 
 
 def ellipse(cx, cy, rx, ry):

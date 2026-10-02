@@ -1,0 +1,127 @@
+{
+ "pose_idle": {
+  "helm_total_bbox_wh": [
+   65,
+   47
+  ],
+  "helm_kubah_rahang_bbox_wh": [
+   37,
+   41
+  ],
+  "moncong_bbox_wh": [
+   34,
+   14
+  ],
+  "tanduk": [
+   {
+    "piksel_terlihat": 118,
+    "jarak_terjauh_piksel": 21.9,
+    "bbox_wh": [
+     21,
+     12
+    ]
+   },
+   {
+    "piksel_terlihat": 100,
+    "jarak_terjauh_piksel": 21.9,
+    "bbox_wh": [
+     21,
+     11
+    ]
+   }
+  ],
+  "tanduk_panjang_busur_desain": [
+   27.8,
+   22.4
+  ],
+  "tanduk_lengkung_busur_per_tali": [
+   1.21
+  ],
+  "rongga_mata_bbox_wh": [
+   [
+    7,
+    6
+   ],
+   [
+    7,
+    7
+   ]
+  ],
+  "gigi_rahang_terlihat": 6,
+  "gigi_lebar_px": [
+   2
+  ],
+  "taring_moncong_terlihat": 3,
+  "bilah_terlebar_px": 16,
+  "bilah_pinggang_tersempit_px": 6,
+  "bilah_luk_per_sisi": [
+   5,
+   5
+  ],
+  "bilah_amplitudo_desain_px": 4.6,
+  "bilah_amplitudo_terukur_px": {
+   "min": 4,
+   "rata": 4.0
+  },
+  "bilah_terlebar_di_pose_idle_px": 16.8,
+  "pedang_panjang_total_px": 72.1,
+  "tinggi_tubuh_px": 60.8,
+  "rasio_pedang_per_tubuh": 1.19,
+  "bahu_pelat_piksel_terlihat": [
+   38,
+   45,
+   139
+  ],
+  "wajah_piksel_terlihat": 288
+ },
+ "global": {
+  "warna_dipakai_tiga_pose": 25,
+  "warna_palet": 26,
+  "batas_warna": 28,
+  "alfa_parsial": false,
+  "kanvas": [
+   128,
+   96
+  ]
+ },
+ "wajah": {
+  "idle": {
+   "wajah": 288,
+   "telinga": 58,
+   "tengkorak_bulu": 97
+  },
+  "run": {
+   "wajah": 297,
+   "telinga": 58,
+   "tengkorak_bulu": 88
+  },
+  "attack-smash": {
+   "wajah": 298,
+   "telinga": 58,
+   "tengkorak_bulu": 90
+  }
+ },
+ "kontras_luminans": {
+  "tepi_hitam_o2_vs_latar_terang": 16.19,
+  "tepi_hitam_o2_vs_latar_gelap": 1.02,
+  "besi_dasar_ib_vs_latar_terang": 10.2,
+  "besi_dasar_ib_vs_latar_gelap": 1.55,
+  "rim_biru_baja_vs_latar_gelap": 6.09,
+  "rim_biru_baja_vs_latar_terang": 2.6,
+  "latar_terang": [
+   250,
+   247,
+   240
+  ],
+  "latar_gelap": [
+   24,
+   28,
+   44
+  ]
+ },
+ "bbox_tinggi_kepala": {
+  "idle": 48,
+  "run": 47,
+  "attack-smash": 49
+ }
+}
