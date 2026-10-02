@@ -192,6 +192,10 @@ Belum diuji (bukan bagian Fase B): seam loop, durasi, ukuran GIF/total, resolver
 Repo Bertahan-Bukan-hidup (`/home/user/Bertahan-Bukan-hidup`): `git status` kosong, cabang `claude/argument-battle-royale-skill-3wzgmg`, HEAD `696605e`
 (commit 2026-10-01, sebelum tugas ini dimulai). Tidak ada perintah tulis yang saya jalankan di sana untuk tugas ini.
 
-Diff stat dan hasil validator penuh sesudah perubahan ditambahkan di bagian ini sebelum commit.
+Diff stat terhadap `claude/gobyet-fase2` (delta tugas ini, commit `7e43deb`): 14 berkas, 1.396 tambah, 6 hapus. Satu-satunya berkas lama yang
+berubah adalah `src/monkey.py` (22 baris). Tidak ada berkas di `gif/`, `sheets/`, `asli/`, atau `pack/sha256-*.txt` yang berubah.
+
+Diff stat terhadap `main`: 1.390 berkas, 39.418 tambah, 259 hapus. Hampir semuanya berasal dari pekerjaan sebelumnya di `claude/gobyet-fase2`
+(gerbang A–J dan folder `v2/`), bukan dari tugas ini.
 
 Menunggu persetujuan gaya untuk Berserker Hero.
