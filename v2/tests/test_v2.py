@@ -25,10 +25,22 @@ from resolve2 import Resolver  # noqa: E402
 W = H = 64
 BASE = 59
 FACE = {(226, 172, 128), (198, 142, 100), (236, 140, 108), (206, 110, 84)}
+# warna darah VFX (rig2 bl0-bl3): tidak boleh muncul di sheet karakter mana pun
+BLOOD = {(236, 112, 100), (198, 36, 44), (144, 22, 32), (96, 14, 24)}
 
 with open(os.path.join(V2, "registry.json")) as f:
     REG = json.load(f)
 CH = {c["id"]: c for c in REG["characters"]}
+
+
+def size_of(cid):
+    """Ukuran kanvas karakter (64x64 standar, atau kanvas sendiri seperti Berserker)."""
+    cv = CH[cid].get("canvas", REG["canvas"])
+    return cv["w"], cv["h"]
+
+
+def base_of(cid):
+    return CH[cid].get("anchor", REG["anchor"])["baseline"]
 
 # state yang diminta brief per karakter (nama huruf kecil). Karakter tanpa daftar di brief: minimal state inti.
 REQUIRED = {
@@ -70,6 +82,8 @@ REQUIRED = {
     "fantasy-knight": "idle attack victory defeat",
     "fantasy-pirate": "idle attack victory defeat",
     "fantasy-viking": "idle attack victory defeat",
+    "berserker": "idle ready rage run jump attack heavy_attack leap_spin_slash overhead_smash air_slash rage_attack "
+                 "combo hit miss exhausted victory defeat",
 }
 FIGHTER_CATS = ("fantasy", "domain", "special")
 # frame tanpa wajah yang disengaja: hilang di balik asap, berjalan keluar/masuk tepi kanvas
@@ -78,19 +92,24 @@ NO_FACE_OK = {("knight-assassin", "disappear"), ("knight-assassin", "defeat"), (
 _FRAMES = {}
 
 
+def strip(cid, rel, n):
+    w, h = size_of(cid)
+    with Image.open(os.path.join(V2, rel)) as src:
+        im = src.convert("RGBA")
+    return [im.crop((i * w, 0, (i + 1) * w, h)) for i in range(n)]
+
+
 def frames(cid, state):
     key = (cid, state)
     if key not in _FRAMES:
         st = CH[cid]["states"][state]
-        with Image.open(os.path.join(V2, st["sheet"])) as src:
-            im = src.convert("RGBA")
-        _FRAMES[key] = [im.crop((i * W, 0, (i + 1) * W, H)) for i in range(st["frames"])]
+        _FRAMES[key] = strip(cid, st["sheet"], st["frames"])
     return _FRAMES[key]
 
 
 def mask(im):
     a = im.split()[3].load()
-    return {(x, y) for y in range(H) for x in range(W) if a[x, y]}
+    return {(x, y) for y in range(im.size[1]) for x in range(im.size[0]) if a[x, y]}
 
 
 def iou(a, b):
@@ -157,18 +176,22 @@ class Assets(unittest.TestCase):
                 sp, gp = os.path.join(V2, st["sheet"]), os.path.join(V2, st["gif"])
                 self.assertTrue(os.path.exists(sp), sp)
                 self.assertTrue(os.path.exists(gp), gp)
+                w, h = size_of(cid)
                 with Image.open(sp) as im:
-                    self.assertEqual(im.size, (W * st["frames"], H), sp)
+                    self.assertEqual(im.size, (w * st["frames"], h), sp)
                     alphas = set(im.convert("RGBA").split()[3].tobytes())
                 self.assertTrue(alphas <= {0, 255}, sp)
                 with Image.open(gp) as g:
-                    self.assertEqual(g.size, (W * REG["gif_scale"], H * REG["gif_scale"]), gp)
+                    self.assertEqual(g.size, (w * REG["gif_scale"], h * REG["gif_scale"]), gp)
                     total = 0
                     for k in range(getattr(g, "n_frames", 1)):
                         g.seek(k)
                         total += g.info.get("duration", 0)
                 # Pillow menggabungkan frame identik berurutan; yang dijaga adalah total durasi animasi.
-                want = st["ms"] * st["frames"] + (st["hold"] * st["ms"] if not st["loop"] else 0)
+                durs = st.get("durations") or [st["ms"]] * st["frames"]
+                self.assertEqual(len(durs), st["frames"], sp)
+                self.assertTrue(all(d % 10 == 0 for d in durs), sp)
+                want = sum(durs) + (st["hold"] * st["ms"] if not st["loop"] else 0)
                 self.assertEqual(total, want, gp)
 
     def test_icons(self):
@@ -317,15 +340,16 @@ class Visual(unittest.TestCase):
     def test_nothing_below_floor_and_idle_on_baseline(self):
         for cid, c in CH.items():
             idle = c["core"].get("idle", "idle")
+            base = base_of(cid)
             for s in c["states"]:
                 for i, fr in enumerate(frames(cid, s)):
                     m = mask(fr)
                     if not m:
                         continue
                     low = max(y for _, y in m)
-                    self.assertLessEqual(low, BASE - 1, "%s/%s f%d" % (cid, s, i))
+                    self.assertLessEqual(low, base - 1, "%s/%s f%d" % (cid, s, i))
                     if s == idle:
-                        self.assertEqual(low, BASE - 1, "%s/%s f%d" % (cid, s, i))
+                        self.assertEqual(low, base - 1, "%s/%s f%d" % (cid, s, i))
 
     def test_gobyet_face_visible(self):
         for cid, c in CH.items():
@@ -334,7 +358,7 @@ class Visual(unittest.TestCase):
                     continue
                 for i, fr in enumerate(frames(cid, s)):
                     px = fr.load()
-                    n = sum(1 for y in range(H) for x in range(W) if px[x, y][3] and px[x, y][:3] in FACE)
+                    n = sum(1 for y in range(fr.size[1]) for x in range(fr.size[0]) if px[x, y][3] and px[x, y][:3] in FACE)
                     self.assertGreaterEqual(n, 25, "%s/%s f%d wajah %d px" % (cid, s, i, n))
 
     def test_loop_seams(self):
@@ -346,6 +370,182 @@ class Visual(unittest.TestCase):
                 fr = [[b[k:k + 4] for k in range(0, len(b), 4)] for b in raw]
                 steps = [sum(1 for a, b in zip(fr[k], fr[(k + 1) % len(fr)]) if a != b) for k in range(len(fr))]
                 self.assertLessEqual(steps[-1], 1.25 * max(steps[:-1]) + 1, "%s/%s seam %s" % (cid, s, steps))
+
+
+class Berserker(unittest.TestCase):
+    """Berserker pedang raksasa: kanvas sendiri, lapisan, kerusakan, tempo, event, VFX, darah hanya VFX."""
+    CID = "berserker"
+
+    def setUp(self):
+        self.c = CH[self.CID]
+
+    def test_canvas_and_anchor(self):
+        self.assertEqual((self.c["canvas"]["w"], self.c["canvas"]["h"]), (144, 100))
+        # badan Gobyet tetap di koordinat rig yang sama: jangkar kaki = (RX, BASE) digeser offset kanvas
+        self.assertEqual((self.c["anchor"]["x"], self.c["anchor"]["baseline"]), (56, 95))
+
+    def test_same_head_as_everyone(self):
+        import berserker
+        import char2
+        self.assertIs(berserker.Berserker.head, char2.Char.head)
+        self.assertIs(berserker.Berserker.draw_tail, char2.Char.draw_tail)
+
+    def test_brief_aliases_resolve(self):
+        r = Resolver(REG, V2)
+        for brief, st in self.c["aliases"].items():
+            self.assertTrue(brief.startswith("berserker_"), brief)
+            self.assertEqual(r.resolve(self.CID, brief)["state"], st, brief)
+
+    def _stack(self, cid, layers, n):
+        parts = [strip(cid, layers[k], n) for k in ("body", "weapon", "vfx")]
+        out = []
+        for i in range(n):
+            im = parts[0][i].copy()
+            im.alpha_composite(parts[1][i])
+            im.alpha_composite(parts[2][i])
+            out.append(im)
+        return out
+
+    def test_layers_stack_to_composite(self):
+        for s, st in self.c["states"].items():
+            levels = [(st["sheet"], st["layers"])] + [(d["sheet"], d["layers"]) for d in st["damage"].values()]
+            for sheet, layers in levels:
+                for k in ("body", "weapon", "vfx"):
+                    self.assertTrue(os.path.exists(os.path.join(V2, layers[k])), layers[k])
+                comp = strip(self.CID, sheet, st["frames"])
+                stack = self._stack(self.CID, layers, st["frames"])
+                for i in range(st["frames"]):
+                    self.assertEqual(comp[i].tobytes(), stack[i].tobytes(), "%s f%d" % (sheet, i))
+
+    def test_layers_are_separate(self):
+        st = self.c["states"]["leap_spin_slash"]
+        body = strip(self.CID, st["layers"]["body"], st["frames"])
+        weapon = strip(self.CID, st["layers"]["weapon"], st["frames"])
+        vfx = strip(self.CID, st["layers"]["vfx"], st["frames"])
+        self.assertTrue(all(mask(f) for f in body))
+        self.assertGreater(sum(len(mask(f)) for f in weapon), 1000)
+        self.assertGreater(len(mask(vfx[15])), 200)  # frame hantaman punya VFX besar
+        self.assertEqual(len(mask(vfx[0])), 0)  # idle awal tanpa VFX
+        for f in body:  # lapisan karakter tidak berisi piksel pedang (warna bilah sw1)
+            cols = {c[1][:3] for c in f.getcolors(1 << 16) if c[1][3]}
+            self.assertNotIn((106, 106, 112), cols)
+
+    def test_damage_levels(self):
+        self.assertEqual(self.c["damage_levels"], ["normal", "damaged", "heavily_damaged"])
+        st = self.c["states"]["idle"]
+        n = strip(self.CID, st["sheet"], 1)[0].tobytes()
+        d1 = strip(self.CID, st["damage"]["damaged"]["sheet"], 1)[0].tobytes()
+        d2 = strip(self.CID, st["damage"]["heavily_damaged"]["sheet"], 1)[0].tobytes()
+        self.assertTrue(n != d1 != d2 and n != d2)
+        r = Resolver(REG, V2)
+        self.assertEqual(r.resolve(self.CID, "attack", damage="damaged")["sheet"], self.c["states"]["attack"]["damage"]["damaged"]["sheet"])
+        self.assertEqual(r.resolve("knight-heavy", "attack", damage="damaged")["sheet"], CH["knight-heavy"]["states"]["attack"]["sheet"])
+
+    def test_sword_length_vs_body(self):
+        """Pedang 1.2-1.5x tinggi badan berdiri. Panjang pedang dari lapisan senjata idle f0 (pedang utuh terlihat);
+        tinggi badan berdiri = tinggi terbesar lapisan karakter di state victory (berdiri tegak, crouch 0)."""
+        st = self.c["states"]["idle"]
+        weapon = mask(strip(self.CID, st["layers"]["weapon"], 1)[0])
+        pts = sorted(weapon)
+        far = max(((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2) ** 0.5 for a in (pts[0], pts[-1]) for b in pts)
+        v = self.c["states"]["victory"]
+        h = 0
+        for f in strip(self.CID, v["layers"]["body"], v["frames"]):
+            m = mask(f)
+            h = max(h, max(y for _, y in m) - min(y for _, y in m) + 1)
+        self.assertGreaterEqual(far / h, 1.2, (far, h))
+        self.assertLessEqual(far / h, 1.5, (far, h))
+
+    def test_signature_timing_and_events(self):
+        st = self.c["states"]["leap_spin_slash"]
+        self.assertEqual(st["frames"], 23)
+        d = st["durations"]
+        phases = [e for e in st["events"] if e["type"] == "phase"][0]["phases"]
+        self.assertEqual(phases, {"anticipation": [0, 3], "charge": [4, 6], "jump": [7, 10], "spin": [11, 14],
+                                  "impact": [15, 15], "aftermath": [16, 18], "recovery": [19, 22]})
+        self.assertGreater(min(d[0:4]), max(d[7:11]))  # ancang-ancang lambat, lepas cepat
+        self.assertLess(max(d[11:15]), min(d[7:11]) + 1)  # putaran paling cepat
+        self.assertEqual(max(d[11:19]), d[15])  # frame hantam ditahan
+        types = {(e["frame"], e["type"]) for e in st["events"]}
+        self.assertTrue({(15, "hit"), (15, "hitstop"), (15, "screen_shake")} <= types)
+
+    def test_hit_events_use_registered_blood(self):
+        w, h = size_of(self.CID)
+        ax, base = self.c["anchor"]["x"], self.c["anchor"]["baseline"]
+        n_hit = 0
+        for s, st in self.c["states"].items():
+            for e in st.get("events", []):
+                self.assertLess(e["frame"], st["frames"], (s, e))
+                if e["type"] != "hit":
+                    continue
+                n_hit += 1
+                self.assertTrue(0 <= ax + e["x"] < w and 0 <= base + e["y"] < h, (s, e))
+                for lvl, name in e["blood"].items():
+                    self.assertIn(name, REG["vfx"], (s, name))
+                    self.assertEqual(REG["vfx"][name]["kind"], "blood")
+        self.assertGreaterEqual(n_hit, 8)
+        for s in ("idle", "ready", "run", "hit", "miss", "exhausted", "victory", "defeat", "rage"):
+            self.assertFalse([e for e in self.c["states"][s].get("events", []) if e["type"] == "hit"], s)
+
+    def test_vfx_sprites(self):
+        need = ["slash_arc", "sword_trail", "dust", "impact", "debris", "spark", "ground_impact", "blood_small",
+                "blood_medium", "blood_burst", "blood_ground", "blood_arc", "blood_particles", "screen_shake_trigger"]
+        for name in need:
+            self.assertIn(name, REG["vfx"], name)
+            v = REG["vfx"][name]
+            if v["kind"] == "event":
+                continue
+            with Image.open(os.path.join(V2, v["sheet"])) as im:
+                self.assertEqual(im.size, (v["canvas"]["w"] * v["frames"], v["canvas"]["h"]), name)
+            self.assertTrue(os.path.exists(os.path.join(V2, v["gif"])), name)
+            self.assertEqual(len(v["durations"]), v["frames"])
+        for lvl in ("1", "2", "3"):
+            for name in REG["blood"]["levels"][lvl]:
+                self.assertEqual(REG["vfx"][name]["kind"], "blood")
+        self.assertEqual(REG["blood"]["levels"]["0"], [])
+
+    def test_blood_never_in_character_sheets(self):
+        for cid, c in CH.items():
+            for s, st in c["states"].items():
+                sheets = [st["sheet"]] + list(st.get("layers", {}).values())
+                for d in st.get("damage", {}).values():
+                    sheets += [d["sheet"]] + list(d["layers"].values())
+                for rel in set(sheets):
+                    with Image.open(os.path.join(V2, rel)) as im:
+                        cols = {c[1][:3] for c in im.convert("RGBA").getcolors(1 << 16) if c[1][3]}
+                    self.assertFalse(cols & BLOOD, rel)
+
+    def test_blood_vfx_is_small_and_brief(self):
+        for name, v in REG["vfx"].items():
+            if v.get("kind") != "blood":
+                continue
+            self.assertLessEqual(v["frames"], 6, name)
+            self.assertLessEqual(sum(v["durations"]), 520, name)
+            for k, f in enumerate(strip_vfx(v)):
+                self.assertLessEqual(len(mask(f)), 160, (name, k))
+
+    def test_variants_deterministic(self):
+        r = Resolver(REG, V2)
+        v = self.c["variants"]
+        self.assertEqual(v["idle"], ["idle", "idle_breath", "idle_grip", "idle_drag", "idle_look", "idle_twitch"])
+        self.assertIn("attack_b", v["attack"])
+        picks = [r.variant(self.CID, "idle", seed) for seed in range(40)]
+        self.assertEqual(picks, [r.variant(self.CID, "idle", seed) for seed in range(40)])
+        self.assertGreaterEqual(len(set(picks)), 4)
+        self.assertEqual(r.variant(self.CID, "idle"), "idle")
+        node = shutil.which("node")
+        if node:
+            js = ("const {Resolver}=require(%r);const reg=require(%r);const r=new Resolver(reg);"
+                  "console.log(JSON.stringify([...Array(40).keys()].map(s=>r.variant('berserker','idle',s))))"
+                  % (os.path.join(V2, "resolver2.js"), os.path.join(V2, "registry.json")))
+            self.assertEqual(json.loads(subprocess.check_output([node, "-e", js]).decode()), picks)
+
+
+def strip_vfx(v):
+    w, h = v["canvas"]["w"], v["canvas"]["h"]
+    with Image.open(os.path.join(V2, v["sheet"])) as src:
+        im = src.convert("RGBA")
+    return [im.crop((i * w, 0, (i + 1) * w, h)) for i in range(v["frames"])]
 
 
 class TheologyParity(unittest.TestCase):

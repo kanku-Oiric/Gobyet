@@ -590,7 +590,7 @@
   },
   {
    "id": "viking-berserker",
-   "name": "Berserker Gobyet",
+   "name": "Viking Berserker Gobyet",
    "category": "fantasy",
    "faction": "vikings",
    "role": "rage",
@@ -3779,8 +3779,2011 @@
      "gif": "gif/defeated/leave.gif"
     }
    }
+  },
+  {
+   "id": "berserker",
+   "name": "Berserker Gobyet",
+   "category": "fantasy",
+   "faction": null,
+   "role": "giant_sword",
+   "silhouette": [
+    "giant_slab_greatsword",
+    "asymmetric_black_armor",
+    "big_left_pauldron",
+    "torn_short_cloak",
+    "low_crouched_stance"
+   ],
+   "fallback": "normal-gblk",
+   "core": {
+    "idle": "idle",
+    "attack": "attack",
+    "hit": "hit",
+    "victory": "victory",
+    "defeat": "defeat"
+   },
+   "acc_anchor": [
+    71,
+    53
+   ],
+   "states": {
+    "idle": {
+     "frames": 5,
+     "ms": 220,
+     "loop": true,
+     "hold": 0,
+     "label": "jongkok condong ke depan, ujung pedang raksasa bertumpu di lantai, kepala sedikit menunduk",
+     "sheet": "sheets/berserker/idle.png",
+     "gif": "gif/berserker/idle.gif",
+     "durations": [
+      220,
+      170,
+      200,
+      160,
+      190
+     ],
+     "layers": {
+      "body": "sheets/berserker/layers/idle.body.png",
+      "weapon": "sheets/berserker/layers/idle.weapon.png",
+      "vfx": "sheets/berserker/layers/idle.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/idle.png",
+       "gif": "gif/berserker/damaged/idle.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/idle.body.png",
+        "weapon": "sheets/berserker/layers/idle.weapon.png",
+        "vfx": "sheets/berserker/layers/idle.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/idle.png",
+       "gif": "gif/berserker/heavily_damaged/idle.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/idle.body.png",
+        "weapon": "sheets/berserker/layers/idle.weapon.png",
+        "vfx": "sheets/berserker/layers/idle.vfx.png"
+       }
+      }
+     }
+    },
+    "idle_breath": {
+     "frames": 8,
+     "ms": 200,
+     "loop": true,
+     "hold": 0,
+     "label": "napas dalam, uap napas keluar",
+     "sheet": "sheets/berserker/idle_breath.png",
+     "gif": "gif/berserker/idle_breath.gif",
+     "durations": [
+      200,
+      160,
+      160,
+      220,
+      120,
+      140,
+      160,
+      180
+     ],
+     "variant_of": "idle",
+     "layers": {
+      "body": "sheets/berserker/layers/idle_breath.body.png",
+      "weapon": "sheets/berserker/layers/idle_breath.weapon.png",
+      "vfx": "sheets/berserker/layers/idle_breath.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/idle_breath.png",
+       "gif": "gif/berserker/damaged/idle_breath.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/idle_breath.body.png",
+        "weapon": "sheets/berserker/layers/idle_breath.weapon.png",
+        "vfx": "sheets/berserker/layers/idle_breath.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/idle_breath.png",
+       "gif": "gif/berserker/heavily_damaged/idle_breath.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/idle_breath.body.png",
+        "weapon": "sheets/berserker/layers/idle_breath.weapon.png",
+        "vfx": "sheets/berserker/layers/idle_breath.vfx.png"
+       }
+      }
+     }
+    },
+    "idle_grip": {
+     "frames": 8,
+     "ms": 200,
+     "loop": true,
+     "hold": 0,
+     "label": "melepas tangan kiri, meregangkan jari, menggenggam ulang",
+     "sheet": "sheets/berserker/idle_grip.png",
+     "gif": "gif/berserker/idle_grip.gif",
+     "durations": [
+      200,
+      90,
+      140,
+      160,
+      120,
+      90,
+      120,
+      180
+     ],
+     "variant_of": "idle",
+     "layers": {
+      "body": "sheets/berserker/layers/idle_grip.body.png",
+      "weapon": "sheets/berserker/layers/idle_grip.weapon.png",
+      "vfx": "sheets/berserker/layers/idle_grip.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/idle_grip.png",
+       "gif": "gif/berserker/damaged/idle_grip.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/idle_grip.body.png",
+        "weapon": "sheets/berserker/layers/idle_grip.weapon.png",
+        "vfx": "sheets/berserker/layers/idle_grip.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/idle_grip.png",
+       "gif": "gif/berserker/heavily_damaged/idle_grip.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/idle_grip.body.png",
+        "weapon": "sheets/berserker/layers/idle_grip.weapon.png",
+        "vfx": "sheets/berserker/layers/idle_grip.vfx.png"
+       }
+      }
+     }
+    },
+    "idle_drag": {
+     "frames": 10,
+     "ms": 200,
+     "loop": true,
+     "hold": 0,
+     "label": "menyeret ujung pedang di lantai lalu mendorongnya kembali",
+     "sheet": "sheets/berserker/idle_drag.png",
+     "gif": "gif/berserker/idle_drag.gif",
+     "durations": [
+      200,
+      140,
+      120,
+      120,
+      200,
+      120,
+      120,
+      140,
+      160,
+      200
+     ],
+     "variant_of": "idle",
+     "layers": {
+      "body": "sheets/berserker/layers/idle_drag.body.png",
+      "weapon": "sheets/berserker/layers/idle_drag.weapon.png",
+      "vfx": "sheets/berserker/layers/idle_drag.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/idle_drag.png",
+       "gif": "gif/berserker/damaged/idle_drag.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/idle_drag.body.png",
+        "weapon": "sheets/berserker/layers/idle_drag.weapon.png",
+        "vfx": "sheets/berserker/layers/idle_drag.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/idle_drag.png",
+       "gif": "gif/berserker/heavily_damaged/idle_drag.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/idle_drag.body.png",
+        "weapon": "sheets/berserker/heavily_damaged/layers/idle_drag.weapon.png",
+        "vfx": "sheets/berserker/layers/idle_drag.vfx.png"
+       }
+      }
+     }
+    },
+    "idle_look": {
+     "frames": 10,
+     "ms": 220,
+     "loop": true,
+     "hold": 0,
+     "label": "menoleh ke belakang, lalu menatap ke depan",
+     "sheet": "sheets/berserker/idle_look.png",
+     "gif": "gif/berserker/idle_look.gif",
+     "durations": [
+      220,
+      140,
+      200,
+      260,
+      100,
+      140,
+      240,
+      180,
+      160,
+      80
+     ],
+     "variant_of": "idle",
+     "layers": {
+      "body": "sheets/berserker/layers/idle_look.body.png",
+      "weapon": "sheets/berserker/layers/idle_look.weapon.png",
+      "vfx": "sheets/berserker/layers/idle_look.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/idle_look.png",
+       "gif": "gif/berserker/damaged/idle_look.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/idle_look.body.png",
+        "weapon": "sheets/berserker/layers/idle_look.weapon.png",
+        "vfx": "sheets/berserker/layers/idle_look.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/idle_look.png",
+       "gif": "gif/berserker/heavily_damaged/idle_look.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/idle_look.body.png",
+        "weapon": "sheets/berserker/layers/idle_look.weapon.png",
+        "vfx": "sheets/berserker/layers/idle_look.vfx.png"
+       }
+      }
+     }
+    },
+    "idle_twitch": {
+     "frames": 6,
+     "ms": 260,
+     "loop": true,
+     "hold": 0,
+     "label": "bahu berkedut, mata melotot sesaat",
+     "sheet": "sheets/berserker/idle_twitch.png",
+     "gif": "gif/berserker/idle_twitch.gif",
+     "durations": [
+      260,
+      50,
+      70,
+      200,
+      60,
+      220
+     ],
+     "variant_of": "idle",
+     "layers": {
+      "body": "sheets/berserker/layers/idle_twitch.body.png",
+      "weapon": "sheets/berserker/layers/idle_twitch.weapon.png",
+      "vfx": "sheets/berserker/layers/idle_twitch.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/idle_twitch.png",
+       "gif": "gif/berserker/damaged/idle_twitch.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/idle_twitch.body.png",
+        "weapon": "sheets/berserker/layers/idle_twitch.weapon.png",
+        "vfx": "sheets/berserker/layers/idle_twitch.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/idle_twitch.png",
+       "gif": "gif/berserker/heavily_damaged/idle_twitch.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/idle_twitch.body.png",
+        "weapon": "sheets/berserker/layers/idle_twitch.weapon.png",
+        "vfx": "sheets/berserker/layers/idle_twitch.vfx.png"
+       }
+      }
+     }
+    },
+    "ready": {
+     "frames": 6,
+     "ms": 120,
+     "loop": true,
+     "hold": 0,
+     "label": "pedang terkokang di bahu, kuda-kuda lebar",
+     "sheet": "sheets/berserker/ready.png",
+     "gif": "gif/berserker/ready.gif",
+     "durations": [
+      120,
+      110,
+      120,
+      110,
+      120,
+      110
+     ],
+     "layers": {
+      "body": "sheets/berserker/layers/ready.body.png",
+      "weapon": "sheets/berserker/layers/ready.weapon.png",
+      "vfx": "sheets/berserker/layers/ready.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/ready.png",
+       "gif": "gif/berserker/damaged/ready.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/ready.body.png",
+        "weapon": "sheets/berserker/layers/ready.weapon.png",
+        "vfx": "sheets/berserker/layers/ready.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/ready.png",
+       "gif": "gif/berserker/heavily_damaged/ready.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/ready.body.png",
+        "weapon": "sheets/berserker/layers/ready.weapon.png",
+        "vfx": "sheets/berserker/layers/ready.vfx.png"
+       }
+      }
+     }
+    },
+    "run": {
+     "frames": 8,
+     "ms": 80,
+     "loop": true,
+     "hold": 0,
+     "label": "lari rendah, pedang raksasa diseret menggores lantai",
+     "sheet": "sheets/berserker/run.png",
+     "gif": "gif/berserker/run.gif",
+     "durations": [
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80
+     ],
+     "layers": {
+      "body": "sheets/berserker/layers/run.body.png",
+      "weapon": "sheets/berserker/layers/run.weapon.png",
+      "vfx": "sheets/berserker/layers/run.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/run.png",
+       "gif": "gif/berserker/damaged/run.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/run.body.png",
+        "weapon": "sheets/berserker/damaged/layers/run.weapon.png",
+        "vfx": "sheets/berserker/layers/run.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/run.png",
+       "gif": "gif/berserker/heavily_damaged/run.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/run.body.png",
+        "weapon": "sheets/berserker/heavily_damaged/layers/run.weapon.png",
+        "vfx": "sheets/berserker/layers/run.vfx.png"
+       }
+      }
+     }
+    },
+    "jump": {
+     "frames": 10,
+     "ms": 120,
+     "loop": false,
+     "hold": 0,
+     "label": "ancang-ancang berat, melompat dengan pedang di bahu, mendarat berdebu",
+     "sheet": "sheets/berserker/jump.png",
+     "gif": "gif/berserker/jump.gif",
+     "durations": [
+      120,
+      160,
+      50,
+      60,
+      80,
+      110,
+      70,
+      50,
+      140,
+      140
+     ],
+     "events": [
+      {
+       "frame": 8,
+       "type": "screen_shake",
+       "px": 1,
+       "ms": 80
+      }
+     ],
+     "layers": {
+      "body": "sheets/berserker/layers/jump.body.png",
+      "weapon": "sheets/berserker/layers/jump.weapon.png",
+      "vfx": "sheets/berserker/layers/jump.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/jump.png",
+       "gif": "gif/berserker/damaged/jump.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/jump.body.png",
+        "weapon": "sheets/berserker/layers/jump.weapon.png",
+        "vfx": "sheets/berserker/layers/jump.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/jump.png",
+       "gif": "gif/berserker/heavily_damaged/jump.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/jump.body.png",
+        "weapon": "sheets/berserker/layers/jump.weapon.png",
+        "vfx": "sheets/berserker/layers/jump.vfx.png"
+       }
+      }
+     }
+    },
+    "attack": {
+     "frames": 12,
+     "ms": 80,
+     "loop": false,
+     "hold": 0,
+     "label": "tebasan diagonal dari bahu: ancang-ancang lambat, ayunan cepat, hantam ke depan",
+     "sheet": "sheets/berserker/attack.png",
+     "gif": "gif/berserker/attack.gif",
+     "durations": [
+      80,
+      80,
+      110,
+      160,
+      40,
+      40,
+      130,
+      90,
+      90,
+      90,
+      100,
+      120
+     ],
+     "events": [
+      {
+       "frame": 6,
+       "type": "hit",
+       "x": 42,
+       "y": -15,
+       "direction": 20,
+       "blood": {
+        "1": "blood_small",
+        "2": "blood_medium",
+        "3": "blood_burst"
+       }
+      },
+      {
+       "frame": 6,
+       "type": "hitstop",
+       "ms": 60
+      },
+      {
+       "frame": 6,
+       "type": "screen_shake",
+       "px": 1,
+       "ms": 80
+      }
+     ],
+     "layers": {
+      "body": "sheets/berserker/layers/attack.body.png",
+      "weapon": "sheets/berserker/layers/attack.weapon.png",
+      "vfx": "sheets/berserker/layers/attack.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/attack.png",
+       "gif": "gif/berserker/damaged/attack.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/attack.body.png",
+        "weapon": "sheets/berserker/layers/attack.weapon.png",
+        "vfx": "sheets/berserker/layers/attack.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/attack.png",
+       "gif": "gif/berserker/heavily_damaged/attack.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/attack.body.png",
+        "weapon": "sheets/berserker/heavily_damaged/layers/attack.weapon.png",
+        "vfx": "sheets/berserker/layers/attack.vfx.png"
+       }
+      }
+     }
+    },
+    "attack_b": {
+     "frames": 12,
+     "ms": 80,
+     "loop": false,
+     "hold": 0,
+     "label": "sapuan mendatar dari belakang ke depan",
+     "sheet": "sheets/berserker/attack_b.png",
+     "gif": "gif/berserker/attack_b.gif",
+     "durations": [
+      80,
+      90,
+      120,
+      160,
+      50,
+      40,
+      120,
+      90,
+      100,
+      90,
+      100,
+      120
+     ],
+     "events": [
+      {
+       "frame": 5,
+       "type": "hit",
+       "x": 51,
+       "y": -18,
+       "direction": 0,
+       "blood": {
+        "1": "blood_small",
+        "2": "blood_medium",
+        "3": "blood_burst"
+       }
+      },
+      {
+       "frame": 5,
+       "type": "hitstop",
+       "ms": 60
+      }
+     ],
+     "variant_of": "attack",
+     "layers": {
+      "body": "sheets/berserker/layers/attack_b.body.png",
+      "weapon": "sheets/berserker/layers/attack_b.weapon.png",
+      "vfx": "sheets/berserker/layers/attack_b.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/attack_b.png",
+       "gif": "gif/berserker/damaged/attack_b.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/attack_b.body.png",
+        "weapon": "sheets/berserker/damaged/layers/attack_b.weapon.png",
+        "vfx": "sheets/berserker/layers/attack_b.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/attack_b.png",
+       "gif": "gif/berserker/heavily_damaged/attack_b.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/attack_b.body.png",
+        "weapon": "sheets/berserker/heavily_damaged/layers/attack_b.weapon.png",
+        "vfx": "sheets/berserker/layers/attack_b.vfx.png"
+       }
+      }
+     }
+    },
+    "heavy_attack": {
+     "frames": 16,
+     "ms": 80,
+     "loop": false,
+     "hold": 0,
+     "label": "pedang di atas kepala, langkah maju, menghantam tanah (retak, puing)",
+     "sheet": "sheets/berserker/heavy_attack.png",
+     "gif": "gif/berserker/heavy_attack.gif",
+     "durations": [
+      80,
+      100,
+      130,
+      150,
+      180,
+      160,
+      40,
+      150,
+      90,
+      90,
+      100,
+      100,
+      100,
+      100,
+      100,
+      120
+     ],
+     "events": [
+      {
+       "frame": 7,
+       "type": "hit",
+       "x": 44,
+       "y": -15,
+       "direction": 20,
+       "blood": {
+        "1": "blood_small",
+        "2": "blood_medium",
+        "3": "blood_burst"
+       }
+      },
+      {
+       "frame": 7,
+       "type": "hitstop",
+       "ms": 90
+      },
+      {
+       "frame": 7,
+       "type": "screen_shake",
+       "px": 3,
+       "ms": 200
+      },
+      {
+       "frame": 7,
+       "type": "vfx",
+       "name": "ground_impact",
+       "x": 27,
+       "y": 0,
+       "baked": true
+      },
+      {
+       "frame": 7,
+       "type": "vfx",
+       "name": "debris",
+       "baked": true
+      }
+     ],
+     "layers": {
+      "body": "sheets/berserker/layers/heavy_attack.body.png",
+      "weapon": "sheets/berserker/layers/heavy_attack.weapon.png",
+      "vfx": "sheets/berserker/layers/heavy_attack.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/heavy_attack.png",
+       "gif": "gif/berserker/damaged/heavy_attack.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/heavy_attack.body.png",
+        "weapon": "sheets/berserker/damaged/layers/heavy_attack.weapon.png",
+        "vfx": "sheets/berserker/damaged/layers/heavy_attack.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/heavy_attack.png",
+       "gif": "gif/berserker/heavily_damaged/heavy_attack.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/heavy_attack.body.png",
+        "weapon": "sheets/berserker/heavily_damaged/layers/heavy_attack.weapon.png",
+        "vfx": "sheets/berserker/heavily_damaged/layers/heavy_attack.vfx.png"
+       }
+      }
+     }
+    },
+    "overhead_smash": {
+     "frames": 18,
+     "ms": 80,
+     "loop": false,
+     "hold": 0,
+     "label": "pedang tegak di atas kepala, ditahan, dibanting lurus ke bawah",
+     "sheet": "sheets/berserker/overhead_smash.png",
+     "gif": "gif/berserker/overhead_smash.gif",
+     "durations": [
+      80,
+      100,
+      140,
+      160,
+      200,
+      180,
+      40,
+      170,
+      100,
+      100,
+      110,
+      110,
+      100,
+      100,
+      100,
+      110,
+      120,
+      140
+     ],
+     "events": [
+      {
+       "frame": 7,
+       "type": "hit",
+       "x": 21,
+       "y": -15,
+       "direction": 90,
+       "blood": {
+        "1": "blood_small",
+        "2": "blood_medium",
+        "3": "blood_burst"
+       }
+      },
+      {
+       "frame": 7,
+       "type": "hitstop",
+       "ms": 100
+      },
+      {
+       "frame": 7,
+       "type": "screen_shake",
+       "px": 4,
+       "ms": 240
+      },
+      {
+       "frame": 7,
+       "type": "vfx",
+       "name": "ground_impact",
+       "x": 21,
+       "y": 0,
+       "baked": true
+      }
+     ],
+     "layers": {
+      "body": "sheets/berserker/layers/overhead_smash.body.png",
+      "weapon": "sheets/berserker/layers/overhead_smash.weapon.png",
+      "vfx": "sheets/berserker/layers/overhead_smash.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/overhead_smash.png",
+       "gif": "gif/berserker/damaged/overhead_smash.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/overhead_smash.body.png",
+        "weapon": "sheets/berserker/damaged/layers/overhead_smash.weapon.png",
+        "vfx": "sheets/berserker/damaged/layers/overhead_smash.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/overhead_smash.png",
+       "gif": "gif/berserker/heavily_damaged/overhead_smash.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/overhead_smash.body.png",
+        "weapon": "sheets/berserker/heavily_damaged/layers/overhead_smash.weapon.png",
+        "vfx": "sheets/berserker/heavily_damaged/layers/overhead_smash.vfx.png"
+       }
+      }
+     }
+    },
+    "air_slash": {
+     "frames": 14,
+     "ms": 80,
+     "loop": false,
+     "hold": 0,
+     "label": "melompat, tebasan bulan sabit di udara, mendarat berat",
+     "sheet": "sheets/berserker/air_slash.png",
+     "gif": "gif/berserker/air_slash.gif",
+     "durations": [
+      80,
+      150,
+      50,
+      60,
+      90,
+      40,
+      70,
+      60,
+      50,
+      130,
+      100,
+      100,
+      100,
+      120
+     ],
+     "events": [
+      {
+       "frame": 6,
+       "type": "hit",
+       "x": 40,
+       "y": -22,
+       "direction": 40,
+       "blood": {
+        "1": "blood_small",
+        "2": "blood_medium",
+        "3": "blood_burst"
+       }
+      },
+      {
+       "frame": 6,
+       "type": "hitstop",
+       "ms": 70
+      }
+     ],
+     "layers": {
+      "body": "sheets/berserker/layers/air_slash.body.png",
+      "weapon": "sheets/berserker/layers/air_slash.weapon.png",
+      "vfx": "sheets/berserker/layers/air_slash.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/air_slash.png",
+       "gif": "gif/berserker/damaged/air_slash.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/air_slash.body.png",
+        "weapon": "sheets/berserker/damaged/layers/air_slash.weapon.png",
+        "vfx": "sheets/berserker/layers/air_slash.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/air_slash.png",
+       "gif": "gif/berserker/heavily_damaged/air_slash.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/air_slash.body.png",
+        "weapon": "sheets/berserker/heavily_damaged/layers/air_slash.weapon.png",
+        "vfx": "sheets/berserker/layers/air_slash.vfx.png"
+       }
+      }
+     }
+    },
+    "leap_spin_slash": {
+     "frames": 23,
+     "ms": 120,
+     "loop": false,
+     "hold": 0,
+     "label": "jurus khas: jongkok, isi tenaga, melompat, salto 360 dengan tebasan, hantaman tanah besar, pulih",
+     "sheet": "sheets/berserker/leap_spin_slash.png",
+     "gif": "gif/berserker/leap_spin_slash.gif",
+     "durations": [
+      120,
+      140,
+      160,
+      180,
+      90,
+      90,
+      110,
+      50,
+      50,
+      60,
+      70,
+      40,
+      40,
+      40,
+      40,
+      160,
+      90,
+      90,
+      100,
+      110,
+      80,
+      110,
+      140
+     ],
+     "events": [
+      {
+       "frame": 15,
+       "type": "hit",
+       "x": 45,
+       "y": -15,
+       "direction": 60,
+       "blood": {
+        "1": "blood_small",
+        "2": "blood_medium",
+        "3": "blood_burst"
+       }
+      },
+      {
+       "frame": 15,
+       "type": "hitstop",
+       "ms": 110
+      },
+      {
+       "frame": 15,
+       "type": "screen_shake",
+       "px": 5,
+       "ms": 260
+      },
+      {
+       "frame": 15,
+       "type": "vfx",
+       "name": "ground_impact",
+       "x": 35,
+       "y": 0,
+       "baked": true
+      },
+      {
+       "frame": 15,
+       "type": "vfx",
+       "name": "debris",
+       "baked": true
+      },
+      {
+       "frame": 7,
+       "type": "vfx",
+       "name": "dust",
+       "baked": true
+      },
+      {
+       "frame": 7,
+       "type": "screen_shake",
+       "px": 1,
+       "ms": 60
+      },
+      {
+       "frame": 0,
+       "type": "phase",
+       "phases": {
+        "anticipation": [
+         0,
+         3
+        ],
+        "charge": [
+         4,
+         6
+        ],
+        "jump": [
+         7,
+         10
+        ],
+        "spin": [
+         11,
+         14
+        ],
+        "impact": [
+         15,
+         15
+        ],
+        "aftermath": [
+         16,
+         18
+        ],
+        "recovery": [
+         19,
+         22
+        ]
+       }
+      }
+     ],
+     "layers": {
+      "body": "sheets/berserker/layers/leap_spin_slash.body.png",
+      "weapon": "sheets/berserker/layers/leap_spin_slash.weapon.png",
+      "vfx": "sheets/berserker/layers/leap_spin_slash.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/leap_spin_slash.png",
+       "gif": "gif/berserker/damaged/leap_spin_slash.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/leap_spin_slash.body.png",
+        "weapon": "sheets/berserker/damaged/layers/leap_spin_slash.weapon.png",
+        "vfx": "sheets/berserker/damaged/layers/leap_spin_slash.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/leap_spin_slash.png",
+       "gif": "gif/berserker/heavily_damaged/leap_spin_slash.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/leap_spin_slash.body.png",
+        "weapon": "sheets/berserker/heavily_damaged/layers/leap_spin_slash.weapon.png",
+        "vfx": "sheets/berserker/heavily_damaged/layers/leap_spin_slash.vfx.png"
+       }
+      }
+     }
+    },
+    "rage": {
+     "frames": 10,
+     "ms": 120,
+     "loop": false,
+     "hold": 0,
+     "label": "mode amuk: gemetar, menunduk, mengaum (bara merah redup, aura tipis), kuda-kuda lebih rendah",
+     "sheet": "sheets/berserker/rage.png",
+     "gif": "gif/berserker/rage.gif",
+     "durations": [
+      120,
+      90,
+      90,
+      200,
+      60,
+      90,
+      90,
+      90,
+      110,
+      160
+     ],
+     "events": [
+      {
+       "frame": 4,
+       "type": "screen_shake",
+       "px": 3,
+       "ms": 260
+      },
+      {
+       "frame": 4,
+       "type": "rage_on"
+      }
+     ],
+     "layers": {
+      "body": "sheets/berserker/layers/rage.body.png",
+      "weapon": "sheets/berserker/layers/rage.weapon.png",
+      "vfx": "sheets/berserker/layers/rage.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/rage.png",
+       "gif": "gif/berserker/damaged/rage.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/rage.body.png",
+        "weapon": "sheets/berserker/layers/rage.weapon.png",
+        "vfx": "sheets/berserker/layers/rage.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/rage.png",
+       "gif": "gif/berserker/heavily_damaged/rage.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/rage.body.png",
+        "weapon": "sheets/berserker/layers/rage.weapon.png",
+        "vfx": "sheets/berserker/layers/rage.vfx.png"
+       }
+      }
+     }
+    },
+    "rage_attack": {
+     "frames": 22,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "amuk: jongkok, meledak maju, sabetan rendah, sabetan naik, putaran gasing, tebasan berat",
+     "sheet": "sheets/berserker/rage_attack.png",
+     "gif": "gif/berserker/rage_attack.gif",
+     "durations": [
+      100,
+      140,
+      120,
+      60,
+      50,
+      70,
+      50,
+      70,
+      40,
+      40,
+      40,
+      40,
+      90,
+      40,
+      150,
+      90,
+      100,
+      100,
+      80,
+      100,
+      110,
+      130
+     ],
+     "events": [
+      {
+       "frame": 4,
+       "type": "hit",
+       "x": 57,
+       "y": -15,
+       "direction": 0,
+       "blood": {
+        "1": "blood_small",
+        "2": "blood_small",
+        "3": "blood_medium"
+       }
+      },
+      {
+       "frame": 4,
+       "type": "hitstop",
+       "ms": 40
+      },
+      {
+       "frame": 6,
+       "type": "hit",
+       "x": 31,
+       "y": -45,
+       "direction": -60,
+       "blood": {
+        "1": "blood_small",
+        "2": "blood_small",
+        "3": "blood_medium"
+       }
+      },
+      {
+       "frame": 6,
+       "type": "hitstop",
+       "ms": 40
+      },
+      {
+       "frame": 8,
+       "type": "hit",
+       "x": 62,
+       "y": -16,
+       "direction": 0,
+       "blood": {
+        "1": "blood_small",
+        "2": "blood_small",
+        "3": "blood_medium"
+       }
+      },
+      {
+       "frame": 8,
+       "type": "hitstop",
+       "ms": 30
+      },
+      {
+       "frame": 14,
+       "type": "hit",
+       "x": 47,
+       "y": -15,
+       "direction": 60,
+       "blood": {
+        "1": "blood_small",
+        "2": "blood_medium",
+        "3": "blood_burst"
+       }
+      },
+      {
+       "frame": 14,
+       "type": "hitstop",
+       "ms": 100
+      },
+      {
+       "frame": 14,
+       "type": "screen_shake",
+       "px": 4,
+       "ms": 240
+      },
+      {
+       "frame": 14,
+       "type": "vfx",
+       "name": "ground_impact",
+       "x": 37,
+       "y": 0,
+       "baked": true
+      },
+      {
+       "frame": 1,
+       "type": "rage_on"
+      }
+     ],
+     "layers": {
+      "body": "sheets/berserker/layers/rage_attack.body.png",
+      "weapon": "sheets/berserker/layers/rage_attack.weapon.png",
+      "vfx": "sheets/berserker/layers/rage_attack.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/rage_attack.png",
+       "gif": "gif/berserker/damaged/rage_attack.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/rage_attack.body.png",
+        "weapon": "sheets/berserker/damaged/layers/rage_attack.weapon.png",
+        "vfx": "sheets/berserker/damaged/layers/rage_attack.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/rage_attack.png",
+       "gif": "gif/berserker/heavily_damaged/rage_attack.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/rage_attack.body.png",
+        "weapon": "sheets/berserker/heavily_damaged/layers/rage_attack.weapon.png",
+        "vfx": "sheets/berserker/heavily_damaged/layers/rage_attack.vfx.png"
+       }
+      }
+     }
+    },
+    "combo": {
+     "frames": 24,
+     "ms": 80,
+     "loop": false,
+     "hold": 0,
+     "label": "kombo: sapuan mendatar, sabetan balik, bacokan atas, lompat salto, hantaman tanah",
+     "sheet": "sheets/berserker/combo.png",
+     "gif": "gif/berserker/combo.gif",
+     "durations": [
+      80,
+      100,
+      130,
+      40,
+      90,
+      90,
+      50,
+      120,
+      50,
+      90,
+      140,
+      50,
+      60,
+      40,
+      40,
+      40,
+      40,
+      160,
+      90,
+      100,
+      110,
+      80,
+      110,
+      140
+     ],
+     "events": [
+      {
+       "frame": 3,
+       "type": "hit",
+       "x": 51,
+       "y": -18,
+       "direction": 0,
+       "blood": {
+        "1": "blood_small",
+        "2": "blood_medium",
+        "3": "blood_burst"
+       }
+      },
+      {
+       "frame": 3,
+       "type": "hitstop",
+       "ms": 40
+      },
+      {
+       "frame": 6,
+       "type": "hit",
+       "x": -4,
+       "y": -42,
+       "direction": -70,
+       "blood": {
+        "1": "blood_small",
+        "2": "blood_medium",
+        "3": "blood_burst"
+       }
+      },
+      {
+       "frame": 6,
+       "type": "hitstop",
+       "ms": 40
+      },
+      {
+       "frame": 8,
+       "type": "hit",
+       "x": 42,
+       "y": -15,
+       "direction": 40,
+       "blood": {
+        "1": "blood_small",
+        "2": "blood_medium",
+        "3": "blood_burst"
+       }
+      },
+      {
+       "frame": 8,
+       "type": "hitstop",
+       "ms": 60
+      },
+      {
+       "frame": 8,
+       "type": "screen_shake",
+       "px": 2,
+       "ms": 100
+      },
+      {
+       "frame": 17,
+       "type": "hit",
+       "x": 42,
+       "y": -15,
+       "direction": 60,
+       "blood": {
+        "1": "blood_small",
+        "2": "blood_medium",
+        "3": "blood_burst"
+       }
+      },
+      {
+       "frame": 17,
+       "type": "hitstop",
+       "ms": 110
+      },
+      {
+       "frame": 17,
+       "type": "screen_shake",
+       "px": 5,
+       "ms": 260
+      },
+      {
+       "frame": 17,
+       "type": "vfx",
+       "name": "ground_impact",
+       "x": 32,
+       "y": 0,
+       "baked": true
+      }
+     ],
+     "layers": {
+      "body": "sheets/berserker/layers/combo.body.png",
+      "weapon": "sheets/berserker/layers/combo.weapon.png",
+      "vfx": "sheets/berserker/layers/combo.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/combo.png",
+       "gif": "gif/berserker/damaged/combo.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/combo.body.png",
+        "weapon": "sheets/berserker/damaged/layers/combo.weapon.png",
+        "vfx": "sheets/berserker/damaged/layers/combo.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/combo.png",
+       "gif": "gif/berserker/heavily_damaged/combo.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/combo.body.png",
+        "weapon": "sheets/berserker/heavily_damaged/layers/combo.weapon.png",
+        "vfx": "sheets/berserker/heavily_damaged/layers/combo.vfx.png"
+       }
+      }
+     }
+    },
+    "hit": {
+     "frames": 8,
+     "ms": 60,
+     "loop": false,
+     "hold": 0,
+     "label": "tersentak mundur, pedang goyah, menggertakkan gigi, kembali ke kuda-kuda",
+     "sheet": "sheets/berserker/hit.png",
+     "gif": "gif/berserker/hit.gif",
+     "durations": [
+      60,
+      90,
+      100,
+      100,
+      90,
+      90,
+      100,
+      120
+     ],
+     "layers": {
+      "body": "sheets/berserker/layers/hit.body.png",
+      "weapon": "sheets/berserker/layers/hit.weapon.png",
+      "vfx": "sheets/berserker/layers/hit.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/hit.png",
+       "gif": "gif/berserker/damaged/hit.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/hit.body.png",
+        "weapon": "sheets/berserker/layers/hit.weapon.png",
+        "vfx": "sheets/berserker/layers/hit.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/hit.png",
+       "gif": "gif/berserker/heavily_damaged/hit.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/hit.body.png",
+        "weapon": "sheets/berserker/layers/hit.weapon.png",
+        "vfx": "sheets/berserker/layers/hit.vfx.png"
+       }
+      }
+     }
+    },
+    "miss": {
+     "frames": 21,
+     "ms": 80,
+     "loop": false,
+     "hold": 8,
+     "label": "meleset: pedang tertancap, ditarik-tarik, menatap pedang, lalu menatap penonton",
+     "sheet": "sheets/berserker/miss.png",
+     "gif": "gif/berserker/miss.gif",
+     "durations": [
+      80,
+      100,
+      150,
+      170,
+      40,
+      160,
+      100,
+      140,
+      110,
+      90,
+      110,
+      90,
+      130,
+      200,
+      240,
+      200,
+      200,
+      120,
+      260,
+      80,
+      300
+     ],
+     "events": [
+      {
+       "frame": 5,
+       "type": "screen_shake",
+       "px": 2,
+       "ms": 120
+      },
+      {
+       "frame": 5,
+       "type": "vfx",
+       "name": "dust",
+       "baked": true
+      }
+     ],
+     "layers": {
+      "body": "sheets/berserker/layers/miss.body.png",
+      "weapon": "sheets/berserker/layers/miss.weapon.png",
+      "vfx": "sheets/berserker/layers/miss.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/miss.png",
+       "gif": "gif/berserker/damaged/miss.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/miss.body.png",
+        "weapon": "sheets/berserker/damaged/layers/miss.weapon.png",
+        "vfx": "sheets/berserker/layers/miss.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/miss.png",
+       "gif": "gif/berserker/heavily_damaged/miss.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/miss.body.png",
+        "weapon": "sheets/berserker/heavily_damaged/layers/miss.weapon.png",
+        "vfx": "sheets/berserker/layers/miss.vfx.png"
+       }
+      }
+     }
+    },
+    "exhausted": {
+     "frames": 8,
+     "ms": 140,
+     "loop": true,
+     "hold": 0,
+     "label": "kehabisan tenaga: bersandar ke pedang, terengah-engah, berkeringat",
+     "sheet": "sheets/berserker/exhausted.png",
+     "gif": "gif/berserker/exhausted.gif",
+     "durations": [
+      140,
+      110,
+      110,
+      140,
+      160,
+      120,
+      110,
+      140
+     ],
+     "layers": {
+      "body": "sheets/berserker/layers/exhausted.body.png",
+      "weapon": "sheets/berserker/layers/exhausted.weapon.png",
+      "vfx": "sheets/berserker/layers/exhausted.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/exhausted.png",
+       "gif": "gif/berserker/damaged/exhausted.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/exhausted.body.png",
+        "weapon": "sheets/berserker/layers/exhausted.weapon.png",
+        "vfx": "sheets/berserker/layers/exhausted.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/exhausted.png",
+       "gif": "gif/berserker/heavily_damaged/exhausted.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/exhausted.body.png",
+        "weapon": "sheets/berserker/heavily_damaged/layers/exhausted.weapon.png",
+        "vfx": "sheets/berserker/layers/exhausted.vfx.png"
+       }
+      }
+     }
+    },
+    "victory": {
+     "frames": 16,
+     "ms": 200,
+     "loop": false,
+     "hold": 10,
+     "label": "susah payah mengangkat pedang, mengacungkannya tinggi, mengaum",
+     "sheet": "sheets/berserker/victory.png",
+     "gif": "gif/berserker/victory.gif",
+     "durations": [
+      200,
+      160,
+      120,
+      120,
+      160,
+      140,
+      90,
+      90,
+      90,
+      120,
+      90,
+      90,
+      90,
+      120,
+      200,
+      240
+     ],
+     "events": [
+      {
+       "frame": 9,
+       "type": "screen_shake",
+       "px": 2,
+       "ms": 160
+      }
+     ],
+     "layers": {
+      "body": "sheets/berserker/layers/victory.body.png",
+      "weapon": "sheets/berserker/layers/victory.weapon.png",
+      "vfx": "sheets/berserker/layers/victory.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/victory.png",
+       "gif": "gif/berserker/damaged/victory.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/victory.body.png",
+        "weapon": "sheets/berserker/layers/victory.weapon.png",
+        "vfx": "sheets/berserker/layers/victory.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/victory.png",
+       "gif": "gif/berserker/heavily_damaged/victory.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/victory.body.png",
+        "weapon": "sheets/berserker/layers/victory.weapon.png",
+        "vfx": "sheets/berserker/layers/victory.vfx.png"
+       }
+      }
+     }
+    },
+    "defeat": {
+     "frames": 19,
+     "ms": 200,
+     "loop": false,
+     "hold": 10,
+     "label": "pedang terlalu berat, terjungkal ke belakang dan jatuh, duduk, menyalahkan pedang",
+     "sheet": "sheets/berserker/defeat.png",
+     "gif": "gif/berserker/defeat.gif",
+     "durations": [
+      200,
+      120,
+      140,
+      160,
+      120,
+      110,
+      90,
+      120,
+      140,
+      160,
+      200,
+      140,
+      120,
+      160,
+      200,
+      200,
+      200,
+      90,
+      300
+     ],
+     "events": [
+      {
+       "frame": 7,
+       "type": "screen_shake",
+       "px": 2,
+       "ms": 100
+      }
+     ],
+     "layers": {
+      "body": "sheets/berserker/layers/defeat.body.png",
+      "weapon": "sheets/berserker/layers/defeat.weapon.png",
+      "vfx": "sheets/berserker/layers/defeat.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/defeat.png",
+       "gif": "gif/berserker/damaged/defeat.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/defeat.body.png",
+        "weapon": "sheets/berserker/damaged/layers/defeat.weapon.png",
+        "vfx": "sheets/berserker/damaged/layers/defeat.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/defeat.png",
+       "gif": "gif/berserker/heavily_damaged/defeat.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/defeat.body.png",
+        "weapon": "sheets/berserker/heavily_damaged/layers/defeat.weapon.png",
+        "vfx": "sheets/berserker/heavily_damaged/layers/defeat.vfx.png"
+       }
+      }
+     }
+    }
+   },
+   "canvas": {
+    "w": 144,
+    "h": 100
+   },
+   "anchor": {
+    "x": 56,
+    "baseline": 95,
+    "facing": "right"
+   },
+   "variants": {
+    "idle": [
+     "idle",
+     "idle_breath",
+     "idle_grip",
+     "idle_drag",
+     "idle_look",
+     "idle_twitch"
+    ],
+    "attack": [
+     "attack",
+     "attack_b"
+    ]
+   },
+   "aliases": {
+    "berserker_idle": "idle",
+    "berserker_ready": "ready",
+    "berserker_rage": "rage",
+    "berserker_run": "run",
+    "berserker_jump": "jump",
+    "berserker_attack": "attack",
+    "berserker_heavy_attack": "heavy_attack",
+    "berserker_leap_spin_slash": "leap_spin_slash",
+    "berserker_overhead_smash": "overhead_smash",
+    "berserker_air_slash": "air_slash",
+    "berserker_rage_attack": "rage_attack",
+    "berserker_combo": "combo",
+    "berserker_hit": "hit",
+    "berserker_miss": "miss",
+    "berserker_exhausted": "exhausted",
+    "berserker_victory": "victory",
+    "berserker_defeat": "defeat"
+   },
+   "damage_levels": [
+    "normal",
+    "damaged",
+    "heavily_damaged"
+   ],
+   "note": "Kanvas 144x100 (badan Gobyet tetap skala yang sama). Lapisan body/weapon/vfx, tiga tingkat kerusakan, durasi per frame, event hit/hitstop/screen_shake. Darah: sprite VFX terpisah, hanya saat kena."
   }
  ],
+ "vfx": {
+  "slash_arc": {
+   "sheet": "vfx/slash_arc.png",
+   "gif": "gif/vfx/slash_arc.gif",
+   "frames": 5,
+   "durations": [
+    40,
+    40,
+    50,
+    60,
+    60
+   ],
+   "loop": false,
+   "canvas": {
+    "w": 64,
+    "h": 64
+   },
+   "anchor": {
+    "x": 32,
+    "y": 32
+   },
+   "kind": "slash",
+   "note": "bulan sabit tebasan diagonal; jangkar = pusat putaran (bahu)"
+  },
+  "sword_trail": {
+   "sheet": "vfx/sword_trail.png",
+   "gif": "gif/vfx/sword_trail.gif",
+   "frames": 4,
+   "durations": [
+    30,
+    40,
+    50,
+    60
+   ],
+   "loop": false,
+   "canvas": {
+    "w": 64,
+    "h": 64
+   },
+   "anchor": {
+    "x": 32,
+    "y": 32
+   },
+   "kind": "slash",
+   "note": "smear pedang di antara dua sudut; jangkar = genggaman"
+  },
+  "dust": {
+   "sheet": "vfx/dust.png",
+   "gif": "gif/vfx/dust.gif",
+   "frames": 5,
+   "durations": [
+    60,
+    60,
+    70,
+    80,
+    90
+   ],
+   "loop": false,
+   "canvas": {
+    "w": 48,
+    "h": 16
+   },
+   "anchor": {
+    "x": 24,
+    "y": 15
+   },
+   "kind": "ground",
+   "note": "kepulan debu; jangkar = titik di lantai"
+  },
+  "impact": {
+   "sheet": "vfx/impact.png",
+   "gif": "gif/vfx/impact.gif",
+   "frames": 4,
+   "durations": [
+    40,
+    50,
+    60,
+    70
+   ],
+   "loop": false,
+   "canvas": {
+    "w": 48,
+    "h": 48
+   },
+   "anchor": {
+    "x": 24,
+    "y": 24
+   },
+   "kind": "impact",
+   "note": "kilat hantaman"
+  },
+  "debris": {
+   "sheet": "vfx/debris.png",
+   "gif": "gif/vfx/debris.gif",
+   "frames": 7,
+   "durations": [
+    50,
+    50,
+    60,
+    60,
+    70,
+    70,
+    80
+   ],
+   "loop": false,
+   "canvas": {
+    "w": 48,
+    "h": 32
+   },
+   "anchor": {
+    "x": 24,
+    "y": 31
+   },
+   "kind": "ground",
+   "note": "serpihan batu; jangkar = titik di lantai"
+  },
+  "spark": {
+   "sheet": "vfx/spark.png",
+   "gif": "gif/vfx/spark.gif",
+   "frames": 4,
+   "durations": [
+    30,
+    40,
+    50,
+    60
+   ],
+   "loop": false,
+   "canvas": {
+    "w": 24,
+    "h": 24
+   },
+   "anchor": {
+    "x": 12,
+    "y": 12
+   },
+   "kind": "impact",
+   "note": "percikan logam"
+  },
+  "ground_impact": {
+   "sheet": "vfx/ground_impact.png",
+   "gif": "gif/vfx/ground_impact.gif",
+   "frames": 8,
+   "durations": [
+    50,
+    60,
+    60,
+    70,
+    70,
+    80,
+    80,
+    90
+   ],
+   "loop": false,
+   "canvas": {
+    "w": 96,
+    "h": 40
+   },
+   "anchor": {
+    "x": 48,
+    "y": 39
+   },
+   "kind": "ground",
+   "note": "retak + gelombang kejut + debu; jangkar = titik di lantai"
+  },
+  "blood_small": {
+   "sheet": "vfx/blood_small.png",
+   "gif": "gif/vfx/blood_small.gif",
+   "frames": 4,
+   "durations": [
+    50,
+    60,
+    60,
+    70
+   ],
+   "loop": false,
+   "canvas": {
+    "w": 32,
+    "h": 24
+   },
+   "anchor": {
+    "x": 8,
+    "y": 10
+   },
+   "kind": "blood",
+   "note": "tingkat 1: beberapa tetes searah tebasan",
+   "blood_level": 1
+  },
+  "blood_medium": {
+   "sheet": "vfx/blood_medium.png",
+   "gif": "gif/vfx/blood_medium.gif",
+   "frames": 5,
+   "durations": [
+    50,
+    50,
+    60,
+    60,
+    70
+   ],
+   "loop": false,
+   "canvas": {
+    "w": 40,
+    "h": 28
+   },
+   "anchor": {
+    "x": 10,
+    "y": 12
+   },
+   "kind": "blood",
+   "note": "tingkat 2: cipratan kecil + tetes",
+   "blood_level": 2
+  },
+  "blood_burst": {
+   "sheet": "vfx/blood_burst.png",
+   "gif": "gif/vfx/blood_burst.gif",
+   "frames": 6,
+   "durations": [
+    40,
+    50,
+    50,
+    60,
+    60,
+    70
+   ],
+   "loop": false,
+   "canvas": {
+    "w": 48,
+    "h": 36
+   },
+   "anchor": {
+    "x": 18,
+    "y": 14
+   },
+   "kind": "blood",
+   "note": "tingkat 3: cipratan bintang kartun + tetes ke dua arah",
+   "blood_level": 3
+  },
+  "blood_arc": {
+   "sheet": "vfx/blood_arc.png",
+   "gif": "gif/vfx/blood_arc.gif",
+   "frames": 5,
+   "durations": [
+    40,
+    50,
+    60,
+    60,
+    70
+   ],
+   "loop": false,
+   "canvas": {
+    "w": 48,
+    "h": 40
+   },
+   "anchor": {
+    "x": 24,
+    "y": 22
+   },
+   "kind": "blood",
+   "note": "tetes mengikuti busur tebasan",
+   "blood_level": 2
+  },
+  "blood_particles": {
+   "sheet": "vfx/blood_particles.png",
+   "gif": "gif/vfx/blood_particles.gif",
+   "frames": 6,
+   "durations": [
+    60,
+    60,
+    60,
+    70,
+    70,
+    80
+   ],
+   "loop": false,
+   "canvas": {
+    "w": 32,
+    "h": 28
+   },
+   "anchor": {
+    "x": 16,
+    "y": 10
+   },
+   "kind": "blood",
+   "note": "partikel halus melayang turun",
+   "blood_level": 1
+  },
+  "blood_ground": {
+   "sheet": "vfx/blood_ground.png",
+   "gif": "gif/vfx/blood_ground.gif",
+   "frames": 6,
+   "durations": [
+    60,
+    70,
+    80,
+    90,
+    100,
+    120
+   ],
+   "loop": false,
+   "canvas": {
+    "w": 32,
+    "h": 4
+   },
+   "anchor": {
+    "x": 14,
+    "y": 0
+   },
+   "kind": "blood",
+   "note": "bercak kecil di lantai yang memudar; jangkar = baris lantai",
+   "blood_level": 1
+  },
+  "screen_shake_trigger": {
+   "type": "screen_shake",
+   "note": "mesin menggetarkan kamera; px = amplitudo, ms = lama",
+   "kind": "event"
+  },
+  "hitstop": {
+   "type": "hitstop",
+   "note": "mesin membekukan penyerang dan target selama ms, hanya bila kena",
+   "kind": "event"
+  }
+ },
+ "blood": {
+  "levels": {
+   "0": [],
+   "1": [
+    "blood_small",
+    "blood_particles"
+   ],
+   "2": [
+    "blood_medium",
+    "blood_arc",
+    "blood_ground"
+   ],
+   "3": [
+    "blood_burst",
+    "blood_arc",
+    "blood_ground"
+   ]
+  },
+  "default_level": 2,
+  "only_on_hit": true,
+  "note": "darah hanya sprite VFX terpisah, bergaya piksel, singkat; tingkat 0 mematikannya"
+ },
+ "event_types": {
+  "hit": "serangan kena di titik (x, y relatif jangkar, y=0 lantai); mesin memunculkan darah sesuai tingkat bila target memang kena, lalu target recoil",
+  "hitstop": "bekukan penyerang dan target selama ms (hanya bila kena)",
+  "screen_shake": "getarkan kamera px piksel selama ms",
+  "vfx": "VFX sudah ada di lapisan vfx sheet (baked); nama sprite VFX terpisah untuk mesin yang menggambar VFX sendiri",
+  "phase": "rentang frame tiap fase gerakan",
+  "rage_on": "mode amuk aktif"
+ },
  "icons": {
   "scroll": "icons/scroll.png",
   "oldscroll": "icons/oldscroll.png",

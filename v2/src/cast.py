@@ -4,8 +4,9 @@ import vikings
 import pirates
 import domain
 import special2
+import berserker
 
-MODULES = [knights, vikings, pirates, domain, special2]
+MODULES = [knights, vikings, pirates, domain, special2, berserker]
 _CACHE = {}
 
 

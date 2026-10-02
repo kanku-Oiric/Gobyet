@@ -105,7 +105,7 @@ class VikingBase(Char):
 
 class Berserker(VikingBase):
     id = "viking-berserker"
-    name = "Berserker Gobyet"
+    name = "Viking Berserker Gobyet"
     role = "rage"
     silhouette = ["wolf_pelt_hood", "dual_axes", "bare_arms", "low_aggressive_stance"]
     body = {"torso_w": 7.6, "shoulder": 6.8}

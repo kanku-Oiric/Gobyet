@@ -13,13 +13,13 @@
 
 Satu monyet, banyak dunia. Rework v2 membuat setiap karakter Gobyet berdiri dengan kuda-kuda, senjata, dan siluet sesuai perannya, sementara kepala, wajah, telinga, dan ekornya tetap Gobyet yang sama.
 
-**38 karakter · 305 state animasi · 3.871 frame · kanvas 64×64**
+**39 karakter · 328 state animasi · 4.165 frame · kanvas 64×64 (Berserker 144×100) · 13 sprite VFX**
 
 ### Animasi andalan
 
-| Heavy Knight | Berserker | Pirate Skirmisher | Wizard |
+| Heavy Knight | Viking Berserker | Pirate Skirmisher | Wizard |
 |:---:|:---:|:---:|:---:|
-| <img src="v2/gif/knight-heavy/attack.gif" width="128" alt="Heavy Knight: ancang-ancang, ayunan pedang besar, hantaman"> | <img src="v2/gif/viking-berserker/rage.gif" width="128" alt="Berserker: mode amuk: lebih rendah, wajah memerah, kapak terangkat, lebih cepat"> | <img src="v2/gif/pirate-skirmisher/explosion.gif" width="128" alt="Pirate Skirmisher: tong meledak kartun, menutup telinga"> | <img src="v2/gif/wizard/spell_fail.gif" width="128" alt="Wizard: mantra gagal: POOF, wajah jelaga, bingung"> |
+| <img src="v2/gif/knight-heavy/attack.gif" width="128" alt="Heavy Knight: ancang-ancang, ayunan pedang besar, hantaman"> | <img src="v2/gif/viking-berserker/rage.gif" width="128" alt="Viking Berserker: mode amuk: lebih rendah, wajah memerah, kapak terangkat, lebih cepat"> | <img src="v2/gif/pirate-skirmisher/explosion.gif" width="128" alt="Pirate Skirmisher: tong meledak kartun, menutup telinga"> | <img src="v2/gif/wizard/spell_fail.gif" width="128" alt="Wizard: mantra gagal: POOF, wajah jelaga, bingung"> |
 | `attack` | `rage` | `explosion` | `spell_fail` |
 
 | Hacker | Skeptic | Normal GBLK | Champion |
@@ -27,15 +27,31 @@ Satu monyet, banyak dunia. Rework v2 membuat setiap karakter Gobyet berdiri deng
 | <img src="v2/gif/hacker/error.gif" width="128" alt="Hacker: layar error, menatap layar, diam, lalu menatap penonton"> | <img src="v2/gif/skeptic/inspect.gif" width="128" alt="Skeptic: melihat klaim, diam, menyipit, menunjuk premis"> | <img src="v2/gif/normal-gblk/victory_dance.gif" width="128" alt="Normal GBLK: tarian kemenangan dengan konfeti"> | <img src="v2/gif/champion/trophy_raise.gif" width="128" alt="Champion: piala diangkat tinggi dengan dua tangan"> |
 | `error` | `inspect` | `victory_dance` | `trophy_raise` |
 
-### FANTASY (17)
+### Berserker: pedang raksasa (dark fantasy)
+
+Pendekar berzirah hitam dengan pedang dua tangan selebar papan (1,4× tinggi badan). Desain orisinal dari
+arketipe umum, dengan kepala dan badan Gobyet berskala sama seperti karakter lain; kanvasnya saja yang 144×100.
+Ada 23 state (17 dari brief, 5 varian idle, 1 varian attack), tempo per frame, event `hit`/`hitstop`/`screen_shake`,
+lapisan karakter/senjata/VFX, dan tiga tingkat kerusakan zirah. Darah hanya muncul sebagai sprite VFX terpisah yang
+bergaya piksel, singkat, dan muncul hanya saat serangan kena.
+
+| `leap_spin_slash` (jurus khas) | konfirmasi kena |
+|:---:|:---:|
+| <img src="v2/gif/berserker/leap_spin_slash.gif" width="288" alt="Berserker: jongkok, isi tenaga, melompat, salto 360 dengan tebasan bulan sabit, menghantam tanah sampai retak dan puing beterbangan, lalu pulih"> | <img src="v2/preview/berserker-leap_spin_slash-hit.gif" width="288" alt="Berserker menghantam Fantasy Knight: kilat hantaman, jeda hit-stop, darah bergaya kecil, lawan terdorong, percikan, debu"> |
+
+| `idle` | `rage_attack` | `miss` | `defeat` |
+|:---:|:---:|:---:|:---:|
+| <img src="v2/gif/berserker/idle.gif" width="192" alt="Berserker jongkok condong ke depan, ujung pedang raksasa bertumpu di lantai"> | <img src="v2/gif/berserker/rage_attack.gif" width="192" alt="Berserker amuk: meledak maju, sabetan rendah, sabetan naik, putaran gasing, tebasan berat"> | <img src="v2/gif/berserker/miss.gif" width="192" alt="Berserker meleset: pedang tertancap, ditarik-tarik, menatap pedang lalu menatap penonton"> | <img src="v2/gif/berserker/defeat.gif" width="192" alt="Berserker: pedang terlalu berat dan jatuh, duduk, menyalahkan pedang"> |
+
+### FANTASY (18)
 
 | Heavy Knight | Archer | Man-at-Arms | Assassin |
 |:---:|:---:|:---:|:---:|
 | <img src="v2/gif/knight-heavy/idle.gif" width="128" alt="Heavy Knight: berdiri berat, zirah naik-turun pelan"> | <img src="v2/gif/knight-archer/idle.gif" width="128" alt="Archer: busur panjang di sisi, tabung panah di punggung"> | <img src="v2/gif/knight-man-at-arms/idle.gif" width="128" alt="Man-at-Arms: halberd tegak, berat badan berpindah"> | <img src="v2/gif/knight-assassin/idle.gif" width="128" alt="Assassin: kuda-kuda rendah, dua belati terbalik"> |
 
-| Fantasy Knight | Viking | Berserker | Huscarl |
+| Fantasy Knight | Viking | Viking Berserker | Huscarl |
 |:---:|:---:|:---:|:---:|
-| <img src="v2/gif/fantasy-knight/idle.gif" width="128" alt="Fantasy Knight: pedang panjang, perisai layang-layang biru, jubah biru"> | <img src="v2/gif/viking/idle.gif" width="128" alt="Viking: kapak dan perisai bundar"> | <img src="v2/gif/viking-berserker/idle.gif" width="128" alt="Berserker: memantul tak sabar, dua kapak siap"> | <img src="v2/gif/viking-huscarl/idle.gif" width="128" alt="Huscarl: kapak Dane besar dan perisai bundar besar"> |
+| <img src="v2/gif/fantasy-knight/idle.gif" width="128" alt="Fantasy Knight: pedang panjang, perisai layang-layang biru, jubah biru"> | <img src="v2/gif/viking/idle.gif" width="128" alt="Viking: kapak dan perisai bundar"> | <img src="v2/gif/viking-berserker/idle.gif" width="128" alt="Viking Berserker: memantul tak sabar, dua kapak siap"> | <img src="v2/gif/viking-huscarl/idle.gif" width="128" alt="Huscarl: kapak Dane besar dan perisai bundar besar"> |
 
 | Gestir | Bondi | Fantasy Viking | Pirate Captain |
 |:---:|:---:|:---:|:---:|

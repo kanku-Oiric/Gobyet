@@ -48,6 +48,19 @@ PAL2.update({
     "cm1": (238, 226, 196), "cm2": (206, 188, 150),  # perkamen
     "hz1": (255, 214, 64), "hz2": (40, 40, 40),  # helm proyek / garis
     "pk1": (236, 150, 170), "pk2": (190, 100, 124),
+    # Berserker pedang raksasa: baja hitam (lebih terang dari garis tepi K supaya bentuk tetap terbaca), besi aus,
+    # bulu gelap, merah redup, jubah arang. Tanpa kilau emas.
+    "bk0": (138, 132, 126), "bk1": (90, 90, 98), "bk2": (66, 66, 74), "bk3": (46, 46, 54),
+    "sw1": (106, 106, 112), "sw2": (78, 78, 86), "ir1": (170, 166, 158),
+    "df1": (92, 74, 58), "df2": (64, 50, 40),
+    "mr1": (136, 46, 44), "mr2": (96, 32, 32),
+    "cl1": (60, 54, 56), "cl2": (42, 38, 40),
+    # VFX: debu tanah, puing batu, tebasan, bara amuk, darah bergaya (hanya sprite VFX terpisah)
+    "du1": (172, 154, 126), "du2": (128, 110, 88),
+    "rk1": (142, 134, 124), "rk2": (98, 92, 86),
+    "sl1": (246, 246, 252), "sl2": (190, 196, 210), "sl3": (132, 140, 160),
+    "em1": (234, 104, 64), "em2": (178, 54, 42),
+    "bl0": (236, 112, 100), "bl1": (198, 36, 44), "bl2": (144, 22, 32), "bl3": (96, 14, 24),
 })
 
 
@@ -56,11 +69,28 @@ def rgb(c):
 
 
 class Canvas:
-    def __init__(self):
+    """Kanvas piksel di koordinat rig. `box` = (x0, y0, w, h): jendela yang disimpan, default 64x64 di (0, 0).
+    Karakter berkanvas besar (Berserker) memakai jendela lebih lebar dengan koordinat rig yang sama, jadi badan,
+    kepala, dan lantai (BASE) tidak berubah; hanya ruang di sekitarnya yang bertambah."""
+
+    def __init__(self, box=None):
+        self.box = box or (0, 0, W, H)
         self.px = {}
 
+    @property
+    def w(self):
+        return self.box[2]
+
+    @property
+    def h(self):
+        return self.box[3]
+
+    def blank(self):
+        return Canvas(self.box)
+
     def put(self, x, y, c):
-        if 0 <= x < W and 0 <= y < H and c:
+        x0, y0, w, h = self.box
+        if x0 <= x < x0 + w and y0 <= y < y0 + h and c:
             self.px[(int(x), int(y))] = c
 
     def fill(self, pts, c):
@@ -68,10 +98,11 @@ class Canvas:
             self.put(p[0], p[1], c)
 
     def image(self, scale=1, bg=None):
-        im = Image.new("RGBA", (W, H), bg + (255,) if bg else (0, 0, 0, 0))
+        x0, y0, w, h = self.box
+        im = Image.new("RGBA", (w, h), bg + (255,) if bg else (0, 0, 0, 0))
         for (x, y), c in self.px.items():
-            im.putpixel((x, y), rgb(c) + (255,))
-        return im.resize((W * scale, H * scale), Image.NEAREST) if scale != 1 else im
+            im.putpixel((x - x0, y - y0), rgb(c) + (255,))
+        return im.resize((w * scale, h * scale), Image.NEAREST) if scale != 1 else im
 
 
 def inner(mask):

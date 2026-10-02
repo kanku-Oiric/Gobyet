@@ -15,6 +15,11 @@ Urutan prioritas: identitas, siluet, keterbacaan, pengenalan peran, animasi, det
 Kenapa 64×64 dan bukan 64×48 seperti v1: kelas tempur butuh badan berdiri, kuda-kuda, langkah, dan senjata yang
 diangkat di atas kepala. Di 48 px tinggi, helm berjambul atau pedang terangkat akan terpotong.
 
+**Pengecualian kanvas: Berserker (144×100).** Pedangnya 1,2–1,5× tinggi badan dan jurusnya melompat dan bersalto,
+jadi kanvasnya diperlebar. Badan tetap digambar di koordinat rig yang sama (skala piksel sama dengan 38 karakter
+lain); kanvasnya hanya jendela yang lebih lebar. Jangkar di gambar: x = 56, lantai `baseline` = 95. Registry
+menyimpan `canvas` dan `anchor` per karakter; tanpa itu berlaku 64×64.
+
 ## 2. Identitas Gobyet (terkunci)
 
 - Kepala memakai `head()` dari rig v1 tanpa perubahan: tengkorak cokelat, telinga besar, wajah krem berbentuk hati,
@@ -44,6 +49,11 @@ Palet v1 (`PAL` + `PAL_EXT`) ditambah warna bernama v2:
 | Kayu | `wo1`, `wo2` | gagang, busur, perisai bundar |
 | Navy, merah tua, emas | `nv1/nv2`, `cr1/cr2`, `go1/go2` | Pirate |
 | Efek | `glw`, `mag`, `smk`, `sm2` | cahaya layar, sihir, asap |
+| Baja hitam | `bk0`–`bk3` | zirah Berserker (lebih terang dari garis tepi `K` supaya bentuk terbaca); `bk0` = tepi aus hangat |
+| Besi pedang | `sw1`, `sw2`, `ir1` | bilah besi gelap, bayangan, tepi aus |
+| Bulu gelap, merah redup, jubah | `df1/df2`, `mr1/mr2`, `cl1/cl2` | kerah dan rok bulu, kain sobek, jubah arang |
+| VFX | `du1/du2`, `rk1/rk2`, `sl1`–`sl3`, `em1/em2` | debu, puing batu, tebasan, bara amuk |
+| Darah (VFX saja) | `bl0`–`bl3` | hanya di sprite VFX darah; diuji tidak pernah muncul di sheet karakter |
 
 Faksi berbagi palet. Warna aksen boleh berbeda antar-kelas, tapi **warna tidak pernah menjadi satu-satunya
 pembeda** (diuji dengan siluet dan grayscale).
@@ -59,6 +69,13 @@ pembeda** (diuji dengan siluet dan grayscale).
 
 Knight = logam. Viking = bulu, kulit, kayu. Heavy Knight dan Huscarl sengaja berbeda material, bentuk perisai,
 senjata, dan helm (IoU siluet 0,70).
+
+**Berserker (dark fantasy, `berserker`).** Arketipe pendekar berpedang raksasa berzirah hitam, desain orisinal
+(tidak menyalin karakter tertentu). Siluet: pedang selebar papan (bilah 9 px, panjang total ±55 px), pauldron kiri
+besar tiga lapis, bahu kanan hanya cop kecil dan lengan atas berbulu Gobyet (asimetris), pelat dada bersegmen,
+sarung tangan besi, bulu gelap dan kain merah redup di pinggang, jubah pendek sobek, kuda-kuda jongkok condong.
+Beda dari Heavy Knight: tanpa helm dan perisai, zirah hitam babak belur bukan baja terang, kuda-kuda rendah
+tidak stabil. Viking Berserker (dua kapak, tudung serigala) tetap kelas Viking.
 
 ## 6. Karakter domain dan peran
 
@@ -82,9 +99,29 @@ laurel emas di kepala (keputusan pemilik di Gerbang B).
 - Defeat berbeda per kelas: Heavy jatuh berat, Archer busur jatuh, Assassin mundur di balik asap, Viking perisai
   turun dan berlutut, Pirate topi jatuh, Wizard tongkat jatuh + asap, Hacker laptop error, GBLK papan roboh. Rebah
   memutar badan 90° tetapi kepala digambar ulang tegak, jadi wajah tidak terbalik.
-- Tanpa darah dan luka. Ledakan dan tembakan adalah kartun (bintang "pow", kepulan asap).
+- Tanpa darah dan luka di sheet karakter. Ledakan dan tembakan adalah kartun (bintang "pow", kepulan asap).
+- Satu pengecualian terkendali: darah bergaya untuk serangan Berserker yang **kena**. Darah hanya sprite VFX
+  terpisah (`vfx/blood_*.png`): tetesan dan cipratan merah bergaris tepi gelap, 4–6 frame, ≤ 160 piksel per
+  frame, tingkat 1–3 (`registry.blood.levels`, tingkat 0 mematikan). Mesin memunculkannya di titik event `hit`
+  hanya bila target memang kena. Tanpa gore: tidak ada potongan tubuh, organ, atau luka realistis.
+
+## 7a. Tempo, event, lapisan, kerusakan, varian (Berserker)
+
+- Tempo tidak rata: `durations` per frame (kelipatan 10 ms). Ancang-ancang lambat, lepas cepat, putaran 40 ms,
+  frame hantam ditahan, pemulihan berat.
+- Event per state: `hit` (titik kena relatif jangkar, arah, darah per tingkat), `hitstop`, `screen_shake`,
+  `vfx` (sudah ada di lapisan VFX, `baked`), `phase` (rentang fase jurus khas).
+- Lapisan `body` (karakter + zirah), `weapon` (piksel pedang yang terlihat), `vfx`: ditumpuk berurutan sama persis
+  dengan komposit (diuji per frame).
+- Kerusakan visual `normal`, `damaged` (goresan, penyok, jubah berlubang), `heavily_damaged` (pauldron sompal,
+  pelat dada pecah memperlihatkan bulu, jubah lebih pendek). Hanya visual.
+- Varian idle dan attack dipilih deterministik dari seed (`Resolver.variant`, FNV-1a), sama di Python dan JS.
+- Salto memutar seluruh figur kelipatan 90° (piksel utuh); putaran gasing mencerminkan figur sesaat.
 
 ## 8. Uji yang menjaga aturan ini
 
 `v2/tests/test_v2.py` dan `v2/tools/visual_qa.py`: siluet dalam faksi (IoU ≤ 0,80), pasangan bagian 54, lantai dan
-baseline, wajah terlihat, sambungan loop, paritas teologi, registry, fallback, context mapping.
+baseline, wajah terlihat, sambungan loop, paritas teologi, registry, fallback, context mapping. Berserker: kanvas
+dan jangkar, kepala dari fungsi yang sama, lapisan = komposit, tingkat kerusakan, rasio pedang/badan, tempo dan
+event jurus khas, sprite VFX, darah tidak pernah di sheet karakter, darah VFX kecil dan singkat, varian
+deterministik (Python = JS).

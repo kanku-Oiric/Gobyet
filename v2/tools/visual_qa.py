@@ -35,10 +35,23 @@ GROUPS = [
 ]
 
 
-def frames(cid, state):
+def full_frames(cid, state, sheet=None):
     st = CH[cid]["states"][state]
-    im = Image.open(os.path.join(V2, st["sheet"])).convert("RGBA")
-    return [im.crop((i * W, 0, (i + 1) * W, H)) for i in range(st["frames"])]
+    cv = CH[cid].get("canvas", REG["canvas"])
+    im = Image.open(os.path.join(V2, sheet or st["sheet"])).convert("RGBA")
+    return [im.crop((i * cv["w"], 0, (i + 1) * cv["w"], cv["h"])) for i in range(st["frames"])]
+
+
+def frames(cid, state):
+    """Frame 64x64. Karakter berkanvas besar (Berserker) dipotong ke jendela 64x64 di sekitar jangkar yang sama
+    (badan pada posisi yang sama dengan karakter lain), supaya metrik siluet sebanding. Pedang yang keluar dari
+    jendela itu diperiksa terpisah di berserker_qa()."""
+    fr = full_frames(cid, state)
+    if "canvas" not in CH[cid]:
+        return fr
+    a = CH[cid]["anchor"]
+    x0, y0 = a["x"] - REG["anchor"]["x"], a["baseline"] - REG["anchor"]["baseline"]
+    return [f.crop((x0, y0, x0 + W, y0 + H)) for f in fr]
 
 
 def mask(im):
@@ -269,6 +282,69 @@ def gallery_images(out_dir):
     return paths
 
 
+def berserker_qa(out_dir):
+    """Metrik kanvas penuh Berserker: lantai, wajah, rasio pedang/badan, lapisan menumpuk ke komposit, warna darah."""
+    cid = "berserker"
+    if cid not in CH:
+        return None
+    c = CH[cid]
+    base = c["anchor"]["baseline"]
+    blood = {(236, 112, 100), (198, 36, 44), (144, 22, 32), (96, 14, 24)}
+    res = {"state": len(c["states"]), "frame": sum(s["frames"] for s in c["states"].values()),
+           "di_bawah_lantai": 0, "wajah_min": 999, "lapisan_tidak_cocok": 0, "piksel_darah_di_sheet": 0}
+    for s, st in c["states"].items():
+        levels = [(st["sheet"], st["layers"])] + [(d["sheet"], d["layers"]) for d in st["damage"].values()]
+        for sheet, layers in levels:
+            comp = full_frames(cid, s, sheet)
+            parts = [full_frames(cid, s, layers[k]) for k in ("body", "weapon", "vfx")]
+            for i, f in enumerate(comp):
+                m = mask(f)
+                if m and max(y for _, y in m) > base - 1:
+                    res["di_bawah_lantai"] += 1
+                px = f.load()
+                res["wajah_min"] = min(res["wajah_min"], sum(1 for (x, y) in m if px[x, y][:3] in FACE))
+                res["piksel_darah_di_sheet"] += sum(1 for (x, y) in m if px[x, y][:3] in blood)
+                st_im = parts[0][i].copy()
+                st_im.alpha_composite(parts[1][i])
+                st_im.alpha_composite(parts[2][i])
+                res["lapisan_tidak_cocok"] += st_im.tobytes() != f.tobytes()
+    st = c["states"]["idle"]
+    weapon = sorted(mask(full_frames(cid, "idle", st["layers"]["weapon"])[0]))
+    # tinggi badan berdiri: tinggi terbesar lapisan karakter di victory (berdiri tegak); idle jongkok lebih pendek
+    h = 0
+    for f in full_frames(cid, "victory", c["states"]["victory"]["layers"]["body"]):
+        m = mask(f)
+        h = max(h, max(y for _, y in m) - min(y for _, y in m) + 1)
+    res["tinggi_badan_jongkok_idle_px"] = (lambda m: max(y for _, y in m) - min(y for _, y in m) + 1)(
+        mask(full_frames(cid, "idle", st["layers"]["body"])[0]))
+    far = max(((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2) ** 0.5 for a in (weapon[0], weapon[-1]) for b in weapon)
+    res["tinggi_badan_berdiri_px"] = h
+    res["panjang_pedang_px"] = round(far, 1)
+    res["rasio_pedang_badan"] = round(far / h, 2)
+    # lembar ringkas semua state (frame kunci) untuk dilihat
+    sc = 2
+    keys = []
+    for s, stt in c["states"].items():
+        n = stt["frames"]
+        keys.append((s, [0, n // 3, (2 * n) // 3, n - 1]))
+    cw, chh = c["canvas"]["w"] * sc + 4, c["canvas"]["h"] * sc + 14
+    im = Image.new("RGB", (4 * cw + 140, len(keys) * chh + 6), BG)
+    d = ImageDraw.Draw(im)
+    for r, (s, idx) in enumerate(keys):
+        d.text((4, r * chh + chh // 2), s, fill=(40, 30, 20))
+        fr = full_frames(cid, s)
+        for j, k in enumerate(idx):
+            big = fr[k].resize((c["canvas"]["w"] * sc, c["canvas"]["h"] * sc), Image.NEAREST)
+            x, y = 140 + j * cw, r * chh + 12
+            d.line([x, y + base * sc, x + c["canvas"]["w"] * sc, y + base * sc], fill=(220, 205, 190))
+            im.paste(big, (x, y), big)
+            d.text((x + 2, y - 11), "f%d" % k, fill=(90, 70, 50))
+    p = os.path.join(out_dir, "berserker-states.png")
+    im.save(p, optimize=True)
+    res["gambar"] = p
+    return res
+
+
 def main():
     out_dir = sys.argv[sys.argv.index("--out") + 1] if "--out" in sys.argv else os.path.join(V2, "qa")
     ids = [c for _, g in GROUPS for c in g]
@@ -287,6 +363,7 @@ def main():
         "seam_jumlah_loop": len(seams(ids)),
     }
     os.makedirs(out_dir, exist_ok=True)
+    res["berserker"] = berserker_qa(out_dir)
     with open(os.path.join(out_dir, "visual-qa.json"), "w") as f:
         json.dump(res, f, ensure_ascii=False, indent=1)
     res["gambar"] = gallery_images(out_dir)

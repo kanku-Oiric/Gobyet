@@ -56,7 +56,12 @@ def main(dest):
     chars = []
     n_files = 0
     size = 0
+    skipped = []
     for c in reg["characters"]:
+        if "canvas" in c and (c["canvas"]["w"], c["canvas"]["h"]) != (reg["canvas"]["w"], reg["canvas"]["h"]):
+            # arena menggambar frame 64x64; karakter berkanvas besar (Berserker) belum didukung di arena
+            skipped.append(c["id"])
+            continue
         keep = []
         for core in CORE:
             s = c["core"].get(core)
@@ -86,6 +91,8 @@ def main(dest):
         shutil.copyfile(os.path.join(V2, rel), dst)
         icons[name] = rel
         size += os.path.getsize(dst)
+    for k in ("vfx", "blood", "event_types"):
+        reg.pop(k, None)
     sub = dict(reg, characters=chars, icons=icons, source={"repo": "kanku-Oiric/Gobyet", "path": "v2", "commit": rev},
                note="Subset untuk arena Battle Royale. Sumber kebenaran: repo Gobyet v2 (registry.json lengkap, GIF, sheet semua state).")
     with open(os.path.join(out_dir, "registry.json"), "w") as f:
@@ -105,6 +112,8 @@ def main(dest):
         with open(os.path.join(eng, dst_name), "w") as f:
             f.write(header(src_name, rev) + body)
     print("karakter %d, sheet %d, ukuran aset %.1f KB, commit %s" % (len(chars), n_files, size / 1024.0, rev))
+    if skipped:
+        print("dilewati (kanvas bukan 64x64, belum didukung arena):", ", ".join(skipped))
 
 
 if __name__ == "__main__":

@@ -16,9 +16,19 @@ from items2 import ITEMS
 
 
 class State:
-    def __init__(self, n, fn, ms=110, loop=True, hold=0, label="", core=None):
+    def __init__(self, n, fn, ms=110, loop=True, hold=0, label="", core=None, durs=None, events=None, variant_of=None):
         self.n, self.fn, self.ms, self.loop, self.hold, self.label = n, fn, ms, loop, hold, label
         self.core = core  # state inti arena yang diwakili (idle/attack/hit/victory/defeat)
+        # durasi per frame (ms, kelipatan 10) bila tempo tidak rata: ancang-ancang lambat, ayunan cepat, frame hantam
+        # ditahan. Tanpa durs semua frame memakai ms.
+        if durs is not None:
+            assert len(durs) == n and all(d % 10 == 0 for d in durs), (label, durs)
+        self.durs = list(durs) if durs is not None else None
+        self.events = list(events or [])  # [{"frame": i, "type": "hit" | "hitstop" | "screen_shake" | "vfx", ...}]
+        self.variant_of = variant_of  # varian dari state lain (mis. idle_look -> idle)
+
+    def durations(self):
+        return list(self.durs) if self.durs else [self.ms] * self.n
 
 
 class Char:
@@ -33,10 +43,18 @@ class Char:
     fur = "B"
     tail_side = -1
     aliases = {}
+    canvas = None  # (x0, y0, w, h) di koordinat rig; None = 64x64 standar
 
     def __init__(self):
         self.states = {}
         self.build()
+
+    def new_canvas(self):
+        return Canvas(self.canvas)
+
+    def post_pose(self, p):
+        """Dipanggil setelah pose dibulatkan (mis. tangan kiri dikunci ke gagang senjata dua tangan)."""
+        pass
 
     def build(self):
         pass
@@ -82,16 +100,17 @@ class Char:
 def _item(cv, g, i, p):
     key, ang = ("lw", "lwa") if i == 0 else ("rw", "rwa")
     name = p.get(key)
-    if not name:
+    if not name or p.get("_no_weapon"):
         return None
     return ITEMS[name] + (g.hand[i], p.get(ang, 0.0))
 
 
-def draw_figure(ch, p, with_head=True):
-    cv = Canvas()
+def draw_figure(ch, p, with_head=True, with_fx=True):
+    cv = ch.new_canvas()
     g = Geo(p, ch.body)
-    for f in p.get("fx_back", ()):
-        f(cv, g)
+    if not p.get("_no_fx"):
+        for f in p.get("fx_back", ()):
+            f(cv, g)
     ch.back(cv, g)
     for i in (0, 1):
         it = _item(cv, g, i, p)
@@ -112,8 +131,9 @@ def draw_figure(ch, p, with_head=True):
             ch.headgear(cv, g)
         _arms(ch, cv, g, p)
     ch.front(cv, g)
-    for f in p.get("fx", ()):
-        f(cv, g)
+    if with_fx and not p.get("_no_fx"):
+        for f in p.get("fx", ()):
+            f(cv, g)
     return cv, g
 
 
@@ -139,7 +159,7 @@ def rotate(cv, deg, pivot):
     """Putar seluruh figur (hanya kelipatan 90 derajat, supaya piksel tetap utuh)."""
     k = int(round(deg / 90.0)) % 4
     px, py = pivot
-    out = Canvas()
+    out = cv.blank()
     for (x, y), c in cv.px.items():
         dx, dy = x - px, y - py
         for _ in range(k):
@@ -149,7 +169,7 @@ def rotate(cv, deg, pivot):
 
 
 def shift(cv, dx, dy):
-    out = Canvas()
+    out = cv.blank()
     for (x, y), c in cv.px.items():
         out.put(x + dx, y + dy, c)
     return out
@@ -186,22 +206,72 @@ def floor_clip(cv):
     return cv
 
 
-def render(ch, state, i):
-    return floor_clip(_render(ch, state, i))
+LAYERS = ("body", "weapon", "vfx")
 
 
-def _render(ch, state, i):
+def render(ch, state, i, layer=None):
+    """Frame komposit, atau satu lapisan: body (karakter tanpa senjata dan efek), weapon (piksel senjata yang
+    terlihat di komposit tanpa efek), vfx (piksel efek yang terlihat di komposit). Ditumpuk body -> weapon -> vfx,
+    ketiganya sama persis dengan komposit."""
+    if layer is None:
+        return floor_clip(_render(ch, state, i))
+    full = floor_clip(_render(ch, state, i))
+    no_fx = floor_clip(_render(ch, state, i, _no_fx=True))
+    if layer == "vfx":
+        out = full.blank()
+        out.px = {k: v for k, v in full.px.items() if no_fx.px.get(k) != v}
+        return out
+    body = floor_clip(_render(ch, state, i, _no_fx=True, _no_weapon=True))
+    if layer == "body":
+        return body
+    out = full.blank()
+    out.px = {k: v for k, v in no_fx.px.items() if body.px.get(k) != v}
+    return out
+
+
+def render_all(ch, state, i):
+    """Komposit + ketiga lapisan dengan tiga render saja (dipakai ekspor)."""
+    full = floor_clip(_render(ch, state, i))
+    no_fx = floor_clip(_render(ch, state, i, _no_fx=True))
+    body = floor_clip(_render(ch, state, i, _no_fx=True, _no_weapon=True))
+    vfx, weapon = full.blank(), full.blank()
+    vfx.px = {k: v for k, v in full.px.items() if no_fx.px.get(k) != v}
+    weapon.px = {k: v for k, v in no_fx.px.items() if body.px.get(k) != v}
+    return {"composite": full, "body": body, "weapon": weapon, "vfx": vfx}
+
+
+def _render(ch, state, i, **flags):
     st = ch.states[state]
     p = R.pose()
     p.update(st.fn(i % st.n))
     quantize(p)
+    ch.post_pose(p)
+    p.update(flags)
     if not p.get("visible", True):
-        cv = Canvas()
-        for f in p.get("fx", ()):
-            f(cv, Geo(p, ch.body))
+        cv = ch.new_canvas()
+        if not p.get("_no_fx"):
+            for f in p.get("fx", ()):
+                f(cv, Geo(p, ch.body))
+        return cv
+    if p.get("spin"):
+        # Putaran salto: seluruh figur (kepala, armor, senjata) diputar kelipatan 90 derajat di sekitar pusat badan,
+        # piksel tetap utuh. Efek (jejak tebasan) digambar setelahnya di koordinat dunia.
+        cv, g = draw_figure(ch, p, with_fx=False)
+        cv = rotate(cv, p["spin"], p.get("pivot", (int(round(g.tcx)), int(round(g.tcy)))))
+        if not p.get("_no_fx"):
+            for f in p.get("fx", ()):
+                f(cv, g)
         return cv
     if not p.get("rot"):
-        return draw_figure(ch, p)[0]
+        cv, g = draw_figure(ch, p)
+        if p.get("mirror"):
+            # cermin horizontal (putaran gasing: badan sesaat menghadap kiri), sumbu = tengah badan
+            ax = p.get("mirror_x", int(round(g.tcx)))
+            out = cv.blank()
+            for (x, y), c in cv.px.items():
+                out.put(2 * ax - x, y, c)
+            cv = out
+        return cv
     # Rebah: badan diputar 90 derajat, kepala digambar ulang tegak menghadap kamera (wajah tidak ikut terbalik).
     cv, g = draw_figure(ch, p, with_head=False)
     pivot = p.get("pivot", (R.RX, BASE - 1))
@@ -221,8 +291,9 @@ def _render(ch, state, i):
     g.hx, g.hy = hx + sx + p.get("lie_hdx", 0), min(hy + dy + sy, BASE - 9) + p.get("lie_hdy", 0)
     ch.head(cv, g)
     ch.headgear(cv, g)
-    for f in p.get("fx_after", ()):
-        f(cv, g)
+    if not p.get("_no_fx"):
+        for f in p.get("fx_after", ()):
+            f(cv, g)
     return cv
 
 
@@ -234,6 +305,6 @@ def _rot_point(x, y, deg, pivot):
     return pivot[0] + dx, pivot[1] + dy
 
 
-def frames(ch, state):
+def frames(ch, state, layer=None):
     st = ch.states[state]
-    return [render(ch, state, i) for i in range(st.n)]
+    return [render(ch, state, i, layer) for i in range(st.n)]

@@ -1,7 +1,7 @@
 {
- "karakter": 38,
- "state": 305,
- "frame": 3871,
+ "karakter": 39,
+ "state": 328,
+ "frame": 4165,
  "iou_siluet_dalam_faksi": {
   "knights": {
    "maks": 0.724,
@@ -57,9 +57,9 @@
  },
  "pengenalan_siluet_semua": {
   "100%": {
-   "benar": 93,
-   "total": 107,
-   "akurasi": 0.869,
+   "benar": 96,
+   "total": 110,
+   "akurasi": 0.873,
    "salah": [
     "knight-man-at-arms/attack->pirate-skirmisher",
     "knight-assassin/victory->fantasy-knight",
@@ -78,9 +78,9 @@
    ]
   },
   "75%": {
-   "benar": 92,
-   "total": 107,
-   "akurasi": 0.86,
+   "benar": 95,
+   "total": 110,
+   "akurasi": 0.864,
    "salah": [
     "knight-man-at-arms/attack->pirate-skirmisher",
     "knight-assassin/victory->pirate-sharpshooter",
@@ -100,9 +100,9 @@
    ]
   },
   "50%": {
-   "benar": 90,
-   "total": 107,
-   "akurasi": 0.841,
+   "benar": 93,
+   "total": 110,
+   "akurasi": 0.845,
    "salah": [
     "knight-man-at-arms/attack->pirate-skirmisher",
     "knight-assassin/victory->pirate-sharpshooter",
@@ -124,9 +124,9 @@
    ]
   },
   "25%": {
-   "benar": 79,
-   "total": 107,
-   "akurasi": 0.738,
+   "benar": 82,
+   "total": 110,
+   "akurasi": 0.745,
    "salah": [
     "knight-archer/idle->viking-bondi",
     "knight-man-at-arms/attack->academic",
@@ -161,9 +161,9 @@
  },
  "pengenalan_siluet_petarung": {
   "100%": {
-   "benar": 87,
-   "total": 99,
-   "akurasi": 0.879,
+   "benar": 90,
+   "total": 102,
+   "akurasi": 0.882,
    "salah": [
     "knight-man-at-arms/attack->pirate-skirmisher",
     "knight-assassin/victory->fantasy-knight",
@@ -180,9 +180,9 @@
    ]
   },
   "75%": {
-   "benar": 85,
-   "total": 99,
-   "akurasi": 0.859,
+   "benar": 88,
+   "total": 102,
+   "akurasi": 0.863,
    "salah": [
     "knight-man-at-arms/attack->pirate-skirmisher",
     "knight-assassin/victory->pirate-sharpshooter",
@@ -201,9 +201,9 @@
    ]
   },
   "50%": {
-   "benar": 83,
-   "total": 99,
-   "akurasi": 0.838,
+   "benar": 86,
+   "total": 102,
+   "akurasi": 0.843,
    "salah": [
     "knight-man-at-arms/attack->pirate-skirmisher",
     "knight-assassin/victory->pirate-sharpshooter",
@@ -224,9 +224,9 @@
    ]
   },
   "25%": {
-   "benar": 72,
-   "total": 99,
-   "akurasi": 0.727,
+   "benar": 75,
+   "total": 102,
+   "akurasi": 0.735,
    "salah": [
     "knight-archer/idle->viking-bondi",
     "knight-man-at-arms/attack->academic",
@@ -260,9 +260,9 @@
  },
  "pengenalan_siluet_roster": {
   "100%": {
-   "benar": 96,
-   "total": 107,
-   "akurasi": 0.897,
+   "benar": 97,
+   "total": 110,
+   "akurasi": 0.882,
    "salah": [
     "knight-man-at-arms/attack->researcher",
     "knight-assassin/attack->economist",
@@ -274,13 +274,15 @@
     "fantasy-viking/attack->knight-assassin",
     "pirate-captain/attack->knight-man-at-arms",
     "pirate-buccaneer/attack->psychologist",
-    "fantasy-pirate/attack->pirate-skirmisher"
+    "fantasy-pirate/attack->pirate-skirmisher",
+    "berserker/attack->hacker",
+    "berserker/victory->knight-heavy"
    ]
   },
   "75%": {
-   "benar": 95,
-   "total": 107,
-   "akurasi": 0.888,
+   "benar": 96,
+   "total": 110,
+   "akurasi": 0.873,
    "salah": [
     "knight-man-at-arms/attack->researcher",
     "knight-assassin/attack->economist",
@@ -293,13 +295,15 @@
     "pirate-captain/attack->pirate-skirmisher",
     "pirate-buccaneer/attack->psychologist",
     "fantasy-pirate/attack->pirate-skirmisher",
+    "berserker/attack->hacker",
+    "berserker/victory->wizard",
     "economist/attack->mathematician"
    ]
   },
   "50%": {
-   "benar": 95,
-   "total": 107,
-   "akurasi": 0.888,
+   "benar": 96,
+   "total": 110,
+   "akurasi": 0.873,
    "salah": [
     "knight-archer/attack->fantasy-pirate",
     "knight-man-at-arms/attack->researcher",
@@ -312,13 +316,15 @@
     "fantasy-viking/attack->knight-assassin",
     "pirate-captain/attack->pirate-skirmisher",
     "pirate-buccaneer/attack->psychologist",
-    "fantasy-pirate/attack->pirate-skirmisher"
+    "fantasy-pirate/attack->pirate-skirmisher",
+    "berserker/attack->hacker",
+    "berserker/victory->wizard"
    ]
   },
   "25%": {
-   "benar": 89,
-   "total": 107,
-   "akurasi": 0.832,
+   "benar": 90,
+   "total": 110,
+   "akurasi": 0.818,
    "salah": [
     "knight-archer/idle->viking-bondi",
     "knight-man-at-arms/attack->researcher",
@@ -333,6 +339,8 @@
     "pirate-captain/attack->psychologist",
     "pirate-buccaneer/attack->psychologist",
     "fantasy-pirate/attack->pirate-skirmisher",
+    "berserker/attack->hacker",
+    "berserker/victory->wizard",
     "lawyer/attack->philosopher",
     "historian/attack->detective",
     "economist/attack->mathematician",
@@ -559,6 +567,14 @@
    "maks": 207,
    "median": 67,
    "seam": 225,
+   "gagal": false,
+   "pop": true
+  },
+  {
+   "sel": "berserker/idle",
+   "maks": 485,
+   "median": 427.0,
+   "seam": 489,
    "gagal": false,
    "pop": true
   },
@@ -947,5 +963,18 @@
    "pop": true
   }
  ],
- "seam_jumlah_loop": 167
+ "seam_jumlah_loop": 176,
+ "berserker": {
+  "state": 23,
+  "frame": 294,
+  "di_bawah_lantai": 0,
+  "wajah_min": 50,
+  "lapisan_tidak_cocok": 0,
+  "piksel_darah_di_sheet": 0,
+  "tinggi_badan_jongkok_idle_px": 34,
+  "tinggi_badan_berdiri_px": 39,
+  "panjang_pedang_px": 55.4,
+  "rasio_pedang_badan": 1.42,
+  "gambar": "/home/user/gobyet/v2/qa/berserker-states.png"
+ }
 }
