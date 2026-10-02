@@ -1,0 +1,5808 @@
+{
+ "format": "gobyet-v2/1",
+ "generated_by": "v2/src/export2.py",
+ "canvas": {
+  "w": 64,
+  "h": 64
+ },
+ "anchor": {
+  "x": 28,
+  "baseline": 59,
+  "facing": "right"
+ },
+ "gif_scale": 4,
+ "core_states": [
+  "idle",
+  "attack",
+  "hit",
+  "victory",
+  "defeat"
+ ],
+ "root_fallback": "normal-gblk",
+ "characters": [
+  {
+   "id": "knight-heavy",
+   "name": "Heavy Knight Gobyet",
+   "category": "fantasy",
+   "faction": "knights",
+   "role": "heavy",
+   "silhouette": [
+    "large_helmet",
+    "plume",
+    "broad_pauldrons",
+    "tower_shield",
+    "greatsword"
+   ],
+   "fallback": "fantasy-knight",
+   "core": {
+    "idle": "idle",
+    "attack": "attack",
+    "hit": "hit",
+    "victory": "victory",
+    "defeat": "defeat"
+   },
+   "acc_anchor": [
+    39,
+    13
+   ],
+   "states": {
+    "idle": {
+     "frames": 12,
+     "ms": 130,
+     "loop": true,
+     "hold": 0,
+     "label": "berdiri berat, zirah naik-turun pelan",
+     "sheet": "sheets/knight-heavy/idle.png",
+     "gif": "gif/knight-heavy/idle.gif"
+    },
+    "walk": {
+     "frames": 12,
+     "ms": 130,
+     "loop": true,
+     "hold": 0,
+     "label": "langkah berat, debu tiap kaki menapak",
+     "sheet": "sheets/knight-heavy/walk.png",
+     "gif": "gif/knight-heavy/walk.gif"
+    },
+    "guard": {
+     "frames": 8,
+     "ms": 140,
+     "loop": true,
+     "hold": 0,
+     "label": "perisai menara ke depan, pedang siaga",
+     "sheet": "sheets/knight-heavy/guard.png",
+     "gif": "gif/knight-heavy/guard.gif"
+    },
+    "attack": {
+     "frames": 14,
+     "ms": 90,
+     "loop": false,
+     "hold": 0,
+     "label": "ancang-ancang, ayunan pedang besar, hantaman",
+     "sheet": "sheets/knight-heavy/attack.png",
+     "gif": "gif/knight-heavy/attack.gif"
+    },
+    "block": {
+     "frames": 10,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "perisai menahan hantaman",
+     "sheet": "sheets/knight-heavy/block.png",
+     "gif": "gif/knight-heavy/block.gif"
+    },
+    "hit": {
+     "frames": 10,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "zirah bergetar, helm berdenting",
+     "sheet": "sheets/knight-heavy/hit.png",
+     "gif": "gif/knight-heavy/hit.gif"
+    },
+    "victory": {
+     "frames": 16,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "pedang besar terangkat lurus, perisai naik",
+     "sheet": "sheets/knight-heavy/victory.png",
+     "gif": "gif/knight-heavy/victory.gif"
+    },
+    "defeat": {
+     "frames": 16,
+     "ms": 120,
+     "loop": false,
+     "hold": 10,
+     "label": "limbung, lutut tertekuk, duduk, lalu rebah berat dengan debu",
+     "sheet": "sheets/knight-heavy/defeat.png",
+     "gif": "gif/knight-heavy/defeat.gif"
+    }
+   }
+  },
+  {
+   "id": "knight-archer",
+   "name": "Archer Gobyet",
+   "category": "fantasy",
+   "faction": "knights",
+   "role": "ranged",
+   "silhouette": [
+    "kettle_hat_wide_brim",
+    "longbow",
+    "quiver_on_back"
+   ],
+   "fallback": "fantasy-knight",
+   "core": {
+    "idle": "idle",
+    "attack": "attack",
+    "hit": "hit",
+    "victory": "victory",
+    "defeat": "defeat"
+   },
+   "acc_anchor": [
+    39,
+    13
+   ],
+   "states": {
+    "idle": {
+     "frames": 12,
+     "ms": 130,
+     "loop": true,
+     "hold": 0,
+     "label": "busur panjang di sisi, tabung panah di punggung",
+     "sheet": "sheets/knight-archer/idle.png",
+     "gif": "gif/knight-archer/idle.gif"
+    },
+    "aim": {
+     "frames": 8,
+     "ms": 130,
+     "loop": true,
+     "hold": 0,
+     "label": "busur terangkat, panah terpasang, membidik",
+     "sheet": "sheets/knight-archer/aim.png",
+     "gif": "gif/knight-archer/aim.gif"
+    },
+    "draw": {
+     "frames": 10,
+     "ms": 110,
+     "loop": false,
+     "hold": 0,
+     "label": "menarik tali sampai penuh",
+     "sheet": "sheets/knight-archer/draw.png",
+     "gif": "gif/knight-archer/draw.gif"
+    },
+    "fire": {
+     "frames": 8,
+     "ms": 80,
+     "loop": false,
+     "hold": 0,
+     "label": "melepas panah, tali bergetar",
+     "sheet": "sheets/knight-archer/fire.png",
+     "gif": "gif/knight-archer/fire.gif"
+    },
+    "recoil": {
+     "frames": 8,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "busur terhentak naik lalu kembali membidik",
+     "sheet": "sheets/knight-archer/recoil.png",
+     "gif": "gif/knight-archer/recoil.gif"
+    },
+    "attack": {
+     "frames": 16,
+     "ms": 90,
+     "loop": false,
+     "hold": 0,
+     "label": "bidik, tarik, lepas, hentakan busur",
+     "sheet": "sheets/knight-archer/attack.png",
+     "gif": "gif/knight-archer/attack.gif"
+    },
+    "hit": {
+     "frames": 10,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "terdorong, topi baja miring",
+     "sheet": "sheets/knight-archer/hit.png",
+     "gif": "gif/knight-archer/hit.gif"
+    },
+    "victory": {
+     "frames": 16,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "busur diangkat melintang di atas kepala",
+     "sheet": "sheets/knight-archer/victory.png",
+     "gif": "gif/knight-archer/victory.gif"
+    },
+    "defeat": {
+     "frames": 16,
+     "ms": 120,
+     "loop": false,
+     "hold": 10,
+     "label": "busur jatuh lebih dulu, lalu ikut rebah",
+     "sheet": "sheets/knight-archer/defeat.png",
+     "gif": "gif/knight-archer/defeat.gif"
+    }
+   }
+  },
+  {
+   "id": "knight-man-at-arms",
+   "name": "Man-at-Arms Gobyet",
+   "category": "fantasy",
+   "faction": "knights",
+   "role": "versatile",
+   "silhouette": [
+    "pointed_bascinet",
+    "halberd_long",
+    "brigandine",
+    "wide_stance"
+   ],
+   "fallback": "fantasy-knight",
+   "core": {
+    "idle": "idle",
+    "attack": "attack",
+    "hit": "hit",
+    "victory": "victory",
+    "defeat": "defeat"
+   },
+   "acc_anchor": [
+    39,
+    13
+   ],
+   "states": {
+    "idle": {
+     "frames": 12,
+     "ms": 130,
+     "loop": true,
+     "hold": 0,
+     "label": "halberd tegak, berat badan berpindah",
+     "sheet": "sheets/knight-man-at-arms/idle.png",
+     "gif": "gif/knight-man-at-arms/idle.gif"
+    },
+    "ready": {
+     "frames": 8,
+     "ms": 120,
+     "loop": true,
+     "hold": 0,
+     "label": "kuda-kuda lebar, halberd mengarah ke depan",
+     "sheet": "sheets/knight-man-at-arms/ready.png",
+     "gif": "gif/knight-man-at-arms/ready.gif"
+    },
+    "attack": {
+     "frames": 12,
+     "ms": 90,
+     "loop": false,
+     "hold": 0,
+     "label": "tusukan halberd ke depan",
+     "sheet": "sheets/knight-man-at-arms/attack.png",
+     "gif": "gif/knight-man-at-arms/attack.gif"
+    },
+    "swing": {
+     "frames": 14,
+     "ms": 90,
+     "loop": false,
+     "hold": 0,
+     "label": "ayunan lebar dari atas kepala",
+     "sheet": "sheets/knight-man-at-arms/swing.png",
+     "gif": "gif/knight-man-at-arms/swing.gif"
+    },
+    "block": {
+     "frames": 12,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "gagang halberd menahan di atas kepala",
+     "sheet": "sheets/knight-man-at-arms/block.png",
+     "gif": "gif/knight-man-at-arms/block.gif"
+    },
+    "recover": {
+     "frames": 10,
+     "ms": 110,
+     "loop": false,
+     "hold": 0,
+     "label": "terengah, kembali ke kuda-kuda",
+     "sheet": "sheets/knight-man-at-arms/recover.png",
+     "gif": "gif/knight-man-at-arms/recover.gif"
+    },
+    "hit": {
+     "frames": 10,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "terdorong, halberd goyah",
+     "sheet": "sheets/knight-man-at-arms/hit.png",
+     "gif": "gif/knight-man-at-arms/hit.gif"
+    },
+    "victory": {
+     "frames": 16,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "halberd diacungkan, tinju naik",
+     "sheet": "sheets/knight-man-at-arms/victory.png",
+     "gif": "gif/knight-man-at-arms/victory.gif"
+    },
+    "defeat": {
+     "frames": 16,
+     "ms": 120,
+     "loop": false,
+     "hold": 10,
+     "label": "halberd terlepas, rebah",
+     "sheet": "sheets/knight-man-at-arms/defeat.png",
+     "gif": "gif/knight-man-at-arms/defeat.gif"
+    }
+   }
+  },
+  {
+   "id": "knight-assassin",
+   "name": "Assassin Gobyet",
+   "category": "fantasy",
+   "faction": "knights",
+   "role": "stealth",
+   "silhouette": [
+    "hood_peak",
+    "asymmetric_cloak",
+    "dual_daggers",
+    "low_stance",
+    "narrow"
+   ],
+   "fallback": "fantasy-knight",
+   "core": {
+    "idle": "idle",
+    "attack": "attack",
+    "hit": "hit",
+    "victory": "victory",
+    "defeat": "defeat"
+   },
+   "acc_anchor": [
+    41,
+    16
+   ],
+   "states": {
+    "idle": {
+     "frames": 12,
+     "ms": 130,
+     "loop": true,
+     "hold": 0,
+     "label": "kuda-kuda rendah, dua belati terbalik",
+     "sheet": "sheets/knight-assassin/idle.png",
+     "gif": "gif/knight-assassin/idle.gif"
+    },
+    "stealth": {
+     "frames": 12,
+     "ms": 120,
+     "loop": true,
+     "hold": 0,
+     "label": "berjingkat sambil merunduk",
+     "sheet": "sheets/knight-assassin/stealth.png",
+     "gif": "gif/knight-assassin/stealth.gif"
+    },
+    "attack": {
+     "frames": 12,
+     "ms": 70,
+     "loop": false,
+     "hold": 0,
+     "label": "melesat cepat, tusukan belati",
+     "sheet": "sheets/knight-assassin/attack.png",
+     "gif": "gif/knight-assassin/attack.gif"
+    },
+    "backstab": {
+     "frames": 10,
+     "ms": 80,
+     "loop": false,
+     "hold": 0,
+     "label": "tikaman cepat dari atas",
+     "sheet": "sheets/knight-assassin/backstab.png",
+     "gif": "gif/knight-assassin/backstab.gif"
+    },
+    "smoke": {
+     "frames": 12,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "bom asap dibanting ke lantai",
+     "sheet": "sheets/knight-assassin/smoke.png",
+     "gif": "gif/knight-assassin/smoke.gif"
+    },
+    "disappear": {
+     "frames": 12,
+     "ms": 100,
+     "loop": false,
+     "hold": 6,
+     "label": "hilang di balik asap",
+     "sheet": "sheets/knight-assassin/disappear.png",
+     "gif": "gif/knight-assassin/disappear.gif"
+    },
+    "hit": {
+     "frames": 10,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "terpental ringan",
+     "sheet": "sheets/knight-assassin/hit.png",
+     "gif": "gif/knight-assassin/hit.gif"
+    },
+    "victory": {
+     "frames": 16,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "belati bersilang, jubah berkibar",
+     "sheet": "sheets/knight-assassin/victory.png",
+     "gif": "gif/knight-assassin/victory.gif"
+    },
+    "defeat": {
+     "frames": 16,
+     "ms": 110,
+     "loop": false,
+     "hold": 8,
+     "label": "mundur di balik asap, satu belati tertinggal",
+     "sheet": "sheets/knight-assassin/defeat.png",
+     "gif": "gif/knight-assassin/defeat.gif"
+    }
+   }
+  },
+  {
+   "id": "fantasy-knight",
+   "name": "Fantasy Knight Gobyet",
+   "category": "fantasy",
+   "faction": "fantasy",
+   "role": "archetype",
+   "silhouette": [
+    "visor_helm_white_plume",
+    "blue_cape",
+    "kite_shield",
+    "longsword"
+   ],
+   "fallback": "normal-gblk",
+   "core": {
+    "idle": "idle",
+    "attack": "attack",
+    "hit": "hit",
+    "victory": "victory",
+    "defeat": "defeat"
+   },
+   "acc_anchor": [
+    39,
+    13
+   ],
+   "states": {
+    "idle": {
+     "frames": 12,
+     "ms": 130,
+     "loop": true,
+     "hold": 0,
+     "label": "pedang panjang, perisai layang-layang biru, jubah biru",
+     "sheet": "sheets/fantasy-knight/idle.png",
+     "gif": "gif/fantasy-knight/idle.gif"
+    },
+    "attack": {
+     "frames": 12,
+     "ms": 90,
+     "loop": false,
+     "hold": 0,
+     "label": "tebasan pedang panjang",
+     "sheet": "sheets/fantasy-knight/attack.png",
+     "gif": "gif/fantasy-knight/attack.gif"
+    },
+    "hit": {
+     "frames": 10,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "tertahan perisai, mundur",
+     "sheet": "sheets/fantasy-knight/hit.png",
+     "gif": "gif/fantasy-knight/hit.gif"
+    },
+    "victory": {
+     "frames": 16,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "pedang diangkat, jubah berkibar",
+     "sheet": "sheets/fantasy-knight/victory.png",
+     "gif": "gif/fantasy-knight/victory.gif"
+    },
+    "defeat": {
+     "frames": 16,
+     "ms": 120,
+     "loop": false,
+     "hold": 10,
+     "label": "pedang terlepas, rebah",
+     "sheet": "sheets/fantasy-knight/defeat.png",
+     "gif": "gif/fantasy-knight/defeat.gif"
+    }
+   }
+  },
+  {
+   "id": "viking",
+   "name": "Viking Gobyet",
+   "category": "fantasy",
+   "faction": "vikings",
+   "role": "base",
+   "silhouette": [
+    "horned_helmet",
+    "fur_mantle",
+    "round_shield",
+    "axe"
+   ],
+   "fallback": "fantasy-viking",
+   "core": {
+    "idle": "idle",
+    "attack": "attack",
+    "hit": "hit",
+    "victory": "victory",
+    "defeat": "defeat"
+   },
+   "acc_anchor": [
+    39,
+    13
+   ],
+   "states": {
+    "idle": {
+     "frames": 12,
+     "ms": 130,
+     "loop": true,
+     "hold": 0,
+     "label": "kapak dan perisai bundar",
+     "sheet": "sheets/viking/idle.png",
+     "gif": "gif/viking/idle.gif"
+    },
+    "attack": {
+     "frames": 14,
+     "ms": 90,
+     "loop": false,
+     "hold": 0,
+     "label": "ayunan kapak dari atas kepala",
+     "sheet": "sheets/viking/attack.png",
+     "gif": "gif/viking/attack.gif"
+    },
+    "hit": {
+     "frames": 10,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "terdorong, perisai goyah",
+     "sheet": "sheets/viking/hit.png",
+     "gif": "gif/viking/hit.gif"
+    },
+    "victory": {
+     "frames": 16,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "kapak terangkat, perisai naik",
+     "sheet": "sheets/viking/victory.png",
+     "gif": "gif/viking/victory.gif"
+    },
+    "defeat": {
+     "frames": 16,
+     "ms": 120,
+     "loop": false,
+     "hold": 10,
+     "label": "perisai turun ke lantai, berlutut",
+     "sheet": "sheets/viking/defeat.png",
+     "gif": "gif/viking/defeat.gif"
+    }
+   }
+  },
+  {
+   "id": "viking-berserker",
+   "name": "Viking Berserker Gobyet",
+   "category": "fantasy",
+   "faction": "vikings",
+   "role": "rage",
+   "silhouette": [
+    "wolf_pelt_hood",
+    "dual_axes",
+    "bare_arms",
+    "low_aggressive_stance"
+   ],
+   "fallback": "viking",
+   "core": {
+    "idle": "idle",
+    "attack": "double_attack",
+    "hit": "hit",
+    "victory": "victory",
+    "defeat": "defeat"
+   },
+   "acc_anchor": [
+    40,
+    15
+   ],
+   "states": {
+    "idle": {
+     "frames": 12,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "memantul tak sabar, dua kapak siap",
+     "sheet": "sheets/viking-berserker/idle.png",
+     "gif": "gif/viking-berserker/idle.gif"
+    },
+    "rage": {
+     "frames": 6,
+     "ms": 70,
+     "loop": true,
+     "hold": 0,
+     "label": "mode amuk: lebih rendah, wajah memerah, kapak terangkat, lebih cepat",
+     "sheet": "sheets/viking-berserker/rage.png",
+     "gif": "gif/viking-berserker/rage.gif"
+    },
+    "roar": {
+     "frames": 12,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "mengaum, garis suara",
+     "sheet": "sheets/viking-berserker/roar.png",
+     "gif": "gif/viking-berserker/roar.gif"
+    },
+    "axe_attack": {
+     "frames": 14,
+     "ms": 80,
+     "loop": false,
+     "hold": 0,
+     "label": "satu kapak menghantam",
+     "sheet": "sheets/viking-berserker/axe_attack.png",
+     "gif": "gif/viking-berserker/axe_attack.gif"
+    },
+    "double_attack": {
+     "frames": 12,
+     "ms": 80,
+     "loop": false,
+     "hold": 0,
+     "label": "dua kapak menghantam bersamaan",
+     "sheet": "sheets/viking-berserker/double_attack.png",
+     "gif": "gif/viking-berserker/double_attack.gif"
+    },
+    "hit": {
+     "frames": 10,
+     "ms": 90,
+     "loop": false,
+     "hold": 0,
+     "label": "terpental, makin marah",
+     "sheet": "sheets/viking-berserker/hit.png",
+     "gif": "gif/viking-berserker/hit.gif"
+    },
+    "victory": {
+     "frames": 16,
+     "ms": 100,
+     "loop": true,
+     "hold": 0,
+     "label": "dua kapak diangkat, mengaum",
+     "sheet": "sheets/viking-berserker/victory.png",
+     "gif": "gif/viking-berserker/victory.gif"
+    },
+    "defeat": {
+     "frames": 16,
+     "ms": 120,
+     "loop": false,
+     "hold": 10,
+     "label": "kehabisan tenaga, dua kapak jatuh, rebah",
+     "sheet": "sheets/viking-berserker/defeat.png",
+     "gif": "gif/viking-berserker/defeat.gif"
+    }
+   }
+  },
+  {
+   "id": "viking-huscarl",
+   "name": "Huscarl Gobyet",
+   "category": "fantasy",
+   "faction": "vikings",
+   "role": "heavy",
+   "silhouette": [
+    "big_horned_helmet",
+    "huge_fur_mantle",
+    "large_round_shield",
+    "dane_axe"
+   ],
+   "fallback": "viking",
+   "core": {
+    "idle": "idle",
+    "attack": "attack",
+    "hit": "hit",
+    "victory": "victory",
+    "defeat": "defeat"
+   },
+   "acc_anchor": [
+    39,
+    13
+   ],
+   "states": {
+    "idle": {
+     "frames": 12,
+     "ms": 140,
+     "loop": true,
+     "hold": 0,
+     "label": "kapak Dane besar dan perisai bundar besar",
+     "sheet": "sheets/viking-huscarl/idle.png",
+     "gif": "gif/viking-huscarl/idle.gif"
+    },
+    "guard": {
+     "frames": 8,
+     "ms": 140,
+     "loop": true,
+     "hold": 0,
+     "label": "dinding perisai",
+     "sheet": "sheets/viking-huscarl/guard.png",
+     "gif": "gif/viking-huscarl/guard.gif"
+    },
+    "attack": {
+     "frames": 16,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "hantaman kapak Dane yang berat",
+     "sheet": "sheets/viking-huscarl/attack.png",
+     "gif": "gif/viking-huscarl/attack.gif"
+    },
+    "hit": {
+     "frames": 10,
+     "ms": 110,
+     "loop": false,
+     "hold": 0,
+     "label": "tertahan, mundur setapak",
+     "sheet": "sheets/viking-huscarl/hit.png",
+     "gif": "gif/viking-huscarl/hit.gif"
+    },
+    "victory": {
+     "frames": 16,
+     "ms": 120,
+     "loop": true,
+     "hold": 0,
+     "label": "kapak besar terangkat, tanpa lompat (berat)",
+     "sheet": "sheets/viking-huscarl/victory.png",
+     "gif": "gif/viking-huscarl/victory.gif"
+    },
+    "defeat": {
+     "frames": 16,
+     "ms": 130,
+     "loop": false,
+     "hold": 10,
+     "label": "perisai besar turun, berlutut",
+     "sheet": "sheets/viking-huscarl/defeat.png",
+     "gif": "gif/viking-huscarl/defeat.gif"
+    }
+   }
+  },
+  {
+   "id": "viking-gestir",
+   "name": "Gestir Gobyet",
+   "category": "fantasy",
+   "faction": "vikings",
+   "role": "spear",
+   "silhouette": [
+    "conical_helmet",
+    "long_spear",
+    "javelins_on_back",
+    "small_shield"
+   ],
+   "fallback": "viking",
+   "core": {
+    "idle": "idle",
+    "attack": "throw",
+    "hit": "hit",
+    "victory": "victory",
+    "defeat": "defeat"
+   },
+   "acc_anchor": [
+    39,
+    13
+   ],
+   "states": {
+    "idle": {
+     "frames": 12,
+     "ms": 130,
+     "loop": true,
+     "hold": 0,
+     "label": "tombak panjang tegak, lembing di punggung",
+     "sheet": "sheets/viking-gestir/idle.png",
+     "gif": "gif/viking-gestir/idle.gif"
+    },
+    "aim": {
+     "frames": 8,
+     "ms": 130,
+     "loop": true,
+     "hold": 0,
+     "label": "lembing di atas bahu, membidik",
+     "sheet": "sheets/viking-gestir/aim.png",
+     "gif": "gif/viking-gestir/aim.gif"
+    },
+    "throw": {
+     "frames": 10,
+     "ms": 80,
+     "loop": false,
+     "hold": 0,
+     "label": "melempar lembing",
+     "sheet": "sheets/viking-gestir/throw.png",
+     "gif": "gif/viking-gestir/throw.gif"
+    },
+    "recover": {
+     "frames": 6,
+     "ms": 110,
+     "loop": false,
+     "hold": 0,
+     "label": "mengambil tombak lagi",
+     "sheet": "sheets/viking-gestir/recover.png",
+     "gif": "gif/viking-gestir/recover.gif"
+    },
+    "melee": {
+     "frames": 10,
+     "ms": 90,
+     "loop": false,
+     "hold": 0,
+     "label": "tusukan tombak jarak dekat",
+     "sheet": "sheets/viking-gestir/melee.png",
+     "gif": "gif/viking-gestir/melee.gif"
+    },
+    "hit": {
+     "frames": 10,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "terdorong",
+     "sheet": "sheets/viking-gestir/hit.png",
+     "gif": "gif/viking-gestir/hit.gif"
+    },
+    "victory": {
+     "frames": 16,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "tombak diacungkan",
+     "sheet": "sheets/viking-gestir/victory.png",
+     "gif": "gif/viking-gestir/victory.gif"
+    },
+    "defeat": {
+     "frames": 16,
+     "ms": 120,
+     "loop": false,
+     "hold": 10,
+     "label": "tombak rebah, perisai kecil turun, berlutut",
+     "sheet": "sheets/viking-gestir/defeat.png",
+     "gif": "gif/viking-gestir/defeat.gif"
+    }
+   }
+  },
+  {
+   "id": "viking-bondi",
+   "name": "Bondi Gobyet",
+   "category": "fantasy",
+   "faction": "vikings",
+   "role": "ranged",
+   "silhouette": [
+    "cloth_cap",
+    "simple_tunic",
+    "flatbow",
+    "seax"
+   ],
+   "fallback": "viking",
+   "core": {
+    "idle": "idle",
+    "attack": "attack",
+    "hit": "hit",
+    "victory": "victory",
+    "defeat": "defeat"
+   },
+   "acc_anchor": [
+    39,
+    13
+   ],
+   "states": {
+    "idle": {
+     "frames": 12,
+     "ms": 130,
+     "loop": true,
+     "hold": 0,
+     "label": "busur pendek, seax di sabuk, pakaian sederhana",
+     "sheet": "sheets/viking-bondi/idle.png",
+     "gif": "gif/viking-bondi/idle.gif"
+    },
+    "attack": {
+     "frames": 14,
+     "ms": 90,
+     "loop": false,
+     "hold": 0,
+     "label": "menarik busur pendek dan melepas",
+     "sheet": "sheets/viking-bondi/attack.png",
+     "gif": "gif/viking-bondi/attack.gif"
+    },
+    "hit": {
+     "frames": 10,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "terkejut",
+     "sheet": "sheets/viking-bondi/hit.png",
+     "gif": "gif/viking-bondi/hit.gif"
+    },
+    "victory": {
+     "frames": 16,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "busur diangkat",
+     "sheet": "sheets/viking-bondi/victory.png",
+     "gif": "gif/viking-bondi/victory.gif"
+    },
+    "defeat": {
+     "frames": 16,
+     "ms": 120,
+     "loop": false,
+     "hold": 10,
+     "label": "busur jatuh, rebah",
+     "sheet": "sheets/viking-bondi/defeat.png",
+     "gif": "gif/viking-bondi/defeat.gif"
+    }
+   }
+  },
+  {
+   "id": "fantasy-viking",
+   "name": "Fantasy Viking Gobyet",
+   "category": "fantasy",
+   "faction": "fantasy",
+   "role": "archetype",
+   "silhouette": [
+    "giant_horns",
+    "braided_beard",
+    "red_cape",
+    "round_shield",
+    "axe"
+   ],
+   "fallback": "normal-gblk",
+   "core": {
+    "idle": "idle",
+    "attack": "attack",
+    "hit": "hit",
+    "victory": "victory",
+    "defeat": "defeat"
+   },
+   "acc_anchor": [
+    39,
+    13
+   ],
+   "states": {
+    "idle": {
+     "frames": 12,
+     "ms": 130,
+     "loop": true,
+     "hold": 0,
+     "label": "kapak dan perisai bundar",
+     "sheet": "sheets/fantasy-viking/idle.png",
+     "gif": "gif/fantasy-viking/idle.gif"
+    },
+    "attack": {
+     "frames": 14,
+     "ms": 90,
+     "loop": false,
+     "hold": 0,
+     "label": "ayunan kapak dari atas kepala",
+     "sheet": "sheets/fantasy-viking/attack.png",
+     "gif": "gif/fantasy-viking/attack.gif"
+    },
+    "hit": {
+     "frames": 10,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "terdorong, perisai goyah",
+     "sheet": "sheets/fantasy-viking/hit.png",
+     "gif": "gif/fantasy-viking/hit.gif"
+    },
+    "victory": {
+     "frames": 16,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "kapak terangkat, perisai naik",
+     "sheet": "sheets/fantasy-viking/victory.png",
+     "gif": "gif/fantasy-viking/victory.gif"
+    },
+    "defeat": {
+     "frames": 16,
+     "ms": 120,
+     "loop": false,
+     "hold": 10,
+     "label": "perisai turun ke lantai, berlutut",
+     "sheet": "sheets/fantasy-viking/defeat.png",
+     "gif": "gif/fantasy-viking/defeat.gif"
+    }
+   }
+  },
+  {
+   "id": "pirate-captain",
+   "name": "Pirate Captain Gobyet",
+   "category": "fantasy",
+   "faction": "pirates",
+   "role": "leader",
+   "silhouette": [
+    "big_tricorn_feather",
+    "long_flared_coat",
+    "epaulettes",
+    "cutlass",
+    "pistol"
+   ],
+   "fallback": "fantasy-pirate",
+   "core": {
+    "idle": "idle",
+    "attack": "sword",
+    "victory": "victory",
+    "hit": "hit",
+    "defeat": "defeat"
+   },
+   "acc_anchor": [
+    38,
+    13
+   ],
+   "states": {
+    "idle": {
+     "frames": 12,
+     "ms": 130,
+     "loop": true,
+     "hold": 0,
+     "label": "dada membusung, cutlass dan pistol",
+     "sheet": "sheets/pirate-captain/idle.png",
+     "gif": "gif/pirate-captain/idle.gif"
+    },
+    "command": {
+     "frames": 12,
+     "ms": 110,
+     "loop": false,
+     "hold": 0,
+     "label": "memberi perintah, cutlass menunjuk ke depan",
+     "sheet": "sheets/pirate-captain/command.png",
+     "gif": "gif/pirate-captain/command.gif"
+    },
+    "sword": {
+     "frames": 12,
+     "ms": 90,
+     "loop": false,
+     "hold": 0,
+     "label": "tebasan cutlass",
+     "sheet": "sheets/pirate-captain/sword.png",
+     "gif": "gif/pirate-captain/sword.gif"
+    },
+    "pistol": {
+     "frames": 12,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "membidik pistol, kepulan asap kartun",
+     "sheet": "sheets/pirate-captain/pistol.png",
+     "gif": "gif/pirate-captain/pistol.gif"
+    },
+    "point": {
+     "frames": 12,
+     "ms": 110,
+     "loop": false,
+     "hold": 0,
+     "label": "menunjuk sasaran",
+     "sheet": "sheets/pirate-captain/point.png",
+     "gif": "gif/pirate-captain/point.gif"
+    },
+    "victory": {
+     "frames": 16,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "cutlass diangkat",
+     "sheet": "sheets/pirate-captain/victory.png",
+     "gif": "gif/pirate-captain/victory.gif"
+    },
+    "hit": {
+     "frames": 10,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "terhuyung, topi miring",
+     "sheet": "sheets/pirate-captain/hit.png",
+     "gif": "gif/pirate-captain/hit.gif"
+    },
+    "defeat": {
+     "frames": 16,
+     "ms": 120,
+     "loop": false,
+     "hold": 10,
+     "label": "topi kapten jatuh, cutlass terlepas, terduduk lalu rebah",
+     "sheet": "sheets/pirate-captain/defeat.png",
+     "gif": "gif/pirate-captain/defeat.gif"
+    }
+   }
+  },
+  {
+   "id": "pirate-skirmisher",
+   "name": "Pirate Skirmisher Gobyet",
+   "category": "fantasy",
+   "faction": "pirates",
+   "role": "mobility",
+   "silhouette": [
+    "bandana_tails",
+    "striped_shirt_open_vest",
+    "powder_keg",
+    "short_blade",
+    "bare_feet_agile"
+   ],
+   "fallback": "fantasy-pirate",
+   "core": {
+    "idle": "idle",
+    "attack": "attack",
+    "hit": "hit",
+    "victory": "victory",
+    "defeat": "defeat"
+   },
+   "acc_anchor": [
+    41,
+    15
+   ],
+   "states": {
+    "idle": {
+     "frames": 12,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "memantul ringan, tong mesiu di tangan",
+     "sheet": "sheets/pirate-skirmisher/idle.png",
+     "gif": "gif/pirate-skirmisher/idle.gif"
+    },
+    "run": {
+     "frames": 8,
+     "ms": 80,
+     "loop": true,
+     "hold": 0,
+     "label": "berlari lincah",
+     "sheet": "sheets/pirate-skirmisher/run.png",
+     "gif": "gif/pirate-skirmisher/run.gif"
+    },
+    "dash": {
+     "frames": 10,
+     "ms": 70,
+     "loop": false,
+     "hold": 0,
+     "label": "melesat ke depan",
+     "sheet": "sheets/pirate-skirmisher/dash.png",
+     "gif": "gif/pirate-skirmisher/dash.gif"
+    },
+    "attack": {
+     "frames": 10,
+     "ms": 80,
+     "loop": false,
+     "hold": 0,
+     "label": "sayatan cepat",
+     "sheet": "sheets/pirate-skirmisher/attack.png",
+     "gif": "gif/pirate-skirmisher/attack.gif"
+    },
+    "throw": {
+     "frames": 12,
+     "ms": 80,
+     "loop": false,
+     "hold": 0,
+     "label": "melempar tong mesiu melengkung",
+     "sheet": "sheets/pirate-skirmisher/throw.png",
+     "gif": "gif/pirate-skirmisher/throw.gif"
+    },
+    "explosion": {
+     "frames": 12,
+     "ms": 90,
+     "loop": false,
+     "hold": 0,
+     "label": "tong meledak kartun, menutup telinga",
+     "sheet": "sheets/pirate-skirmisher/explosion.png",
+     "gif": "gif/pirate-skirmisher/explosion.gif"
+    },
+    "recover": {
+     "frames": 6,
+     "ms": 110,
+     "loop": false,
+     "hold": 0,
+     "label": "mengibas debu, siap lagi",
+     "sheet": "sheets/pirate-skirmisher/recover.png",
+     "gif": "gif/pirate-skirmisher/recover.gif"
+    },
+    "hit": {
+     "frames": 10,
+     "ms": 90,
+     "loop": false,
+     "hold": 0,
+     "label": "terpental ringan",
+     "sheet": "sheets/pirate-skirmisher/hit.png",
+     "gif": "gif/pirate-skirmisher/hit.gif"
+    },
+    "victory": {
+     "frames": 16,
+     "ms": 100,
+     "loop": true,
+     "hold": 0,
+     "label": "melompat, tong mesiu dan belati terangkat",
+     "sheet": "sheets/pirate-skirmisher/victory.png",
+     "gif": "gif/pirate-skirmisher/victory.gif"
+    },
+    "defeat": {
+     "frames": 16,
+     "ms": 120,
+     "loop": false,
+     "hold": 10,
+     "label": "bandana terlepas, tong menggelinding",
+     "sheet": "sheets/pirate-skirmisher/defeat.png",
+     "gif": "gif/pirate-skirmisher/defeat.gif"
+    }
+   }
+  },
+  {
+   "id": "pirate-sharpshooter",
+   "name": "Pirate Sharpshooter Gobyet",
+   "category": "fantasy",
+   "faction": "pirates",
+   "role": "long-range",
+   "silhouette": [
+    "wide_flat_hat",
+    "long_rifle",
+    "light_long_coat"
+   ],
+   "fallback": "fantasy-pirate",
+   "core": {
+    "idle": "idle",
+    "attack": "shoot",
+    "victory": "victory",
+    "hit": "hit",
+    "defeat": "defeat"
+   },
+   "acc_anchor": [
+    39,
+    13
+   ],
+   "states": {
+    "idle": {
+     "frames": 12,
+     "ms": 140,
+     "loop": true,
+     "hold": 0,
+     "label": "senapan panjang di bahu, topi lebar",
+     "sheet": "sheets/pirate-sharpshooter/idle.png",
+     "gif": "gif/pirate-sharpshooter/idle.gif"
+    },
+    "aim": {
+     "frames": 8,
+     "ms": 150,
+     "loop": true,
+     "hold": 0,
+     "label": "membidik dengan mata menyipit",
+     "sheet": "sheets/pirate-sharpshooter/aim.png",
+     "gif": "gif/pirate-sharpshooter/aim.gif"
+    },
+    "shoot": {
+     "frames": 12,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "menembak: kepulan kartun di ujung laras",
+     "sheet": "sheets/pirate-sharpshooter/shoot.png",
+     "gif": "gif/pirate-sharpshooter/shoot.gif"
+    },
+    "recoil": {
+     "frames": 8,
+     "ms": 90,
+     "loop": false,
+     "hold": 0,
+     "label": "hentakan popor ke bahu",
+     "sheet": "sheets/pirate-sharpshooter/recoil.png",
+     "gif": "gif/pirate-sharpshooter/recoil.gif"
+    },
+    "reload": {
+     "frames": 14,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "mengisi ulang dengan tongkat pemadat",
+     "sheet": "sheets/pirate-sharpshooter/reload.png",
+     "gif": "gif/pirate-sharpshooter/reload.gif"
+    },
+    "victory": {
+     "frames": 16,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "senapan diangkat tegak",
+     "sheet": "sheets/pirate-sharpshooter/victory.png",
+     "gif": "gif/pirate-sharpshooter/victory.gif"
+    },
+    "hit": {
+     "frames": 10,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "terdorong",
+     "sheet": "sheets/pirate-sharpshooter/hit.png",
+     "gif": "gif/pirate-sharpshooter/hit.gif"
+    },
+    "defeat": {
+     "frames": 16,
+     "ms": 120,
+     "loop": false,
+     "hold": 10,
+     "label": "topi lebar jatuh, senapan terlepas",
+     "sheet": "sheets/pirate-sharpshooter/defeat.png",
+     "gif": "gif/pirate-sharpshooter/defeat.gif"
+    }
+   }
+  },
+  {
+   "id": "pirate-buccaneer",
+   "name": "Pirate Buccaneer Gobyet",
+   "category": "fantasy",
+   "faction": "pirates",
+   "role": "heavy",
+   "silhouette": [
+    "big_body",
+    "heavy_coat",
+    "giant_hammer",
+    "anchor_on_back",
+    "crossbelts"
+   ],
+   "fallback": "fantasy-pirate",
+   "core": {
+    "idle": "idle",
+    "attack": "hammer_smash",
+    "hit": "hit",
+    "victory": "victory",
+    "defeat": "defeat"
+   },
+   "acc_anchor": [
+    39,
+    12
+   ],
+   "states": {
+    "idle": {
+     "frames": 12,
+     "ms": 150,
+     "loop": true,
+     "hold": 0,
+     "label": "bertumpu pada palu raksasa, jangkar di punggung",
+     "sheet": "sheets/pirate-buccaneer/idle.png",
+     "gif": "gif/pirate-buccaneer/idle.gif"
+    },
+    "heavy_attack": {
+     "frames": 14,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "ayunan palu menyamping",
+     "sheet": "sheets/pirate-buccaneer/heavy_attack.png",
+     "gif": "gif/pirate-buccaneer/heavy_attack.gif"
+    },
+    "hammer_smash": {
+     "frames": 16,
+     "ms": 90,
+     "loop": false,
+     "hold": 0,
+     "label": "palu dihantamkan ke lantai, lantai bergetar",
+     "sheet": "sheets/pirate-buccaneer/hammer_smash.png",
+     "gif": "gif/pirate-buccaneer/hammer_smash.gif"
+    },
+    "anchor_attack": {
+     "frames": 14,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "jangkar diayunkan seperti gada",
+     "sheet": "sheets/pirate-buccaneer/anchor_attack.png",
+     "gif": "gif/pirate-buccaneer/anchor_attack.gif"
+    },
+    "hit": {
+     "frames": 10,
+     "ms": 110,
+     "loop": false,
+     "hold": 0,
+     "label": "nyaris tak bergeming",
+     "sheet": "sheets/pirate-buccaneer/hit.png",
+     "gif": "gif/pirate-buccaneer/hit.gif"
+    },
+    "victory": {
+     "frames": 16,
+     "ms": 120,
+     "loop": true,
+     "hold": 0,
+     "label": "palu diangkat tinggi",
+     "sheet": "sheets/pirate-buccaneer/victory.png",
+     "gif": "gif/pirate-buccaneer/victory.gif"
+    },
+    "defeat": {
+     "frames": 16,
+     "ms": 130,
+     "loop": false,
+     "hold": 10,
+     "label": "palu jatuh berdebam, rebah berat",
+     "sheet": "sheets/pirate-buccaneer/defeat.png",
+     "gif": "gif/pirate-buccaneer/defeat.gif"
+    }
+   }
+  },
+  {
+   "id": "fantasy-pirate",
+   "name": "Fantasy Pirate Gobyet",
+   "category": "fantasy",
+   "faction": "fantasy",
+   "role": "archetype",
+   "silhouette": [
+    "tricorn",
+    "eyepatch",
+    "red_coat",
+    "cutlass",
+    "telescope",
+    "treasure_map"
+   ],
+   "fallback": "normal-gblk",
+   "core": {
+    "idle": "idle",
+    "attack": "attack",
+    "hit": "hit",
+    "victory": "victory",
+    "defeat": "defeat"
+   },
+   "acc_anchor": [
+    39,
+    13
+   ],
+   "states": {
+    "idle": {
+     "frames": 12,
+     "ms": 130,
+     "loop": true,
+     "hold": 0,
+     "label": "peta harta, sesekali meneropong",
+     "sheet": "sheets/fantasy-pirate/idle.png",
+     "gif": "gif/fantasy-pirate/idle.gif"
+    },
+    "attack": {
+     "frames": 12,
+     "ms": 90,
+     "loop": false,
+     "hold": 0,
+     "label": "tebasan cutlass",
+     "sheet": "sheets/fantasy-pirate/attack.png",
+     "gif": "gif/fantasy-pirate/attack.gif"
+    },
+    "hit": {
+     "frames": 10,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "terhuyung",
+     "sheet": "sheets/fantasy-pirate/hit.png",
+     "gif": "gif/fantasy-pirate/hit.gif"
+    },
+    "victory": {
+     "frames": 16,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "peta harta diangkat",
+     "sheet": "sheets/fantasy-pirate/victory.png",
+     "gif": "gif/fantasy-pirate/victory.gif"
+    },
+    "defeat": {
+     "frames": 16,
+     "ms": 120,
+     "loop": false,
+     "hold": 10,
+     "label": "topi jatuh, peta terlepas",
+     "sheet": "sheets/fantasy-pirate/defeat.png",
+     "gif": "gif/fantasy-pirate/defeat.gif"
+    }
+   }
+  },
+  {
+   "id": "philosopher",
+   "name": "Philosopher Gobyet",
+   "category": "domain",
+   "faction": null,
+   "role": "philosophy",
+   "silhouette": [
+    "toga_drape",
+    "laurel",
+    "scroll",
+    "white_beard"
+   ],
+   "fallback": "normal-gblk",
+   "core": {
+    "idle": "idle",
+    "attack": "arguing",
+    "hit": "hit",
+    "victory": "victory",
+    "defeat": "defeat"
+   },
+   "acc_anchor": [
+    39,
+    13
+   ],
+   "states": {
+    "idle": {
+     "frames": 12,
+     "ms": 140,
+     "loop": true,
+     "hold": 0,
+     "label": "gulungan di tangan, toga",
+     "sheet": "sheets/philosopher/idle.png",
+     "gif": "gif/philosopher/idle.gif"
+    },
+    "thinking": {
+     "frames": 16,
+     "ms": 120,
+     "loop": true,
+     "hold": 0,
+     "label": "mengelus janggut, ... lalu ?",
+     "sheet": "sheets/philosopher/thinking.png",
+     "gif": "gif/philosopher/thinking.gif"
+    },
+    "reading": {
+     "frames": 12,
+     "ms": 140,
+     "loop": true,
+     "hold": 0,
+     "label": "membaca gulungan terbuka",
+     "sheet": "sheets/philosopher/reading.png",
+     "gif": "gif/philosopher/reading.gif"
+    },
+    "contemplating": {
+     "frames": 16,
+     "ms": 140,
+     "loop": true,
+     "hold": 0,
+     "label": "merenung menatap jauh",
+     "sheet": "sheets/philosopher/contemplating.png",
+     "gif": "gif/philosopher/contemplating.gif"
+    },
+    "arguing": {
+     "frames": 12,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "berargumen dengan tangan bergerak",
+     "sheet": "sheets/philosopher/arguing.png",
+     "gif": "gif/philosopher/arguing.gif"
+    },
+    "pointing": {
+     "frames": 10,
+     "ms": 110,
+     "loop": false,
+     "hold": 0,
+     "label": "menunjuk premis",
+     "sheet": "sheets/philosopher/pointing.png",
+     "gif": "gif/philosopher/pointing.gif"
+    },
+    "hit": {
+     "frames": 10,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "tersentak mundur",
+     "sheet": "sheets/philosopher/hit.png",
+     "gif": "gif/philosopher/hit.gif"
+    },
+    "victory": {
+     "frames": 16,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "prop diangkat, lompat kecil",
+     "sheet": "sheets/philosopher/victory.png",
+     "gif": "gif/philosopher/victory.gif"
+    },
+    "defeat": {
+     "frames": 16,
+     "ms": 120,
+     "loop": false,
+     "hold": 10,
+     "label": "duduk lesu, prop terjatuh, menghela napas",
+     "sheet": "sheets/philosopher/defeat.png",
+     "gif": "gif/philosopher/defeat.gif"
+    }
+   }
+  },
+  {
+   "id": "academic",
+   "name": "Academic Gobyet",
+   "category": "domain",
+   "faction": null,
+   "role": "academia",
+   "silhouette": [
+    "mortarboard",
+    "long_gown",
+    "book"
+   ],
+   "fallback": "normal-gblk",
+   "core": {
+    "idle": "idle",
+    "attack": "lecture",
+    "hit": "hit",
+    "victory": "victory",
+    "defeat": "defeat"
+   },
+   "acc_anchor": [
+    39,
+    13
+   ],
+   "states": {
+    "idle": {
+     "frames": 12,
+     "ms": 140,
+     "loop": true,
+     "hold": 0,
+     "label": "toga hitam, buku tebal",
+     "sheet": "sheets/academic/idle.png",
+     "gif": "gif/academic/idle.gif"
+    },
+    "read": {
+     "frames": 12,
+     "ms": 140,
+     "loop": true,
+     "hold": 0,
+     "label": "membaca buku terbuka",
+     "sheet": "sheets/academic/read.png",
+     "gif": "gif/academic/read.gif"
+    },
+    "write": {
+     "frames": 12,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "mencatat",
+     "sheet": "sheets/academic/write.png",
+     "gif": "gif/academic/write.gif"
+    },
+    "lecture": {
+     "frames": 12,
+     "ms": 120,
+     "loop": true,
+     "hold": 0,
+     "label": "mengajar di depan papan",
+     "sheet": "sheets/academic/lecture.png",
+     "gif": "gif/academic/lecture.gif"
+    },
+    "think": {
+     "frames": 16,
+     "ms": 120,
+     "loop": true,
+     "hold": 0,
+     "label": "berpikir",
+     "sheet": "sheets/academic/think.png",
+     "gif": "gif/academic/think.gif"
+    },
+    "present": {
+     "frames": 12,
+     "ms": 120,
+     "loop": true,
+     "hold": 0,
+     "label": "memamerkan ijazah",
+     "sheet": "sheets/academic/present.png",
+     "gif": "gif/academic/present.gif"
+    },
+    "hit": {
+     "frames": 10,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "tersentak mundur",
+     "sheet": "sheets/academic/hit.png",
+     "gif": "gif/academic/hit.gif"
+    },
+    "victory": {
+     "frames": 16,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "prop diangkat, lompat kecil",
+     "sheet": "sheets/academic/victory.png",
+     "gif": "gif/academic/victory.gif"
+    },
+    "defeat": {
+     "frames": 16,
+     "ms": 120,
+     "loop": false,
+     "hold": 10,
+     "label": "duduk lesu, prop terjatuh, menghela napas",
+     "sheet": "sheets/academic/defeat.png",
+     "gif": "gif/academic/defeat.gif"
+    }
+   }
+  },
+  {
+   "id": "scientist",
+   "name": "Scientist Gobyet",
+   "category": "domain",
+   "faction": null,
+   "role": "science",
+   "silhouette": [
+    "long_lab_coat",
+    "goggles_on_forehead",
+    "flask",
+    "clipboard"
+   ],
+   "fallback": "normal-gblk",
+   "core": {
+    "idle": "idle",
+    "attack": "experiment",
+    "hit": "hit",
+    "victory": "victory",
+    "defeat": "defeat"
+   },
+   "acc_anchor": [
+    39,
+    13
+   ],
+   "states": {
+    "idle": {
+     "frames": 12,
+     "ms": 130,
+     "loop": true,
+     "hold": 0,
+     "label": "jas lab panjang, labu bergelembung, papan klip",
+     "sheet": "sheets/scientist/idle.png",
+     "gif": "gif/scientist/idle.gif"
+    },
+    "observe": {
+     "frames": 12,
+     "ms": 120,
+     "loop": true,
+     "hold": 0,
+     "label": "mengamati labu di depan mata",
+     "sheet": "sheets/scientist/observe.png",
+     "gif": "gif/scientist/observe.gif"
+    },
+    "experiment": {
+     "frames": 12,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "menuang dari labu ke labu, kepulan kecil",
+     "sheet": "sheets/scientist/experiment.png",
+     "gif": "gif/scientist/experiment.gif"
+    },
+    "write": {
+     "frames": 12,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "mencatat hasil",
+     "sheet": "sheets/scientist/write.png",
+     "gif": "gif/scientist/write.gif"
+    },
+    "compare": {
+     "frames": 12,
+     "ms": 130,
+     "loop": true,
+     "hold": 0,
+     "label": "membandingkan dua sampel",
+     "sheet": "sheets/scientist/compare.png",
+     "gif": "gif/scientist/compare.gif"
+    },
+    "shocked": {
+     "frames": 10,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "terkejut hasil eksperimen",
+     "sheet": "sheets/scientist/shocked.png",
+     "gif": "gif/scientist/shocked.gif"
+    },
+    "success": {
+     "frames": 12,
+     "ms": 110,
+     "loop": false,
+     "hold": 0,
+     "label": "berhasil: lampu ide menyala",
+     "sheet": "sheets/scientist/success.png",
+     "gif": "gif/scientist/success.gif"
+    },
+    "hit": {
+     "frames": 10,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "tersentak mundur",
+     "sheet": "sheets/scientist/hit.png",
+     "gif": "gif/scientist/hit.gif"
+    },
+    "victory": {
+     "frames": 16,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "prop diangkat, lompat kecil",
+     "sheet": "sheets/scientist/victory.png",
+     "gif": "gif/scientist/victory.gif"
+    },
+    "defeat": {
+     "frames": 16,
+     "ms": 120,
+     "loop": false,
+     "hold": 10,
+     "label": "duduk lesu, prop terjatuh, menghela napas",
+     "sheet": "sheets/scientist/defeat.png",
+     "gif": "gif/scientist/defeat.gif"
+    }
+   }
+  },
+  {
+   "id": "mathematician",
+   "name": "Mathematician Gobyet",
+   "category": "domain",
+   "faction": null,
+   "role": "math",
+   "silhouette": [
+    "chalkboard_with_formula",
+    "compass",
+    "purple_vest"
+   ],
+   "fallback": "normal-gblk",
+   "core": {
+    "idle": "idle",
+    "attack": "write",
+    "hit": "hit",
+    "victory": "victory",
+    "defeat": "defeat"
+   },
+   "acc_anchor": [
+    39,
+    13
+   ],
+   "states": {
+    "idle": {
+     "frames": 12,
+     "ms": 140,
+     "loop": true,
+     "hold": 0,
+     "label": "papan tulis berkaki dengan rumus di samping",
+     "sheet": "sheets/mathematician/idle.png",
+     "gif": "gif/mathematician/idle.gif"
+    },
+    "calculate": {
+     "frames": 16,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "menghitung di kepala",
+     "sheet": "sheets/mathematician/calculate.png",
+     "gif": "gif/mathematician/calculate.gif"
+    },
+    "write": {
+     "frames": 12,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "menulis rumus dengan kapur",
+     "sheet": "sheets/mathematician/write.png",
+     "gif": "gif/mathematician/write.gif"
+    },
+    "erase": {
+     "frames": 12,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "menghapus papan, debu kapur",
+     "sheet": "sheets/mathematician/erase.png",
+     "gif": "gif/mathematician/erase.gif"
+    },
+    "think": {
+     "frames": 16,
+     "ms": 120,
+     "loop": true,
+     "hold": 0,
+     "label": "berpikir di depan rumus",
+     "sheet": "sheets/mathematician/think.png",
+     "gif": "gif/mathematician/think.gif"
+    },
+    "eureka": {
+     "frames": 12,
+     "ms": 110,
+     "loop": false,
+     "hold": 0,
+     "label": "eureka: lampu menyala",
+     "sheet": "sheets/mathematician/eureka.png",
+     "gif": "gif/mathematician/eureka.gif"
+    },
+    "confused": {
+     "frames": 12,
+     "ms": 120,
+     "loop": true,
+     "hold": 0,
+     "label": "bingung, garuk kepala",
+     "sheet": "sheets/mathematician/confused.png",
+     "gif": "gif/mathematician/confused.gif"
+    },
+    "hit": {
+     "frames": 10,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "tersentak mundur",
+     "sheet": "sheets/mathematician/hit.png",
+     "gif": "gif/mathematician/hit.gif"
+    },
+    "victory": {
+     "frames": 16,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "prop diangkat, lompat kecil",
+     "sheet": "sheets/mathematician/victory.png",
+     "gif": "gif/mathematician/victory.gif"
+    },
+    "defeat": {
+     "frames": 16,
+     "ms": 120,
+     "loop": false,
+     "hold": 10,
+     "label": "duduk lesu, prop terjatuh, menghela napas",
+     "sheet": "sheets/mathematician/defeat.png",
+     "gif": "gif/mathematician/defeat.gif"
+    }
+   }
+  },
+  {
+   "id": "lawyer",
+   "name": "Lawyer Gobyet",
+   "category": "domain",
+   "faction": null,
+   "role": "law",
+   "silhouette": [
+    "dark_suit_red_tie",
+    "thick_law_book",
+    "briefcase",
+    "documents"
+   ],
+   "fallback": "normal-gblk",
+   "core": {
+    "idle": "idle",
+    "attack": "object",
+    "hit": "hit",
+    "victory": "victory",
+    "defeat": "defeat"
+   },
+   "acc_anchor": [
+    39,
+    13
+   ],
+   "states": {
+    "idle": {
+     "frames": 12,
+     "ms": 140,
+     "loop": true,
+     "hold": 0,
+     "label": "jas gelap, kitab hukum, berkas",
+     "sheet": "sheets/lawyer/idle.png",
+     "gif": "gif/lawyer/idle.gif"
+    },
+    "read": {
+     "frames": 12,
+     "ms": 140,
+     "loop": true,
+     "hold": 0,
+     "label": "membaca berkas",
+     "sheet": "sheets/lawyer/read.png",
+     "gif": "gif/lawyer/read.gif"
+    },
+    "present": {
+     "frames": 12,
+     "ms": 120,
+     "loop": true,
+     "hold": 0,
+     "label": "menyerahkan bukti",
+     "sheet": "sheets/lawyer/present.png",
+     "gif": "gif/lawyer/present.gif"
+    },
+    "object": {
+     "frames": 10,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "keberatan! menunjuk keras",
+     "sheet": "sheets/lawyer/object.png",
+     "gif": "gif/lawyer/object.gif"
+    },
+    "point": {
+     "frames": 10,
+     "ms": 110,
+     "loop": false,
+     "hold": 0,
+     "label": "menunjuk saksi",
+     "sheet": "sheets/lawyer/point.png",
+     "gif": "gif/lawyer/point.gif"
+    },
+    "judge": {
+     "frames": 10,
+     "ms": 100,
+     "loop": true,
+     "hold": 0,
+     "label": "mengetuk palu",
+     "sheet": "sheets/lawyer/judge.png",
+     "gif": "gif/lawyer/judge.gif"
+    },
+    "hit": {
+     "frames": 10,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "tersentak mundur",
+     "sheet": "sheets/lawyer/hit.png",
+     "gif": "gif/lawyer/hit.gif"
+    },
+    "victory": {
+     "frames": 16,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "prop diangkat, lompat kecil",
+     "sheet": "sheets/lawyer/victory.png",
+     "gif": "gif/lawyer/victory.gif"
+    },
+    "defeat": {
+     "frames": 16,
+     "ms": 120,
+     "loop": false,
+     "hold": 10,
+     "label": "duduk lesu, prop terjatuh, menghela napas",
+     "sheet": "sheets/lawyer/defeat.png",
+     "gif": "gif/lawyer/defeat.gif"
+    }
+   }
+  },
+  {
+   "id": "historian",
+   "name": "Historian Gobyet",
+   "category": "domain",
+   "faction": null,
+   "role": "history",
+   "silhouette": [
+    "flat_cap",
+    "tweed_jacket",
+    "long_timeline_scroll",
+    "archive_box"
+   ],
+   "fallback": "normal-gblk",
+   "core": {
+    "idle": "idle",
+    "attack": "discover",
+    "hit": "hit",
+    "victory": "victory",
+    "defeat": "defeat"
+   },
+   "acc_anchor": [
+    39,
+    13
+   ],
+   "states": {
+    "idle": {
+     "frames": 12,
+     "ms": 140,
+     "loop": true,
+     "hold": 0,
+     "label": "jaket wol, kacamata bundar, kotak arsip",
+     "sheet": "sheets/historian/idle.png",
+     "gif": "gif/historian/idle.gif"
+    },
+    "read_archive": {
+     "frames": 12,
+     "ms": 140,
+     "loop": true,
+     "hold": 0,
+     "label": "membaca naskah tua",
+     "sheet": "sheets/historian/read_archive.png",
+     "gif": "gif/historian/read_archive.gif"
+    },
+    "compare": {
+     "frames": 12,
+     "ms": 130,
+     "loop": true,
+     "hold": 0,
+     "label": "membandingkan dua sumber",
+     "sheet": "sheets/historian/compare.png",
+     "gif": "gif/historian/compare.gif"
+    },
+    "search": {
+     "frames": 12,
+     "ms": 120,
+     "loop": true,
+     "hold": 0,
+     "label": "mencari dengan kaca pembesar",
+     "sheet": "sheets/historian/search.png",
+     "gif": "gif/historian/search.gif"
+    },
+    "write": {
+     "frames": 12,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "menulis dengan pena bulu",
+     "sheet": "sheets/historian/write.png",
+     "gif": "gif/historian/write.gif"
+    },
+    "discover": {
+     "frames": 12,
+     "ms": 120,
+     "loop": true,
+     "hold": 0,
+     "label": "membentangkan lini masa: menemukan!",
+     "sheet": "sheets/historian/discover.png",
+     "gif": "gif/historian/discover.gif"
+    },
+    "hit": {
+     "frames": 10,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "tersentak mundur",
+     "sheet": "sheets/historian/hit.png",
+     "gif": "gif/historian/hit.gif"
+    },
+    "victory": {
+     "frames": 16,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "prop diangkat, lompat kecil",
+     "sheet": "sheets/historian/victory.png",
+     "gif": "gif/historian/victory.gif"
+    },
+    "defeat": {
+     "frames": 16,
+     "ms": 120,
+     "loop": false,
+     "hold": 10,
+     "label": "duduk lesu, prop terjatuh, menghela napas",
+     "sheet": "sheets/historian/defeat.png",
+     "gif": "gif/historian/defeat.gif"
+    }
+   }
+  },
+  {
+   "id": "economist",
+   "name": "Economist Gobyet",
+   "category": "domain",
+   "faction": null,
+   "role": "economics",
+   "silhouette": [
+    "green_visor",
+    "vest_tie",
+    "chart_board",
+    "calculator"
+   ],
+   "fallback": "normal-gblk",
+   "core": {
+    "idle": "idle",
+    "attack": "graph",
+    "hit": "hit",
+    "victory": "victory",
+    "defeat": "defeat"
+   },
+   "acc_anchor": [
+    39,
+    13
+   ],
+   "states": {
+    "idle": {
+     "frames": 12,
+     "ms": 140,
+     "loop": true,
+     "hold": 0,
+     "label": "pelindung mata hijau, kalkulator, buku besar, grafik",
+     "sheet": "sheets/economist/idle.png",
+     "gif": "gif/economist/idle.gif"
+    },
+    "calculate": {
+     "frames": 12,
+     "ms": 100,
+     "loop": true,
+     "hold": 0,
+     "label": "menekan tombol kalkulator",
+     "sheet": "sheets/economist/calculate.png",
+     "gif": "gif/economist/calculate.gif"
+    },
+    "graph": {
+     "frames": 12,
+     "ms": 120,
+     "loop": true,
+     "hold": 0,
+     "label": "menunjuk grafik yang naik",
+     "sheet": "sheets/economist/graph.png",
+     "gif": "gif/economist/graph.gif"
+    },
+    "check": {
+     "frames": 12,
+     "ms": 130,
+     "loop": true,
+     "hold": 0,
+     "label": "memeriksa buku besar",
+     "sheet": "sheets/economist/check.png",
+     "gif": "gif/economist/check.gif"
+    },
+    "shocked": {
+     "frames": 10,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "grafik anjlok, terkejut",
+     "sheet": "sheets/economist/shocked.png",
+     "gif": "gif/economist/shocked.gif"
+    },
+    "analyze": {
+     "frames": 16,
+     "ms": 120,
+     "loop": true,
+     "hold": 0,
+     "label": "menganalisis",
+     "sheet": "sheets/economist/analyze.png",
+     "gif": "gif/economist/analyze.gif"
+    },
+    "hit": {
+     "frames": 10,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "tersentak mundur",
+     "sheet": "sheets/economist/hit.png",
+     "gif": "gif/economist/hit.gif"
+    },
+    "victory": {
+     "frames": 16,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "prop diangkat, lompat kecil",
+     "sheet": "sheets/economist/victory.png",
+     "gif": "gif/economist/victory.gif"
+    },
+    "defeat": {
+     "frames": 16,
+     "ms": 120,
+     "loop": false,
+     "hold": 10,
+     "label": "duduk lesu, prop terjatuh, menghela napas",
+     "sheet": "sheets/economist/defeat.png",
+     "gif": "gif/economist/defeat.gif"
+    }
+   }
+  },
+  {
+   "id": "psychologist",
+   "name": "Psychologist Gobyet",
+   "category": "domain",
+   "faction": null,
+   "role": "psychology",
+   "silhouette": [
+    "wingback_armchair_seated",
+    "cardigan",
+    "big_glasses",
+    "notebook",
+    "inkblot_card"
+   ],
+   "fallback": "normal-gblk",
+   "core": {
+    "idle": "idle",
+    "attack": "analyze",
+    "hit": "hit",
+    "victory": "victory",
+    "defeat": "defeat"
+   },
+   "acc_anchor": [
+    39,
+    12
+   ],
+   "states": {
+    "idle": {
+     "frames": 12,
+     "ms": 140,
+     "loop": true,
+     "hold": 0,
+     "label": "duduk di kursi berlengan, kardigan, kacamata besar, buku catatan",
+     "sheet": "sheets/psychologist/idle.png",
+     "gif": "gif/psychologist/idle.gif"
+    },
+    "observe": {
+     "frames": 12,
+     "ms": 130,
+     "loop": true,
+     "hold": 0,
+     "label": "mengamati dengan alis terangkat",
+     "sheet": "sheets/psychologist/observe.png",
+     "gif": "gif/psychologist/observe.gif"
+    },
+    "write": {
+     "frames": 12,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "mencatat",
+     "sheet": "sheets/psychologist/write.png",
+     "gif": "gif/psychologist/write.gif"
+    },
+    "think": {
+     "frames": 16,
+     "ms": 120,
+     "loop": true,
+     "hold": 0,
+     "label": "berpikir",
+     "sheet": "sheets/psychologist/think.png",
+     "gif": "gif/psychologist/think.gif"
+    },
+    "analyze": {
+     "frames": 12,
+     "ms": 120,
+     "loop": true,
+     "hold": 0,
+     "label": "menunjukkan kartu bercak tinta: apa yang kamu lihat?",
+     "sheet": "sheets/psychologist/analyze.png",
+     "gif": "gif/psychologist/analyze.gif"
+    },
+    "suspicious": {
+     "frames": 12,
+     "ms": 130,
+     "loop": true,
+     "hold": 0,
+     "label": "curiga, mata menyipit",
+     "sheet": "sheets/psychologist/suspicious.png",
+     "gif": "gif/psychologist/suspicious.gif"
+    },
+    "hit": {
+     "frames": 10,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "tersentak mundur",
+     "sheet": "sheets/psychologist/hit.png",
+     "gif": "gif/psychologist/hit.gif"
+    },
+    "victory": {
+     "frames": 16,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "prop diangkat, lompat kecil",
+     "sheet": "sheets/psychologist/victory.png",
+     "gif": "gif/psychologist/victory.gif"
+    },
+    "defeat": {
+     "frames": 16,
+     "ms": 120,
+     "loop": false,
+     "hold": 10,
+     "label": "lesu di kursi, buku catatan jatuh",
+     "sheet": "sheets/psychologist/defeat.png",
+     "gif": "gif/psychologist/defeat.gif"
+    }
+   }
+  },
+  {
+   "id": "sociologist",
+   "name": "Sociologist Gobyet",
+   "category": "domain",
+   "faction": null,
+   "role": "sociology",
+   "silhouette": [
+    "field_jacket_scarf",
+    "network_diagram_board",
+    "clipboard"
+   ],
+   "fallback": "normal-gblk",
+   "core": {
+    "idle": "idle",
+    "attack": "analyze",
+    "hit": "hit",
+    "victory": "victory",
+    "defeat": "defeat"
+   },
+   "acc_anchor": [
+    39,
+    13
+   ],
+   "states": {
+    "idle": {
+     "frames": 12,
+     "ms": 140,
+     "loop": true,
+     "hold": 0,
+     "label": "papan diagram jaringan, papan klip, syal",
+     "sheet": "sheets/sociologist/idle.png",
+     "gif": "gif/sociologist/idle.gif"
+    },
+    "observe_crowd": {
+     "frames": 12,
+     "ms": 130,
+     "loop": true,
+     "hold": 0,
+     "label": "mengamati kerumunan",
+     "sheet": "sheets/sociologist/observe_crowd.png",
+     "gif": "gif/sociologist/observe_crowd.gif"
+    },
+    "draw_network": {
+     "frames": 12,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "menggambar jaringan",
+     "sheet": "sheets/sociologist/draw_network.png",
+     "gif": "gif/sociologist/draw_network.gif"
+    },
+    "compare": {
+     "frames": 12,
+     "ms": 130,
+     "loop": true,
+     "hold": 0,
+     "label": "membandingkan data",
+     "sheet": "sheets/sociologist/compare.png",
+     "gif": "gif/sociologist/compare.gif"
+    },
+    "analyze": {
+     "frames": 12,
+     "ms": 120,
+     "loop": true,
+     "hold": 0,
+     "label": "menjelaskan jaringan sosial",
+     "sheet": "sheets/sociologist/analyze.png",
+     "gif": "gif/sociologist/analyze.gif"
+    },
+    "hit": {
+     "frames": 10,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "tersentak mundur",
+     "sheet": "sheets/sociologist/hit.png",
+     "gif": "gif/sociologist/hit.gif"
+    },
+    "victory": {
+     "frames": 16,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "prop diangkat, lompat kecil",
+     "sheet": "sheets/sociologist/victory.png",
+     "gif": "gif/sociologist/victory.gif"
+    },
+    "defeat": {
+     "frames": 16,
+     "ms": 120,
+     "loop": false,
+     "hold": 10,
+     "label": "duduk lesu, prop terjatuh, menghela napas",
+     "sheet": "sheets/sociologist/defeat.png",
+     "gif": "gif/sociologist/defeat.gif"
+    }
+   }
+  },
+  {
+   "id": "engineer",
+   "name": "Engineer Gobyet",
+   "category": "domain",
+   "faction": null,
+   "role": "engineering",
+   "silhouette": [
+    "hard_hat",
+    "hi_vis_vest",
+    "wrench",
+    "blueprint"
+   ],
+   "fallback": "normal-gblk",
+   "core": {
+    "idle": "idle",
+    "attack": "build",
+    "hit": "hit",
+    "victory": "victory",
+    "defeat": "defeat"
+   },
+   "acc_anchor": [
+    39,
+    13
+   ],
+   "states": {
+    "idle": {
+     "frames": 12,
+     "ms": 130,
+     "loop": true,
+     "hold": 0,
+     "label": "helm proyek, rompi oranye, kunci pas",
+     "sheet": "sheets/engineer/idle.png",
+     "gif": "gif/engineer/idle.gif"
+    },
+    "measure": {
+     "frames": 12,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "menarik meteran",
+     "sheet": "sheets/engineer/measure.png",
+     "gif": "gif/engineer/measure.gif"
+    },
+    "design": {
+     "frames": 12,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "menggambar cetak biru",
+     "sheet": "sheets/engineer/design.png",
+     "gif": "gif/engineer/design.gif"
+    },
+    "build": {
+     "frames": 6,
+     "ms": 100,
+     "loop": true,
+     "hold": 0,
+     "label": "membangun: mengetuk balok",
+     "sheet": "sheets/engineer/build.png",
+     "gif": "gif/engineer/build.gif"
+    },
+    "inspect": {
+     "frames": 12,
+     "ms": 120,
+     "loop": true,
+     "hold": 0,
+     "label": "memeriksa sambungan",
+     "sheet": "sheets/engineer/inspect.png",
+     "gif": "gif/engineer/inspect.gif"
+    },
+    "fix": {
+     "frames": 8,
+     "ms": 100,
+     "loop": true,
+     "hold": 0,
+     "label": "memutar baut dengan kunci pas",
+     "sheet": "sheets/engineer/fix.png",
+     "gif": "gif/engineer/fix.gif"
+    },
+    "hit": {
+     "frames": 10,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "tersentak mundur",
+     "sheet": "sheets/engineer/hit.png",
+     "gif": "gif/engineer/hit.gif"
+    },
+    "victory": {
+     "frames": 16,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "prop diangkat, lompat kecil",
+     "sheet": "sheets/engineer/victory.png",
+     "gif": "gif/engineer/victory.gif"
+    },
+    "defeat": {
+     "frames": 16,
+     "ms": 120,
+     "loop": false,
+     "hold": 10,
+     "label": "duduk lesu, prop terjatuh, menghela napas",
+     "sheet": "sheets/engineer/defeat.png",
+     "gif": "gif/engineer/defeat.gif"
+    }
+   }
+  },
+  {
+   "id": "detective",
+   "name": "Detective Gobyet",
+   "category": "domain",
+   "faction": null,
+   "role": "investigation",
+   "silhouette": [
+    "deerstalker",
+    "trench_coat_cape",
+    "big_magnifier",
+    "notebook"
+   ],
+   "fallback": "normal-gblk",
+   "core": {
+    "idle": "idle",
+    "attack": "point",
+    "hit": "hit",
+    "victory": "victory",
+    "defeat": "defeat"
+   },
+   "acc_anchor": [
+    39,
+    13
+   ],
+   "states": {
+    "idle": {
+     "frames": 12,
+     "ms": 140,
+     "loop": true,
+     "hold": 0,
+     "label": "topi deerstalker, mantel berjubah, kaca pembesar",
+     "sheet": "sheets/detective/idle.png",
+     "gif": "gif/detective/idle.gif"
+    },
+    "search": {
+     "frames": 12,
+     "ms": 120,
+     "loop": true,
+     "hold": 0,
+     "label": "menyisir lantai dengan kaca pembesar",
+     "sheet": "sheets/detective/search.png",
+     "gif": "gif/detective/search.gif"
+    },
+    "inspect": {
+     "frames": 12,
+     "ms": 120,
+     "loop": true,
+     "hold": 0,
+     "label": "memeriksa papan bukti",
+     "sheet": "sheets/detective/inspect.png",
+     "gif": "gif/detective/inspect.gif"
+    },
+    "magnify": {
+     "frames": 12,
+     "ms": 120,
+     "loop": true,
+     "hold": 0,
+     "label": "lensa di depan mata, mata membesar",
+     "sheet": "sheets/detective/magnify.png",
+     "gif": "gif/detective/magnify.gif"
+    },
+    "discover": {
+     "frames": 12,
+     "ms": 110,
+     "loop": false,
+     "hold": 0,
+     "label": "menemukan petunjuk!",
+     "sheet": "sheets/detective/discover.png",
+     "gif": "gif/detective/discover.gif"
+    },
+    "suspicious": {
+     "frames": 12,
+     "ms": 130,
+     "loop": true,
+     "hold": 0,
+     "label": "curiga, menyipit",
+     "sheet": "sheets/detective/suspicious.png",
+     "gif": "gif/detective/suspicious.gif"
+    },
+    "point": {
+     "frames": 10,
+     "ms": 110,
+     "loop": false,
+     "hold": 0,
+     "label": "menunjuk pelaku",
+     "sheet": "sheets/detective/point.png",
+     "gif": "gif/detective/point.gif"
+    },
+    "hit": {
+     "frames": 10,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "tersentak mundur",
+     "sheet": "sheets/detective/hit.png",
+     "gif": "gif/detective/hit.gif"
+    },
+    "victory": {
+     "frames": 16,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "prop diangkat, lompat kecil",
+     "sheet": "sheets/detective/victory.png",
+     "gif": "gif/detective/victory.gif"
+    },
+    "defeat": {
+     "frames": 16,
+     "ms": 120,
+     "loop": false,
+     "hold": 10,
+     "label": "duduk lesu, prop terjatuh, menghela napas",
+     "sheet": "sheets/detective/defeat.png",
+     "gif": "gif/detective/defeat.gif"
+    }
+   }
+  },
+  {
+   "id": "researcher",
+   "name": "Researcher Gobyet",
+   "category": "domain",
+   "faction": null,
+   "role": "evidence",
+   "silhouette": [
+    "book_stack",
+    "laptop",
+    "papers",
+    "glasses",
+    "sweater"
+   ],
+   "fallback": "normal-gblk",
+   "core": {
+    "idle": "idle",
+    "attack": "compare",
+    "hit": "hit",
+    "victory": "victory",
+    "defeat": "defeat"
+   },
+   "acc_anchor": [
+    39,
+    13
+   ],
+   "states": {
+    "idle": {
+     "frames": 12,
+     "ms": 140,
+     "loop": true,
+     "hold": 0,
+     "label": "memeluk tumpukan buku",
+     "sheet": "sheets/researcher/idle.png",
+     "gif": "gif/researcher/idle.gif"
+    },
+    "search": {
+     "frames": 12,
+     "ms": 120,
+     "loop": true,
+     "hold": 0,
+     "label": "mencari di tumpukan sumber",
+     "sheet": "sheets/researcher/search.png",
+     "gif": "gif/researcher/search.gif"
+    },
+    "read": {
+     "frames": 12,
+     "ms": 140,
+     "loop": true,
+     "hold": 0,
+     "label": "membaca",
+     "sheet": "sheets/researcher/read.png",
+     "gif": "gif/researcher/read.gif"
+    },
+    "compare": {
+     "frames": 12,
+     "ms": 130,
+     "loop": true,
+     "hold": 0,
+     "label": "membandingkan sumber",
+     "sheet": "sheets/researcher/compare.png",
+     "gif": "gif/researcher/compare.gif"
+    },
+    "write": {
+     "frames": 12,
+     "ms": 100,
+     "loop": true,
+     "hold": 0,
+     "label": "mengetik catatan di laptop",
+     "sheet": "sheets/researcher/write.png",
+     "gif": "gif/researcher/write.gif"
+    },
+    "archive": {
+     "frames": 12,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "menyimpan bukti ke kotak arsip",
+     "sheet": "sheets/researcher/archive.png",
+     "gif": "gif/researcher/archive.gif"
+    },
+    "hit": {
+     "frames": 10,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "tersentak mundur",
+     "sheet": "sheets/researcher/hit.png",
+     "gif": "gif/researcher/hit.gif"
+    },
+    "victory": {
+     "frames": 16,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "prop diangkat, lompat kecil",
+     "sheet": "sheets/researcher/victory.png",
+     "gif": "gif/researcher/victory.gif"
+    },
+    "defeat": {
+     "frames": 16,
+     "ms": 120,
+     "loop": false,
+     "hold": 10,
+     "label": "duduk lesu, prop terjatuh, menghela napas",
+     "sheet": "sheets/researcher/defeat.png",
+     "gif": "gif/researcher/defeat.gif"
+    }
+   }
+  },
+  {
+   "id": "pak-haji",
+   "name": "Pak Haji Gobyet",
+   "category": "domain",
+   "faction": null,
+   "role": "theology",
+   "silhouette": [
+    "kopiah_putih",
+    "baju_koko",
+    "sarung",
+    "tasbih"
+   ],
+   "fallback": "normal-gblk",
+   "core": {
+    "idle": "idle",
+    "attack": "present",
+    "hit": "hit",
+    "victory": "victory",
+    "defeat": "defeat"
+   },
+   "acc_anchor": [
+    39,
+    13
+   ],
+   "states": {
+    "idle": {
+     "frames": 12,
+     "ms": 150,
+     "loop": true,
+     "hold": 0,
+     "label": "tenang, aura halus",
+     "sheet": "sheets/pak-haji/idle.png",
+     "gif": "gif/pak-haji/idle.gif"
+    },
+    "read": {
+     "frames": 12,
+     "ms": 150,
+     "loop": true,
+     "hold": 0,
+     "label": "membaca kitab",
+     "sheet": "sheets/pak-haji/read.png",
+     "gif": "gif/pak-haji/read.gif"
+    },
+    "think": {
+     "frames": 16,
+     "ms": 130,
+     "loop": true,
+     "hold": 0,
+     "label": "merenung",
+     "sheet": "sheets/pak-haji/think.png",
+     "gif": "gif/pak-haji/think.gif"
+    },
+    "present": {
+     "frames": 12,
+     "ms": 130,
+     "loop": true,
+     "hold": 0,
+     "label": "menyampaikan pandangan dengan kitab terbuka",
+     "sheet": "sheets/pak-haji/present.png",
+     "gif": "gif/pak-haji/present.gif"
+    },
+    "calm": {
+     "frames": 16,
+     "ms": 150,
+     "loop": true,
+     "hold": 0,
+     "label": "menenangkan diri, napas panjang",
+     "sheet": "sheets/pak-haji/calm.png",
+     "gif": "gif/pak-haji/calm.gif"
+    },
+    "hit": {
+     "frames": 10,
+     "ms": 110,
+     "loop": false,
+     "hold": 0,
+     "label": "tersentak",
+     "sheet": "sheets/pak-haji/hit.png",
+     "gif": "gif/pak-haji/hit.gif"
+    },
+    "victory": {
+     "frames": 16,
+     "ms": 130,
+     "loop": true,
+     "hold": 0,
+     "label": "kedua tangan terangkat bersyukur, tanpa lompat",
+     "sheet": "sheets/pak-haji/victory.png",
+     "gif": "gif/pak-haji/victory.gif"
+    },
+    "defeat": {
+     "frames": 16,
+     "ms": 130,
+     "loop": false,
+     "hold": 10,
+     "label": "duduk tenang, kitab diletakkan",
+     "sheet": "sheets/pak-haji/defeat.png",
+     "gif": "gif/pak-haji/defeat.gif"
+    },
+    "consult": {
+     "frames": 12,
+     "ms": 140,
+     "loop": true,
+     "hold": 0,
+     "label": "berdiskusi dengan sopan",
+     "sheet": "sheets/pak-haji/consult.png",
+     "gif": "gif/pak-haji/consult.gif"
+    }
+   }
+  },
+  {
+   "id": "priest",
+   "name": "Priest Gobyet",
+   "category": "domain",
+   "faction": null,
+   "role": "theology",
+   "silhouette": [
+    "cassock",
+    "white_collar",
+    "plain_book"
+   ],
+   "fallback": "normal-gblk",
+   "core": {
+    "idle": "idle",
+    "attack": "present",
+    "hit": "hit",
+    "victory": "victory",
+    "defeat": "defeat"
+   },
+   "acc_anchor": [
+    39,
+    13
+   ],
+   "states": {
+    "idle": {
+     "frames": 12,
+     "ms": 150,
+     "loop": true,
+     "hold": 0,
+     "label": "tenang, aura halus",
+     "sheet": "sheets/priest/idle.png",
+     "gif": "gif/priest/idle.gif"
+    },
+    "read": {
+     "frames": 12,
+     "ms": 150,
+     "loop": true,
+     "hold": 0,
+     "label": "membaca kitab",
+     "sheet": "sheets/priest/read.png",
+     "gif": "gif/priest/read.gif"
+    },
+    "think": {
+     "frames": 16,
+     "ms": 130,
+     "loop": true,
+     "hold": 0,
+     "label": "merenung",
+     "sheet": "sheets/priest/think.png",
+     "gif": "gif/priest/think.gif"
+    },
+    "present": {
+     "frames": 12,
+     "ms": 130,
+     "loop": true,
+     "hold": 0,
+     "label": "menyampaikan pandangan dengan kitab terbuka",
+     "sheet": "sheets/priest/present.png",
+     "gif": "gif/priest/present.gif"
+    },
+    "calm": {
+     "frames": 16,
+     "ms": 150,
+     "loop": true,
+     "hold": 0,
+     "label": "menenangkan diri, napas panjang",
+     "sheet": "sheets/priest/calm.png",
+     "gif": "gif/priest/calm.gif"
+    },
+    "hit": {
+     "frames": 10,
+     "ms": 110,
+     "loop": false,
+     "hold": 0,
+     "label": "tersentak",
+     "sheet": "sheets/priest/hit.png",
+     "gif": "gif/priest/hit.gif"
+    },
+    "victory": {
+     "frames": 16,
+     "ms": 130,
+     "loop": true,
+     "hold": 0,
+     "label": "kedua tangan terangkat bersyukur, tanpa lompat",
+     "sheet": "sheets/priest/victory.png",
+     "gif": "gif/priest/victory.gif"
+    },
+    "defeat": {
+     "frames": 16,
+     "ms": 130,
+     "loop": false,
+     "hold": 10,
+     "label": "duduk tenang, kitab diletakkan",
+     "sheet": "sheets/priest/defeat.png",
+     "gif": "gif/priest/defeat.gif"
+    },
+    "judge": {
+     "frames": 12,
+     "ms": 140,
+     "loop": true,
+     "hold": 0,
+     "label": "menimbang dengan saksama",
+     "sheet": "sheets/priest/judge.png",
+     "gif": "gif/priest/judge.gif"
+    }
+   }
+  },
+  {
+   "id": "hacker",
+   "name": "Hacker Gobyet",
+   "category": "domain",
+   "faction": null,
+   "role": "technology",
+   "silhouette": [
+    "hoodie_with_ear_hood",
+    "laptop",
+    "floating_terminal",
+    "screen_glow"
+   ],
+   "fallback": "normal-gblk",
+   "core": {
+    "idle": "idle",
+    "hit": "hit",
+    "attack": "attack",
+    "victory": "victory",
+    "defeat": "defeat"
+   },
+   "acc_anchor": [
+    39,
+    13
+   ],
+   "states": {
+    "idle": {
+     "frames": 12,
+     "ms": 140,
+     "loop": true,
+     "hold": 0,
+     "label": "hoodie, laptop, terminal hijau bergulir",
+     "sheet": "sheets/hacker/idle.png",
+     "gif": "gif/hacker/idle.gif"
+    },
+    "typing": {
+     "frames": 12,
+     "ms": 80,
+     "loop": true,
+     "hold": 0,
+     "label": "mengetik cepat",
+     "sheet": "sheets/hacker/typing.png",
+     "gif": "gif/hacker/typing.gif"
+    },
+    "debugging": {
+     "frames": 12,
+     "ms": 120,
+     "loop": true,
+     "hold": 0,
+     "label": "menyipit memburu baris merah",
+     "sheet": "sheets/hacker/debugging.png",
+     "gif": "gif/hacker/debugging.gif"
+    },
+    "error": {
+     "frames": 14,
+     "ms": 150,
+     "loop": false,
+     "hold": 8,
+     "label": "layar error, menatap layar, diam, lalu menatap penonton",
+     "sheet": "sheets/hacker/error.png",
+     "gif": "gif/hacker/error.gif"
+    },
+    "panic": {
+     "frames": 6,
+     "ms": 80,
+     "loop": true,
+     "hold": 0,
+     "label": "panik: tangan ke kepala, laptop di lantai",
+     "sheet": "sheets/hacker/panic.png",
+     "gif": "gif/hacker/panic.gif"
+    },
+    "success": {
+     "frames": 12,
+     "ms": 110,
+     "loop": false,
+     "hold": 0,
+     "label": "tanda centang hijau, tinju naik",
+     "sheet": "sheets/hacker/success.png",
+     "gif": "gif/hacker/success.gif"
+    },
+    "hit": {
+     "frames": 10,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "tersentak, laptop goyah",
+     "sheet": "sheets/hacker/hit.png",
+     "gif": "gif/hacker/hit.gif"
+    },
+    "attack": {
+     "frames": 12,
+     "ms": 80,
+     "loop": false,
+     "hold": 0,
+     "label": "mengetik serangan: kode hijau menyala",
+     "sheet": "sheets/hacker/attack.png",
+     "gif": "gif/hacker/attack.gif"
+    },
+    "victory": {
+     "frames": 16,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "laptop diangkat, terminal OK",
+     "sheet": "sheets/hacker/victory.png",
+     "gif": "gif/hacker/victory.gif"
+    },
+    "defeat": {
+     "frames": 16,
+     "ms": 120,
+     "loop": false,
+     "hold": 10,
+     "label": "laptop error, terduduk lesu",
+     "sheet": "sheets/hacker/defeat.png",
+     "gif": "gif/hacker/defeat.gif"
+    }
+   }
+  },
+  {
+   "id": "normal-gblk",
+   "name": "Normal GBLK Gobyet",
+   "category": "special",
+   "faction": null,
+   "role": "default",
+   "silhouette": [
+    "plain_gobyet",
+    "big_gblk_sign"
+   ],
+   "fallback": null,
+   "core": {
+    "idle": "idle",
+    "attack": "sign_raise",
+    "victory": "victory",
+    "hit": "hit",
+    "defeat": "defeat"
+   },
+   "acc_anchor": [
+    39,
+    13
+   ],
+   "states": {
+    "idle": {
+     "frames": 12,
+     "ms": 140,
+     "loop": true,
+     "hold": 0,
+     "label": "papan GBLK besar",
+     "sheet": "sheets/normal-gblk/idle.png",
+     "gif": "gif/normal-gblk/idle.gif"
+    },
+    "think": {
+     "frames": 16,
+     "ms": 120,
+     "loop": true,
+     "hold": 0,
+     "label": "berpikir sambil memegang papan",
+     "sheet": "sheets/normal-gblk/think.png",
+     "gif": "gif/normal-gblk/think.gif"
+    },
+    "confused": {
+     "frames": 12,
+     "ms": 120,
+     "loop": true,
+     "hold": 0,
+     "label": "bingung, garuk kepala",
+     "sheet": "sheets/normal-gblk/confused.png",
+     "gif": "gif/normal-gblk/confused.gif"
+    },
+    "sign_raise": {
+     "frames": 12,
+     "ms": 100,
+     "loop": true,
+     "hold": 0,
+     "label": "papan GBLK diacungkan tinggi",
+     "sheet": "sheets/normal-gblk/sign_raise.png",
+     "gif": "gif/normal-gblk/sign_raise.gif"
+    },
+    "victory": {
+     "frames": 16,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "papan terangkat, konfeti",
+     "sheet": "sheets/normal-gblk/victory.png",
+     "gif": "gif/normal-gblk/victory.gif"
+    },
+    "hit": {
+     "frames": 10,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "terhuyung, papan miring",
+     "sheet": "sheets/normal-gblk/hit.png",
+     "gif": "gif/normal-gblk/hit.gif"
+    },
+    "defeat": {
+     "frames": 16,
+     "ms": 120,
+     "loop": false,
+     "hold": 10,
+     "label": "papan GBLK roboh, terduduk",
+     "sheet": "sheets/normal-gblk/defeat.png",
+     "gif": "gif/normal-gblk/defeat.gif"
+    },
+    "dance_01": {
+     "frames": 16,
+     "ms": 120,
+     "loop": true,
+     "hold": 0,
+     "label": "goyang kiri-kanan",
+     "sheet": "sheets/normal-gblk/dance_01.png",
+     "gif": "gif/normal-gblk/dance_01.gif"
+    },
+    "dance_02": {
+     "frames": 16,
+     "ms": 120,
+     "loop": true,
+     "hold": 0,
+     "label": "lompat kecil, tangan bergantian naik",
+     "sheet": "sheets/normal-gblk/dance_02.png",
+     "gif": "gif/normal-gblk/dance_02.gif"
+    },
+    "dance_03": {
+     "frames": 16,
+     "ms": 120,
+     "loop": true,
+     "hold": 0,
+     "label": "papan diayun kiri-kanan",
+     "sheet": "sheets/normal-gblk/dance_03.png",
+     "gif": "gif/normal-gblk/dance_03.gif"
+    },
+    "victory_dance": {
+     "frames": 16,
+     "ms": 120,
+     "loop": true,
+     "hold": 0,
+     "label": "tarian kemenangan dengan konfeti",
+     "sheet": "sheets/normal-gblk/victory_dance.png",
+     "gif": "gif/normal-gblk/victory_dance.gif"
+    }
+   },
+   "caption": "GBLK = Gamers Berkembang Lewat Kebodohan"
+  },
+  {
+   "id": "wizard",
+   "name": "Wizard Gobyet",
+   "category": "fantasy",
+   "faction": "fantasy",
+   "role": "magic",
+   "silhouette": [
+    "tall_pointed_hat",
+    "floor_robe",
+    "tall_staff",
+    "spellbook"
+   ],
+   "fallback": "normal-gblk",
+   "core": {
+    "idle": "idle",
+    "attack": "cast",
+    "hit": "hit",
+    "victory": "victory",
+    "defeat": "defeat"
+   },
+   "acc_anchor": [
+    39,
+    13
+   ],
+   "states": {
+    "idle": {
+     "frames": 12,
+     "ms": 130,
+     "loop": true,
+     "hold": 0,
+     "label": "topi runcing tinggi, jubah sampai lantai, tongkat bercahaya",
+     "sheet": "sheets/wizard/idle.png",
+     "gif": "gif/wizard/idle.gif"
+    },
+    "cast": {
+     "frames": 12,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "merapal mantra, permata makin terang",
+     "sheet": "sheets/wizard/cast.png",
+     "gif": "gif/wizard/cast.gif"
+    },
+    "spell_success": {
+     "frames": 12,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "mantra berhasil: ledakan bintang",
+     "sheet": "sheets/wizard/spell_success.png",
+     "gif": "gif/wizard/spell_success.gif"
+    },
+    "spell_fail": {
+     "frames": 16,
+     "ms": 110,
+     "loop": false,
+     "hold": 6,
+     "label": "mantra gagal: POOF, wajah jelaga, bingung",
+     "sheet": "sheets/wizard/spell_fail.png",
+     "gif": "gif/wizard/spell_fail.gif"
+    },
+    "read": {
+     "frames": 12,
+     "ms": 140,
+     "loop": true,
+     "hold": 0,
+     "label": "membaca buku mantra",
+     "sheet": "sheets/wizard/read.png",
+     "gif": "gif/wizard/read.gif"
+    },
+    "confused": {
+     "frames": 12,
+     "ms": 120,
+     "loop": true,
+     "hold": 0,
+     "label": "bingung",
+     "sheet": "sheets/wizard/confused.png",
+     "gif": "gif/wizard/confused.gif"
+    },
+    "hit": {
+     "frames": 10,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "terkejut, topi terangkat",
+     "sheet": "sheets/wizard/hit.png",
+     "gif": "gif/wizard/hit.gif"
+    },
+    "victory": {
+     "frames": 16,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "tongkat terangkat, kembang api sihir",
+     "sheet": "sheets/wizard/victory.png",
+     "gif": "gif/wizard/victory.gif"
+    },
+    "defeat": {
+     "frames": 16,
+     "ms": 120,
+     "loop": false,
+     "hold": 10,
+     "label": "tongkat jatuh, asap, terduduk",
+     "sheet": "sheets/wizard/defeat.png",
+     "gif": "gif/wizard/defeat.gif"
+    }
+   }
+  },
+  {
+   "id": "referee",
+   "name": "Referee Gobyet",
+   "category": "role",
+   "faction": null,
+   "role": "tournament-control",
+   "silhouette": [
+    "striped_shirt",
+    "whistle",
+    "flag"
+   ],
+   "fallback": "normal-gblk",
+   "core": {
+    "idle": "idle"
+   },
+   "acc_anchor": [
+    39,
+    13
+   ],
+   "states": {
+    "idle": {
+     "frames": 12,
+     "ms": 130,
+     "loop": true,
+     "hold": 0,
+     "label": "kaus belang, peluit, bendera",
+     "sheet": "sheets/referee/idle.png",
+     "gif": "gif/referee/idle.gif"
+    },
+    "enter": {
+     "frames": 12,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "masuk arena dari kiri",
+     "sheet": "sheets/referee/enter.png",
+     "gif": "gif/referee/enter.gif"
+    },
+    "exit": {
+     "frames": 12,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "keluar arena ke kanan",
+     "sheet": "sheets/referee/exit.png",
+     "gif": "gif/referee/exit.gif"
+    },
+    "signal_start": {
+     "frames": 12,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "bendera naik, peluit ditiup: mulai!",
+     "sheet": "sheets/referee/signal_start.png",
+     "gif": "gif/referee/signal_start.gif"
+    },
+    "signal_stop": {
+     "frames": 12,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "tangan bersilang di atas kepala: berhenti!",
+     "sheet": "sheets/referee/signal_stop.png",
+     "gif": "gif/referee/signal_stop.gif"
+    },
+    "point_winner": {
+     "frames": 12,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "bendera menunjuk pemenang",
+     "sheet": "sheets/referee/point_winner.png",
+     "gif": "gif/referee/point_winner.gif"
+    }
+   }
+  },
+  {
+   "id": "judge",
+   "name": "Judge Gobyet",
+   "category": "role",
+   "faction": null,
+   "role": "judging",
+   "silhouette": [
+    "judge_robe_jabot",
+    "desk",
+    "score_sheet",
+    "gavel"
+   ],
+   "fallback": "normal-gblk",
+   "core": {
+    "idle": "idle"
+   },
+   "acc_anchor": [
+    39,
+    13
+   ],
+   "states": {
+    "idle": {
+     "frames": 12,
+     "ms": 140,
+     "loop": true,
+     "hold": 0,
+     "label": "jubah hakim di balik meja",
+     "sheet": "sheets/judge/idle.png",
+     "gif": "gif/judge/idle.gif"
+    },
+    "read": {
+     "frames": 12,
+     "ms": 140,
+     "loop": true,
+     "hold": 0,
+     "label": "membaca argumen",
+     "sheet": "sheets/judge/read.png",
+     "gif": "gif/judge/read.gif"
+    },
+    "compare": {
+     "frames": 12,
+     "ms": 130,
+     "loop": true,
+     "hold": 0,
+     "label": "membandingkan dua argumen",
+     "sheet": "sheets/judge/compare.png",
+     "gif": "gif/judge/compare.gif"
+    },
+    "write_score": {
+     "frames": 12,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "menulis skor",
+     "sheet": "sheets/judge/write_score.png",
+     "gif": "gif/judge/write_score.gif"
+    },
+    "think": {
+     "frames": 16,
+     "ms": 120,
+     "loop": true,
+     "hold": 0,
+     "label": "menimbang",
+     "sheet": "sheets/judge/think.png",
+     "gif": "gif/judge/think.gif"
+    },
+    "finalize": {
+     "frames": 12,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "palu diketuk: putusan final",
+     "sheet": "sheets/judge/finalize.png",
+     "gif": "gif/judge/finalize.gif"
+    }
+   }
+  },
+  {
+   "id": "skeptic",
+   "name": "Skeptic Gobyet",
+   "category": "role",
+   "faction": null,
+   "role": "falsification",
+   "silhouette": [
+    "sweater",
+    "monocle",
+    "magnifier",
+    "claim_card",
+    "raised_brow"
+   ],
+   "fallback": "normal-gblk",
+   "core": {
+    "idle": "idle",
+    "attack": "counterattack",
+    "hit": "hit",
+    "victory": "victory",
+    "defeat": "defeat"
+   },
+   "acc_anchor": [
+    39,
+    13
+   ],
+   "states": {
+    "idle": {
+     "frames": 12,
+     "ms": 140,
+     "loop": true,
+     "hold": 0,
+     "label": "alis terangkat, monokel, kaca pembesar",
+     "sheet": "sheets/skeptic/idle.png",
+     "gif": "gif/skeptic/idle.gif"
+    },
+    "inspect": {
+     "frames": 14,
+     "ms": 150,
+     "loop": false,
+     "hold": 6,
+     "label": "melihat klaim, diam, menyipit, menunjuk premis",
+     "sheet": "sheets/skeptic/inspect.png",
+     "gif": "gif/skeptic/inspect.gif"
+    },
+    "squint": {
+     "frames": 8,
+     "ms": 140,
+     "loop": true,
+     "hold": 0,
+     "label": "menyipit mendekat",
+     "sheet": "sheets/skeptic/squint.png",
+     "gif": "gif/skeptic/squint.gif"
+    },
+    "point": {
+     "frames": 10,
+     "ms": 110,
+     "loop": false,
+     "hold": 0,
+     "label": "menunjuk premis yang lemah",
+     "sheet": "sheets/skeptic/point.png",
+     "gif": "gif/skeptic/point.gif"
+    },
+    "contradiction_found": {
+     "frames": 12,
+     "ms": 110,
+     "loop": false,
+     "hold": 0,
+     "label": "kontradiksi ditemukan: tanda X merah",
+     "sheet": "sheets/skeptic/contradiction_found.png",
+     "gif": "gif/skeptic/contradiction_found.gif"
+    },
+    "counterattack": {
+     "frames": 12,
+     "ms": 90,
+     "loop": false,
+     "hold": 0,
+     "label": "serangan balik: tanda tanya melesat",
+     "sheet": "sheets/skeptic/counterattack.png",
+     "gif": "gif/skeptic/counterattack.gif"
+    },
+    "falsification": {
+     "frames": 12,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "stempel X pada kartu klaim",
+     "sheet": "sheets/skeptic/falsification.png",
+     "gif": "gif/skeptic/falsification.gif"
+    },
+    "hit": {
+     "frames": 10,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "tersentak mundur",
+     "sheet": "sheets/skeptic/hit.png",
+     "gif": "gif/skeptic/hit.gif"
+    },
+    "victory": {
+     "frames": 16,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "prop diangkat, lompat kecil",
+     "sheet": "sheets/skeptic/victory.png",
+     "gif": "gif/skeptic/victory.gif"
+    },
+    "defeat": {
+     "frames": 16,
+     "ms": 120,
+     "loop": false,
+     "hold": 10,
+     "label": "duduk lesu, prop terjatuh, menghela napas",
+     "sheet": "sheets/skeptic/defeat.png",
+     "gif": "gif/skeptic/defeat.gif"
+    }
+   }
+  },
+  {
+   "id": "champion",
+   "name": "Champion Gobyet",
+   "category": "role",
+   "faction": null,
+   "role": "winner",
+   "silhouette": [
+    "giant_trophy",
+    "red_cape",
+    "medal"
+   ],
+   "fallback": "normal-gblk",
+   "core": {
+    "idle": "idle",
+    "victory": "trophy_raise"
+   },
+   "acc_anchor": [
+    39,
+    13
+   ],
+   "states": {
+    "idle": {
+     "frames": 12,
+     "ms": 140,
+     "loop": true,
+     "hold": 0,
+     "label": "memamerkan piala, jubah merah, medali",
+     "sheet": "sheets/champion/idle.png",
+     "gif": "gif/champion/idle.gif"
+    },
+    "trophy_raise": {
+     "frames": 16,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "piala diangkat tinggi dengan dua tangan",
+     "sheet": "sheets/champion/trophy_raise.png",
+     "gif": "gif/champion/trophy_raise.gif"
+    },
+    "victory": {
+     "frames": 16,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "piala terangkat, lompat",
+     "sheet": "sheets/champion/victory.png",
+     "gif": "gif/champion/victory.gif"
+    },
+    "celebrate": {
+     "frames": 8,
+     "ms": 100,
+     "loop": true,
+     "hold": 0,
+     "label": "lompat-lompat dengan konfeti",
+     "sheet": "sheets/champion/celebrate.png",
+     "gif": "gif/champion/celebrate.gif"
+    },
+    "dance": {
+     "frames": 16,
+     "ms": 120,
+     "loop": true,
+     "hold": 0,
+     "label": "tarian juara (16 frame, beat f0/f4/f8/f12)",
+     "sheet": "sheets/champion/dance.png",
+     "gif": "gif/champion/dance.gif"
+    }
+   },
+   "label": "TOURNAMENT WINNER"
+  },
+  {
+   "id": "defeated",
+   "name": "Defeated Gobyet",
+   "category": "role",
+   "faction": null,
+   "role": "loser",
+   "silhouette": [
+    "slumped_sitting",
+    "fallen_sword",
+    "tired_face"
+   ],
+   "fallback": "normal-gblk",
+   "core": {
+    "defeat": "fall",
+    "idle": "sit",
+    "hit": "hit"
+   },
+   "acc_anchor": [
+    39,
+    13
+   ],
+   "states": {
+    "hit": {
+     "frames": 10,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "terkena",
+     "sheet": "sheets/defeated/hit.png",
+     "gif": "gif/defeated/hit.gif"
+    },
+    "stagger": {
+     "frames": 9,
+     "ms": 110,
+     "loop": true,
+     "hold": 0,
+     "label": "sempoyongan",
+     "sheet": "sheets/defeated/stagger.png",
+     "gif": "gif/defeated/stagger.gif"
+    },
+    "fall": {
+     "frames": 16,
+     "ms": 120,
+     "loop": false,
+     "hold": 10,
+     "label": "jatuh terduduk lalu rebah",
+     "sheet": "sheets/defeated/fall.png",
+     "gif": "gif/defeated/fall.gif"
+    },
+    "sit": {
+     "frames": 12,
+     "ms": 140,
+     "loop": true,
+     "hold": 0,
+     "label": "duduk lesu, pedang di lantai, menghela napas",
+     "sheet": "sheets/defeated/sit.png",
+     "gif": "gif/defeated/sit.gif"
+    },
+    "leave": {
+     "frames": 16,
+     "ms": 110,
+     "loop": false,
+     "hold": 0,
+     "label": "berjalan pergi lesu ke kiri",
+     "sheet": "sheets/defeated/leave.png",
+     "gif": "gif/defeated/leave.gif"
+    }
+   }
+  },
+  {
+   "id": "berserker",
+   "name": "Berserker Gobyet",
+   "category": "fantasy",
+   "faction": null,
+   "role": "giant_sword",
+   "silhouette": [
+    "giant_slab_greatsword",
+    "asymmetric_black_armor",
+    "big_left_pauldron",
+    "torn_short_cloak",
+    "low_crouched_stance"
+   ],
+   "fallback": "normal-gblk",
+   "core": {
+    "idle": "idle",
+    "attack": "attack",
+    "hit": "hit",
+    "victory": "victory",
+    "defeat": "defeat"
+   },
+   "acc_anchor": [
+    71,
+    53
+   ],
+   "states": {
+    "idle": {
+     "frames": 5,
+     "ms": 220,
+     "loop": true,
+     "hold": 0,
+     "label": "jongkok condong ke depan, ujung pedang raksasa bertumpu di lantai, kepala sedikit menunduk",
+     "sheet": "sheets/berserker/idle.png",
+     "gif": "gif/berserker/idle.gif",
+     "durations": [
+      220,
+      170,
+      200,
+      160,
+      190
+     ],
+     "layers": {
+      "body": "sheets/berserker/layers/idle.body.png",
+      "weapon": "sheets/berserker/layers/idle.weapon.png",
+      "vfx": "sheets/berserker/layers/idle.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/idle.png",
+       "gif": "gif/berserker/damaged/idle.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/idle.body.png",
+        "weapon": "sheets/berserker/layers/idle.weapon.png",
+        "vfx": "sheets/berserker/layers/idle.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/idle.png",
+       "gif": "gif/berserker/heavily_damaged/idle.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/idle.body.png",
+        "weapon": "sheets/berserker/layers/idle.weapon.png",
+        "vfx": "sheets/berserker/layers/idle.vfx.png"
+       }
+      }
+     }
+    },
+    "idle_breath": {
+     "frames": 8,
+     "ms": 200,
+     "loop": true,
+     "hold": 0,
+     "label": "napas dalam, uap napas keluar",
+     "sheet": "sheets/berserker/idle_breath.png",
+     "gif": "gif/berserker/idle_breath.gif",
+     "durations": [
+      200,
+      160,
+      160,
+      220,
+      120,
+      140,
+      160,
+      180
+     ],
+     "variant_of": "idle",
+     "layers": {
+      "body": "sheets/berserker/layers/idle_breath.body.png",
+      "weapon": "sheets/berserker/layers/idle_breath.weapon.png",
+      "vfx": "sheets/berserker/layers/idle_breath.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/idle_breath.png",
+       "gif": "gif/berserker/damaged/idle_breath.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/idle_breath.body.png",
+        "weapon": "sheets/berserker/layers/idle_breath.weapon.png",
+        "vfx": "sheets/berserker/layers/idle_breath.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/idle_breath.png",
+       "gif": "gif/berserker/heavily_damaged/idle_breath.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/idle_breath.body.png",
+        "weapon": "sheets/berserker/layers/idle_breath.weapon.png",
+        "vfx": "sheets/berserker/layers/idle_breath.vfx.png"
+       }
+      }
+     }
+    },
+    "idle_grip": {
+     "frames": 8,
+     "ms": 200,
+     "loop": true,
+     "hold": 0,
+     "label": "melepas tangan kiri, meregangkan jari, menggenggam ulang",
+     "sheet": "sheets/berserker/idle_grip.png",
+     "gif": "gif/berserker/idle_grip.gif",
+     "durations": [
+      200,
+      90,
+      140,
+      160,
+      120,
+      90,
+      120,
+      180
+     ],
+     "variant_of": "idle",
+     "layers": {
+      "body": "sheets/berserker/layers/idle_grip.body.png",
+      "weapon": "sheets/berserker/layers/idle_grip.weapon.png",
+      "vfx": "sheets/berserker/layers/idle_grip.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/idle_grip.png",
+       "gif": "gif/berserker/damaged/idle_grip.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/idle_grip.body.png",
+        "weapon": "sheets/berserker/layers/idle_grip.weapon.png",
+        "vfx": "sheets/berserker/layers/idle_grip.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/idle_grip.png",
+       "gif": "gif/berserker/heavily_damaged/idle_grip.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/idle_grip.body.png",
+        "weapon": "sheets/berserker/layers/idle_grip.weapon.png",
+        "vfx": "sheets/berserker/layers/idle_grip.vfx.png"
+       }
+      }
+     }
+    },
+    "idle_drag": {
+     "frames": 10,
+     "ms": 200,
+     "loop": true,
+     "hold": 0,
+     "label": "menyeret ujung pedang di lantai lalu mendorongnya kembali",
+     "sheet": "sheets/berserker/idle_drag.png",
+     "gif": "gif/berserker/idle_drag.gif",
+     "durations": [
+      200,
+      140,
+      120,
+      120,
+      200,
+      120,
+      120,
+      140,
+      160,
+      200
+     ],
+     "variant_of": "idle",
+     "layers": {
+      "body": "sheets/berserker/layers/idle_drag.body.png",
+      "weapon": "sheets/berserker/layers/idle_drag.weapon.png",
+      "vfx": "sheets/berserker/layers/idle_drag.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/idle_drag.png",
+       "gif": "gif/berserker/damaged/idle_drag.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/idle_drag.body.png",
+        "weapon": "sheets/berserker/layers/idle_drag.weapon.png",
+        "vfx": "sheets/berserker/layers/idle_drag.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/idle_drag.png",
+       "gif": "gif/berserker/heavily_damaged/idle_drag.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/idle_drag.body.png",
+        "weapon": "sheets/berserker/heavily_damaged/layers/idle_drag.weapon.png",
+        "vfx": "sheets/berserker/layers/idle_drag.vfx.png"
+       }
+      }
+     }
+    },
+    "idle_look": {
+     "frames": 10,
+     "ms": 220,
+     "loop": true,
+     "hold": 0,
+     "label": "menoleh ke belakang, lalu menatap ke depan",
+     "sheet": "sheets/berserker/idle_look.png",
+     "gif": "gif/berserker/idle_look.gif",
+     "durations": [
+      220,
+      140,
+      200,
+      260,
+      100,
+      140,
+      240,
+      180,
+      160,
+      80
+     ],
+     "variant_of": "idle",
+     "layers": {
+      "body": "sheets/berserker/layers/idle_look.body.png",
+      "weapon": "sheets/berserker/layers/idle_look.weapon.png",
+      "vfx": "sheets/berserker/layers/idle_look.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/idle_look.png",
+       "gif": "gif/berserker/damaged/idle_look.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/idle_look.body.png",
+        "weapon": "sheets/berserker/layers/idle_look.weapon.png",
+        "vfx": "sheets/berserker/layers/idle_look.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/idle_look.png",
+       "gif": "gif/berserker/heavily_damaged/idle_look.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/idle_look.body.png",
+        "weapon": "sheets/berserker/layers/idle_look.weapon.png",
+        "vfx": "sheets/berserker/layers/idle_look.vfx.png"
+       }
+      }
+     }
+    },
+    "idle_twitch": {
+     "frames": 6,
+     "ms": 260,
+     "loop": true,
+     "hold": 0,
+     "label": "bahu berkedut, mata melotot sesaat",
+     "sheet": "sheets/berserker/idle_twitch.png",
+     "gif": "gif/berserker/idle_twitch.gif",
+     "durations": [
+      260,
+      50,
+      70,
+      200,
+      60,
+      220
+     ],
+     "variant_of": "idle",
+     "layers": {
+      "body": "sheets/berserker/layers/idle_twitch.body.png",
+      "weapon": "sheets/berserker/layers/idle_twitch.weapon.png",
+      "vfx": "sheets/berserker/layers/idle_twitch.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/idle_twitch.png",
+       "gif": "gif/berserker/damaged/idle_twitch.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/idle_twitch.body.png",
+        "weapon": "sheets/berserker/layers/idle_twitch.weapon.png",
+        "vfx": "sheets/berserker/layers/idle_twitch.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/idle_twitch.png",
+       "gif": "gif/berserker/heavily_damaged/idle_twitch.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/idle_twitch.body.png",
+        "weapon": "sheets/berserker/layers/idle_twitch.weapon.png",
+        "vfx": "sheets/berserker/layers/idle_twitch.vfx.png"
+       }
+      }
+     }
+    },
+    "ready": {
+     "frames": 6,
+     "ms": 120,
+     "loop": true,
+     "hold": 0,
+     "label": "pedang terkokang di bahu, kuda-kuda lebar",
+     "sheet": "sheets/berserker/ready.png",
+     "gif": "gif/berserker/ready.gif",
+     "durations": [
+      120,
+      110,
+      120,
+      110,
+      120,
+      110
+     ],
+     "layers": {
+      "body": "sheets/berserker/layers/ready.body.png",
+      "weapon": "sheets/berserker/layers/ready.weapon.png",
+      "vfx": "sheets/berserker/layers/ready.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/ready.png",
+       "gif": "gif/berserker/damaged/ready.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/ready.body.png",
+        "weapon": "sheets/berserker/layers/ready.weapon.png",
+        "vfx": "sheets/berserker/layers/ready.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/ready.png",
+       "gif": "gif/berserker/heavily_damaged/ready.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/ready.body.png",
+        "weapon": "sheets/berserker/layers/ready.weapon.png",
+        "vfx": "sheets/berserker/layers/ready.vfx.png"
+       }
+      }
+     }
+    },
+    "run": {
+     "frames": 8,
+     "ms": 80,
+     "loop": true,
+     "hold": 0,
+     "label": "lari rendah, pedang raksasa diseret menggores lantai",
+     "sheet": "sheets/berserker/run.png",
+     "gif": "gif/berserker/run.gif",
+     "durations": [
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80
+     ],
+     "layers": {
+      "body": "sheets/berserker/layers/run.body.png",
+      "weapon": "sheets/berserker/layers/run.weapon.png",
+      "vfx": "sheets/berserker/layers/run.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/run.png",
+       "gif": "gif/berserker/damaged/run.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/run.body.png",
+        "weapon": "sheets/berserker/damaged/layers/run.weapon.png",
+        "vfx": "sheets/berserker/layers/run.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/run.png",
+       "gif": "gif/berserker/heavily_damaged/run.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/run.body.png",
+        "weapon": "sheets/berserker/heavily_damaged/layers/run.weapon.png",
+        "vfx": "sheets/berserker/layers/run.vfx.png"
+       }
+      }
+     }
+    },
+    "jump": {
+     "frames": 10,
+     "ms": 120,
+     "loop": false,
+     "hold": 0,
+     "label": "ancang-ancang berat, melompat dengan pedang di bahu, mendarat berdebu",
+     "sheet": "sheets/berserker/jump.png",
+     "gif": "gif/berserker/jump.gif",
+     "durations": [
+      120,
+      160,
+      50,
+      60,
+      80,
+      110,
+      70,
+      50,
+      140,
+      140
+     ],
+     "events": [
+      {
+       "frame": 8,
+       "type": "screen_shake",
+       "px": 1,
+       "ms": 80
+      }
+     ],
+     "layers": {
+      "body": "sheets/berserker/layers/jump.body.png",
+      "weapon": "sheets/berserker/layers/jump.weapon.png",
+      "vfx": "sheets/berserker/layers/jump.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/jump.png",
+       "gif": "gif/berserker/damaged/jump.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/jump.body.png",
+        "weapon": "sheets/berserker/layers/jump.weapon.png",
+        "vfx": "sheets/berserker/layers/jump.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/jump.png",
+       "gif": "gif/berserker/heavily_damaged/jump.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/jump.body.png",
+        "weapon": "sheets/berserker/layers/jump.weapon.png",
+        "vfx": "sheets/berserker/layers/jump.vfx.png"
+       }
+      }
+     }
+    },
+    "attack": {
+     "frames": 12,
+     "ms": 80,
+     "loop": false,
+     "hold": 0,
+     "label": "tebasan diagonal dari bahu: ancang-ancang lambat, ayunan cepat, hantam ke depan",
+     "sheet": "sheets/berserker/attack.png",
+     "gif": "gif/berserker/attack.gif",
+     "durations": [
+      80,
+      80,
+      110,
+      160,
+      40,
+      40,
+      130,
+      90,
+      90,
+      90,
+      100,
+      120
+     ],
+     "events": [
+      {
+       "frame": 6,
+       "type": "hit",
+       "x": 42,
+       "y": -15,
+       "direction": 20,
+       "blood": {
+        "1": "blood_small",
+        "2": "blood_medium",
+        "3": "blood_burst"
+       }
+      },
+      {
+       "frame": 6,
+       "type": "hitstop",
+       "ms": 60
+      },
+      {
+       "frame": 6,
+       "type": "screen_shake",
+       "px": 1,
+       "ms": 80
+      }
+     ],
+     "layers": {
+      "body": "sheets/berserker/layers/attack.body.png",
+      "weapon": "sheets/berserker/layers/attack.weapon.png",
+      "vfx": "sheets/berserker/layers/attack.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/attack.png",
+       "gif": "gif/berserker/damaged/attack.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/attack.body.png",
+        "weapon": "sheets/berserker/layers/attack.weapon.png",
+        "vfx": "sheets/berserker/layers/attack.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/attack.png",
+       "gif": "gif/berserker/heavily_damaged/attack.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/attack.body.png",
+        "weapon": "sheets/berserker/heavily_damaged/layers/attack.weapon.png",
+        "vfx": "sheets/berserker/layers/attack.vfx.png"
+       }
+      }
+     }
+    },
+    "attack_b": {
+     "frames": 12,
+     "ms": 80,
+     "loop": false,
+     "hold": 0,
+     "label": "sapuan mendatar dari belakang ke depan",
+     "sheet": "sheets/berserker/attack_b.png",
+     "gif": "gif/berserker/attack_b.gif",
+     "durations": [
+      80,
+      90,
+      120,
+      160,
+      50,
+      40,
+      120,
+      90,
+      100,
+      90,
+      100,
+      120
+     ],
+     "events": [
+      {
+       "frame": 5,
+       "type": "hit",
+       "x": 51,
+       "y": -18,
+       "direction": 0,
+       "blood": {
+        "1": "blood_small",
+        "2": "blood_medium",
+        "3": "blood_burst"
+       }
+      },
+      {
+       "frame": 5,
+       "type": "hitstop",
+       "ms": 60
+      }
+     ],
+     "variant_of": "attack",
+     "layers": {
+      "body": "sheets/berserker/layers/attack_b.body.png",
+      "weapon": "sheets/berserker/layers/attack_b.weapon.png",
+      "vfx": "sheets/berserker/layers/attack_b.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/attack_b.png",
+       "gif": "gif/berserker/damaged/attack_b.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/attack_b.body.png",
+        "weapon": "sheets/berserker/damaged/layers/attack_b.weapon.png",
+        "vfx": "sheets/berserker/layers/attack_b.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/attack_b.png",
+       "gif": "gif/berserker/heavily_damaged/attack_b.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/attack_b.body.png",
+        "weapon": "sheets/berserker/heavily_damaged/layers/attack_b.weapon.png",
+        "vfx": "sheets/berserker/layers/attack_b.vfx.png"
+       }
+      }
+     }
+    },
+    "heavy_attack": {
+     "frames": 16,
+     "ms": 80,
+     "loop": false,
+     "hold": 0,
+     "label": "pedang di atas kepala, langkah maju, menghantam tanah (retak, puing)",
+     "sheet": "sheets/berserker/heavy_attack.png",
+     "gif": "gif/berserker/heavy_attack.gif",
+     "durations": [
+      80,
+      100,
+      130,
+      150,
+      180,
+      160,
+      40,
+      150,
+      90,
+      90,
+      100,
+      100,
+      100,
+      100,
+      100,
+      120
+     ],
+     "events": [
+      {
+       "frame": 7,
+       "type": "hit",
+       "x": 44,
+       "y": -15,
+       "direction": 20,
+       "blood": {
+        "1": "blood_small",
+        "2": "blood_medium",
+        "3": "blood_burst"
+       }
+      },
+      {
+       "frame": 7,
+       "type": "hitstop",
+       "ms": 90
+      },
+      {
+       "frame": 7,
+       "type": "screen_shake",
+       "px": 3,
+       "ms": 200
+      },
+      {
+       "frame": 7,
+       "type": "vfx",
+       "name": "ground_impact",
+       "x": 27,
+       "y": 0,
+       "baked": true
+      },
+      {
+       "frame": 7,
+       "type": "vfx",
+       "name": "debris",
+       "baked": true
+      }
+     ],
+     "layers": {
+      "body": "sheets/berserker/layers/heavy_attack.body.png",
+      "weapon": "sheets/berserker/layers/heavy_attack.weapon.png",
+      "vfx": "sheets/berserker/layers/heavy_attack.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/heavy_attack.png",
+       "gif": "gif/berserker/damaged/heavy_attack.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/heavy_attack.body.png",
+        "weapon": "sheets/berserker/damaged/layers/heavy_attack.weapon.png",
+        "vfx": "sheets/berserker/damaged/layers/heavy_attack.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/heavy_attack.png",
+       "gif": "gif/berserker/heavily_damaged/heavy_attack.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/heavy_attack.body.png",
+        "weapon": "sheets/berserker/heavily_damaged/layers/heavy_attack.weapon.png",
+        "vfx": "sheets/berserker/heavily_damaged/layers/heavy_attack.vfx.png"
+       }
+      }
+     }
+    },
+    "overhead_smash": {
+     "frames": 18,
+     "ms": 80,
+     "loop": false,
+     "hold": 0,
+     "label": "pedang tegak di atas kepala, ditahan, dibanting lurus ke bawah",
+     "sheet": "sheets/berserker/overhead_smash.png",
+     "gif": "gif/berserker/overhead_smash.gif",
+     "durations": [
+      80,
+      100,
+      140,
+      160,
+      200,
+      180,
+      40,
+      170,
+      100,
+      100,
+      110,
+      110,
+      100,
+      100,
+      100,
+      110,
+      120,
+      140
+     ],
+     "events": [
+      {
+       "frame": 7,
+       "type": "hit",
+       "x": 21,
+       "y": -15,
+       "direction": 90,
+       "blood": {
+        "1": "blood_small",
+        "2": "blood_medium",
+        "3": "blood_burst"
+       }
+      },
+      {
+       "frame": 7,
+       "type": "hitstop",
+       "ms": 100
+      },
+      {
+       "frame": 7,
+       "type": "screen_shake",
+       "px": 4,
+       "ms": 240
+      },
+      {
+       "frame": 7,
+       "type": "vfx",
+       "name": "ground_impact",
+       "x": 21,
+       "y": 0,
+       "baked": true
+      }
+     ],
+     "layers": {
+      "body": "sheets/berserker/layers/overhead_smash.body.png",
+      "weapon": "sheets/berserker/layers/overhead_smash.weapon.png",
+      "vfx": "sheets/berserker/layers/overhead_smash.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/overhead_smash.png",
+       "gif": "gif/berserker/damaged/overhead_smash.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/overhead_smash.body.png",
+        "weapon": "sheets/berserker/damaged/layers/overhead_smash.weapon.png",
+        "vfx": "sheets/berserker/damaged/layers/overhead_smash.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/overhead_smash.png",
+       "gif": "gif/berserker/heavily_damaged/overhead_smash.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/overhead_smash.body.png",
+        "weapon": "sheets/berserker/heavily_damaged/layers/overhead_smash.weapon.png",
+        "vfx": "sheets/berserker/heavily_damaged/layers/overhead_smash.vfx.png"
+       }
+      }
+     }
+    },
+    "air_slash": {
+     "frames": 14,
+     "ms": 80,
+     "loop": false,
+     "hold": 0,
+     "label": "melompat, tebasan bulan sabit di udara, mendarat berat",
+     "sheet": "sheets/berserker/air_slash.png",
+     "gif": "gif/berserker/air_slash.gif",
+     "durations": [
+      80,
+      150,
+      50,
+      60,
+      90,
+      40,
+      70,
+      60,
+      50,
+      130,
+      100,
+      100,
+      100,
+      120
+     ],
+     "events": [
+      {
+       "frame": 6,
+       "type": "hit",
+       "x": 40,
+       "y": -22,
+       "direction": 40,
+       "blood": {
+        "1": "blood_small",
+        "2": "blood_medium",
+        "3": "blood_burst"
+       }
+      },
+      {
+       "frame": 6,
+       "type": "hitstop",
+       "ms": 70
+      }
+     ],
+     "layers": {
+      "body": "sheets/berserker/layers/air_slash.body.png",
+      "weapon": "sheets/berserker/layers/air_slash.weapon.png",
+      "vfx": "sheets/berserker/layers/air_slash.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/air_slash.png",
+       "gif": "gif/berserker/damaged/air_slash.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/air_slash.body.png",
+        "weapon": "sheets/berserker/damaged/layers/air_slash.weapon.png",
+        "vfx": "sheets/berserker/layers/air_slash.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/air_slash.png",
+       "gif": "gif/berserker/heavily_damaged/air_slash.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/air_slash.body.png",
+        "weapon": "sheets/berserker/heavily_damaged/layers/air_slash.weapon.png",
+        "vfx": "sheets/berserker/layers/air_slash.vfx.png"
+       }
+      }
+     }
+    },
+    "leap_spin_slash": {
+     "frames": 23,
+     "ms": 120,
+     "loop": false,
+     "hold": 0,
+     "label": "jurus khas: jongkok, isi tenaga, melompat, salto 360 dengan tebasan, hantaman tanah besar, pulih",
+     "sheet": "sheets/berserker/leap_spin_slash.png",
+     "gif": "gif/berserker/leap_spin_slash.gif",
+     "durations": [
+      120,
+      140,
+      160,
+      180,
+      90,
+      90,
+      110,
+      50,
+      50,
+      60,
+      70,
+      40,
+      40,
+      40,
+      40,
+      160,
+      90,
+      90,
+      100,
+      110,
+      80,
+      110,
+      140
+     ],
+     "events": [
+      {
+       "frame": 15,
+       "type": "hit",
+       "x": 45,
+       "y": -15,
+       "direction": 60,
+       "blood": {
+        "1": "blood_small",
+        "2": "blood_medium",
+        "3": "blood_burst"
+       }
+      },
+      {
+       "frame": 15,
+       "type": "hitstop",
+       "ms": 110
+      },
+      {
+       "frame": 15,
+       "type": "screen_shake",
+       "px": 5,
+       "ms": 260
+      },
+      {
+       "frame": 15,
+       "type": "vfx",
+       "name": "ground_impact",
+       "x": 35,
+       "y": 0,
+       "baked": true
+      },
+      {
+       "frame": 15,
+       "type": "vfx",
+       "name": "debris",
+       "baked": true
+      },
+      {
+       "frame": 7,
+       "type": "vfx",
+       "name": "dust",
+       "baked": true
+      },
+      {
+       "frame": 7,
+       "type": "screen_shake",
+       "px": 1,
+       "ms": 60
+      },
+      {
+       "frame": 0,
+       "type": "phase",
+       "phases": {
+        "anticipation": [
+         0,
+         3
+        ],
+        "charge": [
+         4,
+         6
+        ],
+        "jump": [
+         7,
+         10
+        ],
+        "spin": [
+         11,
+         14
+        ],
+        "impact": [
+         15,
+         15
+        ],
+        "aftermath": [
+         16,
+         18
+        ],
+        "recovery": [
+         19,
+         22
+        ]
+       }
+      }
+     ],
+     "layers": {
+      "body": "sheets/berserker/layers/leap_spin_slash.body.png",
+      "weapon": "sheets/berserker/layers/leap_spin_slash.weapon.png",
+      "vfx": "sheets/berserker/layers/leap_spin_slash.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/leap_spin_slash.png",
+       "gif": "gif/berserker/damaged/leap_spin_slash.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/leap_spin_slash.body.png",
+        "weapon": "sheets/berserker/damaged/layers/leap_spin_slash.weapon.png",
+        "vfx": "sheets/berserker/damaged/layers/leap_spin_slash.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/leap_spin_slash.png",
+       "gif": "gif/berserker/heavily_damaged/leap_spin_slash.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/leap_spin_slash.body.png",
+        "weapon": "sheets/berserker/heavily_damaged/layers/leap_spin_slash.weapon.png",
+        "vfx": "sheets/berserker/heavily_damaged/layers/leap_spin_slash.vfx.png"
+       }
+      }
+     }
+    },
+    "rage": {
+     "frames": 10,
+     "ms": 120,
+     "loop": false,
+     "hold": 0,
+     "label": "mode amuk: gemetar, menunduk, mengaum (bara merah redup, aura tipis), kuda-kuda lebih rendah",
+     "sheet": "sheets/berserker/rage.png",
+     "gif": "gif/berserker/rage.gif",
+     "durations": [
+      120,
+      90,
+      90,
+      200,
+      60,
+      90,
+      90,
+      90,
+      110,
+      160
+     ],
+     "events": [
+      {
+       "frame": 4,
+       "type": "screen_shake",
+       "px": 3,
+       "ms": 260
+      },
+      {
+       "frame": 4,
+       "type": "rage_on"
+      }
+     ],
+     "layers": {
+      "body": "sheets/berserker/layers/rage.body.png",
+      "weapon": "sheets/berserker/layers/rage.weapon.png",
+      "vfx": "sheets/berserker/layers/rage.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/rage.png",
+       "gif": "gif/berserker/damaged/rage.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/rage.body.png",
+        "weapon": "sheets/berserker/layers/rage.weapon.png",
+        "vfx": "sheets/berserker/layers/rage.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/rage.png",
+       "gif": "gif/berserker/heavily_damaged/rage.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/rage.body.png",
+        "weapon": "sheets/berserker/layers/rage.weapon.png",
+        "vfx": "sheets/berserker/layers/rage.vfx.png"
+       }
+      }
+     }
+    },
+    "rage_attack": {
+     "frames": 22,
+     "ms": 100,
+     "loop": false,
+     "hold": 0,
+     "label": "amuk: jongkok, meledak maju, sabetan rendah, sabetan naik, putaran gasing, tebasan berat",
+     "sheet": "sheets/berserker/rage_attack.png",
+     "gif": "gif/berserker/rage_attack.gif",
+     "durations": [
+      100,
+      140,
+      120,
+      60,
+      50,
+      70,
+      50,
+      70,
+      40,
+      40,
+      40,
+      40,
+      90,
+      40,
+      150,
+      90,
+      100,
+      100,
+      80,
+      100,
+      110,
+      130
+     ],
+     "events": [
+      {
+       "frame": 4,
+       "type": "hit",
+       "x": 57,
+       "y": -15,
+       "direction": 0,
+       "blood": {
+        "1": "blood_small",
+        "2": "blood_small",
+        "3": "blood_medium"
+       }
+      },
+      {
+       "frame": 4,
+       "type": "hitstop",
+       "ms": 40
+      },
+      {
+       "frame": 6,
+       "type": "hit",
+       "x": 31,
+       "y": -45,
+       "direction": -60,
+       "blood": {
+        "1": "blood_small",
+        "2": "blood_small",
+        "3": "blood_medium"
+       }
+      },
+      {
+       "frame": 6,
+       "type": "hitstop",
+       "ms": 40
+      },
+      {
+       "frame": 8,
+       "type": "hit",
+       "x": 62,
+       "y": -16,
+       "direction": 0,
+       "blood": {
+        "1": "blood_small",
+        "2": "blood_small",
+        "3": "blood_medium"
+       }
+      },
+      {
+       "frame": 8,
+       "type": "hitstop",
+       "ms": 30
+      },
+      {
+       "frame": 14,
+       "type": "hit",
+       "x": 47,
+       "y": -15,
+       "direction": 60,
+       "blood": {
+        "1": "blood_small",
+        "2": "blood_medium",
+        "3": "blood_burst"
+       }
+      },
+      {
+       "frame": 14,
+       "type": "hitstop",
+       "ms": 100
+      },
+      {
+       "frame": 14,
+       "type": "screen_shake",
+       "px": 4,
+       "ms": 240
+      },
+      {
+       "frame": 14,
+       "type": "vfx",
+       "name": "ground_impact",
+       "x": 37,
+       "y": 0,
+       "baked": true
+      },
+      {
+       "frame": 1,
+       "type": "rage_on"
+      }
+     ],
+     "layers": {
+      "body": "sheets/berserker/layers/rage_attack.body.png",
+      "weapon": "sheets/berserker/layers/rage_attack.weapon.png",
+      "vfx": "sheets/berserker/layers/rage_attack.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/rage_attack.png",
+       "gif": "gif/berserker/damaged/rage_attack.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/rage_attack.body.png",
+        "weapon": "sheets/berserker/damaged/layers/rage_attack.weapon.png",
+        "vfx": "sheets/berserker/damaged/layers/rage_attack.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/rage_attack.png",
+       "gif": "gif/berserker/heavily_damaged/rage_attack.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/rage_attack.body.png",
+        "weapon": "sheets/berserker/heavily_damaged/layers/rage_attack.weapon.png",
+        "vfx": "sheets/berserker/heavily_damaged/layers/rage_attack.vfx.png"
+       }
+      }
+     }
+    },
+    "combo": {
+     "frames": 24,
+     "ms": 80,
+     "loop": false,
+     "hold": 0,
+     "label": "kombo: sapuan mendatar, sabetan balik, bacokan atas, lompat salto, hantaman tanah",
+     "sheet": "sheets/berserker/combo.png",
+     "gif": "gif/berserker/combo.gif",
+     "durations": [
+      80,
+      100,
+      130,
+      40,
+      90,
+      90,
+      50,
+      120,
+      50,
+      90,
+      140,
+      50,
+      60,
+      40,
+      40,
+      40,
+      40,
+      160,
+      90,
+      100,
+      110,
+      80,
+      110,
+      140
+     ],
+     "events": [
+      {
+       "frame": 3,
+       "type": "hit",
+       "x": 51,
+       "y": -18,
+       "direction": 0,
+       "blood": {
+        "1": "blood_small",
+        "2": "blood_medium",
+        "3": "blood_burst"
+       }
+      },
+      {
+       "frame": 3,
+       "type": "hitstop",
+       "ms": 40
+      },
+      {
+       "frame": 6,
+       "type": "hit",
+       "x": -4,
+       "y": -42,
+       "direction": -70,
+       "blood": {
+        "1": "blood_small",
+        "2": "blood_medium",
+        "3": "blood_burst"
+       }
+      },
+      {
+       "frame": 6,
+       "type": "hitstop",
+       "ms": 40
+      },
+      {
+       "frame": 8,
+       "type": "hit",
+       "x": 42,
+       "y": -15,
+       "direction": 40,
+       "blood": {
+        "1": "blood_small",
+        "2": "blood_medium",
+        "3": "blood_burst"
+       }
+      },
+      {
+       "frame": 8,
+       "type": "hitstop",
+       "ms": 60
+      },
+      {
+       "frame": 8,
+       "type": "screen_shake",
+       "px": 2,
+       "ms": 100
+      },
+      {
+       "frame": 17,
+       "type": "hit",
+       "x": 42,
+       "y": -15,
+       "direction": 60,
+       "blood": {
+        "1": "blood_small",
+        "2": "blood_medium",
+        "3": "blood_burst"
+       }
+      },
+      {
+       "frame": 17,
+       "type": "hitstop",
+       "ms": 110
+      },
+      {
+       "frame": 17,
+       "type": "screen_shake",
+       "px": 5,
+       "ms": 260
+      },
+      {
+       "frame": 17,
+       "type": "vfx",
+       "name": "ground_impact",
+       "x": 32,
+       "y": 0,
+       "baked": true
+      }
+     ],
+     "layers": {
+      "body": "sheets/berserker/layers/combo.body.png",
+      "weapon": "sheets/berserker/layers/combo.weapon.png",
+      "vfx": "sheets/berserker/layers/combo.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/combo.png",
+       "gif": "gif/berserker/damaged/combo.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/combo.body.png",
+        "weapon": "sheets/berserker/damaged/layers/combo.weapon.png",
+        "vfx": "sheets/berserker/damaged/layers/combo.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/combo.png",
+       "gif": "gif/berserker/heavily_damaged/combo.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/combo.body.png",
+        "weapon": "sheets/berserker/heavily_damaged/layers/combo.weapon.png",
+        "vfx": "sheets/berserker/heavily_damaged/layers/combo.vfx.png"
+       }
+      }
+     }
+    },
+    "hit": {
+     "frames": 8,
+     "ms": 60,
+     "loop": false,
+     "hold": 0,
+     "label": "tersentak mundur, pedang goyah, menggertakkan gigi, kembali ke kuda-kuda",
+     "sheet": "sheets/berserker/hit.png",
+     "gif": "gif/berserker/hit.gif",
+     "durations": [
+      60,
+      90,
+      100,
+      100,
+      90,
+      90,
+      100,
+      120
+     ],
+     "layers": {
+      "body": "sheets/berserker/layers/hit.body.png",
+      "weapon": "sheets/berserker/layers/hit.weapon.png",
+      "vfx": "sheets/berserker/layers/hit.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/hit.png",
+       "gif": "gif/berserker/damaged/hit.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/hit.body.png",
+        "weapon": "sheets/berserker/layers/hit.weapon.png",
+        "vfx": "sheets/berserker/layers/hit.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/hit.png",
+       "gif": "gif/berserker/heavily_damaged/hit.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/hit.body.png",
+        "weapon": "sheets/berserker/layers/hit.weapon.png",
+        "vfx": "sheets/berserker/layers/hit.vfx.png"
+       }
+      }
+     }
+    },
+    "miss": {
+     "frames": 21,
+     "ms": 80,
+     "loop": false,
+     "hold": 8,
+     "label": "meleset: pedang tertancap, ditarik-tarik, menatap pedang, lalu menatap penonton",
+     "sheet": "sheets/berserker/miss.png",
+     "gif": "gif/berserker/miss.gif",
+     "durations": [
+      80,
+      100,
+      150,
+      170,
+      40,
+      160,
+      100,
+      140,
+      110,
+      90,
+      110,
+      90,
+      130,
+      200,
+      240,
+      200,
+      200,
+      120,
+      260,
+      80,
+      300
+     ],
+     "events": [
+      {
+       "frame": 5,
+       "type": "screen_shake",
+       "px": 2,
+       "ms": 120
+      },
+      {
+       "frame": 5,
+       "type": "vfx",
+       "name": "dust",
+       "baked": true
+      }
+     ],
+     "layers": {
+      "body": "sheets/berserker/layers/miss.body.png",
+      "weapon": "sheets/berserker/layers/miss.weapon.png",
+      "vfx": "sheets/berserker/layers/miss.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/miss.png",
+       "gif": "gif/berserker/damaged/miss.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/miss.body.png",
+        "weapon": "sheets/berserker/damaged/layers/miss.weapon.png",
+        "vfx": "sheets/berserker/layers/miss.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/miss.png",
+       "gif": "gif/berserker/heavily_damaged/miss.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/miss.body.png",
+        "weapon": "sheets/berserker/heavily_damaged/layers/miss.weapon.png",
+        "vfx": "sheets/berserker/layers/miss.vfx.png"
+       }
+      }
+     }
+    },
+    "exhausted": {
+     "frames": 8,
+     "ms": 140,
+     "loop": true,
+     "hold": 0,
+     "label": "kehabisan tenaga: bersandar ke pedang, terengah-engah, berkeringat",
+     "sheet": "sheets/berserker/exhausted.png",
+     "gif": "gif/berserker/exhausted.gif",
+     "durations": [
+      140,
+      110,
+      110,
+      140,
+      160,
+      120,
+      110,
+      140
+     ],
+     "layers": {
+      "body": "sheets/berserker/layers/exhausted.body.png",
+      "weapon": "sheets/berserker/layers/exhausted.weapon.png",
+      "vfx": "sheets/berserker/layers/exhausted.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/exhausted.png",
+       "gif": "gif/berserker/damaged/exhausted.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/exhausted.body.png",
+        "weapon": "sheets/berserker/layers/exhausted.weapon.png",
+        "vfx": "sheets/berserker/layers/exhausted.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/exhausted.png",
+       "gif": "gif/berserker/heavily_damaged/exhausted.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/exhausted.body.png",
+        "weapon": "sheets/berserker/heavily_damaged/layers/exhausted.weapon.png",
+        "vfx": "sheets/berserker/layers/exhausted.vfx.png"
+       }
+      }
+     }
+    },
+    "victory": {
+     "frames": 16,
+     "ms": 200,
+     "loop": false,
+     "hold": 10,
+     "label": "susah payah mengangkat pedang, mengacungkannya tinggi, mengaum",
+     "sheet": "sheets/berserker/victory.png",
+     "gif": "gif/berserker/victory.gif",
+     "durations": [
+      200,
+      160,
+      120,
+      120,
+      160,
+      140,
+      90,
+      90,
+      90,
+      120,
+      90,
+      90,
+      90,
+      120,
+      200,
+      240
+     ],
+     "events": [
+      {
+       "frame": 9,
+       "type": "screen_shake",
+       "px": 2,
+       "ms": 160
+      }
+     ],
+     "layers": {
+      "body": "sheets/berserker/layers/victory.body.png",
+      "weapon": "sheets/berserker/layers/victory.weapon.png",
+      "vfx": "sheets/berserker/layers/victory.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/victory.png",
+       "gif": "gif/berserker/damaged/victory.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/victory.body.png",
+        "weapon": "sheets/berserker/layers/victory.weapon.png",
+        "vfx": "sheets/berserker/layers/victory.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/victory.png",
+       "gif": "gif/berserker/heavily_damaged/victory.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/victory.body.png",
+        "weapon": "sheets/berserker/layers/victory.weapon.png",
+        "vfx": "sheets/berserker/layers/victory.vfx.png"
+       }
+      }
+     }
+    },
+    "defeat": {
+     "frames": 19,
+     "ms": 200,
+     "loop": false,
+     "hold": 10,
+     "label": "pedang terlalu berat, terjungkal ke belakang dan jatuh, duduk, menyalahkan pedang",
+     "sheet": "sheets/berserker/defeat.png",
+     "gif": "gif/berserker/defeat.gif",
+     "durations": [
+      200,
+      120,
+      140,
+      160,
+      120,
+      110,
+      90,
+      120,
+      140,
+      160,
+      200,
+      140,
+      120,
+      160,
+      200,
+      200,
+      200,
+      90,
+      300
+     ],
+     "events": [
+      {
+       "frame": 7,
+       "type": "screen_shake",
+       "px": 2,
+       "ms": 100
+      }
+     ],
+     "layers": {
+      "body": "sheets/berserker/layers/defeat.body.png",
+      "weapon": "sheets/berserker/layers/defeat.weapon.png",
+      "vfx": "sheets/berserker/layers/defeat.vfx.png"
+     },
+     "damage": {
+      "damaged": {
+       "sheet": "sheets/berserker/damaged/defeat.png",
+       "gif": "gif/berserker/damaged/defeat.gif",
+       "layers": {
+        "body": "sheets/berserker/damaged/layers/defeat.body.png",
+        "weapon": "sheets/berserker/damaged/layers/defeat.weapon.png",
+        "vfx": "sheets/berserker/damaged/layers/defeat.vfx.png"
+       }
+      },
+      "heavily_damaged": {
+       "sheet": "sheets/berserker/heavily_damaged/defeat.png",
+       "gif": "gif/berserker/heavily_damaged/defeat.gif",
+       "layers": {
+        "body": "sheets/berserker/heavily_damaged/layers/defeat.body.png",
+        "weapon": "sheets/berserker/heavily_damaged/layers/defeat.weapon.png",
+        "vfx": "sheets/berserker/heavily_damaged/layers/defeat.vfx.png"
+       }
+      }
+     }
+    }
+   },
+   "canvas": {
+    "w": 144,
+    "h": 100
+   },
+   "anchor": {
+    "x": 56,
+    "baseline": 95,
+    "facing": "right"
+   },
+   "variants": {
+    "idle": [
+     "idle",
+     "idle_breath",
+     "idle_grip",
+     "idle_drag",
+     "idle_look",
+     "idle_twitch"
+    ],
+    "attack": [
+     "attack",
+     "attack_b"
+    ]
+   },
+   "aliases": {
+    "berserker_idle": "idle",
+    "berserker_ready": "ready",
+    "berserker_rage": "rage",
+    "berserker_run": "run",
+    "berserker_jump": "jump",
+    "berserker_attack": "attack",
+    "berserker_heavy_attack": "heavy_attack",
+    "berserker_leap_spin_slash": "leap_spin_slash",
+    "berserker_overhead_smash": "overhead_smash",
+    "berserker_air_slash": "air_slash",
+    "berserker_rage_attack": "rage_attack",
+    "berserker_combo": "combo",
+    "berserker_hit": "hit",
+    "berserker_miss": "miss",
+    "berserker_exhausted": "exhausted",
+    "berserker_victory": "victory",
+    "berserker_defeat": "defeat"
+   },
+   "damage_levels": [
+    "normal",
+    "damaged",
+    "heavily_damaged"
+   ],
+   "note": "Kanvas 144x100 (badan Gobyet tetap skala yang sama). Lapisan body/weapon/vfx, tiga tingkat kerusakan, durasi per frame, event hit/hitstop/screen_shake. Darah: sprite VFX terpisah, hanya saat kena."
+  }
+ ],
+ "vfx": {
+  "slash_arc": {
+   "sheet": "vfx/slash_arc.png",
+   "gif": "gif/vfx/slash_arc.gif",
+   "frames": 5,
+   "durations": [
+    40,
+    40,
+    50,
+    60,
+    60
+   ],
+   "loop": false,
+   "canvas": {
+    "w": 64,
+    "h": 64
+   },
+   "anchor": {
+    "x": 32,
+    "y": 32
+   },
+   "kind": "slash",
+   "note": "bulan sabit tebasan diagonal; jangkar = pusat putaran (bahu)"
+  },
+  "sword_trail": {
+   "sheet": "vfx/sword_trail.png",
+   "gif": "gif/vfx/sword_trail.gif",
+   "frames": 4,
+   "durations": [
+    30,
+    40,
+    50,
+    60
+   ],
+   "loop": false,
+   "canvas": {
+    "w": 64,
+    "h": 64
+   },
+   "anchor": {
+    "x": 32,
+    "y": 32
+   },
+   "kind": "slash",
+   "note": "smear pedang di antara dua sudut; jangkar = genggaman"
+  },
+  "dust": {
+   "sheet": "vfx/dust.png",
+   "gif": "gif/vfx/dust.gif",
+   "frames": 5,
+   "durations": [
+    60,
+    60,
+    70,
+    80,
+    90
+   ],
+   "loop": false,
+   "canvas": {
+    "w": 48,
+    "h": 16
+   },
+   "anchor": {
+    "x": 24,
+    "y": 15
+   },
+   "kind": "ground",
+   "note": "kepulan debu; jangkar = titik di lantai"
+  },
+  "impact": {
+   "sheet": "vfx/impact.png",
+   "gif": "gif/vfx/impact.gif",
+   "frames": 4,
+   "durations": [
+    40,
+    50,
+    60,
+    70
+   ],
+   "loop": false,
+   "canvas": {
+    "w": 48,
+    "h": 48
+   },
+   "anchor": {
+    "x": 24,
+    "y": 24
+   },
+   "kind": "impact",
+   "note": "kilat hantaman"
+  },
+  "debris": {
+   "sheet": "vfx/debris.png",
+   "gif": "gif/vfx/debris.gif",
+   "frames": 7,
+   "durations": [
+    50,
+    50,
+    60,
+    60,
+    70,
+    70,
+    80
+   ],
+   "loop": false,
+   "canvas": {
+    "w": 48,
+    "h": 32
+   },
+   "anchor": {
+    "x": 24,
+    "y": 31
+   },
+   "kind": "ground",
+   "note": "serpihan batu; jangkar = titik di lantai"
+  },
+  "spark": {
+   "sheet": "vfx/spark.png",
+   "gif": "gif/vfx/spark.gif",
+   "frames": 4,
+   "durations": [
+    30,
+    40,
+    50,
+    60
+   ],
+   "loop": false,
+   "canvas": {
+    "w": 24,
+    "h": 24
+   },
+   "anchor": {
+    "x": 12,
+    "y": 12
+   },
+   "kind": "impact",
+   "note": "percikan logam"
+  },
+  "ground_impact": {
+   "sheet": "vfx/ground_impact.png",
+   "gif": "gif/vfx/ground_impact.gif",
+   "frames": 8,
+   "durations": [
+    50,
+    60,
+    60,
+    70,
+    70,
+    80,
+    80,
+    90
+   ],
+   "loop": false,
+   "canvas": {
+    "w": 96,
+    "h": 40
+   },
+   "anchor": {
+    "x": 48,
+    "y": 39
+   },
+   "kind": "ground",
+   "note": "retak + gelombang kejut + debu; jangkar = titik di lantai"
+  },
+  "blood_small": {
+   "sheet": "vfx/blood_small.png",
+   "gif": "gif/vfx/blood_small.gif",
+   "frames": 4,
+   "durations": [
+    50,
+    60,
+    60,
+    70
+   ],
+   "loop": false,
+   "canvas": {
+    "w": 32,
+    "h": 24
+   },
+   "anchor": {
+    "x": 8,
+    "y": 10
+   },
+   "kind": "blood",
+   "note": "tingkat 1: beberapa tetes searah tebasan",
+   "blood_level": 1
+  },
+  "blood_medium": {
+   "sheet": "vfx/blood_medium.png",
+   "gif": "gif/vfx/blood_medium.gif",
+   "frames": 5,
+   "durations": [
+    50,
+    50,
+    60,
+    60,
+    70
+   ],
+   "loop": false,
+   "canvas": {
+    "w": 40,
+    "h": 28
+   },
+   "anchor": {
+    "x": 10,
+    "y": 12
+   },
+   "kind": "blood",
+   "note": "tingkat 2: cipratan kecil + tetes",
+   "blood_level": 2
+  },
+  "blood_burst": {
+   "sheet": "vfx/blood_burst.png",
+   "gif": "gif/vfx/blood_burst.gif",
+   "frames": 6,
+   "durations": [
+    40,
+    50,
+    50,
+    60,
+    60,
+    70
+   ],
+   "loop": false,
+   "canvas": {
+    "w": 48,
+    "h": 36
+   },
+   "anchor": {
+    "x": 18,
+    "y": 14
+   },
+   "kind": "blood",
+   "note": "tingkat 3: cipratan bintang kartun + tetes ke dua arah",
+   "blood_level": 3
+  },
+  "blood_arc": {
+   "sheet": "vfx/blood_arc.png",
+   "gif": "gif/vfx/blood_arc.gif",
+   "frames": 5,
+   "durations": [
+    40,
+    50,
+    60,
+    60,
+    70
+   ],
+   "loop": false,
+   "canvas": {
+    "w": 48,
+    "h": 40
+   },
+   "anchor": {
+    "x": 24,
+    "y": 22
+   },
+   "kind": "blood",
+   "note": "tetes mengikuti busur tebasan",
+   "blood_level": 2
+  },
+  "blood_particles": {
+   "sheet": "vfx/blood_particles.png",
+   "gif": "gif/vfx/blood_particles.gif",
+   "frames": 6,
+   "durations": [
+    60,
+    60,
+    60,
+    70,
+    70,
+    80
+   ],
+   "loop": false,
+   "canvas": {
+    "w": 32,
+    "h": 28
+   },
+   "anchor": {
+    "x": 16,
+    "y": 10
+   },
+   "kind": "blood",
+   "note": "partikel halus melayang turun",
+   "blood_level": 1
+  },
+  "blood_ground": {
+   "sheet": "vfx/blood_ground.png",
+   "gif": "gif/vfx/blood_ground.gif",
+   "frames": 6,
+   "durations": [
+    60,
+    70,
+    80,
+    90,
+    100,
+    120
+   ],
+   "loop": false,
+   "canvas": {
+    "w": 32,
+    "h": 4
+   },
+   "anchor": {
+    "x": 14,
+    "y": 0
+   },
+   "kind": "blood",
+   "note": "bercak kecil di lantai yang memudar; jangkar = baris lantai",
+   "blood_level": 1
+  },
+  "screen_shake_trigger": {
+   "type": "screen_shake",
+   "note": "mesin menggetarkan kamera; px = amplitudo, ms = lama",
+   "kind": "event"
+  },
+  "hitstop": {
+   "type": "hitstop",
+   "note": "mesin membekukan penyerang dan target selama ms, hanya bila kena",
+   "kind": "event"
+  }
+ },
+ "blood": {
+  "levels": {
+   "0": [],
+   "1": [
+    "blood_small",
+    "blood_particles"
+   ],
+   "2": [
+    "blood_medium",
+    "blood_arc",
+    "blood_ground"
+   ],
+   "3": [
+    "blood_burst",
+    "blood_arc",
+    "blood_ground"
+   ]
+  },
+  "default_level": 2,
+  "only_on_hit": true,
+  "note": "darah hanya sprite VFX terpisah, bergaya piksel, singkat; tingkat 0 mematikannya"
+ },
+ "event_types": {
+  "hit": "serangan kena di titik (x, y relatif jangkar, y=0 lantai); mesin memunculkan darah sesuai tingkat bila target memang kena, lalu target recoil",
+  "hitstop": "bekukan penyerang dan target selama ms (hanya bila kena)",
+  "screen_shake": "getarkan kamera px piksel selama ms",
+  "vfx": "VFX sudah ada di lapisan vfx sheet (baked); nama sprite VFX terpisah untuk mesin yang menggambar VFX sendiri",
+  "phase": "rentang frame tiap fase gerakan",
+  "rage_on": "mode amuk aktif"
+ },
+ "icons": {
+  "scroll": "icons/scroll.png",
+  "oldscroll": "icons/oldscroll.png",
+  "book": "icons/book.png",
+  "lawbook": "icons/lawbook.png",
+  "flask": "icons/flask.png",
+  "formula": "icons/formula.png",
+  "laptop": "icons/laptop.png",
+  "calculator": "icons/calculator.png",
+  "notebook": "icons/notebook.png",
+  "network": "icons/network.png",
+  "wrench": "icons/wrench.png",
+  "magnifier": "icons/magnifier.png",
+  "sword": "icons/sword.png",
+  "axe": "icons/axe.png",
+  "telescope": "icons/telescope.png",
+  "star": "icons/star.png",
+  "papers": "icons/papers.png",
+  "question": "icons/question.png",
+  "flag": "icons/flag.png"
+ }
+}

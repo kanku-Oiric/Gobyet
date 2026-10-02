@@ -10,7 +10,7 @@
    arsir dan menampilkan hasil fallback yang diredupkan. */
 :root {
   --bg: #f6f1e8; --panel: #fffaf2; --ink: #2b1a10; --muted: #6f5646; --line: #e3d4c0;
-  --fur: #8b5a37; --real: #2f7d4f; --ph: #b0691f; --ph-bg: #f3e3cc; --stage: #fdf7ec;
+  --fur: #8b5a37; --real: #2f7d4f; --new: #2f5fa8; --ph: #b0691f; --ph-bg: #f3e3cc; --stage: #fdf7ec;
   --f-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --f-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   color-scheme: light;
@@ -18,12 +18,12 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #17120e; --panel: #211a14; --ink: #f3e9dc; --muted: #bba592; --line: #3a2e24;
-    --fur: #d59a6a; --real: #5ccb8a; --ph: #f0a654; --ph-bg: #2e2217; --stage: #1d1712; color-scheme: dark;
+    --fur: #d59a6a; --real: #5ccb8a; --new: #7fb0ff; --ph: #f0a654; --ph-bg: #2e2217; --stage: #1d1712; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #17120e; --panel: #211a14; --ink: #f3e9dc; --muted: #bba592; --line: #3a2e24;
-  --fur: #d59a6a; --real: #5ccb8a; --ph: #f0a654; --ph-bg: #2e2217; --stage: #1d1712; color-scheme: dark;
+  --fur: #d59a6a; --real: #5ccb8a; --new: #7fb0ff; --ph: #f0a654; --ph-bg: #2e2217; --stage: #1d1712; color-scheme: dark;
 }
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
@@ -32,11 +32,13 @@ body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 var(-
 .wrap > * { min-width: 0; }
 h1 { margin: 0; font-size: clamp(24px, 5vw, 34px); line-height: 1.15; color: var(--fur); }
 h2 { margin: 0 0 10px; font-size: 18px; }
+h3 { margin: 0; font-size: 14px; color: var(--muted); }
 p { margin: 0; }
 .muted { color: var(--muted); }
 .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
 .chip { display: inline-flex; align-items: center; gap: 6px; font: 600 12px/1 var(--f-mono); padding: 6px 9px; border-radius: 6px; }
 .chip.real { color: var(--real); border: 2px solid var(--real); }
+.chip.new { color: var(--new); border: 2px solid var(--new); }
 .chip.ph { color: var(--ph); border: 2px dashed var(--ph); background: repeating-linear-gradient(45deg, var(--ph-bg) 0 6px, transparent 6px 12px); }
 .chip.na { color: var(--muted); border: 1px solid var(--line); }
 .stats { display: flex; flex-wrap: wrap; gap: 8px 18px; font-variant-numeric: tabular-nums; }
@@ -64,6 +66,31 @@ tr.group td, tr.group th { background: var(--bg); font: 700 11px/1 var(--f-mono)
 .frame { width: 128px; height: 96px; border-radius: 6px; background: var(--stage); position: relative; display: grid; place-items: center; overflow: hidden; }
 .frame canvas { width: 128px; height: 96px; image-rendering: pixelated; image-rendering: crisp-edges; display: block; }
 .cell.real .frame { outline: 2px solid var(--real); outline-offset: -2px; }
+.cell.new .frame { outline: 3px solid var(--new); outline-offset: -3px; }
+.cell.new .tag { background: var(--new); color: var(--panel); }
+.compare { display: grid; grid-template-columns: repeat(auto-fill, minmax(276px, 1fr)); gap: 12px; }
+.cmp { display: grid; gap: 4px; align-content: start; background: var(--stage); border-radius: 10px; padding: 8px; min-width: 0; margin: 0; }
+.cmp canvas { image-rendering: pixelated; image-rendering: crisp-edges; display: block; }
+.cmp .x4 { width: 256px; height: 192px; }
+.cmp .meta { display: flex; gap: 6px; align-items: center; min-width: 0; }
+.cmp .x1 { width: 64px; height: 48px; flex: none; }
+.cmp figcaption { font: 11px/1.3 var(--f-mono); color: var(--muted); min-width: 0; display: grid; }
+.cmp figcaption span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+details.fam { border: 1px solid var(--line); border-radius: 12px; background: var(--panel); min-width: 0; max-width: 100%; }
+details.fam > summary { cursor: pointer; padding: 10px 12px; font-weight: 600; min-height: 40px; }
+details.fam > .scroll { border: 0; border-top: 1px solid var(--line); border-radius: 0 0 12px 12px; }
+@media (max-width: 600px) {
+  .compare { grid-template-columns: 1fr 1fr; gap: 6px; }
+  .cmp { padding: 4px; gap: 2px; }
+  .cmp .x4 { width: 128px; height: 96px; }
+  .cmp figcaption { font-size: 10px; line-height: 1.2; }
+}
+.cmp.asli { outline: 2px solid var(--real); }
+.cmp.baru { outline: 3px solid var(--new); }
+.blind { display: flex; flex-wrap: wrap; gap: 12px; }
+.blind figure { margin: 0; display: grid; gap: 4px; justify-items: center; background: var(--stage); border-radius: 8px; padding: 8px; min-width: 88px; }
+.blind canvas { width: 64px; height: 48px; image-rendering: pixelated; image-rendering: crisp-edges; display: block; }
+.blind figcaption { font: 11px/1.3 var(--f-mono); color: var(--muted); text-align: center; }
 .cell.ph .frame { outline: 2px dashed var(--ph); outline-offset: -2px; background: repeating-linear-gradient(45deg, var(--ph-bg) 0 8px, var(--stage) 8px 16px); }
 .cell.ph canvas { opacity: 0.35; filter: grayscale(1); }
 .cell.css .frame::after { content: "?"; font: 700 36px/1 var(--f-mono); color: var(--ph); }
@@ -86,7 +113,8 @@ tr.group td, tr.group th { background: var(--bg); font: 700 11px/1 var(--f-mono)
     <h1>Gobyet Character Pack</h1>
     <p class="muted">Kostum menentukan siapa Gobyet, state menentukan dia sedang apa. Setiap sel diselesaikan oleh resolver dengan fallback berantai: kostum+state → kostum+idle → normal+state → normal+idle → placeholder.</p>
     <div class="row">
-      <span class="chip real">ASLI</span><span class="muted">asset sendiri</span>
+      <span class="chip real">ASLI</span><span class="muted">7 aset yang sudah ada sebelum Fase 2</span>
+      <span class="chip new">BARU</span><span class="muted">aset hasil generate Fase 2</span>
       <span class="chip ph">PLACEHOLDER</span><span class="muted">belum ada asset; yang tampil adalah hasil fallback, diredupkan</span>
       <span class="chip na">—</span><span class="muted">state tidak berlaku untuk kostum ini</span>
     </div>
@@ -102,6 +130,27 @@ tr.group td, tr.group th { background: var(--bg); font: 700 11px/1 var(--f-mono)
   <section class="panel" aria-labelledby="statsTitle">
     <h2 id="statsTitle">Cakupan</h2>
     <div class="stats" id="stats"></div>
+  </section>
+
+  <section class="panel" aria-labelledby="cmpTitle">
+    <h2 id="cmpTitle">Banding gaya</h2>
+    <p class="muted" style="margin-bottom:12px">Tiap aset tampil 1× (piksel asli 64×48) dan 4× (sheet 1× yang sama, diperbesar tanpa smoothing). Baris pertama: idle semua kostum dasar yang sudah jadi. Setelah itu per gerbang, yang terbaru di atas. Aset baru berlabel gerbangnya. Di mode Statis yang tampil adalah frame kunci dari manifest.</p>
+    <div class="row" style="margin-bottom:10px">
+      <label class="muted" for="cmpFilter">Tampilkan</label>
+      <select id="cmpFilter" style="max-width:100%;min-width:0"></select>
+      <span class="muted" id="cmpCount"></span>
+    </div>
+    <div id="compare" style="display:grid;gap:14px;grid-template-columns:minmax(0,1fr)"></div>
+  </section>
+
+  <section class="panel" aria-labelledby="blindTitle">
+    <h2 id="blindTitle">Tes buta: idle 1×</h2>
+    <p class="muted" style="margin-bottom:12px">Per keluarga kostum, lalu semua kostum dasar. Hanya kostum yang sudah punya idle; ukuran asli 64×48, tanpa label, urutan acak dengan seed tetap. Tebak dulu, lalu buka labelnya.</p>
+    <div class="row" style="margin-bottom:12px">
+      <button type="button" id="btnReveal" aria-pressed="false">Tampilkan label</button>
+      <span class="muted" id="blindSeed"></span>
+    </div>
+    <div id="blind" style="display:grid;gap:14px"></div>
   </section>
 
   <section class="panel" aria-labelledby="playTitle">
@@ -127,7 +176,7 @@ tr.group td, tr.group th { background: var(--bg); font: 700 11px/1 var(--f-mono)
 
   <section aria-labelledby="matrixTitle" style="display:grid;gap:10px">
     <h2 id="matrixTitle">Matriks kostum × state</h2>
-    <div class="scroll"><table id="matrix"></table></div>
+    <div id="matrix" style="display:grid;gap:10px;grid-template-columns:minmax(0,1fr)"></div>
   </section>
 </main>
 
@@ -179,9 +228,10 @@ tr.group td, tr.group th { background: var(--bg); font: 700 11px/1 var(--f-mono)
     wrap.appendChild(frame);
     var tag, note;
     if (result.kind === "exact") {
-      wrap.classList.add("real");
-      tag = "ASLI";
-      note = result.cell.source + " · " + result.cell.frames + " frame";
+      var isNew = result.cell.origin === "baru";
+      wrap.classList.add(isNew ? "new" : "real");
+      tag = isNew ? "BARU" : "ASLI";
+      note = result.cell.source + " · " + result.cell.frames + " frame" + (isNew && result.cell.gate ? " · gerbang " + result.cell.gate : "");
     } else if (result.kind === "fallback") {
       wrap.classList.add("ph");
       tag = "PLACEHOLDER";
@@ -200,72 +250,248 @@ tr.group td, tr.group th { background: var(--bg); font: 700 11px/1 var(--f-mono)
     return wrap;
   }
 
+  var FAMILY_OF = { core: "Inti dan spesial", special: "Inti dan spesial", role: "Peran", domain: "Domain",
+    fantasy: "Fantasi", theology: "Teologi" };
   function buildMatrix() {
     var mx = P.matrix(manifest);
-    var table = $("matrix");
-    table.textContent = "";
-    var thead = el("thead"), hr = el("tr");
-    hr.appendChild(el("th", null, "Kostum"));
-    mx.states.forEach(function (s) {
-      var th = el("th", null, s.label);
-      th.scope = "col";
-      th.appendChild(el("small", null, s.required ? "wajib" : "opsional" + (s.costumes ? " · " + s.costumes.join(", ") : "")));
-      hr.appendChild(th);
-    });
-    thead.appendChild(hr);
-    table.appendChild(thead);
-    var tbody = el("tbody"), group = null;
-    var count = { real: 0, ph: 0, reqReal: 0, req: 0, applicable: 0 };
+    var box = $("matrix");
+    box.textContent = "";
+    var narrow = !!(window.matchMedia && window.matchMedia("(max-width: 600px)").matches);
+    var count = { real: 0, fresh: 0, ph: 0, reqReal: 0, req: 0, applicable: 0 };
+    var families = [];
     mx.costumes.forEach(function (c) {
-      if (c.group !== group) {
-        group = c.group;
-        var gr = el("tr", "group"), gth = el("th", null, group.toUpperCase());
-        gth.colSpan = mx.states.length + 1;
-        gr.appendChild(gth);
-        tbody.appendChild(gr);
-      }
-      var tr = el("tr");
-      var th = el("th", null, c.label);
-      th.scope = "row";
-      th.appendChild(el("small", null, c.id));
-      tr.appendChild(th);
-      mx.states.forEach(function (s) {
-        var td = el("td");
-        if (!P.applies(s, c.id)) {
-          var na = el("div", "na-cell", "—");
-          na.setAttribute("aria-label", c.label + " " + s.label + ": tidak berlaku");
-          td.appendChild(na);
-        } else {
-          var r = P.resolve(manifest, c.id, s.id);
-          td.appendChild(cellView(r));
-          count.applicable++;
-          if (s.required) count.req++;
-          if (r.kind === "exact") { count.real++; if (s.required) count.reqReal++; } else count.ph++;
-        }
-        tr.appendChild(td);
-      });
-      tbody.appendChild(tr);
+      var name = FAMILY_OF[c.group] || c.group;
+      var fam = families.filter(function (f) { return f.name === name; })[0];
+      if (!fam) families.push(fam = { name: name, costumes: [] });
+      fam.costumes.push(c);
     });
-    table.appendChild(tbody);
+    families.forEach(function (fam, fi) {
+      var det = el("details", "fam");
+      det.open = !narrow || fi === 0;
+      var sum = el("summary", null, fam.name + " (" + fam.costumes.length + " kostum)");
+      det.appendChild(sum);
+      var wrap = el("div", "scroll"), table = el("table");
+      wrap.appendChild(table);
+      det.appendChild(wrap);
+      box.appendChild(det);
+      var thead = el("thead"), hr = el("tr");
+      hr.appendChild(el("th", null, "Kostum"));
+      mx.states.forEach(function (s) {
+        var th = el("th", null, s.label);
+        th.scope = "col";
+        hr.appendChild(th);
+      });
+      thead.appendChild(hr);
+      table.appendChild(thead);
+      var tbody = el("tbody"), filled = 0, applicable = 0;
+      fam.costumes.forEach(function (c) {
+        var tr = el("tr");
+        var th = el("th", null, c.label);
+        th.scope = "row";
+        th.appendChild(el("small", null, c.id + (c.base ? " ← " + c.base : "")));
+        if (c.caption) th.title = c.caption;
+        tr.appendChild(th);
+        mx.states.forEach(function (s) {
+          var td = el("td");
+          var rule = P.cellRule(c, s);
+          if (!rule) {
+            var na = el("div", "na-cell", "—");
+            na.setAttribute("aria-label", c.label + " " + s.label + ": tidak berlaku");
+            td.appendChild(na);
+          } else {
+            var r = P.resolve(manifest, c.id, s.id);
+            var v = cellView(r);
+            v.appendChild(el("span", "note", rule === "required" ? "wajib" : "opsional"));
+            td.appendChild(v);
+            count.applicable++; applicable++;
+            if (rule === "required") count.req++;
+            if (r.kind === "exact") {
+              filled++;
+              if (r.cell.origin === "baru") count.fresh++; else count.real++;
+              if (rule === "required") count.reqReal++;
+            } else count.ph++;
+          }
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+      sum.textContent = fam.name + " · " + fam.costumes.length + " kostum · " + filled + " / " + applicable + " sel terisi";
+    });
     var st = $("stats");
     st.textContent = "";
-    [[count.real, "sel asli"], [count.ph, "placeholder"], [count.reqReal + " / " + count.req, "state wajib terisi"],
+    [[count.real, "sel asli"], [count.fresh, "sel baru"], [count.ph, "placeholder"], [count.reqReal + " / " + count.req, "sel wajib terisi"],
+     [(count.real + count.fresh) + " / " + count.applicable, "sel berlaku terisi"],
      [mx.costumes.length + " × " + mx.states.length, "kostum × state"]].forEach(function (p) {
       var d = el("div"); d.appendChild(el("b", null, String(p[0]))); d.appendChild(document.createTextNode(" " + p[1])); st.appendChild(d);
     });
   }
 
+  // ---- banding gaya: 1x dan 4x dari sheet 1x yang sama (tanpa smoothing), dibangkitkan dari manifest
+  var GATE_ORDER = ["A", "B", "C", "D", "E", "G", "H", "I", "J", "F"];  // urutan kerja sebenarnya
+  var SPLIT_OVER = 24;
+  function isBaseCostume(c) { return !c.base || c.group === "special"; }
+  function compareGroups() {
+    var mx = P.matrix(manifest);
+    var groups = [["idle", "Idle: semua kostum dasar yang sudah jadi", mx.costumes.filter(isBaseCostume).map(function (c) { return [c.id, "idle"]; })]];
+    var byGate = {};
+    mx.costumes.forEach(function (c) {
+      mx.states.forEach(function (s) {
+        var r = P.resolve(manifest, c.id, s.id);
+        if (r.kind === "exact" && r.cell.gate) (byGate[r.cell.gate] = byGate[r.cell.gate] || []).push([c.id, s.id]);
+      });
+    });
+    // Gerbang dengan lebih dari SPLIT_OVER aset dipecah per keluarga (atau per faksi bila satu keluarga saja),
+    // supaya satu tampilan tetap <= 3000 px di ponsel. Nilai pilihan: "<gerbang>:<kunci>".
+    var byId = {};
+    mx.costumes.forEach(function (c) { byId[c.id] = c; });
+    GATE_ORDER.slice().reverse().forEach(function (g) {
+      var list = byGate[g];
+      if (!list) return;
+      if (list.length <= SPLIT_OVER) { groups.push([g, "Gerbang " + g + " (" + list.length + " aset)", list]); return; }
+      var fam = function (pair) { var c = byId[pair[0]]; return FAMILY_OF[c.group] || c.group; };
+      var keyOf = list.every(function (pair) { return fam(pair) === fam(list[0]); })
+        ? function (pair) { var c = byId[pair[0]]; return c.base || c.id; } : fam;
+      var parts = [];
+      list.forEach(function (pair) {
+        var k = keyOf(pair), part = parts.filter(function (x) { return x[0] === k; })[0];
+        if (!part) parts.push(part = [k, []]);
+        part[1].push(pair);
+      });
+      parts.forEach(function (part) {
+        var slug = part[0].toLowerCase().replace(/[^a-z0-9]+/g, "-");
+        groups.push([g + ":" + slug, "Gerbang " + g + " · " + part[0] + " (" + part[1].length + " dari " + list.length + " aset)", part[1]]);
+      });
+    });
+    return groups;
+  }
+  var cmpCells = [];
+  function figure(pair) {
+    var r = P.resolve(manifest, pair[0], pair[1]);
+    if (r.kind !== "exact") return null;
+    var isNew = r.cell.origin === "baru";
+    var fig = el("figure", "cmp " + (isNew ? "baru" : "asli"));
+    var c4 = el("canvas", "x4"); c4.width = 256; c4.height = 192;
+    var meta = el("div", "meta");
+    var c1 = el("canvas", "x1"); c1.width = 64; c1.height = 48;
+    var cap = el("figcaption");
+    var label = isNew ? "BARU · gerbang " + (r.cell.gate || "?") : "ASLI";
+    [pair[0], pair[1], label].forEach(function (t) { cap.appendChild(el("span", null, t)); });
+    cap.title = label + " · " + pair[0] + "/" + pair[1] + " · " + r.cell.source;
+    meta.appendChild(c1); meta.appendChild(cap);
+    fig.appendChild(c4); fig.appendChild(meta);
+    fig.setAttribute("aria-label", pair[0] + " " + pair[1] + ", " + label + ", 1x dan diperbesar");
+    fig.setAttribute("data-cell", pair[0] + "/" + pair[1]);
+    cmpCells.push({ canvas: c1, cell: r.cell, url: assetUrl(r.cell.sheet), last: -1 });
+    cmpCells.push({ canvas: c4, cell: r.cell, url: assetUrl(r.cell.sheet), last: -1 });
+    return fig;
+  }
+  function buildCompare() {
+    var sel = $("cmpFilter"), groups = compareGroups();
+    if (!sel.options.length) {
+      groups.forEach(function (g) { var o = el("option", null, g[1]); o.value = g[0]; sel.appendChild(o); });
+      var all = el("option", null, "Semua"); all.value = "semua"; sel.appendChild(all);
+      sel.value = groups.length > 1 ? groups[1][0] : "idle";  // bawaan: gerbang terbaru
+      sel.addEventListener("change", buildCompare);
+    }
+    var box = $("compare");
+    box.textContent = "";
+    cells = cells.filter(function (c) { return cmpCells.indexOf(c) === -1; });
+    cmpCells = [];
+    var n = 0;
+    groups.forEach(function (group) {
+      if (sel.value !== "semua" && sel.value !== group[0]) return;
+      box.appendChild(el("h3", null, group[1]));
+      var row = el("div", "compare");
+      box.appendChild(row);
+      group[2].forEach(function (pair) { var f = figure(pair); if (f) { row.appendChild(f); n++; } });
+    });
+    cells = cells.concat(cmpCells);
+    $("cmpCount").textContent = n + " aset";
+  }
+
+  // ---- tes buta: idle 1x tanpa label, urutan acak dengan seed tetap
+  var BLIND_SEED = 20260930;
+  function rng(seed) {  // mulberry32
+    return function () {
+      seed = (seed + 0x6D2B79F5) | 0;
+      var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  var FAMILIES = [
+    ["Peran", function (c) { return c.group === "role"; }],
+    ["Domain", function (c) { return c.group === "core" || c.group === "domain"; }],
+    ["Fantasi (termasuk varian)", function (c) { return c.group === "fantasy"; }],
+    ["Teologi dan spesial", function (c) { return c.group === "theology" || c.group === "special"; }],
+    ["Semua kostum dasar", isBaseCostume],
+  ];
+  function shuffled(list, seed) {
+    var picks = list.slice(), rand = rng(seed);
+    for (var i = picks.length - 1; i > 0; i--) {
+      var j = Math.floor(rand() * (i + 1));
+      var tmp = picks[i]; picks[i] = picks[j]; picks[j] = tmp;
+    }
+    return picks;
+  }
+  function buildBlind() {
+    var box = $("blind");
+    box.textContent = "";
+    var withIdle = P.matrix(manifest).costumes.filter(function (c) {
+      return P.resolve(manifest, c.id, "idle").kind === "exact";
+    });
+    var total = 0;
+    FAMILIES.forEach(function (fam, f) {
+      var picks = shuffled(withIdle.filter(fam[1]), BLIND_SEED + f);
+      var sec = el("div", "blind-family");
+      sec.appendChild(el("h3", null, fam[0] + " (" + picks.length + ")"));
+      var row = el("div", "blind");
+      sec.appendChild(row);
+      box.appendChild(sec);
+      if (!picks.length) row.appendChild(el("span", "muted", "belum ada kostum dengan idle"));
+      picks.forEach(function (c, k) {
+        var r = P.resolve(manifest, c.id, "idle");
+        var fig = el("figure");
+        var cv = el("canvas"); cv.width = 64; cv.height = 48;
+        fig.appendChild(cv);
+        var cap = el("figcaption", null, "#" + (k + 1));
+        cap.setAttribute("data-label", c.label);
+        cap.setAttribute("data-num", String(k + 1));
+        fig.appendChild(cap);
+        fig.setAttribute("role", "img");
+        fig.setAttribute("aria-label", fam[0] + ", kandidat " + (k + 1));
+        fig.setAttribute("data-costume", c.id);
+        row.appendChild(fig);
+        cells.push({ canvas: cv, cell: r.cell, url: assetUrl(r.cell.sheet), last: -1 });
+        total++;
+      });
+    });
+    $("blindSeed").textContent = total + " gambar · seed " + BLIND_SEED + " (+ nomor keluarga)";
+  }
+  $("btnReveal").addEventListener("click", function () {
+    var show = this.getAttribute("aria-pressed") !== "true";
+    this.setAttribute("aria-pressed", String(show));
+    this.textContent = show ? "Sembunyikan label" : "Tampilkan label";
+    Array.prototype.forEach.call(document.querySelectorAll("#blind figure"), function (fig) {
+      var cap = fig.querySelector("figcaption"), n = cap.getAttribute("data-num");
+      cap.textContent = "#" + n + (show ? " · " + cap.getAttribute("data-label") : "");
+      var fam = fig.getAttribute("aria-label").split(",")[0];
+      fig.setAttribute("aria-label", fam + ", kandidat " + n + (show ? ": " + cap.getAttribute("data-label") : ""));
+    });
+  });
+
   // ---- uji resolver
   var play = { canvas: $("playCanvas"), cell: null, url: null, last: -1 };
   function fillSelects() {
     var mx = P.matrix(manifest);
-    mx.costumes.concat([{ id: "pirate", label: "pirate (tidak ada)" }]).forEach(function (c) {
+    mx.costumes.concat([{ id: "astronot", label: "astronot (tidak ada)" }]).forEach(function (c) {
       var o = el("option", null, c.label); o.value = c.id; $("selCostume").appendChild(o);
     });
     mx.states.concat([{ id: "dancing", label: "dancing (tidak ada)" }]).forEach(function (s) {
       var o = el("option", null, s.label); o.value = s.id; $("selState").appendChild(o);
     });
-    $("selCostume").value = "greek-philosopher";
+    $("selCostume").value = "knight-heavy";
     $("selState").value = "victory";
   }
   function updatePlay() {
@@ -299,10 +525,15 @@ tr.group td, tr.group th { background: var(--bg); font: 700 11px/1 var(--f-mono)
     var f = P.frameAt(c.cell, t, still);
     if (f === c.last) return;
     c.last = f;
+    var w = c.canvas.width, h = c.canvas.height;
     var ctx = c.canvas.getContext("2d");
     ctx.imageSmoothingEnabled = false;
-    ctx.clearRect(0, 0, 64, 48);
-    ctx.drawImage(im, f * 64, 0, 64, 48, 0, 0, 64, 48);
+    ctx.clearRect(0, 0, w, h);
+    ctx.drawImage(im, f * 64, 0, 64, 48, 0, 0, w, h);
+    // penanda untuk uji otomatis: frame yang sedang tampil dan frame kunci sel ini
+    c.canvas.setAttribute("data-frame", String(f));
+    c.canvas.setAttribute("data-keyframe", String(c.cell.keyframe));
+    c.canvas.setAttribute("data-src", c.url);
   }
   function tick(now) {
     var t = now - t0;
@@ -314,6 +545,8 @@ tr.group td, tr.group th { background: var(--bg); font: 700 11px/1 var(--f-mono)
   function start(m, url) {
     manifest = m; manifestUrl = url;
     buildMatrix();
+    buildCompare();
+    buildBlind();
     fillSelects();
     updatePlay();
     setMotion(reduced);

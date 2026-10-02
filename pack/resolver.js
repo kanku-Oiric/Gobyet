@@ -3,7 +3,9 @@
  *
  * resolve(manifest, costume, state) tidak pernah melempar error dan selalu
  * mengembalikan sesuatu yang bisa dirender. Urutan fallback:
- *   kostum+state -> kostum+idle -> normal+state -> normal+idle -> placeholder
+ *   kostum+state -> kostum+idle -> base+state -> base+idle -> normal+state -> normal+idle -> placeholder
+ * "base" diambil dari field base kostum di manifest.costumes (varian kelas -> kostum induk).
+ * Tanpa base, atau base = normal, langkah base dilewati dan rantainya sama dengan rantai lama.
  *
  * Dipakai di browser (window.GobyetPack) maupun Node (require). Tanpa dependensi.
  */
@@ -15,7 +17,7 @@
 
   var BASE_COSTUME = "normal";
   var BASE_STATE = "idle";
-  var STEPS = ["costume+state", "costume+idle", "normal+state", "normal+idle"];
+  var STEPS = ["costume+state", "costume+idle", "base+state", "base+idle", "normal+state", "normal+idle"];
 
   function name(value, fallback) {
     if (typeof value !== "string") return fallback;
@@ -53,6 +55,21 @@
     }
   }
 
+  /* Kostum induk dari manifest.costumes[].base; null bila tidak ada, tidak valid, atau manifest rusak. */
+  function baseOf(manifest, costume) {
+    try {
+      if (!isObject(manifest) || !Array.isArray(manifest.costumes)) return null;
+      for (var i = 0; i < manifest.costumes.length; i++) {
+        var c = manifest.costumes[i];
+        if (isObject(c) && c.id === costume) {
+          var b = name(c.base, null);
+          return b && b !== costume && b !== BASE_COSTUME ? b : null;
+        }
+      }
+    } catch (e) { /* abaikan */ }
+    return null;
+  }
+
   function canvas(manifest) {
     try {
       var c = manifest && manifest.canvas;
@@ -78,9 +95,11 @@
     var s = name(state, BASE_STATE);
     var tried = [];
     try {
-      var chain = [[c, s], [c, BASE_STATE], [BASE_COSTUME, s], [BASE_COSTUME, BASE_STATE]];
+      var b = baseOf(manifest, c);
+      var chain = [[c, s], [c, BASE_STATE], b && [b, s], b && [b, BASE_STATE], [BASE_COSTUME, s], [BASE_COSTUME, BASE_STATE]];
       var seen = {};
       for (var i = 0; i < chain.length; i++) {
+        if (!chain[i]) continue;
         var key = chain[i][0] + "/" + chain[i][1];
         if (seen[key]) continue;
         seen[key] = true;
@@ -125,7 +144,12 @@
     try {
       if (isObject(manifest) && Array.isArray(manifest.costumes)) {
         manifest.costumes.forEach(function (c) {
-          if (isObject(c) && typeof c.id === "string") costumes.push({ id: c.id, label: String(c.label || c.id), group: String(c.group || "") });
+          if (!isObject(c) || typeof c.id !== "string") return;
+          var out = { id: c.id, label: String(c.label || c.id), group: String(c.group || "") };
+          if (typeof c.base === "string" && c.base) out.base = c.base;
+          if (typeof c.caption === "string" && c.caption) out.caption = c.caption;
+          if (isObject(c.applies)) out.applies = c.applies;
+          costumes.push(out);
         });
       }
       if (isObject(manifest) && Array.isArray(manifest.states)) {
@@ -144,6 +168,20 @@
     return !state.costumes || state.costumes.indexOf(costumeId) !== -1;
   }
 
-  return { resolve: resolve, frameAt: frameAt, matrix: matrix, applies: applies, canvas: canvas, validCell: validCell,
-    STEPS: STEPS.concat(["placeholder"]) };
+  /* Status sel dari "applies" per kostum: "required", "optional", atau null (tidak berlaku).
+     Manifest lama tanpa "applies" memakai aturan state lama (required + allowlist). */
+  function cellRule(costume, state) {
+    try {
+      if (isObject(costume) && isObject(costume.applies)) {
+        var r = costume.applies[state.id];
+        return r === "required" || r === "optional" ? r : null;
+      }
+      return applies(state, costume.id) ? (state.required ? "required" : "optional") : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  return { resolve: resolve, frameAt: frameAt, matrix: matrix, applies: applies, cellRule: cellRule, baseOf: baseOf,
+    canvas: canvas, validCell: validCell, STEPS: STEPS.concat(["placeholder"]) };
 });

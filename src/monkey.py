@@ -20,6 +20,26 @@ PAL = {
     "I": (196, 228, 246), "k": (44, 76, 60), "m": (232, 228, 218),  # lensa, papan tulis, marmer
 }
 
+# Palet tambahan untuk aset baru mulai Gerbang D. Aset lama hanya memakai PAL dan diekspor dengan urutan
+# palet lama, jadi byte-nya tidak berubah. Aset baru memakai palet lokal (hanya warna yang dipakai aset
+# itu), jadi menambah kunci di sini tidak mengubah aset baru yang sudah ada. Kunci tidak boleh sama
+# dengan kunci PAL. Kunci yang masih bebas: J j p t w z i o dan angka.
+PAL_EXT = {
+    "p": (98, 58, 140), "j": (70, 40, 104),  # ungu: rompi Mathematician (Gerbang D)
+    "J": (40, 56, 104), "w": (28, 38, 74),  # biru jas: jas Lawyer (Gerbang E)
+    # Alokasi warna global untuk kostum Gerbang G-J (ditambahkan sekaligus sebelum Gerbang G).
+    "o": (238, 142, 52), "t": (196, 104, 32),  # oranye: kaus Gamer
+    "z": (164, 32, 40), "1": (120, 20, 30),  # merah tua: tabard Knight
+    "i": (122, 32, 52), "2": (88, 20, 38),  # marun: mantel Pirate
+    "3": (66, 110, 220), "4": (44, 78, 170),  # biru kerajaan: jubah Wizard
+    "5": (112, 112, 124),  # bayangan abu untuk jubah Priest (g)
+}
+
+
+def rgb(c):
+    """Warna untuk kunci palet: PAL dulu, lalu PAL_EXT."""
+    return PAL[c] if c in PAL else PAL_EXT[c]
+
 
 class Canvas:
     def __init__(self):
@@ -36,7 +56,7 @@ class Canvas:
     def image(self, scale=1, bg=None):
         im = Image.new("RGBA", (W, H), bg + (255,) if bg else (0, 0, 0, 0))
         for (x, y), c in self.px.items():
-            im.putpixel((x, y), PAL[c] + (255,))
+            im.putpixel((x, y), rgb(c) + (255,))
         return im.resize((W * scale, H * scale), Image.NEAREST) if scale != 1 else im
 
 
@@ -106,7 +126,7 @@ def head(cv, cx, cy, eyes="look", brows="flat", mouth="frown", face="F", tilt=0)
     ey = int(cy + 0.4)
     for i, x0 in enumerate(ex):
         x0 = int(x0)
-        if eyes in ("look", "wide", "down", "side"):
+        if eyes in ("look", "wide", "down", "side", "left"):
             h = 4 if eyes != "wide" else 5
             white = rect(x0 - 2, ey - 2, 4, h) - {(x0 - 2, ey - 2), (x0 + 1, ey - 2), (x0 - 2, ey - 3 + h), (x0 + 1, ey - 3 + h)}
             cv.fill(white, "W")
@@ -116,6 +136,8 @@ def head(cv, cx, cy, eyes="look", brows="flat", mouth="frown", face="F", tilt=0)
                 cv.fill(rect(x0 - 1 + i, ey, 2, 2), "P")
             elif eyes == "side":
                 cv.fill(rect(x0, ey - 1, 2, 2), "P")
+            elif eyes == "left":
+                cv.fill(rect(x0 - 2, ey - 1, 2, 2), "P")
             else:
                 cv.fill(rect(x0 - 1 + i, ey - 1, 2, 2), "P")
         elif eyes == "blink":
@@ -147,6 +169,11 @@ def head(cv, cx, cy, eyes="look", brows="flat", mouth="frown", face="F", tilt=0)
             cv.fill([(p[0], p[1] - 1) for p in pts[1:]], "K")
         elif brows == "up":
             cv.fill(rect(x0 - 2, by - 1, 4, 1), "K")
+        elif brows == "raised":  # skeptis: alis kiri turun, alis kanan melengkung naik
+            if i == 0:
+                cv.fill({(x0 - 2, by), (x0 - 1, by), (x0, by + 1), (x0 + 1, by + 1)}, "K")
+            else:
+                cv.fill({(x0 - 2, by - 1), (x0 - 1, by - 2), (x0, by - 2), (x0 + 1, by - 1)}, "K")
     # hidung dan mulut
     my = int(cy + 4)
     cv.put(cx - 1, my - 1, "M"); cv.put(cx, my - 1, "M")
@@ -156,6 +183,8 @@ def head(cv, cx, cy, eyes="look", brows="flat", mouth="frown", face="F", tilt=0)
         cv.fill(rect(cx - 2, my + 1, 4, 1), "M")
     elif mouth == "smile":
         cv.fill({(cx - 2, my + 1), (cx - 1, my + 2), (cx, my + 2), (cx + 1, my + 1)}, "M")
+    elif mouth == "smirk":  # datar dengan sudut kanan naik
+        cv.fill({(cx - 2, my + 2), (cx - 1, my + 2), (cx, my + 2), (cx + 1, my + 1)}, "M")
     elif mouth == "shout":
         cv.fill(rect(cx - 2, my + 1, 4, 3), "M")
         cv.fill(rect(cx - 1, my + 3, 2, 1), "T")
@@ -268,6 +297,9 @@ MINI = {
     ".": ["00000", "00000", "00000", "00000", "00100"], "v": ["00001", "00010", "10100", "01000", "00000"],
     "n": ["00110", "00101", "00100", "11100", "11100"],  # not musik
     "O": ["01110", "10001", "10001", "10001", "01110"], "K": ["10010", "10100", "11000", "10100", "10010"],
+    # Fase 2 Gerbang G (aditif): huruf untuk papan GBLK dan "GG" milik Gamer.
+    "G": ["01111", "10000", "10011", "10001", "01110"], "B": ["11110", "10001", "11110", "10001", "11110"],
+    "L": ["10000", "10000", "10000", "10000", "11111"],
 }
 
 

@@ -1,0 +1,64 @@
+{
+ "seed": 20260930,
+ "urutan": {
+  "semua": [
+   "referee",
+   "normal-gblk",
+   "lawyer",
+   "champion",
+   "judge",
+   "hacker",
+   "scientist",
+   "pak-haji",
+   "greek-philosopher",
+   "wizard",
+   "skeptic",
+   "pirate",
+   "priest",
+   "normal",
+   "viking",
+   "gamer",
+   "mathematician",
+   "academic",
+   "detective",
+   "knight"
+  ],
+  "inti-spesial": [
+   "normal-gblk",
+   "normal"
+  ],
+  "peran": [
+   "champion",
+   "referee",
+   "judge",
+   "skeptic"
+  ],
+  "domain": [
+   "mathematician",
+   "gamer",
+   "greek-philosopher",
+   "hacker",
+   "lawyer",
+   "detective",
+   "scientist",
+   "academic"
+  ],
+  "fantasi": [
+   "viking",
+   "pirate",
+   "wizard",
+   "knight"
+  ],
+  "teologi": [
+   "pak-haji",
+   "priest"
+  ]
+ },
+ "label": {
+  "inti-spesial": "Inti dan spesial",
+  "peran": "Peran",
+  "domain": "Domain",
+  "fantasi": "Fantasi",
+  "teologi": "Teologi"
+ }
+}
