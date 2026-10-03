@@ -246,4 +246,10 @@ Fallback hero: `berserker-hero` punya `idle`, jadi state yang tidak ada (mis. `v
 
 `src/hero_scenes.py`, `src/hero_check.py`, `tools/hero_hashes.py`, `tools/hero_phase_d.py`, `pack/sha256-hero.txt`, `pack/reports/hero-fase-cd.md` dan `pack/reports/hero-fase-cd/`, 16 aset `gif/berserker-hero-*.gif` dan `sheets/berserker-hero-*.png`; diubah: `src/hero.py`, `src/pack.py`, `src/export.py`, `src/validate_pack.py`, `src/test_validate_pack.py`, `pack/manifest.json`, `pack/resolver.js`, `pack/resolver.test.js`, `pack/preview.html`, `tools/e2e_preview.js`, `pack/README.md`, `pack/STYLE.md`, `pack/PROGRESS.md`.
 
+## 9. Angka akhir diff (pada commit `1545abf`, sebelum commit yang menambahkan bagian ini)
+
+- `git diff --stat b213be8..HEAD` (basis `claude/gobyet-fase2`, yaitu pekerjaan hero saja): `74 files changed, 5645 insertions(+), 88 deletions(-)`
+- `git diff --name-status b213be8..HEAD -- gif sheets`: `16 A` (hanya `A` = berkas hero baru; tidak ada `M` atau `D`)
+- `git diff --stat main..HEAD`: `1438 files changed, 43581 insertions(+), 255 deletions(-)` (hampir seluruhnya pekerjaan Fase 2 dan v2 yang sudah ada di `claude/gobyet-fase2`, bukan hero)
+
 Menunggu persetujuan gaya untuk Berserker Hero.
