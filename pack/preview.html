@@ -105,8 +105,17 @@ details.fam > .scroll { border: 0; border-top: 1px solid var(--line); border-rad
 .big { width: 256px; height: 192px; }
 .play-cell { width: auto; }
 /* Berserker Hero (kanvas 128x96): lembar kontak per state, semua frame berurutan, bernomor, 2x, bisa digulir mendatar. */
-#heroSection { --hero-stage: #faf7f0; --hero-ink: #2b1a10; }
+#heroSection { --hero-stage: #faf7f0; --hero-ink: #2b1a10; --halo: #e8daba; }
 #heroSection[data-herobg="dark"] { --hero-stage: #181c2c; --hero-ink: #e7ecf8; }
+#heroSection[data-herobg="gray"] { --hero-stage: #808080; --hero-ink: #101010; }
+/* Halo: kontur krem 1 px (CSS) di luar siluet, hanya di pratinjau; aset tidak diubah. Empat drop-shadow tanpa blur berantai
+   (kiri, kanan, atas, bawah) menutup juga sudut diagonal. Warna = nada tulang palet hero (bb). */
+#heroSection[data-halo="1"] .strip canvas, #heroSection[data-halo="1"] .hero-player canvas {
+  filter: drop-shadow(1px 0 0 var(--halo)) drop-shadow(-1px 0 0 var(--halo)) drop-shadow(0 1px 0 var(--halo)) drop-shadow(0 -1px 0 var(--halo));
+}
+.once { font: 700 11px/1 var(--f-mono); letter-spacing: 0.04em; padding: 4px 7px; border-radius: 5px; color: var(--ph); border: 1px dashed var(--ph); white-space: nowrap; }
+.hero-head button.replay { min-height: 32px; padding: 4px 10px; font-size: 13px; }
+.hero-head button.replay[aria-disabled="true"] { opacity: 0.5; }
 .hero-state { display: grid; gap: 8px; padding-block: 12px; border-top: 1px solid var(--line); min-width: 0; }
 .hero-state:first-of-type { border-top: 0; }
 .hero-state h3 { color: var(--ink); }
@@ -119,8 +128,10 @@ details.fam > .scroll { border: 0; border-top: 1px solid var(--line); border-rad
 .strip { display: flex; gap: 8px; overflow-x: auto; max-width: 100%; padding-bottom: 8px; -webkit-overflow-scrolling: touch; scroll-snap-type: x proximity; }
 .strip:focus-visible { outline: 2px solid var(--ph); outline-offset: 2px; }
 .strip figure { margin: 0; flex: none; display: grid; gap: 3px; justify-items: center; scroll-snap-align: start; }
-.strip canvas { width: 256px; height: 192px; display: block; background: var(--hero-stage); border-radius: 6px; image-rendering: pixelated; image-rendering: crisp-edges; }
-.strip figure.key canvas { outline: 3px solid var(--new); outline-offset: -3px; }
+/* Latar ada di pembungkus .stage, bukan di kanvas: filter drop-shadow (halo) hanya boleh menghitung siluet sprite, bukan kotak latar. */
+.strip .stage { width: 256px; height: 192px; background: var(--hero-stage); border-radius: 6px; }
+.strip canvas { width: 256px; height: 192px; display: block; image-rendering: pixelated; image-rendering: crisp-edges; }
+.strip figure.key .stage { outline: 3px solid var(--new); outline-offset: -3px; }
 .strip figcaption { font: 12px/1.2 var(--f-mono); color: var(--muted); white-space: nowrap; }
 .strip figcaption b { color: var(--ink); font-size: 13px; }
 
@@ -154,11 +165,14 @@ details.fam > .scroll { border: 0; border-top: 1px solid var(--line); border-rad
 
   <section class="panel" id="heroSection" data-herobg="light" aria-labelledby="heroTitle" hidden>
     <h2 id="heroTitle">Berserker Hero: lembar kontak per state</h2>
-    <p class="muted" style="margin-bottom:12px">Kostum berkanvas sendiri 128×96 (kostum lain 64×48). Tiap state: pemutar 2× (di mode Statis menampilkan frame kunci), lalu semua frame berurutan, bernomor, 2×, dengan durasi per frame; frame kunci diberi bingkai biru. Geser mendatar untuk melihat semua frame. Ini pratinjau bahan penilaian gaya; bukan pernyataan bahwa gayanya bagus atau disetujui.</p>
+    <p class="muted" style="margin-bottom:12px">Kostum berkanvas sendiri 128×96 (kostum lain 64×48). Tiap state: pemutar 2× (di mode Statis menampilkan frame kunci), lalu semua frame berurutan, bernomor, 2×, dengan durasi per frame; frame kunci diberi bingkai biru. Geser mendatar untuk melihat semua frame. State yang tidak berputar (rage) ditandai "diputar sekali" dan punya tombol Putar ulang. Latar abu tengah dan Halo (kontur krem 1 px) membantu menilai keterbacaan zirah hitam; keduanya hanya pratinjau. Ini pratinjau bahan penilaian gaya; bukan pernyataan bahwa gayanya bagus atau disetujui.</p>
     <div class="row" style="margin-bottom:10px">
       <span class="muted">Latar</span>
       <button type="button" id="btnHeroLight" aria-pressed="true">Terang</button>
       <button type="button" id="btnHeroDark" aria-pressed="false">Gelap</button>
+      <button type="button" id="btnHeroGray" aria-pressed="false">Abu tengah #808080</button>
+      <span class="muted">Tepi</span>
+      <button type="button" id="btnHeroHalo" aria-pressed="false" title="kontur krem 1 px di luar siluet; hanya pratinjau, aset tidak berubah">Halo</button>
     </div>
     <div id="heroBox"></div>
   </section>
@@ -228,7 +242,7 @@ details.fam > .scroll { border: 0; border-top: 1px solid var(--line); border-rad
     still = isStill;
     $("btnAnim").setAttribute("aria-pressed", String(!still));
     $("btnStatic").setAttribute("aria-pressed", String(still));
-    cells.forEach(function (c) { c.last = -1; });
+    cells.forEach(function (c) { c.last = -1; if (c.replayBtn) c.replayBtn.setAttribute("aria-disabled", String(still)); });
   }
   $("btnAnim").addEventListener("click", function () { setMotion(false); });
   $("btnStatic").addEventListener("click", function () { setMotion(true); });
@@ -264,7 +278,7 @@ details.fam > .scroll { border: 0; border-top: 1px solid var(--line); border-rad
       var isNew = result.cell.origin === "baru";
       wrap.classList.add(isNew ? "new" : "real");
       tag = isNew ? "BARU" : "ASLI";
-      note = result.cell.source + " · " + result.cell.frames + " frame" + (isNew && result.cell.gate ? " · gerbang " + result.cell.gate : "");
+      note = result.cell.source + " · " + result.cell.frames + " frame" + (isNew && result.cell.gate ? " · gerbang " + result.cell.gate : "") + (result.cell.loop === false ? " · diputar sekali" : "");
     } else if (result.kind === "fallback") {
       wrap.classList.add("ph");
       tag = "PLACEHOLDER";
@@ -410,6 +424,7 @@ details.fam > .scroll { border: 0; border-top: 1px solid var(--line); border-rad
     var cap = el("figcaption");
     var label = isNew ? "BARU · gerbang " + (r.cell.gate || "?") : "ASLI";
     var captions = [pair[0], pair[1], label];
+    if (r.cell.loop === false) captions.push("diputar sekali");
     if (custom) captions.push(dim.w + "×" + dim.h + " · 2×");
     captions.forEach(function (t) { cap.appendChild(el("span", null, t)); });
     cap.title = label + " · " + pair[0] + "/" + pair[1] + " · " + r.cell.source;
@@ -474,6 +489,15 @@ details.fam > .scroll { border: 0; border-top: 1px solid var(--line); border-rad
       head.appendChild(el("h3", null, state));
       head.appendChild(el("span", "muted", cell.frames + " frame · " + total + " ms · " +
         (cell.loop === false ? "tidak loop (berhenti di frame terakhir)" : "loop") + " · kunci f" + cell.keyframe + " · " + dim.w + "×" + dim.h));
+      var once = cell.loop === false;
+      if (once) head.appendChild(el("span", "once", "diputar sekali"));
+      var replayBtn = null;
+      if (once) {
+        replayBtn = el("button", "replay", "Putar ulang");
+        replayBtn.type = "button";
+        replayBtn.setAttribute("aria-label", "Putar ulang " + state + " dari frame pertama");
+        head.appendChild(replayBtn);
+      }
       wrap.appendChild(head);
       var body = el("div", "hero-body");
       var player = el("div", "hero-player");
@@ -495,14 +519,24 @@ details.fam > .scroll { border: 0; border-top: 1px solid var(--line); border-rad
         var cap = el("figcaption");
         cap.appendChild(el("b", null, String(i)));
         cap.appendChild(document.createTextNode(" · " + cell.durations_ms[i] + " ms" + (i === cell.keyframe ? " · kunci" : "")));
-        fig.appendChild(cv); fig.appendChild(cap);
+        var stage = el("div", "stage");
+        stage.appendChild(cv);
+        fig.appendChild(stage); fig.appendChild(cap);
         strip.appendChild(fig);
         heroSheets.push({ canvas: cv, cell: cell, url: assetUrl(cell.sheet), index: i, done: false });
       }
       body.appendChild(strip);
       wrap.appendChild(body);
       box.appendChild(wrap);
-      cells.push({ canvas: pc, cell: cell, url: assetUrl(cell.sheet), last: -1 });
+      var item = { canvas: pc, cell: cell, url: assetUrl(cell.sheet), last: -1 };
+      cells.push(item);
+      if (replayBtn) {
+        replayBtn.addEventListener("click", function () {
+          if (still) return;                                  // mode Statis: selalu frame kunci, tidak ada yang diputar
+          item.start = clockNow; item.last = -1;
+        });
+        item.replayBtn = replayBtn;
+      }
       shown++;
     });
     sec.hidden = !shown;
@@ -519,13 +553,20 @@ details.fam > .scroll { border: 0; border-top: 1px solid var(--line); border-rad
     h.canvas.setAttribute("data-drawn", "1");
     h.done = true;
   }
-  function setHeroBg(dark) {
-    $("heroSection").setAttribute("data-herobg", dark ? "dark" : "light");
-    $("btnHeroLight").setAttribute("aria-pressed", String(!dark));
-    $("btnHeroDark").setAttribute("aria-pressed", String(dark));
+  function setHeroBg(name) {   // "light" | "dark" | "gray"
+    $("heroSection").setAttribute("data-herobg", name);
+    $("btnHeroLight").setAttribute("aria-pressed", String(name === "light"));
+    $("btnHeroDark").setAttribute("aria-pressed", String(name === "dark"));
+    $("btnHeroGray").setAttribute("aria-pressed", String(name === "gray"));
   }
-  $("btnHeroLight").addEventListener("click", function () { setHeroBg(false); });
-  $("btnHeroDark").addEventListener("click", function () { setHeroBg(true); });
+  function setHeroHalo(on) {
+    $("heroSection").setAttribute("data-halo", on ? "1" : "0");
+    $("btnHeroHalo").setAttribute("aria-pressed", String(on));
+  }
+  $("btnHeroLight").addEventListener("click", function () { setHeroBg("light"); });
+  $("btnHeroDark").addEventListener("click", function () { setHeroBg("dark"); });
+  $("btnHeroGray").addEventListener("click", function () { setHeroBg("gray"); });
+  $("btnHeroHalo").addEventListener("click", function () { setHeroHalo($("btnHeroHalo").getAttribute("aria-pressed") !== "true"); });
 
   // ---- tes buta: idle 1x tanpa label, urutan acak dengan seed tetap
   var BLIND_SEED = 20260930;
@@ -630,7 +671,7 @@ details.fam > .scroll { border: 0; border-top: 1px solid var(--line); border-rad
     $("playNote").textContent = r.kind === "exact" ? "ASLI: " + r.cell.source
       : r.kind === "fallback" ? "PLACEHOLDER: belum ada asset untuk " + r.requested.costume + "/" + r.requested.state + ", tampil " + r.resolved.costume + "/" + r.resolved.state
       : "PLACEHOLDER CSS: " + r.reason;
-    play.cell = r.cell; play.url = r.cell ? assetUrl(r.cell.sheet) : null; play.last = -1;
+    play.cell = r.cell; play.url = r.cell ? assetUrl(r.cell.sheet) : null; play.last = -1; play.start = clockNow;
     var pd = P.canvasOf(m, r.cell);
     if (play.canvas.width !== pd.w || play.canvas.height !== pd.h) { play.canvas.width = pd.w; play.canvas.height = pd.h; }
     var ctx = play.canvas.getContext("2d"); ctx.clearRect(0, 0, play.canvas.width, play.canvas.height);
@@ -639,8 +680,25 @@ details.fam > .scroll { border: 0; border-top: 1px solid var(--line); border-rad
 
   // ---- satu loop gambar untuk semua sel
   var t0 = performance.now();
+  var clockNow = 0, io = null;
+  // Sel yang tidak berputar (loop=false) diputar sekali dari c.start: saat kanvas pertama kali terlihat, dan saat Putar ulang.
+  function watchOnce(c) {
+    if (c.watched || !("IntersectionObserver" in window)) return;
+    c.watched = true;
+    io = io || new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        var item = e.target.__item;
+        if (!item) return;
+        if (e.isIntersecting && !item.visible) { item.start = clockNow; item.last = -1; }
+        item.visible = e.isIntersecting;
+      });
+    });
+    c.canvas.__item = c;
+    io.observe(c.canvas);
+  }
   function draw(c, t) {
     if (!c.cell || !c.url) return;
+    if (c.cell.loop === false) { watchOnce(c); t = t - (c.start || 0); }
     var im = image(c.url);
     if (im.failed) { if (c.wrap && !c.wrap.classList.contains("css")) { c.wrap.classList.add("ph", "css"); c.canvas.hidden = true; } return; }
     if (!im.complete || !im.naturalWidth) return;
@@ -660,6 +718,7 @@ details.fam > .scroll { border: 0; border-top: 1px solid var(--line); border-rad
   }
   function tick(now) {
     var t = now - t0;
+    clockNow = t;
     cells.forEach(function (c) { draw(c, t); });
     heroSheets.forEach(drawSheet);
     draw(play, t);

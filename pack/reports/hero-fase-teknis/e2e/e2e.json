@@ -1,0 +1,785 @@
+{
+  "counts": {
+    "real": 7,
+    "new": 164,
+    "new_by_gate": {
+      "C": 9,
+      "F": 36,
+      "G": 15,
+      "A": 2,
+      "B": 8,
+      "D": 6,
+      "E": 10,
+      "H": 24,
+      "J": 36,
+      "K": 8,
+      "I": 10
+    },
+    "placeholder": 0,
+    "css_placeholder": 0,
+    "not_applicable": 456,
+    "rows": 33,
+    "stats": "7 sel asli | 164 sel baru | 0 placeholder | 111 / 111 sel wajib terisi | 171 / 171 sel berlaku terisi | 33 × 19 kostum × state"
+  },
+  "expected": {
+    "cells": 171,
+    "applicable": 171
+  },
+  "animates": true,
+  "blank_cells": 0,
+  "blind_before": [
+    {
+      "costume": "referee",
+      "caption": "#1"
+    },
+    {
+      "costume": "judge",
+      "caption": "#2"
+    },
+    {
+      "costume": "champion",
+      "caption": "#3"
+    },
+    {
+      "costume": "skeptic",
+      "caption": "#4"
+    },
+    {
+      "costume": "scientist",
+      "caption": "#1"
+    },
+    {
+      "costume": "hacker",
+      "caption": "#2"
+    },
+    {
+      "costume": "gamer",
+      "caption": "#3"
+    },
+    {
+      "costume": "lawyer",
+      "caption": "#4"
+    },
+    {
+      "costume": "normal",
+      "caption": "#5"
+    },
+    {
+      "costume": "academic",
+      "caption": "#6"
+    },
+    {
+      "costume": "detective",
+      "caption": "#7"
+    },
+    {
+      "costume": "greek-philosopher",
+      "caption": "#8"
+    },
+    {
+      "costume": "mathematician",
+      "caption": "#9"
+    },
+    {
+      "costume": "viking-gestir",
+      "caption": "#1"
+    },
+    {
+      "costume": "pirate",
+      "caption": "#2"
+    },
+    {
+      "costume": "pirate-skirmisher",
+      "caption": "#3"
+    },
+    {
+      "costume": "viking-huscarl",
+      "caption": "#4"
+    },
+    {
+      "costume": "knight-assassin",
+      "caption": "#5"
+    },
+    {
+      "costume": "pirate-buccaneer",
+      "caption": "#6"
+    },
+    {
+      "costume": "knight",
+      "caption": "#7"
+    },
+    {
+      "costume": "knight-heavy",
+      "caption": "#8"
+    },
+    {
+      "costume": "knight-manatarms",
+      "caption": "#9"
+    },
+    {
+      "costume": "viking-berserker",
+      "caption": "#10"
+    },
+    {
+      "costume": "viking",
+      "caption": "#11"
+    },
+    {
+      "costume": "knight-archer",
+      "caption": "#12"
+    },
+    {
+      "costume": "pirate-captain",
+      "caption": "#13"
+    },
+    {
+      "costume": "wizard",
+      "caption": "#14"
+    },
+    {
+      "costume": "viking-bondi",
+      "caption": "#15"
+    },
+    {
+      "costume": "pirate-sharpshooter",
+      "caption": "#16"
+    },
+    {
+      "costume": "normal-gblk",
+      "caption": "#1"
+    },
+    {
+      "costume": "priest",
+      "caption": "#2"
+    },
+    {
+      "costume": "pak-haji",
+      "caption": "#3"
+    },
+    {
+      "costume": "pirate",
+      "caption": "#1"
+    },
+    {
+      "costume": "normal",
+      "caption": "#2"
+    },
+    {
+      "costume": "skeptic",
+      "caption": "#3"
+    },
+    {
+      "costume": "mathematician",
+      "caption": "#4"
+    },
+    {
+      "costume": "academic",
+      "caption": "#5"
+    },
+    {
+      "costume": "pak-haji",
+      "caption": "#6"
+    },
+    {
+      "costume": "greek-philosopher",
+      "caption": "#7"
+    },
+    {
+      "costume": "knight",
+      "caption": "#8"
+    },
+    {
+      "costume": "scientist",
+      "caption": "#9"
+    },
+    {
+      "costume": "referee",
+      "caption": "#10"
+    },
+    {
+      "costume": "priest",
+      "caption": "#11"
+    },
+    {
+      "costume": "detective",
+      "caption": "#12"
+    },
+    {
+      "costume": "gamer",
+      "caption": "#13"
+    },
+    {
+      "costume": "wizard",
+      "caption": "#14"
+    },
+    {
+      "costume": "hacker",
+      "caption": "#15"
+    },
+    {
+      "costume": "judge",
+      "caption": "#16"
+    },
+    {
+      "costume": "lawyer",
+      "caption": "#17"
+    },
+    {
+      "costume": "viking",
+      "caption": "#18"
+    },
+    {
+      "costume": "normal-gblk",
+      "caption": "#19"
+    },
+    {
+      "costume": "champion",
+      "caption": "#20"
+    }
+  ],
+  "filter_desktop": {
+    "options": [
+      "idle",
+      "K",
+      "F:inti-dan-spesial",
+      "F:peran",
+      "F:domain",
+      "J:knight",
+      "J:viking",
+      "J:pirate",
+      "I",
+      "H",
+      "G",
+      "E",
+      "D",
+      "C",
+      "B",
+      "A",
+      "semua"
+    ],
+    "per_option": {
+      "idle": {
+        "figures": 20,
+        "height_px": 1584
+      },
+      "K": {
+        "figures": 8,
+        "height_px": 800
+      },
+      "F:inti-dan-spesial": {
+        "figures": 2,
+        "height_px": 496
+      },
+      "F:peran": {
+        "figures": 18,
+        "height_px": 1584
+      },
+      "F:domain": {
+        "figures": 16,
+        "height_px": 1312
+      },
+      "J:knight": {
+        "figures": 12,
+        "height_px": 1040
+      },
+      "J:viking": {
+        "figures": 12,
+        "height_px": 1040
+      },
+      "J:pirate": {
+        "figures": 12,
+        "height_px": 1040
+      },
+      "I": {
+        "figures": 10,
+        "height_px": 1040
+      },
+      "H": {
+        "figures": 24,
+        "height_px": 1856
+      },
+      "G": {
+        "figures": 15,
+        "height_px": 1312
+      },
+      "E": {
+        "figures": 10,
+        "height_px": 1040
+      },
+      "D": {
+        "figures": 6,
+        "height_px": 768
+      },
+      "C": {
+        "figures": 9,
+        "height_px": 1040
+      },
+      "B": {
+        "figures": 8,
+        "height_px": 768
+      },
+      "A": {
+        "figures": 2,
+        "height_px": 496
+      },
+      "semua": {
+        "figures": 184,
+        "height_px": 14411
+      }
+    },
+    "union_ok": true,
+    "max_gate_height": 1856,
+    "gated_cells": 164,
+    "counts_ok": true
+  },
+  "static_desktop": {
+    "canvases": 591,
+    "hero_canvases": 24,
+    "frame_mismatch": [],
+    "pixel_mismatch": []
+  },
+  "hero_desktop": {
+    "states": {
+      "idle": {
+        "frames": 12,
+        "expected": 12,
+        "in_order": true,
+        "numbered": true,
+        "keyframe_marked": true,
+        "undrawn": 0,
+        "size_bad": 0,
+        "pixel_bad": 0,
+        "scrollable": true,
+        "strip_client_w": 948,
+        "player_ok": true
+      },
+      "run": {
+        "frames": 12,
+        "expected": 12,
+        "in_order": true,
+        "numbered": true,
+        "keyframe_marked": true,
+        "undrawn": 0,
+        "size_bad": 0,
+        "pixel_bad": 0,
+        "scrollable": true,
+        "strip_client_w": 948,
+        "player_ok": true
+      },
+      "rage": {
+        "frames": 12,
+        "expected": 12,
+        "in_order": true,
+        "numbered": true,
+        "keyframe_marked": true,
+        "undrawn": 0,
+        "size_bad": 0,
+        "pixel_bad": 0,
+        "scrollable": true,
+        "strip_client_w": 948,
+        "player_ok": true
+      },
+      "attack-leap": {
+        "frames": 14,
+        "expected": 14,
+        "in_order": true,
+        "numbered": true,
+        "keyframe_marked": true,
+        "undrawn": 0,
+        "size_bad": 0,
+        "pixel_bad": 0,
+        "scrollable": true,
+        "strip_client_w": 948,
+        "player_ok": true
+      },
+      "attack-smash": {
+        "frames": 12,
+        "expected": 12,
+        "in_order": true,
+        "numbered": true,
+        "keyframe_marked": true,
+        "undrawn": 0,
+        "size_bad": 0,
+        "pixel_bad": 0,
+        "scrollable": true,
+        "strip_client_w": 948,
+        "player_ok": true
+      },
+      "miss": {
+        "frames": 10,
+        "expected": 10,
+        "in_order": true,
+        "numbered": true,
+        "keyframe_marked": true,
+        "undrawn": 0,
+        "size_bad": 0,
+        "pixel_bad": 0,
+        "scrollable": true,
+        "strip_client_w": 948,
+        "player_ok": true
+      },
+      "exhaustion": {
+        "frames": 12,
+        "expected": 12,
+        "in_order": true,
+        "numbered": true,
+        "keyframe_marked": true,
+        "undrawn": 0,
+        "size_bad": 0,
+        "pixel_bad": 0,
+        "scrollable": true,
+        "strip_client_w": 948,
+        "player_ok": true
+      },
+      "defeated": {
+        "frames": 14,
+        "expected": 14,
+        "in_order": true,
+        "numbered": true,
+        "keyframe_marked": true,
+        "undrawn": 0,
+        "size_bad": 0,
+        "pixel_bad": 0,
+        "scrollable": true,
+        "strip_client_w": 948,
+        "player_ok": true
+      }
+    },
+    "problems": []
+  },
+  "hero_gifs": {
+    "idle": "512x384",
+    "run": "512x384",
+    "rage": "512x384",
+    "attack-leap": "512x384",
+    "attack-smash": "512x384",
+    "miss": "512x384",
+    "exhaustion": "512x384",
+    "defeated": "512x384"
+  },
+  "hero_bg": {
+    "light": "rgb(250, 247, 240)",
+    "dark": "rgb(24, 28, 44)",
+    "gray": "rgb(128, 128, 128)",
+    "light_again": "rgb(250, 247, 240)"
+  },
+  "hero_halo": {
+    "off": "none",
+    "on": "drop-shadow(rgb(232, 218, 186) 1px 0px 0px) drop-shadow(rgb(232, 218, 186) -1px 0px 0px) drop-shadow(rgb(232, 218, 186) 0px 1px 0px) drop-shadow(rgb(232, 218, 186) 0px -1px 0px)",
+    "pressed": "true",
+    "off_again": "none"
+  },
+  "hero_once": {
+    "badges": [
+      "rage"
+    ],
+    "replay": [
+      "rage"
+    ]
+  },
+  "hero_replay": {
+    "before": 11,
+    "just_after": 0,
+    "frames_seen": [
+      0,
+      2,
+      3,
+      6,
+      8,
+      11
+    ],
+    "after": 11,
+    "later": 11
+  },
+  "hero_replay_static": {
+    "frame_before": 6,
+    "disabled": "true",
+    "frame_after": 6
+  },
+  "static_button_holds": true,
+  "compare_figures": 184,
+  "blind_revealed_ok": true,
+  "sheet4x_vs_1x_scaled": {
+    "cells_with_sheet4x": 26,
+    "cells_without_sheet4x": 145,
+    "frames_compared": 445,
+    "frames_different": 0
+  },
+  "desktop_errors": [],
+  "desktop_bad_requests": [],
+  "blind_same_order_after_reload": true,
+  "reduced_motion_static": true,
+  "filter_phone": {
+    "options": [
+      "idle",
+      "K",
+      "F:inti-dan-spesial",
+      "F:peran",
+      "F:domain",
+      "J:knight",
+      "J:viking",
+      "J:pirate",
+      "I",
+      "H",
+      "G",
+      "E",
+      "D",
+      "C",
+      "B",
+      "A",
+      "semua"
+    ],
+    "per_option": {
+      "idle": {
+        "figures": 20,
+        "height_px": 2051
+      },
+      "K": {
+        "figures": 8,
+        "height_px": 1082
+      },
+      "F:inti-dan-spesial": {
+        "figures": 2,
+        "height_px": 611
+      },
+      "F:peran": {
+        "figures": 18,
+        "height_px": 1870
+      },
+      "F:domain": {
+        "figures": 16,
+        "height_px": 1710
+      },
+      "J:knight": {
+        "figures": 12,
+        "height_px": 1390
+      },
+      "J:viking": {
+        "figures": 12,
+        "height_px": 1390
+      },
+      "J:pirate": {
+        "figures": 12,
+        "height_px": 1390
+      },
+      "I": {
+        "figures": 10,
+        "height_px": 1230
+      },
+      "H": {
+        "figures": 24,
+        "height_px": 2350
+      },
+      "G": {
+        "figures": 15,
+        "height_px": 1710
+      },
+      "E": {
+        "figures": 10,
+        "height_px": 1230
+      },
+      "D": {
+        "figures": 6,
+        "height_px": 910
+      },
+      "C": {
+        "figures": 9,
+        "height_px": 1230
+      },
+      "B": {
+        "figures": 8,
+        "height_px": 1070
+      },
+      "A": {
+        "figures": 2,
+        "height_px": 590
+      },
+      "semua": {
+        "figures": 184,
+        "height_px": 16009
+      }
+    },
+    "union_ok": true,
+    "max_gate_height": 2350,
+    "gated_cells": 164,
+    "counts_ok": true
+  },
+  "static_phone": {
+    "canvases": 591,
+    "hero_canvases": 24,
+    "frame_mismatch": [],
+    "pixel_mismatch": []
+  },
+  "phone_overflow": 0,
+  "hero_phone": {
+    "states": {
+      "idle": {
+        "frames": 12,
+        "expected": 12,
+        "in_order": true,
+        "numbered": true,
+        "keyframe_marked": true,
+        "undrawn": 0,
+        "size_bad": 0,
+        "pixel_bad": 0,
+        "scrollable": true,
+        "strip_client_w": 324,
+        "player_ok": true
+      },
+      "run": {
+        "frames": 12,
+        "expected": 12,
+        "in_order": true,
+        "numbered": true,
+        "keyframe_marked": true,
+        "undrawn": 0,
+        "size_bad": 0,
+        "pixel_bad": 0,
+        "scrollable": true,
+        "strip_client_w": 324,
+        "player_ok": true
+      },
+      "rage": {
+        "frames": 12,
+        "expected": 12,
+        "in_order": true,
+        "numbered": true,
+        "keyframe_marked": true,
+        "undrawn": 0,
+        "size_bad": 0,
+        "pixel_bad": 0,
+        "scrollable": true,
+        "strip_client_w": 324,
+        "player_ok": true
+      },
+      "attack-leap": {
+        "frames": 14,
+        "expected": 14,
+        "in_order": true,
+        "numbered": true,
+        "keyframe_marked": true,
+        "undrawn": 0,
+        "size_bad": 0,
+        "pixel_bad": 0,
+        "scrollable": true,
+        "strip_client_w": 324,
+        "player_ok": true
+      },
+      "attack-smash": {
+        "frames": 12,
+        "expected": 12,
+        "in_order": true,
+        "numbered": true,
+        "keyframe_marked": true,
+        "undrawn": 0,
+        "size_bad": 0,
+        "pixel_bad": 0,
+        "scrollable": true,
+        "strip_client_w": 324,
+        "player_ok": true
+      },
+      "miss": {
+        "frames": 10,
+        "expected": 10,
+        "in_order": true,
+        "numbered": true,
+        "keyframe_marked": true,
+        "undrawn": 0,
+        "size_bad": 0,
+        "pixel_bad": 0,
+        "scrollable": true,
+        "strip_client_w": 324,
+        "player_ok": true
+      },
+      "exhaustion": {
+        "frames": 12,
+        "expected": 12,
+        "in_order": true,
+        "numbered": true,
+        "keyframe_marked": true,
+        "undrawn": 0,
+        "size_bad": 0,
+        "pixel_bad": 0,
+        "scrollable": true,
+        "strip_client_w": 324,
+        "player_ok": true
+      },
+      "defeated": {
+        "frames": 14,
+        "expected": 14,
+        "in_order": true,
+        "numbered": true,
+        "keyframe_marked": true,
+        "undrawn": 0,
+        "size_bad": 0,
+        "pixel_bad": 0,
+        "scrollable": true,
+        "strip_client_w": 324,
+        "player_ok": true
+      }
+    },
+    "problems": []
+  },
+  "hero_phone_scroll": [
+    {
+      "state": "idle",
+      "strip_w": 324,
+      "scrollable": true,
+      "moved_px": 400,
+      "within_viewport": true
+    },
+    {
+      "state": "run",
+      "strip_w": 324,
+      "scrollable": true,
+      "moved_px": 400,
+      "within_viewport": true
+    },
+    {
+      "state": "rage",
+      "strip_w": 324,
+      "scrollable": true,
+      "moved_px": 400,
+      "within_viewport": true
+    },
+    {
+      "state": "attack-leap",
+      "strip_w": 324,
+      "scrollable": true,
+      "moved_px": 400,
+      "within_viewport": true
+    },
+    {
+      "state": "attack-smash",
+      "strip_w": 324,
+      "scrollable": true,
+      "moved_px": 400,
+      "within_viewport": true
+    },
+    {
+      "state": "miss",
+      "strip_w": 324,
+      "scrollable": true,
+      "moved_px": 400,
+      "within_viewport": true
+    },
+    {
+      "state": "exhaustion",
+      "strip_w": 324,
+      "scrollable": true,
+      "moved_px": 400,
+      "within_viewport": true
+    },
+    {
+      "state": "defeated",
+      "strip_w": 324,
+      "scrollable": true,
+      "moved_px": 400,
+      "within_viewport": true
+    }
+  ],
+  "phone_overflow_after_hero": 0,
+  "phone_errors": [],
+  "phone_bad_requests": [],
+  "fails": []
+}

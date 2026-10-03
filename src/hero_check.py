@@ -183,3 +183,95 @@ def contrast(a, b):
 def iou(a, b):
     u = len(a | b)
     return len(a & b) / float(u) if u else 1.0
+
+
+# ------------------------------------------------------------------ asimetri: elemen karakter tetap di sisi yang sama
+# (nama, bagian pemilik piksel, sisi yang diharapkan relatif titik tengah badan: -1 kiri, +1 kanan, 0 tengah, tambahan?)
+# Tiga elemen pertama diminta pemilik (bahu berlapis 3 pelat, gesper, tanduk patah); sisanya tambahan sebagai pembanding.
+ASYM_ELEMENTS = (
+    ("pelat_bahu_1", {"pauldron1"}, -1, False),
+    ("pelat_bahu_2", {"pauldron2"}, -1, False),
+    ("pelat_bahu_3", {"pauldron3"}, -1, False),
+    ("gesper", {"buckle"}, 0, False),
+    ("tanduk_patah", {"horn_break"}, -1, False),
+    ("bahu_kecil", {"pauldron_s"}, +1, True),
+    ("ekor", {"tail"}, -1, True),
+    ("moncong", {"snout"}, +1, True),
+)
+CENTER_TOL = 1.5          # px: elemen yang memang di tengah (gesper) boleh bergeser sampai segini dari titik tengah badan
+# Pose yang berbalik arah secara eksplisit dikecualikan dari penandaan: {state: {indeks frame}}. Saat ini tidak ada pose hero
+# yang berbalik arah (tidak ada bidang arah di rig), jadi kosong; kecuali ini ada supaya pembalikan yang disengaja bisa dicatat.
+EXPLICIT_TURNS = {}
+
+
+def element_dx(cv, center, parts):
+    """(dx, n): rata-rata x pusat piksel elemen dikurangi `center`, dan jumlah piksel terlihat; (None, 0) bila tidak terlihat."""
+    pts = [k for k, o in cv.owner.items() if o in parts]
+    if not pts:
+        return None, 0
+    return sum(x + 0.5 for x, _ in pts) / len(pts) - center, len(pts)
+
+
+def buckle_light(cv):
+    """Sisi cahaya gesper: rata-rata x piksel sorot (kl) dikurangi rata-rata x piksel bayangan (ks). Negatif = sorot di kiri
+    (cahaya kiri-atas); gesper yang dicerminkan menjadi positif. None bila salah satu nada tidak terlihat."""
+    pts = [k for k, o in cv.owner.items() if o == "buckle"]
+    hi = [x + 0.5 for (x, y) in pts if cv.px.get((x, y)) == "kl"]
+    lo = [x + 0.5 for (x, y) in pts if cv.px.get((x, y)) == "ks"]
+    if not hi or not lo:
+        return None
+    return sum(hi) / len(hi) - sum(lo) / len(lo)
+
+
+def sign(v, tol=0.0):
+    return 0 if abs(v) <= tol else (1 if v > 0 else -1)
+
+
+def side_flags(series, expect=None, tol=CENTER_TOL, turning=()):
+    """Tandai frame yang elemennya di sisi salah atau pindah sisi. series = [(dx, n)] per frame.
+    expect = -1 / +1 / 0 (tengah, dalam `tol`) bila sisinya diketahui; None = sisi acuan adalah sisi frame terlihat pertama,
+    dan setiap frame dengan tanda berbeda ditandai. turning = indeks frame berbalik arah eksplisit (dilewati).
+    Mengembalikan [(indeks, alasan)]; frame yang elemennya tidak terlihat dilaporkan terpisah oleh pemanggil (n == 0)."""
+    flags, ref = [], None
+    for i, (dx, n) in enumerate(series):
+        if n == 0 or i in turning:
+            continue
+        if expect == 0:
+            if abs(dx) > tol:
+                flags.append((i, "bergeser %.1f px dari tengah (> %.1f)" % (dx, tol)))
+            continue
+        want = expect if expect is not None else ref
+        s = sign(dx)
+        if expect is None and ref is None:
+            ref = s
+            continue
+        if s != want:
+            flags.append((i, "pindah sisi: dx %.1f, seharusnya %s" % (dx, "kanan" if want > 0 else "kiri")))
+    return flags
+
+
+def asymmetry(cvs, centers, state=None):
+    """Untuk urutan frame `cvs` dan titik tengah badan per frame `centers`: {nama: {"seri": [(dx, n)], "tanda": [(i, alasan)],
+    "tidak_terlihat": [i], "tambahan": bool}} ditambah kunci 'cahaya_gesper' (seri float|None, tanda)."""
+    turning = EXPLICIT_TURNS.get(state, ())
+    out = {}
+    for name, parts, expect, extra in ASYM_ELEMENTS:
+        series = [element_dx(cv, c, parts) for cv, c in zip(cvs, centers)]
+        out[name] = {"seri": series, "tanda": side_flags(series, expect, turning=turning), "tidak_terlihat": [i for i, (_, n) in enumerate(series) if n == 0],
+                     "tambahan": extra}
+    light = [buckle_light(cv) for cv in cvs]
+    pseudo = [(v if v is not None else 0.0, 0 if v is None else 1) for v in light]
+    out["cahaya_gesper"] = {"seri": light, "tanda": side_flags(pseudo, -1, turning=turning), "tidak_terlihat": [i for i, v in enumerate(light) if v is None],
+                            "tambahan": False}
+    return out
+
+
+def mirrored(cv, center):
+    """Salinan PartCanvas yang dicerminkan horizontal terhadap x = center (untuk uji: harus ditandai oleh asymmetry)."""
+    out = hero.PartCanvas()
+    for (x, y), c in cv.px.items():
+        nx = int(round(2 * center - x - 1))
+        if 0 <= nx < out.w:
+            out.px[(nx, y)] = c
+            out.owner[(nx, y)] = cv.owner.get((x, y))
+    return out

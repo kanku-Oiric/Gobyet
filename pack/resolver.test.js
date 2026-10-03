@@ -344,6 +344,10 @@ test("Berserker Hero: 8 sel exact, kanvas 128x96 dan GIF x4 per sel, rage tidak 
 test("Berserker Hero: rage tidak berputar (berhenti di frame terakhir), state lain berputar", () => {
   const rage = M.cells["berserker-hero"].rage;
   const total = rage.durations_ms.reduce((a, b) => a + b, 0);
+  assert.equal(rage.durations_ms[rage.frames - 1], 1500, "frame terakhir rage ditahan 1500 ms");
+  assert.equal(total, 2760);
+  assert.equal(P.frameAt(rage, total - 1500 - 1), rage.frames - 2);   // tepat sebelum frame terakhir
+  assert.equal(P.frameAt(rage, total - 1500), rage.frames - 1);
   assert.equal(P.frameAt(rage, 0), 0);
   assert.equal(P.frameAt(rage, total - 1), rage.frames - 1);
   assert.equal(P.frameAt(rage, total), rage.frames - 1);

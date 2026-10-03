@@ -208,14 +208,73 @@ function serve() {
   check(!report.hero_desktop.problems.length, "lembar kontak hero (desktop): " + report.hero_desktop.problems.join("; "));
   report.hero_gifs = await heroGifCheck(d.p);
   check(Object.keys(report.hero_gifs).length === 8 && Object.values(report.hero_gifs).every((v) => v === "512x384"), "GIF hero tidak termuat 512x384");
-  // latar terang/gelap: warna latar kanvas lembar kontak berganti dan kembali
-  const bgOf = () => d.p.$eval(".strip canvas", (c) => getComputedStyle(c).backgroundColor);
+  // latar terang/gelap/abu tengah: warna latar kanvas lembar kontak berganti dan kembali
+  const bgOf = () => d.p.$eval(".strip .stage", (c) => getComputedStyle(c).backgroundColor);
+  const filterOf = () => d.p.$eval(".strip canvas", (c) => getComputedStyle(c).filter);
   report.hero_bg = { light: await bgOf() };
   await d.p.click("#btnHeroDark"); report.hero_bg.dark = await bgOf();
   await d.p.locator("#heroSection").screenshot({ path: path.join(OUT, "hero-dark.png") });
+  await d.p.click("#btnHeroGray"); report.hero_bg.gray = await bgOf();
+  await d.p.locator("#heroSection").screenshot({ path: path.join(OUT, "hero-gray.png") });
   await d.p.click("#btnHeroLight"); report.hero_bg.light_again = await bgOf();
-  check(report.hero_bg.light === "rgb(250, 247, 240)" && report.hero_bg.dark === "rgb(24, 28, 44)" && report.hero_bg.light_again === report.hero_bg.light, "pilihan latar terang/gelap hero tidak bekerja");
+  check(report.hero_bg.light === "rgb(250, 247, 240)" && report.hero_bg.dark === "rgb(24, 28, 44)" && report.hero_bg.gray === "rgb(128, 128, 128)" &&
+    report.hero_bg.light_again === report.hero_bg.light, "pilihan latar terang/gelap/abu hero tidak bekerja");
   await d.p.locator("#heroSection").screenshot({ path: path.join(OUT, "hero-light.png") });
+  // halo: kontur krem 1 px lewat CSS drop-shadow (hanya preview); piksel hasil render diperiksa dari tangkapan layar per kombinasi
+  report.hero_halo = { off: await filterOf() };
+  await d.p.click("#btnHeroHalo");
+  report.hero_halo.on = await filterOf();
+  report.hero_halo.pressed = await d.p.$eval("#btnHeroHalo", (b) => b.getAttribute("aria-pressed"));
+  check(report.hero_halo.off === "none" && (report.hero_halo.on.match(/drop-shadow/g) || []).length === 4 && report.hero_halo.on.includes("rgb(232, 218, 186)"),
+    "halo tidak menyalakan empat drop-shadow krem");
+  await d.p.click("#btnHeroHalo");
+  report.hero_halo.off_again = await filterOf();
+  check(report.hero_halo.off_again === "none", "halo tidak mati kembali");
+  fs.mkdirSync(path.join(OUT, "halo"), { recursive: true });
+  for (const [bg, btn] of [["terang", "#btnHeroLight"], ["gelap", "#btnHeroDark"], ["abu", "#btnHeroGray"]]) {
+    await d.p.click(btn);
+    for (const halo of [false, true]) {
+      const on = (await d.p.$eval("#btnHeroHalo", (b) => b.getAttribute("aria-pressed"))) === "true";
+      if (on !== halo) await d.p.click("#btnHeroHalo");
+      await d.p.waitForTimeout(150);
+      await d.p.locator('.hero-state[data-state="idle"] .strip figure:first-child .stage').screenshot({ path: path.join(OUT, "halo", "idle-" + bg + (halo ? "-halo" : "") + ".png") });
+    }
+  }
+  await d.p.click("#btnHeroHalo");     // matikan lagi
+  await d.p.click("#btnHeroLight");
+  // state yang tidak berputar: indikator "diputar sekali" dan tombol Putar ulang hanya untuk rage; Putar ulang memulai dari frame 0, lalu berhenti di frame terakhir
+  await d.p.click("#btnAnim");                                    // uji gerak harus di mode Animasi (tombol Statis sudah ditekan di atas)
+  report.hero_once = await d.p.evaluate(() => ({
+    badges: [...document.querySelectorAll(".hero-state .once")].map((b) => b.closest(".hero-state").dataset.state),
+    replay: [...document.querySelectorAll(".hero-state button.replay")].map((b) => b.closest(".hero-state").dataset.state),
+  }));
+  check(JSON.stringify(report.hero_once.badges) === '["rage"]' && JSON.stringify(report.hero_once.replay) === '["rage"]', "indikator diputar sekali dan Putar ulang harus hanya untuk rage");
+  const rageCell = manifestData.cells["berserker-hero"].rage, rageTotal = rageCell.durations_ms.reduce((a, b) => a + b, 0);
+  await d.p.locator('.hero-state[data-state="rage"]').scrollIntoViewIfNeeded();
+  const frameNow = () => d.p.$eval('.hero-state[data-state="rage"] .hero-player canvas', (c) => +c.dataset.frame);
+  await d.p.waitForTimeout(rageTotal + 600);                      // pastikan sudah berhenti sebelum diputar ulang
+  report.hero_replay = { before: await frameNow() };
+  await d.p.click('.hero-state[data-state="rage"] button.replay');
+  await d.p.waitForTimeout(120);
+  report.hero_replay.just_after = await frameNow();
+  const seen = new Set([report.hero_replay.just_after]);
+  for (let k = 0; k < 14; k++) { await d.p.waitForTimeout(220); seen.add(await frameNow()); }
+  await d.p.waitForTimeout(rageTotal);                            // total lewat lama, tetap di frame terakhir
+  report.hero_replay.frames_seen = [...seen].sort((a, b) => a - b);
+  report.hero_replay.after = await frameNow();
+  await d.p.waitForTimeout(1200);
+  report.hero_replay.later = await frameNow();
+  check(report.hero_replay.before === rageCell.frames - 1 && report.hero_replay.just_after <= 2 && report.hero_replay.after === rageCell.frames - 1 &&
+    report.hero_replay.later === rageCell.frames - 1 && report.hero_replay.frames_seen.length >= 6,
+    "Putar ulang rage: harus mulai dari frame awal, melewati beberapa frame, lalu berhenti di frame terakhir");
+  await d.p.click("#btnStatic");                                  // kembali ke mode Statis: Putar ulang dinonaktifkan dan frame kunci tetap
+  await d.p.waitForTimeout(300);
+  report.hero_replay_static = { frame_before: await frameNow(), disabled: await d.p.$eval('.hero-state[data-state="rage"] button.replay', (b) => b.getAttribute("aria-disabled")) };
+  await d.p.click('.hero-state[data-state="rage"] button.replay', { force: true });   // aria-disabled: Playwright menganggapnya tidak aktif, jadi dipaksa
+  await d.p.waitForTimeout(400);
+  report.hero_replay_static.frame_after = await frameNow();
+  check(report.hero_replay_static.frame_before === rageCell.keyframe && report.hero_replay_static.frame_after === rageCell.keyframe && report.hero_replay_static.disabled === "true",
+    "mode Statis: Putar ulang harus nonaktif dan rage tetap di frame kunci");
   const s1 = await hashOf(d.p, realSel); await d.p.waitForTimeout(900); const s2 = await hashOf(d.p, realSel);
   report.static_button_holds = s1 === s2;
   check(report.static_button_holds, "tombol Statis tidak menghentikan gerak");

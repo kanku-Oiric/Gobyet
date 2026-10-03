@@ -1,0 +1,15 @@
+kontras luminans WCAG (rasio) tepi hero terhadap latar; halo = krem (232, 218, 186) (nada tulang bb)
+  kunci                         terang     gelap  abu tengah | dengan halo (tetangga tepi = halo, sama di semua latar)
+  o2   garis tepi besi         16.19:1     1.02:1       4.39:1 | 12.51:1
+  o1   garis tepi organik      15.46:1     1.02:1       4.19:1 | 11.95:1
+  rm   rim light baja-biru      2.60:1     6.09:1       1.42:1 | 2.01:1
+  halo itu sendiri terhadap latar (terlihat atau tidak): terang 1.29:1, gelap 12.22:1, abu tengah 2.85:1
+
+terukur dari tangkapan layar (frame idle f0, 2x, Chromium); pasangan = piksel sprite dan tetangganya yang bukan sprite
+  latar       halo    pasang    median  persen10   minimum    luar=halo
+  terang      tidak     1544    16.19:1    15.46:1     1.29:1         0.0%
+  terang      ya        1544    12.51:1    11.95:1     1.00:1       100.0%
+  gelap       tidak     1544     1.02:1     1.02:1     1.02:1         0.0%
+  gelap       ya        1544    12.51:1    11.95:1     1.00:1       100.0%
+  abu tengah  tidak     1544     4.39:1     4.19:1     1.12:1         0.0%
+  abu tengah  ya        1544    12.51:1    11.95:1     1.00:1       100.0%

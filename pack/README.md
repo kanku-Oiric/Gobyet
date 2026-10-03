@@ -140,7 +140,7 @@ Field sel opsional, ditulis hanya bila ada: `canvas` (`{ "w", "h" }`, bilangan b
 ```json
 { "status": "final", "origin": "baru", "source": "berserker-hero-rage", "gate": "K",
   "sheet": "../sheets/berserker-hero-rage.png", "gif": "../gif/berserker-hero-rage.gif",
-  "frames": 12, "durations_ms": [200, 140, 140, 180, 70, 90, 110, 70, 70, 70, 120, 400],
+  "frames": 12, "durations_ms": [200, 140, 140, 180, 70, 90, 110, 70, 70, 70, 120, 1500],
   "loop": false, "keyframe": 6, "canvas": { "w": 128, "h": 96 }, "gif_scale": 4 }
 ```
 
@@ -152,7 +152,7 @@ Karakter utama original, kostum `berserker-hero` (label "Berserker Hero", group 
 |---|---:|---|---|
 | `idle` | 12 | ya | berdiri tegak, ujung pedang di lantai, napas, tabard bergoyang, berkedip |
 | `run` | 12 | ya | lari condong ke depan: kontak, serap, lintas, dorong, melayang; debu dan garis kecepatan |
-| `rage` | 12 | **tidak** | mengumpulkan amarah lalu meledak: wajah merah (`face="A"`), titik teal di rongga mata, tabard mengembang |
+| `rage` | 12 | **tidak** | mengumpulkan amarah lalu meledak: wajah merah (`face="A"`), titik teal di rongga mata, tabard mengembang; frame terakhir ditahan 1500 ms |
 | `attack-leap` | 14 | ya | jongkok, melompat, tebas turun, mendarat di balok kayu |
 | `attack-smash` | 12 | ya | antisipasi, ayunan dengan smear, tumbukan ditahan ke balok kayu |
 | `miss` | 10 | ya | ayunan meleset, pedang menancap lantai di depan balok, malu |
@@ -165,7 +165,24 @@ Karakter utama original, kostum `berserker-hero` (label "Berserker Hero", group 
 - **Validasi cepat hero:** `python3 src/validate_pack.py --hero-only` (V1, V2/V3, V4, V10, V11). Validasi penuh tanpa flag itu tetap yang menentukan.
 - **Hash:** `pack/sha256-hero.txt` (`python3 tools/hero_hashes.py`, `--check` untuk memeriksa). Berkas ini berdiri sendiri; `sha256-asli.txt`, `-disetujui.txt`, `-dibuat.txt` tidak disentuh.
 - **Bukti gaya:** `python3 tools/hero_phase_d.py` menulis lembar kontak per state, siluet isi hitam, dan tabel ukuran ke `pack/reports/hero-fase-cd/`. Laporan: `pack/reports/hero-fase-cd.md` (Fase C/D) dan `pack/reports/hero-fase-b.md` (tiga pose kunci).
-- **Preview:** `pack/preview.html` punya bagian "Berserker Hero: lembar kontak per state": pemutar 2× per state, semua frame berurutan, bernomor, 2×, bisa digulir mendatar (termasuk di ponsel 390 px), pilihan latar terang atau gelap, dan mode Statis = frame kunci. Kostum berkanvas sendiri tidak ikut tes buta (ukurannya membocorkan identitas).
+- **Preview:** `pack/preview.html` punya bagian "Berserker Hero: lembar kontak per state": pemutar 2× per state, semua frame berurutan, bernomor, 2×, bisa digulir mendatar (termasuk di ponsel 390 px), pilihan latar terang, gelap, atau abu tengah `#808080`, tombol **Halo** (kontur krem 1 px CSS di luar siluet, `drop-shadow`; hanya pratinjau, aset tidak berubah), dan mode Statis = frame kunci. State yang tidak berputar (`rage`) ditandai "diputar sekali" dan punya tombol **Putar ulang** (dinonaktifkan di mode Statis). Kostum berkanvas sendiri tidak ikut tes buta (ukurannya membocorkan identitas).
+- **Kontras tepi besi** (laporan, `python3 tools/hero_contrast.py <folder-tangkapan>`; terukur dari render Chromium, sama dengan hitungan palet): garis tepi besi `o2` terhadap latar terang 16,19:1, gelap **1,02:1**, abu tengah 4,39:1; dengan halo krem, tetangga tepi menjadi halo dan rasionya 12,51:1 di semua latar (100% piksel luar siluet berwarna halo di tangkapan). Halo itu sendiri hampir tak terlihat di latar terang (1,29:1) dan jelas di latar gelap (12,22:1).
+
+### Rekomendasi untuk integrasi arena (Fase 3)
+
+Karakter berzirah hitam tidak terbaca di arena gelap (garis tepi 1,02:1 terhadap latar `#181c2c`; hanya rim light 1 px dan isi besi terang yang tersisa). Saat hero ditempatkan di arena gelap, pakai salah satu: (a) **halo**, yaitu kontur krem 1 px di sekeliling siluet (CSS `filter: drop-shadow` empat arah tanpa blur pada kanvas atau gambar, dengan latar ada di pembungkus, bukan di elemen yang difilter); atau (b) **alas yang lebih terang** di belakang karakter (panggung, lingkaran cahaya, atau latar arena tengah-terang; di abu tengah `#808080` kontras tepi besi sudah 4,39:1). Jangan menambah warna terang ke aset: aset tidak diubah.
+
+### GIF tanpa loop (`berserker-hero/rage`, `loop: false`)
+
+GIF diekspor tanpa blok aplikasi NETSCAPE2.0 (tanpa `loop`), dan frame terakhir ditahan 1500 ms (sebelumnya 400 ms; total 1660 → 2760 ms; frame 0-10 identik, hanya durasi frame 11 yang berubah) supaya penampil yang tetap mengulang tampak berhenti lebih lama. Menahan 1500 ms tidak membuat penampil pengulang benar-benar berhenti: ia akan memutar ulang setelah 2,76 detik.
+
+| Penampil | Perilaku GIF tanpa loop | Status |
+|---|---|---|
+| Chromium 141 (headless, Playwright; `<img>`) | berhenti di frame terakhir dan tidak berubah lagi (diuji sampai total + 6,5 detik; frame yang tampil = frame terakhir sheet piksel demi piksel; kontrol: GIF `run` yang berputar tetap bergerak). GIF sebelum perubahan (frame akhir 400 ms) berperilaku sama. | **diuji** (`node tools/gif_once_check.js`) |
+| Firefox, Safari/WebKit | spesifikasi GIF89a: tanpa blok loop, animasi diputar sekali | **belum diuji** (hanya Chromium tersedia di lingkungan pengujian) |
+| Penampil gambar sistem (Windows, macOS, Android, iOS), WhatsApp, Telegram, Slack, Discord, GitHub (README), editor gambar | tidak diketahui; sebagian penampil mengabaikan ketiadaan blok loop dan mengulang tanpa henti | **belum diuji** |
+
+Preview memakai sheet PNG dan `frameAt`, bukan `<img>` GIF, jadi perilakunya di preview ditentukan manifest (`loop: false` = berhenti di frame terakhir), bukan penampil GIF. Pemakai yang perlu pasti berhenti sebaiknya memakai sheet + manifest (`GobyetPack.frameAt`), bukan GIF.
 
 
 ## Menambah kostum, state, atau varian
@@ -218,7 +235,7 @@ node tools/e2e_preview.js                      # uji browser (Playwright, alat d
 - `pack/sha256-asli.txt` mengunci 27 file `gif/` dan `sheets/` yang ada sebelum Fase 2.
 - `pack/sha256-disetujui.txt` mengunci aset baru yang gayanya sudah disetujui pemilik.
 - `pack/sha256-hero.txt` mengunci aset Berserker Hero (Gerbang K) yang sudah dibuat dan belum disetujui. V1 memeriksanya bersama tiga berkas lain.
-- **V11 (Berserker Hero):** spesifikasi (8 state, jumlah frame, loop, canvas 128×96, `gif_scale` 4, ≤ 28 warna); setiap frame sheet identik piksel dengan render ulang dari kode; durasi tidak seragam; wajah, mata, hidung/mulut, dan telinga terlihat penuh di semua frame (dibanding kepala digambar sendirian); tinggi kotak kepala berubah ≤ 10%; tidak ada warna merah wajah di luar wajah dan mulut; seam loop ≤ langkah terbesar; siluet `run` berurutan IoU ≤ 0,90; batas keterbacaan 4.4 di frame kunci (helm ≥ 34×26, moncong ≥ 10×8, tanduk ≥ 14 px, rongga mata ≥ 4×3, ≥ 6 gigi lebar 2, tiga pelat bahu, bilah terlebar ≥ 10 px dengan 5 luk beramplitudo ≥ 3 px); kontras luminans garis tepi terhadap latar terang dan gelap dilaporkan (bukan lulus/gagal).
+- **V11 (Berserker Hero):** spesifikasi (8 state, jumlah frame, loop, canvas 128×96, `gif_scale` 4, ≤ 28 warna); setiap frame sheet identik piksel dengan render ulang dari kode; durasi tidak seragam; wajah, mata, hidung/mulut, dan telinga terlihat penuh di semua frame (dibanding kepala digambar sendirian); tinggi kotak kepala berubah ≤ 10%; tidak ada warna merah wajah di luar wajah dan mulut; seam loop ≤ langkah terbesar; **asimetri**: bahu berlapis 3 pelat, gesper, dan tanduk patah (serta bahu kecil, ekor, moncong sebagai pembanding) tetap di sisinya di setiap frame, diukur dari centroid x piksel elemen itu relatif titik tengah badan (`hero.geometry` `tcx`), ditandai bila tandanya (kiri/kanan) berubah kecuali pose berbalik arah eksplisit (`EXPLICIT_TURNS`, saat ini kosong). Hasil: 0 frame ditandai, tidak ada elemen yang pindah sisi (gesper di tengah, sorotnya di kiri). Uji unit: sprite sintetik dan frame hero yang dicerminkan harus ditandai, yang tidak dicerminkan lolos; siluet `run` berurutan IoU ≤ 0,90; batas keterbacaan 4.4 di frame kunci (helm ≥ 34×26, moncong ≥ 10×8, tanduk ≥ 14 px, rongga mata ≥ 4×3, ≥ 6 gigi lebar 2, tiga pelat bahu, bilah terlebar ≥ 10 px dengan 5 luk beramplitudo ≥ 3 px); kontras luminans garis tepi terhadap empat latar pratinjau (terang, gelap, abu tengah #808080, dan halo krem) dilaporkan, dengan dan tanpa halo (bukan lulus/gagal).
 - Validator keluar dengan kode 1 bila:
   - ada hash yang berubah;
   - warna di luar palet yang diizinkan, atau ada piksel semi-transparan;
@@ -228,6 +245,8 @@ node tools/e2e_preview.js                      # uji browser (Playwright, alat d
   - teks melanggar aturan glyph;
   - tarian tidak 16 × 120 ms;
   - proyeksi ukuran melewati anggaran 16 MB.
+- **Metrik pelengkap seam:** `seam/median` = selisih frame terakhir → frame pertama dibanding median selisih antar-frame berurutan di dalam aset (kolom `seam/med` di V4, dan di V11 untuk hero). Nilai ≈ 1 berarti sambungan loop sebesar langkah biasa.
+- **SEAM-POP dikecualikan dengan alasan tertulis:** hanya `berserker-hero/run` (daftar `POP_EXEMPT` di `src/validate_pack.py`). Alasan: siklus lari bergerak seragam; tiap langkah mengubah hampir seluruh badan, jadi median langkah mendekati langkah terbesar dan seam adalah satu langkah biasa, bukan lonjakan di sambungan. Pengecualian hanya berlaku bila datanya memang seragam (seam/median ≤ 1,25 dan median ≥ 0,9 × maks; run: 1,06 dan 0,92); bila tidak, tetap PERINGATAN. Aset tidak diubah untuk menghilangkan peringatan.
 - Ambang seam loop = 1,25 × selisih piksel terbesar antar-frame berurutan di aset itu sendiri. Aset yang terkunci hash dan melewati ambang dilaporkan **DIKETAHUI**, bukan GAGAL, karena tidak boleh diubah.
 - Warna dominan dihitung dari piksel kostum saja, yaitu piksel frame kunci yang berbeda dari Normal idle pada posisi sama. Warna tubuh (bulu, kulit, garis tepi) tidak dihitung. Jaraknya CIE76 ΔE di ruang Lab.
   - Untuk Pak Haji dan Priest, piksel aura juga tidak dihitung. Posisinya diambil dari `theology.aura_mask` untuk frame kunci. Aura sengaja identik untuk keduanya (7.2e), jadi tidak bisa menjadi pembeda. Kalau dihitung, `n` aura menjadi dominan Pak Haji dan menyamakan keduanya.
@@ -272,6 +291,7 @@ Pembeda pasangan ini adalah siluet dan prop, bukan warna.
 
 ## Anggaran ukuran
 
+- **Definisi (keputusan pemilik):** "total pack ≤ 16 MB" berarti **pertambahan `gif/` + `sheets/` sejak commit `dd78be8`**. Ukuran seluruh pohon repo (`pack/`, `src/`, `v2/`, laporan, gambar bukti) **tidak dihitung**. V10 mencetak definisi ini di setiap keluaran.
 - Batas pertambahan `gif/` + `sheets/`: **16 MB** dari kondisi awal Fase 2 lanjutan (commit `dd78be8`). **Ambang peringatan 15 MB:** bila proyeksi melewatinya, validator GAGAL (STOP-DARURAT).
 - V10 memisahkan total GIF dan total sheet, masing-masing dengan pertambahan dan proyeksi sampai semua sel terisi. Contoh sebelum Gerbang G (42 dari 163 sel terisi):
 

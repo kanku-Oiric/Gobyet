@@ -380,3 +380,138 @@ class HeroFindings(unittest.TestCase):
             name, kf, gate = pack.NEW[("berserker-hero", state)]
             self.assertEqual(kf, self.hs.META[state]["keyframe"], state)
             self.assertEqual(name, "berserker-hero-" + state)
+
+
+class HeroAsymmetry(unittest.TestCase):
+    """Elemen asimetris (bahu berlapis 3 pelat, gesper, tanduk patah) harus tetap di sisinya: sprite yang dicerminkan ditandai,
+    yang tidak dicerminkan lolos."""
+
+    def setUp(self):
+        import hero
+        import hero_check
+        import hero_scenes
+        self.hero, self.hc, self.hs = hero, hero_check, hero_scenes
+
+    def synthetic(self, flip_frames=(), n=5, center=50, shift=0):
+        """Frame sintetik: tiga pelat bahu di kiri, tanduk patah di kiri, gesper di tengah (sorot kiri, bayangan kanan)."""
+        out = []
+        for i in range(n):
+            cv = self.hero.PartCanvas()
+            f = (lambda x: 2 * center - 1 - x) if i in flip_frames else (lambda x: x)
+            for k, name in enumerate(("pauldron1", "pauldron2", "pauldron3")):
+                self.hero.part(cv, name)
+                for dx in range(4):
+                    cv.put(f(center - 20 + k * 3 + dx), 40 + k, "ib")
+            self.hero.part(cv, "horn_break")
+            for dx in range(3):
+                cv.put(f(center - 18 + dx), 20, "il")
+            self.hero.part(cv, "buckle")
+            cv.put(f(center - 2 + shift), 50, "kl")
+            cv.put(f(center + 2 + shift), 50, "ks")
+            out.append(cv)
+        return out
+
+    def flagged(self, frames, center=50, state=None):
+        a = self.hc.asymmetry(frames, [center] * len(frames), state)
+        return {k: [i for i, _ in v["tanda"]] for k, v in a.items() if v["tanda"]}
+
+    def test_unmirrored_synthetic_passes(self):
+        self.assertEqual(self.flagged(self.synthetic()), {})
+
+    def test_mirrored_synthetic_frame_is_flagged_only_there(self):
+        got = self.flagged(self.synthetic(flip_frames=(3,)))
+        for name in ("pelat_bahu_1", "pelat_bahu_2", "pelat_bahu_3", "tanduk_patah", "cahaya_gesper"):
+            self.assertEqual(got.get(name), [3], name)
+        self.assertNotIn("gesper", got)                     # gesper di tengah: posisinya tidak berubah saat dicerminkan, sorotnya yang berubah
+
+    def test_second_half_flip_is_caught(self):
+        got = self.flagged(self.synthetic(flip_frames=(6, 7, 8, 9, 10, 11), n=12))
+        self.assertEqual(got["pelat_bahu_2"], [6, 7, 8, 9, 10, 11])
+
+    def test_buckle_off_centre_is_flagged(self):
+        got = self.flagged(self.synthetic(shift=4))
+        self.assertEqual(sorted(got["gesper"]), [0, 1, 2, 3, 4])
+
+    def test_explicit_turn_is_exempt(self):
+        frames = self.synthetic(flip_frames=(2,))
+        self.hc.EXPLICIT_TURNS["uji-balik"] = {2}
+        try:
+            self.assertEqual(self.flagged(frames, state="uji-balik"), {})
+        finally:
+            del self.hc.EXPLICIT_TURNS["uji-balik"]
+        self.assertTrue(self.flagged(frames))
+
+    def test_unknown_side_uses_the_first_visible_frame_and_skips_hidden(self):
+        self.assertEqual(self.hc.side_flags([(-5, 1), (-6, 1), (5, 1)]), [(2, "pindah sisi: dx 5.0, seharusnya kiri")])
+        self.assertEqual(self.hc.side_flags([(None, 0), (4, 1), (None, 0), (3, 1), (-2, 1)])[0][0], 4)
+        self.assertEqual(self.hc.side_flags([(-5, 1), (None, 0), (-1, 1)]), [])
+
+    def test_real_frames_pass_and_their_mirror_is_flagged(self):
+        sided = ["pelat_bahu_1", "pelat_bahu_2", "pelat_bahu_3", "tanduk_patah", "bahu_kecil", "ekor", "moncong", "cahaya_gesper"]
+        for state, i in (("idle", 0), ("run", 3), ("run", 9), ("attack-smash", 7), ("attack-leap", 4), ("defeated", 3)):
+            t = self.hs.TRACKS[state]
+            cv, tc = t.frame(i), self.hero.geometry(t.pose(i))["tcx"]
+            self.assertEqual(self.flagged([cv], tc), {}, (state, i))
+            got = self.flagged([self.hc.mirrored(cv, tc)], tc)
+            for name in sided:
+                self.assertEqual(got.get(name), [0], (state, i, name))
+            self.assertNotIn("gesper", got)
+
+    def test_every_hero_frame_keeps_its_side(self):
+        for state, t in self.hs.TRACKS.items():
+            cvs = [t.frame(i) for i in range(t.n)]
+            a = self.hc.asymmetry(cvs, [self.hero.geometry(t.pose(i))["tcx"] for i in range(t.n)], state)
+            for name, v in a.items():
+                self.assertEqual(v["tanda"], [], (state, name))
+                self.assertEqual(v["tidak_terlihat"], [], (state, name))
+
+
+class SeamPopExempt(unittest.TestCase):
+    """Pengecualian SEAM-POP berserker-hero/run: hanya bila daftarnya cocok DAN datanya memang gerak seragam."""
+
+    def test_uniform_run_is_exempt_with_a_written_reason(self):
+        r = vp.seam_metrics([3600, 3500, 3747, 3600, 3550, 3700], 3679)
+        self.assertTrue(r["pop"], r)
+        why = vp.pop_exempt("berserker-hero", "run", r)
+        self.assertIn("seragam", why)
+        self.assertLessEqual(r["seam_per_median"], vp.POP_UNIFORM_SEAM_PER_MEDIAN)
+
+    def test_other_cells_are_never_exempt(self):
+        r = vp.seam_metrics([3600, 3500, 3747, 3600, 3550, 3700], 3679)
+        self.assertIsNone(vp.pop_exempt("viking", "idle", r))
+        self.assertIsNone(vp.pop_exempt("berserker-hero", "idle", r))
+
+    def test_listed_cell_with_a_real_pop_is_still_warned(self):
+        # langkah kecil dan tidak seragam, seam hampir sebesar langkah terbesar: ini lonjakan di sambungan, bukan gerak seragam
+        r = vp.seam_metrics([120, 150, 130, 3700, 140, 125], 3500)
+        self.assertTrue(r["pop"], r)
+        self.assertIsNone(vp.pop_exempt("berserker-hero", "run", r))
+
+    def test_no_pop_means_nothing_to_exempt(self):
+        r = vp.seam_metrics([3600, 3500, 3747], 300)
+        self.assertFalse(r["pop"])
+        self.assertIsNone(vp.pop_exempt("berserker-hero", "run", r))
+
+    def test_complementary_metric_is_seam_over_median(self):
+        r = vp.seam_metrics([100, 200, 300], 400)
+        self.assertAlmostEqual(r["seam_per_median"], 2.0)
+
+
+class HeroRageHold(unittest.TestCase):
+    def test_rage_last_frame_is_held_1500_ms_and_only_the_last_changed(self):
+        import hero_scenes
+        t = hero_scenes.TRACKS["rage"]
+        self.assertEqual(t.duration(t.n - 1), 1500)
+        self.assertEqual([t.duration(i) for i in range(t.n - 1)], [200, 140, 140, 180, 70, 90, 110, 70, 70, 70, 120])
+        self.assertEqual(vp.HERO_LAST_HOLD_MS, {"rage": 1500})
+
+    def test_validator_rejects_a_rage_with_a_short_last_frame(self):
+        import hero_scenes
+        t = hero_scenes.TRACKS["rage"]
+        sheet = [t.frame(i).image(1) for i in range(t.n)]
+        ms = [int(t.duration(i)) for i in range(t.n)]
+        cell = {"frames": t.n, "durations_ms": ms, "loop": False, "keyframe": t.keyframe}
+        self.assertEqual(vp.hero_findings("rage", t, sheet, cell)[0], [])
+        short = dict(cell, durations_ms=ms[:-1] + [400])
+        bad = vp.hero_findings("rage", t, sheet, short)[0]
+        self.assertTrue(any("frame terakhir 400 ms" in b for b in bad), bad)

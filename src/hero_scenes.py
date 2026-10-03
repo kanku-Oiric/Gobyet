@@ -219,7 +219,7 @@ def _rage_fx(i, p):
     return out
 
 
-RAGE_TRACK = Track("rage", 12, _rage_keys(), [200, 140, 140, 180, 70, 90, 110, 70, 70, 70, 120, 400], keyframe=6, loop=False,
+RAGE_TRACK = Track("rage", 12, _rage_keys(), [200, 140, 140, 180, 70, 90, 110, 70, 70, 70, 120, 1500], keyframe=6, loop=False,
                    fx=_rage_fx, label="mengumpulkan amarah, meledak: wajah merah, mata teal, teriak, tabard mengembang, debu bergetar")
 
 # ================================================================== attack-smash (target: balok kayu)

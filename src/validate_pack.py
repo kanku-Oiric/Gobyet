@@ -25,6 +25,10 @@ V8  Audit teks: semua pemanggil mini_text (termasuk impor langsung dan alias) di
     dari MINI; maksimal 3 karakter kecuali pengecualian yang disahkan pemilik.
 V9  Audit tarian: dance-* tepat 16 frame x 120 ms, seam lulus, perubahan pose terbesar ada di beat.
 V10 Ukuran per gerbang, anggaran 16 MB dari kondisi awal Fase 2 lanjutan, dan proyeksi sampai selesai.
+    DEFINISI ANGGARAN: "total pack <= 16 MB" = PERTAMBAHAN gif/ + sheets/ sejak commit dd78be8 (ambang peringatan
+    15 MB, batas keras 16 MB). Ukuran seluruh pohon repo (pack/, src/, v2/, laporan, gambar bukti) tidak dihitung.
+V11 Berserker Hero: spesifikasi, aset = kode, wajah, kepala, batas 4.4, asimetri (elemen tetap di sisinya),
+    seam, warna, kontras terhadap empat latar (dengan dan tanpa halo).
 Beat per rentang frame dicetak untuk aset baru (ekspresi dan teks yang benar-benar digambar).
 Keluar dengan kode 1 bila ada pemeriksaan wajib yang gagal.
 """
@@ -62,15 +66,25 @@ HERO_TOTAL_LIMIT = int(1.5 * 1024 * 1024)  # semua GIF + sheet hero
 HERO_MAX_COLORS = 28
 HERO_HEAD_VARIATION = 0.10  # tinggi kotak kepala berubah paling banyak 10% antar frame
 HERO_RUN_IOU_MAX = 0.90  # run: siluet dua frame berurutan harus jelas berbeda
-HERO_LIGHT, HERO_DARK = (250, 247, 240), (24, 28, 44)  # dua latar pratinjau untuk laporan kontras
+HERO_LIGHT, HERO_DARK, HERO_GRAY = (250, 247, 240), (24, 28, 44), (128, 128, 128)  # tiga latar pratinjau untuk laporan kontras
+HERO_HALO_KEY = "bb"  # halo pratinjau = nada tulang palet hero (krem), kontur 1 px CSS di luar siluet; aset tidak diubah
 # Spesifikasi hero: state -> (jumlah frame, loop). Ditulis ulang di sini (bukan dibaca dari hero_scenes) supaya
 # validator memeriksa kode terhadap spesifikasi, bukan terhadap dirinya sendiri.
+HERO_LAST_HOLD_MS = {"rage": 1500}  # state yang tidak berputar: frame terakhir ditahan segini lama (penampil GIF yang mengulang tetap tampak berhenti)
 HERO_ATTACKS = {"attack-leap": ("dust", "chip"), "attack-smash": ("dust", "chip"), "miss": ("dust",)}  # state serangan -> bagian efek di frame tumbukan
 HERO_SPEC = {"idle": (12, True), "run": (12, True), "rage": (12, False), "attack-leap": (14, True), "attack-smash": (12, True),
              "miss": (10, True), "exhaustion": (12, True), "defeated": (14, True)}
 GROUPS = ("core", "role", "domain", "fantasy", "theology", "special")
 SEAM_FACTOR = 1.25
 POP_RATIO, POP_MIN = 0.9, 100  # SEAM-POP: seam >= 0,9 x maks dan maks > 100 px (peringatan)
+# SEAM-POP yang dikecualikan dengan alasan tertulis. Pengecualian hanya berlaku bila datanya memang menunjukkan gerak seragam:
+# seam/median <= POP_UNIFORM_SEAM_PER_MEDIAN dan median >= POP_UNIFORM_MEDIAN_PER_MAX x maks; bila tidak, tetap PERINGATAN.
+POP_EXEMPT = {
+    ("berserker-hero", "run"): "siklus lari bergerak seragam: tiap langkah mengubah hampir seluruh badan, jadi median langkah mendekati langkah "
+                               "terbesar dan seam (frame akhir ke frame pertama) adalah satu langkah biasa, bukan lonjakan di sambungan",
+}
+POP_UNIFORM_SEAM_PER_MEDIAN = 1.25
+POP_UNIFORM_MEDIAN_PER_MAX = 0.9
 DANCE_FRAMES, DANCE_MS = 16, 120
 BUDGET_BYTES = 16 * 1024 * 1024
 WARN_BYTES = 15 * 1024 * 1024  # ambang peringatan pemilik: proyeksi di atasnya = STOP-DARURAT
@@ -319,6 +333,16 @@ def seam_metrics(steps, seam):
             "gagal": seam > SEAM_FACTOR * mx, "pop": seam >= POP_RATIO * mx and mx > POP_MIN}
 
 
+def pop_exempt(costume, state, r):
+    """Alasan tertulis bila SEAM-POP sel ini dikecualikan dan datanya memang seragam; None bila tidak berlaku.
+    r = hasil seam_metrics. Metrik pelengkap: seam_per_median (selisih f(n-1)->f0 dibanding median langkah internal)."""
+    reason = POP_EXEMPT.get((costume, state))
+    if not reason or not r["pop"]:
+        return None
+    uniform = r["seam_per_median"] <= POP_UNIFORM_SEAM_PER_MEDIAN and r["median"] >= POP_UNIFORM_MEDIAN_PER_MAX * r["maks"]
+    return reason if uniform else None
+
+
 def check_seams(m, only=None):
     print("\n[V4] Loop seam (piksel berbeda; seam = frame terakhir -> frame pertama)")
     print("  ambang = %.2f x selisih maksimum antar-frame berurutan di aset itu sendiri" % SEAM_FACTOR)
@@ -326,7 +350,7 @@ def check_seams(m, only=None):
           % (POP_RATIO, POP_MIN))
     print("  %-26s %-8s %6s %6s %7s %6s %7s  %s" % ("sel", "status", "maks", "median", "ambang", "seam", "seam/med", "hasil"))
     locked = locked_files()
-    pops = []
+    pops, exempt = [], []
     for costume, state, cell in cells(m, only):
         if cell.get("loop") is False:  # sel tidak berputar (loop=false): tidak ada sambungan loop untuk diukur
             print("  %-26s %-8s tidak loop (loop=false), seam tidak berlaku" % (costume + "/" + state, "baru"))
@@ -336,16 +360,23 @@ def check_seams(m, only=None):
         r = seam_metrics(steps, diff(fr[-1], fr[0]))
         lk = is_locked(cell, locked)
         verdict = "lulus" if not r["gagal"] else ("DIKETAHUI (terkunci, tidak diubah)" if lk else "GAGAL")
-        if r["pop"]:
+        why = pop_exempt(costume, state, r)
+        if r["pop"] and why:
+            verdict += "; SEAM-POP DIKECUALIKAN (seam/median %.2f <= %.2f, median/maks %.2f >= %.2f)" % (
+                r["seam_per_median"], POP_UNIFORM_SEAM_PER_MEDIAN, r["median"] / float(r["maks"]), POP_UNIFORM_MEDIAN_PER_MAX)
+            exempt.append((costume + "/" + state, why))
+        elif r["pop"]:
             verdict += "; SEAM-POP " + ("DIKETAHUI (terkunci)" if lk else "PERINGATAN")
             pops.append((costume + "/" + state, lk))
         print("  %-26s %-8s %6d %6g %7.1f %6d %8.2f  %s" % (costume + "/" + state, "terkunci" if lk else "baru", r["maks"],
                                                           r["median"], r["ambang"], r["seam"], r["seam_per_median"], verdict))
         if r["gagal"] and not lk:
             fail("%s/%s: loop seam %d > %.1f" % (costume, state, r["seam"], r["ambang"]))
+    for name, why in exempt:
+        print("  SEAM-POP dikecualikan: %s. Alasan: %s." % (name, why))
     new_pops = [c for c, lk in pops if not lk]
-    print("  SEAM-POP: %d sel (%d terkunci = DIKETAHUI, %d baru = PERINGATAN)%s" % (
-        len(pops), len(pops) - len(new_pops), len(new_pops), (": " + ", ".join(new_pops)) if new_pops else ""))
+    print("  SEAM-POP: %d sel (%d terkunci = DIKETAHUI, %d baru = PERINGATAN), %d dikecualikan dengan alasan tertulis%s" % (
+        len(pops), len(pops) - len(new_pops), len(new_pops), len(exempt), (": " + ", ".join(new_pops)) if new_pops else ""))
 
 
 # ------------------------------------------------------------------ V5
@@ -938,6 +969,8 @@ def git_sizes(commit, prefixes=("gif/", "sheets/")):
 
 def check_sizes(m, gate):
     print("\n[V10] Ukuran")
+    print("  definisi anggaran: 'total pack <= 16 MB' = pertambahan gif/ + sheets/ sejak %s (peringatan %d MB, batas %d MB); "
+          "ukuran seluruh pohon repo tidak dihitung" % (BUDGET_BASE_COMMIT, WARN_BYTES // 1048576, BUDGET_BYTES // 1048576))
     originals = [os.path.getsize(cell_path(c["gif"])) for _, _, c in cells(m) if c["origin"] == "asli"]
     originals += [os.path.getsize(cell_path(x["gif"])) for x in m.get("extras", [])]
     limit = max(originals)
@@ -1014,6 +1047,9 @@ def hero_findings(state, track, sheet_frames, cell):
         bad.append("frame sheet beda dari render kode: %s" % diffs[:6])
     if [int(track.duration(i)) for i in range(n)] != cell["durations_ms"]:
         bad.append("durasi manifest beda dari kode")
+    hold = HERO_LAST_HOLD_MS.get(state)
+    if hold is not None and cell["durations_ms"][-1] != hold:
+        bad.append("frame terakhir %d ms, harus %d ms (state tidak berputar)" % (cell["durations_ms"][-1], hold))
     if len(set(cell["durations_ms"])) < 3:
         bad.append("durasi hampir seragam: %s" % sorted(set(cell["durations_ms"])))
     # wajah, mata, hidung, mulut, dan telinga terlihat penuh di SEMUA frame (dibanding kepala digambar sendirian)
@@ -1028,6 +1064,13 @@ def hero_findings(state, track, sheet_frames, cell):
         if vis["face"][0] == 0 or vis["eye"][0] == 0 or vis["mouth"][0] == 0:
             bad.append("f%d: wajah, mata, atau hidung/mulut tidak terlihat" % i)
     info["wajah_min_px"], info["terlihat_min"] = skin, worst
+    # asimetri: bahu berlapis 3 pelat, gesper, dan tanduk patah tetap di sisi yang sama di setiap frame (centroid x relatif titik tengah badan)
+    import hero
+    asym = hc.asymmetry(cvs, [hero.geometry(p)["tcx"] for p in poses], state)
+    info["asimetri"] = asym
+    for name, a in asym.items():
+        for i, why in a["tanda"]:
+            bad.append("asimetri %s f%d: %s" % (name, i, why))
     # tinggi kotak kepala (helm + kepala) antar frame berurutan dan sepanjang state
     hh = [hc.head_height(cv) for cv in cvs]
     pairs = list(zip(hh, hh[1:])) + ([(hh[-1], hh[0])] if cell.get("loop") else [])
@@ -1046,6 +1089,7 @@ def hero_findings(state, track, sheet_frames, cell):
         steps = [diff(sheet_frames[i], sheet_frames[i + 1]) for i in range(n - 1)]
         seam = diff(sheet_frames[-1], sheet_frames[0])
         info["seam"] = (seam, max(steps))
+        info["seam_median"] = seam / float(statistics.median(steps)) if statistics.median(steps) else 0.0   # metrik pelengkap
         if seam > max(steps):
             bad.append("seam %d > langkah terbesar %d" % (seam, max(steps)))
     if state == "run":
@@ -1135,6 +1179,19 @@ def check_hero(m):
             state, cell["frames"], "ya" if cell.get("loop") else "tidak", "%dx%d" % cell_canvas(cell), cell_scale(cell), cell["keyframe"],
             os.path.getsize(cell_path(cell["gif"])) / 1024.0, "lulus" if not bad else "GAGAL (%d)" % len(bad)))
         kf, r = info["kunci"]
+        asym = info["asimetri"]
+
+        def rng(name):
+            v = [dx for dx, n in asym[name]["seri"] if n]
+            return "%.1f..%.1f" % (min(v), max(v)) if v else "tidak terlihat"
+        flagged = sum(len(a["tanda"]) for a in asym.values())
+        hidden = sorted({i for a in asym.values() for i in a["tidak_terlihat"]})
+        print("      asimetri (dx px relatif tengah badan, - kiri / + kanan): pelat bahu 1/2/3 %s | %s | %s; gesper %s (cahaya %s); tanduk patah %s; "
+              "tambahan: bahu kecil %s, ekor %s, moncong %s; frame ditandai %d%s" % (
+                  rng("pelat_bahu_1"), rng("pelat_bahu_2"), rng("pelat_bahu_3"), rng("gesper"),
+                  "%.1f..%.1f" % (min(v for v in asym["cahaya_gesper"]["seri"] if v is not None), max(v for v in asym["cahaya_gesper"]["seri"] if v is not None)),
+                  rng("tanduk_patah"), rng("bahu_kecil"), rng("ekor"), rng("moncong"), flagged,
+                  ("; elemen tidak terlihat di f%s" % hidden) if hidden else ""))
         extra = ""
         if "smear" in info:
             extra = "; smear sebelum tumbukan f%s, frame tumbukan %d ms (median %g)" % (info["smear"], info["tahan"][0], info["tahan"][1])
@@ -1143,7 +1200,7 @@ def check_hero(m):
         print("      wajah min %d px, terlihat %.2f dari acuan; tinggi kepala %d-%d px (langkah %.1f%%, rentang %.1f%%)%s%s" % (
             info["wajah_min_px"], info["terlihat_min"], info["kepala_tinggi"][0], info["kepala_tinggi"][1], 100 * info["kepala_langkah"],
             100 * info["kepala_rentang"],
-            ("; seam %d <= langkah maks %d" % info["seam"]) if "seam" in info else "; tidak loop",
+            ("; seam %d <= langkah maks %d (seam/median %.2f)" % (info["seam"] + (info["seam_median"],))) if "seam" in info else "; tidak loop",
             ("; IoU run berurutan maks %.2f" % info["run_iou_maks"]) if "run_iou_maks" in info else "") + extra)
         print("      kunci f%d: helm %dx%d, moncong %dx%d, tanduk %s px, rongga mata %s, gigi %d (lebar %s), pelat bahu %s" % (
             kf, r["helm"][0], r["helm"][1], r["snout"][0], r["snout"][1], r["horn_px"], r["socket"], r["teeth"], r["teeth_width"], r["plates"]))
@@ -1158,14 +1215,20 @@ def check_hero(m):
     print("  bilah (digambar sendiri, tanpa rotasi): terlebar %d px, luk per sisi %s, amplitudo luk terkecil %d px" % (b["lebar"], b["luk"], b["amplitudo_min"]))
     for f in hc.blade_failures(b):
         fail("%s: %s" % (HERO, f))
-    print("  kontras luminans WCAG (rasio; laporan, bukan lulus/gagal) terhadap latar terang %s dan gelap %s:" % (HERO_LIGHT, HERO_DARK))
     pal = monkey.PAL_HERO
+    halo = tuple(pal[HERO_HALO_KEY])
+    print("  kontras luminans WCAG (rasio; laporan, bukan lulus/gagal) tepi hero terhadap empat latar pratinjau: terang %s, gelap %s, abu tengah %s, halo krem %s" % (
+        HERO_LIGHT, HERO_DARK, HERO_GRAY, halo))
+    print("    %-4s %-20s %9s %9s %11s | %s" % ("kunci", "", "terang", "gelap", "abu tengah", "dengan halo (tetangga tepi = halo, sama di semua latar)"))
     for key, label in (("o2", "garis tepi besi"), ("o1", "garis tepi organik"), ("is", "besi bayangan"), ("ib", "besi tengah"),
                        ("il", "besi terang"), ("rm", "rim light baja-biru")):
-        print("    %-4s %-20s terang %5.2f:1   gelap %5.2f:1" % (key, label, hc.contrast(pal[key], HERO_LIGHT), hc.contrast(pal[key], HERO_DARK)))
-    dark_edge = hc.contrast(pal["o2"], HERO_DARK)
-    if dark_edge < 1.5:
-        print("  PERINGATAN: garis tepi besi hampir menyatu dengan latar gelap (%.2f:1); keterbacaan siluet di latar gelap bergantung pada rim light dan isi besi terang" % dark_edge)
+        print("    %-4s %-20s %8.2f:1 %8.2f:1 %10.2f:1 | %.2f:1" % (
+            (key, label) + tuple(hc.contrast(pal[key], bg) for bg in (HERO_LIGHT, HERO_DARK, HERO_GRAY)) + (hc.contrast(pal[key], halo),)))
+    print("    halo itu sendiri terhadap latar: terang %.2f:1, gelap %.2f:1, abu tengah %.2f:1" % tuple(hc.contrast(halo, bg) for bg in (HERO_LIGHT, HERO_DARK, HERO_GRAY)))
+    for bg_name, bg in (("gelap", HERO_DARK), ("abu tengah", HERO_GRAY)):
+        no, yes = hc.contrast(pal["o2"], bg), hc.contrast(pal["o2"], halo)
+        if no < 3.0:
+            print("  PERINGATAN: garis tepi besi terhadap latar %s hanya %.2f:1 tanpa halo; dengan halo %.2f:1" % (bg_name, no, yes))
     print("  V11: %s" % ("lulus" if len(FAILS) == before else "%d GAGAL" % (len(FAILS) - before)))
 
 
