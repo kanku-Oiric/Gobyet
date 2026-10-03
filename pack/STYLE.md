@@ -211,3 +211,13 @@ Setiap victory baru wajib punya minimal satu elemen yang belum dipakai kostum la
 
 - Glyph `MINI` 5×5, jarak 6 px. Maksimal 3 karakter per gelembung.
 - Pengecualian: papan `E=mc` (Scientist, statis) dan `GBLK` (normal-gblk).
+
+## Berserker Hero (Gerbang K, 128×96)
+
+Karakter utama original. Aturan di bagian lain dokumen ini (kanvas 64×48, `PAL`/`PAL_EXT`) berlaku untuk kostum lain; hero memakai aturan sendiri di bawah. Status: menunggu persetujuan gaya pemilik.
+
+- **Kanvas:** 128×96, latar transparan, GIF ×4 (512×384), hanya sheet 1×. Kanvas dicatat per sel di manifest (`canvas`, `gif_scale`); 64×48 tidak berubah.
+- **Palet lokal `PAL_HERO`:** 26 kunci (batas 28 untuk seluruh karakter). Pergeseran rona: bayangan lebih dingin, sorot lebih hangat. Garis tepi 1 px dari warna turunan, bukan hitam murni: `o1` (organik, hangat) dan `o2` (besi, dingin). Rim light baja-biru `rm` 1 px di tepi atas setiap bagian besi hitam. Tiga nada (bayangan, tengah, sorot) dari cahaya kiri-atas, sama di semua frame. Tanpa piksel semi-transparan, tanpa anti-aliasing, tanpa teks.
+- **Identitas Gobyet tetap:** bulu cokelat, telinga, dan wajah (mata, hidung, mulut) terlihat penuh di semua frame. Kostum adalah lapisan di atasnya; helm tidak pernah menutup mata, hidung, atau mulut. Varian wajah merah (`face="A"`) hanya untuk `rage`.
+- **Desain:** helm tengkorak naga besi hitam dipakai seperti tudung (moncong panjang dengan dua lubang hidung, dua tanduk melengkung ke belakang dengan satu ujung patah, rongga mata gelap, rahang terbuka sebagai pelindung pipi bergigi krem, jambul dan paku keling); pedang besar bergelombang ±1,2× tinggi badan (5 luk, garis pamor, pelindung bersayap melengkung ke bawah, gagang dibalut krem, pangkal bulat); zirah pelat hitam (bahu kiri tiga pelat bertumpuk, bahu kanan satu pelat bergerigi kecil, dada berpelat dengan garis tengah dan paku, sabuk lebar dengan gesper perunggu, rok rantai pendek, sarung tangan dan sepatu pelat); tabard teal pendek sebagai gerak sekunder; aksen perunggu. Tanpa jubah, tanpa bulu mantel, tanpa mata merah menyala, tanpa darah.
+- **Animasi:** setiap serangan punya antisipasi, aksi, dan tindak lanjut; satu sampai dua frame smear (busur terang tipis mengikuti bilah) dan satu frame tumbukan yang ditahan lebih lama dengan serpihan dan debu. Durasi per frame tidak seragam; pose kunci ditahan lebih lama. Run: kontak, serap, lintas, dorong, melayang; tabard tertinggal satu frame; debu tiap injakan; dua sampai tiga garis kecepatan.

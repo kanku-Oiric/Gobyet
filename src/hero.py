@@ -645,6 +645,7 @@ def fx_smear(cv, cx, cy, r, a0, a1, width=1, dither=True):
     """Busur terang tipis (smear) mengikuti bilah: dari sudut a0 ke a1 (derajat layar, 0 = kanan, 90 = bawah) di jari-jari
     r, memudar (dither) ke arah a0 (ekor)."""
     n = int(abs(a1 - a0) * math.pi / 180.0 * r * 1.6) + 2
+    part(cv, "smear")                                          # hanya penanda pemilik piksel (untuk validator); piksel tidak berubah
     for i in range(n + 1):
         t = i / float(n)
         a = math.radians(a0 + (a1 - a0) * t)

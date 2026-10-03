@@ -65,6 +65,7 @@ HERO_RUN_IOU_MAX = 0.90  # run: siluet dua frame berurutan harus jelas berbeda
 HERO_LIGHT, HERO_DARK = (250, 247, 240), (24, 28, 44)  # dua latar pratinjau untuk laporan kontras
 # Spesifikasi hero: state -> (jumlah frame, loop). Ditulis ulang di sini (bukan dibaca dari hero_scenes) supaya
 # validator memeriksa kode terhadap spesifikasi, bukan terhadap dirinya sendiri.
+HERO_ATTACKS = {"attack-leap": ("dust", "chip"), "attack-smash": ("dust", "chip"), "miss": ("dust",)}  # state serangan -> bagian efek di frame tumbukan
 HERO_SPEC = {"idle": (12, True), "run": (12, True), "rage": (12, False), "attack-leap": (14, True), "attack-smash": (12, True),
              "miss": (10, True), "exhaustion": (12, True), "defeated": (14, True)}
 GROUPS = ("core", "role", "domain", "fantasy", "theology", "special")
@@ -1035,7 +1036,7 @@ def hero_findings(state, track, sheet_frames, cell):
     info["kepala_tinggi"], info["kepala_langkah"], info["kepala_rentang"] = (min(hh), max(hh)), step, span
     if step > HERO_HEAD_VARIATION or span > HERO_HEAD_VARIATION:
         bad.append("tinggi kepala %s: langkah %.1f%%, rentang %.1f%% > %d%%" % ((min(hh), max(hh)), 100 * step, 100 * span, 100 * HERO_HEAD_VARIATION))
-    # tidak ada darah: warna merah wajah (ra/rb) hanya milik wajah dan mulut
+    # tidak ada darah: warna merah wajah (ra/rb) hanya milik wajah dan mulut (pemeriksaan ini terpisah dari wajah merah rage di bawah)
     for i, cv in enumerate(cvs):
         red = {cv.owner.get(k) for k, c in cv.px.items() if c in ("ra", "rb")}
         if red - {"face", "mouth", None}:
@@ -1053,8 +1054,35 @@ def hero_findings(state, track, sheet_frames, cell):
         info["run_iou_maks"] = max(ious)
         if max(ious) > HERO_RUN_IOU_MAX:
             bad.append("siluet run berurutan terlalu mirip: IoU %.2f > %.2f (f%d)" % (max(ious), HERO_RUN_IOU_MAX, ious.index(max(ious))))
-    # batas keterbacaan 4.4 di frame kunci
     kf = cell["keyframe"]
+    # serangan: 1-2 frame smear sebelum tumbukan, frame tumbukan ditahan >= 1,5 x median durasi, serpihan dan debu di sana
+    if state in HERO_ATTACKS:
+        smear = [i for i, cv in enumerate(cvs) if "smear" in cv.owner.values()]
+        pre = [i for i in smear if i < kf]
+        info["smear"] = pre
+        if not 1 <= len(pre) <= 2:
+            bad.append("frame smear sebelum tumbukan %s: harus 1-2" % pre)
+        med = statistics.median(cell["durations_ms"])
+        info["tahan"] = (cell["durations_ms"][kf], med)
+        if cell["durations_ms"][kf] < 1.5 * med:
+            bad.append("frame tumbukan f%d %d ms kurang dari 1,5 x median %g ms" % (kf, cell["durations_ms"][kf], med))
+        have = set(cvs[kf].owner.values())
+        for need in HERO_ATTACKS[state]:
+            if need not in have:
+                bad.append("frame tumbukan f%d tanpa %s" % (kf, need))
+    # wajah merah dan titik teal rongga mata hanya pada rage (frame kunci dan akhir marah, empat frame awal tenang)
+    glow = [sum(1 for o in cv.owner.values() if o == "socket_glow") for cv in cvs]
+    red = [sum(1 for k, c in cv.px.items() if c == "ra" and cv.owner.get(k) == "face") for cv in cvs]
+    if state == "rage":
+        angry = [i for i in range(n) if glow[i] == 8 and red[i] >= 60]
+        info["amuk"] = (angry[0], angry[-1]) if angry else None
+        if kf not in angry or n - 1 not in angry or len(angry) < 6:
+            bad.append("rage: frame marah (wajah merah + dua titik teal 2x2) %s; harus mencakup kunci f%d dan frame akhir" % (angry, kf))
+        if any(glow[i] or red[i] for i in range(3)):
+            bad.append("rage: tiga frame awal harus tenang (tanpa wajah merah atau titik teal)")
+    elif any(glow) or any(red):
+        bad.append("wajah merah atau titik teal rongga mata di state selain rage (f%s)" % [i for i in range(n) if glow[i] or red[i]][:5])
+    # batas keterbacaan 4.4 di frame kunci
     r = hc.readability(cvs[kf])
     info["kunci"] = (kf, r)
     for f in hc.readability_failures(r):
@@ -1090,6 +1118,10 @@ def check_hero(m):
         if state not in hs.TRACKS:
             fail("%s: tidak ada di hero_scenes.TRACKS" % tag)
             continue
+        meta = hs.META[state]
+        if (meta["frames"], meta["keyframe"], meta["loop"]) != (cell["frames"], cell["keyframe"], cell["loop"]):
+            fail("%s: manifest (frame %d, kunci f%d, loop %r) != hero_scenes.META (frame %d, kunci f%d, loop %r)" % (
+                tag, cell["frames"], cell["keyframe"], cell["loop"], meta["frames"], meta["keyframe"], meta["loop"]))
         sheet = frames_of(cell_path(cell["sheet"]), 1, cell_canvas(cell))
         if len(sheet) != cell["frames"]:
             fail("%s: sheet berisi %d frame, manifest %d" % (tag, len(sheet), cell["frames"]))
@@ -1103,11 +1135,16 @@ def check_hero(m):
             state, cell["frames"], "ya" if cell.get("loop") else "tidak", "%dx%d" % cell_canvas(cell), cell_scale(cell), cell["keyframe"],
             os.path.getsize(cell_path(cell["gif"])) / 1024.0, "lulus" if not bad else "GAGAL (%d)" % len(bad)))
         kf, r = info["kunci"]
+        extra = ""
+        if "smear" in info:
+            extra = "; smear sebelum tumbukan f%s, frame tumbukan %d ms (median %g)" % (info["smear"], info["tahan"][0], info["tahan"][1])
+        if state == "rage":
+            extra = "; frame marah f%d-f%d" % info["amuk"] if info.get("amuk") else "; tidak ada frame marah"
         print("      wajah min %d px, terlihat %.2f dari acuan; tinggi kepala %d-%d px (langkah %.1f%%, rentang %.1f%%)%s%s" % (
             info["wajah_min_px"], info["terlihat_min"], info["kepala_tinggi"][0], info["kepala_tinggi"][1], 100 * info["kepala_langkah"],
             100 * info["kepala_rentang"],
             ("; seam %d <= langkah maks %d" % info["seam"]) if "seam" in info else "; tidak loop",
-            ("; IoU run berurutan maks %.2f" % info["run_iou_maks"]) if "run_iou_maks" in info else ""))
+            ("; IoU run berurutan maks %.2f" % info["run_iou_maks"]) if "run_iou_maks" in info else "") + extra)
         print("      kunci f%d: helm %dx%d, moncong %dx%d, tanduk %s px, rongga mata %s, gigi %d (lebar %s), pelat bahu %s" % (
             kf, r["helm"][0], r["helm"][1], r["snout"][0], r["snout"][1], r["horn_px"], r["socket"], r["teeth"], r["teeth_width"], r["plates"]))
     allowed = {tuple(v) for v in monkey.PAL_HERO.values()} | EXT_RGB

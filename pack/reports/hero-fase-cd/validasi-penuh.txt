@@ -1,0 +1,518 @@
+
+[V1] Hash aset yang dikunci dan aset yang sudah dibuat
+  sha256-asli.txt: 27 identik, 0 berubah/hilang
+  sha256-disetujui.txt: 89 identik, 0 berubah/hilang
+  sha256-dibuat.txt: 242 identik, 0 berubah/hilang
+  sha256-hero.txt: 16 identik, 0 berubah/hilang
+
+[V2] Manifest dan schema, [V3] palet, kanvas, alfa, isi GIF
+  33 kostum, 19 state, 171 sel berlaku, 171 sel terisi; 0 gagal
+
+[V4] Loop seam (piksel berbeda; seam = frame terakhir -> frame pertama)
+  ambang = 1.25 x selisih maksimum antar-frame berurutan di aset itu sendiri
+  SEAM-POP (peringatan) = seam >= 0.9 x maks dan maks > 100 px; seam/med = seam dibagi median langkah internal
+  sel                        status     maks median  ambang   seam seam/med  hasil
+  normal/idle                terkunci    237     42   296.2     37     0.88  lulus
+  normal/happy               terkunci    324   91.5   405.0    100     1.09  lulus
+  normal/thinking            terkunci    158     37   197.5     34     0.92  lulus
+  normal/victory             terkunci    544    395   680.0     16     0.04  lulus
+  normal/defeated            terkunci     45      7    56.2     36     5.14  lulus
+  normal/shocked             baru        687    412   858.8     19     0.05  lulus
+  normal/dance-a             baru        677      7   846.2    677    96.71  lulus; SEAM-POP PERINGATAN
+  greek-philosopher/thinking terkunci    197     20   246.2    234    11.70  lulus; SEAM-POP DIKETAHUI (terkunci)
+  greek-philosopher/idle     terkunci     70     28    87.5     33     1.18  lulus
+  greek-philosopher/victory  terkunci    560    438   700.0      8     0.02  lulus
+  greek-philosopher/defeated terkunci    113     24   141.2     69     2.88  lulus
+  greek-philosopher/shocked  baru        702    401   877.5     17     0.04  lulus
+  greek-philosopher/happy    baru        344     40   430.0     42     1.05  lulus
+  academic/idle              terkunci    241     27   301.2     36     1.33  lulus
+  academic/thinking          terkunci    176     34   220.0     28     0.82  lulus
+  academic/victory           terkunci    549    130   686.2     20     0.15  lulus
+  academic/defeated          terkunci    287     17   358.8     12     0.71  lulus
+  academic/shocked           baru        409    117   511.2     27     0.23  lulus
+  academic/happy             baru        420     36   525.0     31     0.86  lulus
+  scientist/thinking         terkunci    140     37   175.0    239     6.46  DIKETAHUI (terkunci, tidak diubah); SEAM-POP DIKETAHUI (terkunci)
+  scientist/idle             terkunci     75     43    93.8     44     1.02  lulus
+  scientist/shocked          terkunci    814     44  1017.5     30     0.68  lulus
+  scientist/victory          terkunci    722    493   902.5     59     0.12  lulus
+  scientist/defeated         baru         46      7    57.5     36     5.14  lulus
+  scientist/happy            baru         99     45   123.8     69     1.53  lulus
+  hacker/idle                terkunci    257     43   321.2    258     6.00  lulus; SEAM-POP DIKETAHUI (terkunci)
+  hacker/thinking            terkunci    138     25   172.5     68     2.72  lulus
+  hacker/shocked             terkunci    372    118   465.0     68     0.58  lulus
+  hacker/victory             terkunci    600    331   750.0     68     0.21  lulus
+  hacker/defeated            baru        712     11   890.0    708    64.36  lulus; SEAM-POP PERINGATAN
+  hacker/happy               baru         74     61    92.5     74     1.21  lulus
+  detective/thinking         terkunci    312     80   390.0    356     4.45  lulus; SEAM-POP DIKETAHUI (terkunci)
+  detective/idle             terkunci    196     19   245.0     16     0.84  lulus
+  detective/suspicious       terkunci    527     65   658.8     93     1.43  lulus
+  detective/shocked          terkunci    813    100  1016.2     16     0.16  lulus
+  detective/victory          terkunci    689    467   861.2     16     0.03  lulus
+  detective/defeated         baru        246     18   307.5     16     0.89  lulus
+  detective/happy            baru        376     52   470.0     31     0.60  lulus
+  referee/idle               terkunci    216     20   270.0      8     0.40  lulus
+  referee/thinking           terkunci    143     27   178.8    152     5.63  lulus; SEAM-POP DIKETAHUI (terkunci)
+  referee/victory            baru        231     34   288.8     18     0.53  lulus
+  referee/defeated           baru        219      7   273.8     42     6.00  lulus
+  referee/shocked            baru        623    357   778.8     18     0.05  lulus
+  referee/happy              baru        173     41   216.2    102     2.49  lulus
+  judge/idle                 terkunci    207     18   258.8      4     0.22  lulus
+  judge/thinking             terkunci    158     26   197.5     24     0.92  lulus
+  judge/judging              terkunci    207    112   258.8      7     0.06  lulus
+  judge/victory              baru        302     46   377.5     19     0.41  lulus
+  judge/defeated             baru        226      7   282.5     37     5.29  lulus
+  judge/shocked              baru        670    388   837.5     19     0.05  lulus
+  judge/happy                baru        374     36   467.5     19     0.53  lulus
+  skeptic/idle               terkunci    221     18   276.2      8     0.44  lulus
+  skeptic/suspicious         terkunci    278     21   347.5      8     0.38  lulus
+  skeptic/attack             terkunci    152     20   190.0      8     0.40  lulus
+  skeptic/thinking           baru        158     26   197.5     40     1.54  lulus
+  skeptic/victory            baru        222     41   277.5     19     0.46  lulus
+  skeptic/defeated           baru        229     19   286.2     67     3.53  lulus
+  skeptic/shocked            baru        587    340   733.8     19     0.06  lulus
+  skeptic/happy              baru        333     47   416.2     19     0.40  lulus
+  champion/idle              terkunci    214     19   267.5     16     0.84  lulus
+  champion/victory           terkunci    513    286   641.2     16     0.06  lulus
+  champion/thinking          baru        154     22   192.5     41     1.86  lulus
+  champion/defeated          baru        218      7   272.5     42     6.00  lulus
+  champion/shocked           baru        763    463   953.8     18     0.04  lulus
+  champion/happy             baru        324     34   405.0     16     0.47  lulus
+  champion/dance-a           baru        721      7   901.2    721   103.00  lulus; SEAM-POP PERINGATAN
+  mathematician/idle         terkunci     59     37    73.8     23     0.62  lulus
+  mathematician/thinking     terkunci    180     48   225.0     11     0.23  lulus
+  mathematician/victory      terkunci    710    450   887.5     38     0.08  lulus
+  mathematician/defeated     baru        217      8   271.2     42     5.25  lulus
+  mathematician/shocked      baru        731    385   913.8     18     0.05  lulus
+  mathematician/happy        baru        281     62   351.2     55     0.89  lulus
+  lawyer/idle                terkunci    105     27   131.2      8     0.30  lulus
+  lawyer/thinking            terkunci    131     37   163.8     18     0.49  lulus
+  lawyer/victory             terkunci    652    403   815.0      8     0.02  lulus
+  lawyer/defeated            baru        217      8   271.2     38     4.75  lulus
+  lawyer/shocked             baru        671    345   838.8     11     0.03  lulus
+  lawyer/happy               baru        331     39   413.8     11     0.28  lulus
+  gamer/idle                 baru        154     36   192.5     43     1.19  lulus
+  gamer/thinking             baru        211     35   263.8     32     0.91  lulus
+  gamer/happy                baru        220     22   275.0     31     1.41  lulus
+  gamer/shocked              baru        620    107   775.0     32     0.30  lulus
+  gamer/victory              baru        803    443  1003.8     17     0.04  lulus
+  gamer/defeated             baru        103     18   128.8     16     0.89  lulus
+  gamer/dance-a              baru        619      7   773.8    619    88.43  lulus; SEAM-POP PERINGATAN
+  normal-gblk/idle           baru        183     43   228.8    158     3.67  lulus
+  normal-gblk/reveal         baru        367     19   458.8    261    13.74  lulus
+  normal-gblk/happy          baru        217    200   271.2     36     0.18  lulus
+  normal-gblk/victory        baru        993    359  1241.2     16     0.04  lulus
+  normal-gblk/defeated       baru        359     18   448.8     16     0.89  lulus
+  normal-gblk/dance-a        baru        873      7  1091.2    873   124.71  lulus; SEAM-POP PERINGATAN
+  normal-gblk/dance-b        baru        834      7  1042.5    844   120.57  lulus; SEAM-POP PERINGATAN
+  normal-gblk/dance-c        baru        962      7  1202.5    956   136.57  lulus; SEAM-POP PERINGATAN
+  knight/idle                baru        356     14   445.0     11     0.79  lulus
+  knight/thinking            baru        138     32   172.5     28     0.88  lulus
+  knight/shocked             baru        728     19   910.0     11     0.58  lulus
+  knight/attack              baru        509     22   636.2     11     0.50  lulus
+  knight/victory             baru        552    460   690.0     11     0.02  lulus
+  knight/defeated            baru         32     14    40.0     13     0.93  lulus
+  viking/idle                baru        396     21   495.0    395    18.81  lulus; SEAM-POP PERINGATAN
+  viking/thinking            baru        114     29   142.5     27     0.93  lulus
+  viking/attack              baru        267     21   333.8     11     0.52  lulus
+  viking/victory             baru        719    541   898.8     11     0.02  lulus
+  viking/defeated            baru         30     15    37.5     14     0.93  lulus
+  viking/dance-a             baru        586      7   732.5    597    85.29  lulus; SEAM-POP PERINGATAN
+  pirate/idle                baru         45     19    56.2     19     1.00  lulus
+  pirate/thinking            baru        272     15   340.0     43     2.87  lulus
+  pirate/attack              baru        277     32   346.2     19     0.59  lulus
+  pirate/victory             baru        652    596   815.0     19     0.03  lulus
+  pirate/defeated            baru         29     16    36.2     22     1.38  lulus
+  pirate/dance-a             baru        548      7   685.0    559    79.86  lulus; SEAM-POP PERINGATAN
+  wizard/idle                baru         37     13    46.2     17     1.31  lulus
+  wizard/thinking            baru        130     27   162.5    138     5.11  lulus; SEAM-POP PERINGATAN
+  wizard/shocked             baru        531    116   663.8     18     0.16  lulus
+  wizard/attack              baru        153     76   191.2     18     0.24  lulus
+  wizard/victory             baru        642    580   802.5     24     0.04  lulus
+  wizard/defeated            baru        120     10   150.0     32     3.20  lulus
+  pak-haji/idle              baru        296     39   370.0     19     0.49  lulus
+  pak-haji/thinking          baru         99     17   123.8     54     3.18  lulus
+  pak-haji/happy             baru        295     52   368.8     82     1.58  lulus
+  pak-haji/victory           baru        136     45   170.0     48     1.07  lulus
+  pak-haji/defeated          baru        153     15   191.2     19     1.27  lulus
+  priest/idle                baru        240     18   300.0     19     1.06  lulus
+  priest/thinking            baru         99     14   123.8     48     3.43  lulus
+  priest/happy               baru        242     32   302.5     66     2.06  lulus
+  priest/victory             baru        100     26   125.0     35     1.35  lulus
+  priest/defeated            baru        126     14   157.5     19     1.36  lulus
+  knight-heavy/idle          baru        441     32   551.2    435    13.59  lulus; SEAM-POP PERINGATAN
+  knight-heavy/attack        baru        555     40   693.8     19     0.47  lulus
+  knight-heavy/victory       baru        504    474   630.0     19     0.04  lulus
+  knight-archer/idle         baru        442     22   552.5    437    19.86  lulus; SEAM-POP PERINGATAN
+  knight-archer/attack       baru        309     22   386.2     11     0.50  lulus
+  knight-archer/victory      baru        523    446   653.8     11     0.02  lulus
+  knight-manatarms/idle      baru        453     23   566.2    449    19.52  lulus; SEAM-POP PERINGATAN
+  knight-manatarms/attack    baru        490     23   612.5     12     0.52  lulus
+  knight-manatarms/victory   baru        551    506   688.8     12     0.02  lulus
+  knight-assassin/idle       baru        469     32   586.2    463    14.47  lulus; SEAM-POP PERINGATAN
+  knight-assassin/attack     baru        384     47   480.0     19     0.40  lulus
+  knight-assassin/victory    baru        501    471   626.2     19     0.04  lulus
+  viking-berserker/idle      baru        489     32   611.2    483    15.09  lulus; SEAM-POP PERINGATAN
+  viking-berserker/attack    baru        667     96   833.8     19     0.20  lulus
+  viking-berserker/victory   baru        558    460   697.5     19     0.04  lulus
+  viking-huscarl/idle        baru        464     21   580.0    463    22.05  lulus; SEAM-POP PERINGATAN
+  viking-huscarl/attack      baru        551     19   688.8      9     0.47  lulus
+  viking-huscarl/victory     baru        694    592   867.5     11     0.02  lulus
+  viking-gestir/idle         baru        475     32   593.8    469    14.66  lulus; SEAM-POP PERINGATAN
+  viking-gestir/attack       baru        558     32   697.5     19     0.59  lulus
+  viking-gestir/victory      baru        578    514   722.5     19     0.04  lulus
+  viking-bondi/idle          baru        489     22   611.2    487    22.14  lulus; SEAM-POP PERINGATAN
+  viking-bondi/attack        baru        259     21   323.8     12     0.57  lulus
+  viking-bondi/victory       baru        541    490   676.2     12     0.02  lulus
+  pirate-captain/idle        baru        522     27   652.5    515    19.07  lulus; SEAM-POP PERINGATAN
+  pirate-captain/attack      baru        646     77   807.5     15     0.19  lulus
+  pirate-captain/victory     baru        600    529   750.0     15     0.03  lulus
+  pirate-skirmisher/idle     baru        517     32   646.2    516    16.12  lulus; SEAM-POP PERINGATAN
+  pirate-skirmisher/attack   baru        683     32   853.8     32     1.00  lulus
+  pirate-skirmisher/victory  baru        501    298   626.2     32     0.11  lulus
+  pirate-sharpshooter/idle   baru        483     32   603.8    477    14.91  lulus; SEAM-POP PERINGATAN
+  pirate-sharpshooter/attack baru        208     21   260.0     19     0.90  lulus
+  pirate-sharpshooter/victory baru        626    505   782.5     19     0.04  lulus
+  pirate-buccaneer/idle      baru        538     32   672.5    532    16.62  lulus; SEAM-POP PERINGATAN
+  pirate-buccaneer/attack    baru        561     32   701.2     19     0.59  lulus
+  pirate-buccaneer/victory   baru        713    603   891.2     19     0.03  lulus
+  berserker-hero/idle        baru       2015    113  2518.8    126     1.12  lulus
+  berserker-hero/run         baru       3747   3464  4683.8   3679     1.06  lulus; SEAM-POP PERINGATAN
+  berserker-hero/rage        baru     tidak loop (loop=false), seam tidak berlaku
+  berserker-hero/attack-leap baru       4262   3348  5327.5   3145     0.94  lulus
+  berserker-hero/attack-smash baru       3564   3022  4455.0   1926     0.64  lulus
+  berserker-hero/miss        baru       3679   3269  4598.8   1893     0.58  lulus
+  berserker-hero/exhaustion  baru       1856   1749  2320.0    165     0.09  lulus
+  berserker-hero/defeated    baru       1877    102  2346.2     57     0.56  lulus
+  SEAM-POP: 29 sel (5 terkunci = DIKETAHUI, 24 baru = PERINGATAN): normal/dance-a, hacker/defeated, champion/dance-a, gamer/dance-a, normal-gblk/dance-a, normal-gblk/dance-b, normal-gblk/dance-c, viking/idle, viking/dance-a, pirate/dance-a, wizard/thinking, knight-heavy/idle, knight-archer/idle, knight-manatarms/idle, knight-assassin/idle, viking-berserker/idle, viking-huscarl/idle, viking-gestir/idle, viking-bondi/idle, pirate-captain/idle, pirate-skirmisher/idle, pirate-sharpshooter/idle, pirate-buccaneer/idle, berserker-hero/run
+
+[V5] Siluet: IoU mask buram frame kunci
+  catatan: semua kostum memakai kepala dan badan yang sama, jadi IoU dasar antar-kostum sudah tinggi
+  a) idle antar kostum dasar (> 0,90 = kandidat terlalu mirip)
+             normal normal refere  judge skepti champi greek- academ scient mathem lawyer hacker detect  gamer knight viking pirate wizard pak-ha priest
+  normal       1.00   0.41   0.51   0.58   0.55   0.50   0.43   0.52   0.31   0.50   0.50   0.32   0.50   0.53   0.50   0.47   0.50   0.56   0.54   0.56
+  normal-gbl   0.41   1.00   0.66   0.58   0.61   0.65   0.38   0.48   0.39   0.60   0.59   0.45   0.63   0.63   0.60   0.60   0.63   0.45   0.59   0.58
+  referee      0.51   0.66   1.00   0.78   0.85   0.86   0.44   0.62   0.32   0.84   0.85   0.30   0.82   0.85   0.79   0.74   0.83   0.55   0.78   0.79
+  judge        0.58   0.58   0.78   1.00   0.79   0.75   0.46   0.62   0.31   0.78   0.74   0.31   0.73   0.74   0.72   0.65   0.75   0.61   0.76   0.82
+  skeptic      0.55   0.61   0.85   0.79   1.00   0.79   0.46   0.60   0.31   0.83   0.80   0.28   0.77   0.84   0.78   0.71   0.80   0.57   0.77   0.77
+  champion     0.50   0.65   0.86   0.75   0.79   1.00   0.43   0.59   0.33   0.83   0.77   0.33   0.83   0.77   0.75   0.70   0.78   0.58   0.75   0.75
+  greek-phil   0.43   0.38   0.44   0.46   0.46   0.43   1.00   0.40   0.30   0.42   0.41   0.26   0.46   0.43   0.43   0.41   0.44   0.40   0.44   0.45
+  academic     0.52   0.48   0.62   0.62   0.60   0.59   0.40   1.00   0.31   0.61   0.58   0.31   0.62   0.63   0.58   0.57   0.62   0.71   0.65   0.64
+  scientist    0.31   0.39   0.32   0.31   0.31   0.33   0.30   0.31   1.00   0.32   0.36   0.64   0.33   0.35   0.36   0.40   0.34   0.30   0.34   0.33
+  mathematic   0.50   0.60   0.84   0.78   0.83   0.83   0.42   0.61   0.32   1.00   0.80   0.32   0.78   0.81   0.78   0.73   0.81   0.58   0.78   0.80
+  lawyer       0.50   0.59   0.85   0.74   0.80   0.77   0.41   0.58   0.36   0.80   1.00   0.32   0.72   0.81   0.83   0.79   0.78   0.52   0.75   0.75
+  hacker       0.32   0.45   0.30   0.31   0.28   0.33   0.26   0.31   0.64   0.32   0.32   1.00   0.33   0.31   0.33   0.37   0.31   0.34   0.34   0.34
+  detective    0.50   0.63   0.82   0.73   0.77   0.83   0.46   0.62   0.33   0.78   0.72   0.33   1.00   0.82   0.80   0.74   0.82   0.56   0.78   0.73
+  gamer        0.53   0.63   0.85   0.74   0.84   0.77   0.43   0.63   0.35   0.81   0.81   0.31   0.82   1.00   0.80   0.75   0.85   0.57   0.76   0.74
+  knight       0.50   0.60   0.79   0.72   0.78   0.75   0.43   0.58   0.36   0.78   0.83   0.33   0.80   0.80   1.00   0.83   0.85   0.54   0.79   0.73
+  viking       0.47   0.60   0.74   0.65   0.71   0.70   0.41   0.57   0.40   0.73   0.79   0.37   0.74   0.75   0.83   1.00   0.78   0.50   0.73   0.68
+  pirate       0.50   0.63   0.83   0.75   0.80   0.78   0.44   0.62   0.34   0.81   0.78   0.31   0.82   0.85   0.85   0.78   1.00   0.56   0.79   0.75
+  wizard       0.56   0.45   0.55   0.61   0.57   0.58   0.40   0.71   0.30   0.58   0.52   0.34   0.56   0.57   0.54   0.50   0.56   1.00   0.61   0.64
+  pak-haji     0.54   0.59   0.78   0.76   0.77   0.75   0.44   0.65   0.34   0.78   0.75   0.34   0.78   0.76   0.79   0.73   0.79   0.61   1.00   0.93
+  priest       0.56   0.58   0.79   0.82   0.77   0.75   0.45   0.64   0.33   0.80   0.75   0.34   0.73   0.74   0.73   0.68   0.75   0.64   0.93   1.00
+  tertinggi: pak-haji-priest 0.93, referee-champion 0.86, referee-lawyer 0.85
+  pasangan > 0,90: pak-haji-priest 0.93
+  b) defeated vs idle pada kostum yang sama (<= 0,85)
+    normal               0.30  lulus
+    greek-philosopher    0.34  lulus
+    academic             0.75  lulus
+    scientist            0.43  lulus
+    hacker               0.42  lulus
+    detective            0.66  lulus
+    referee              0.66  lulus
+    judge                0.60  lulus
+    skeptic              0.66  lulus
+    champion             0.62  lulus
+    mathematician        0.59  lulus
+    lawyer               0.60  lulus
+    gamer                0.65  lulus
+    normal-gblk          0.53  lulus
+    knight               0.56  lulus
+    viking               0.61  lulus
+    pirate               0.64  lulus
+    wizard               0.65  lulus
+    pak-haji             0.79  lulus
+    priest               0.83  lulus
+    berserker-hero       0.50  lulus
+  c) varian vs saudara sefaksi (dilaporkan; kostum berkanvas sendiri dikecualikan: indeks piksel tidak sebanding)
+    knight               knight-heavy         0.85
+    knight               knight-archer        0.88
+    knight               knight-manatarms     0.88
+    knight               knight-assassin      0.84
+    knight-heavy         knight-archer        0.82
+    knight-heavy         knight-manatarms     0.83
+    knight-heavy         knight-assassin      0.87
+    knight-archer        knight-manatarms     0.87
+    knight-archer        knight-assassin      0.81
+    knight-manatarms     knight-assassin      0.84
+    viking               viking-berserker     0.75
+    viking               viking-huscarl       0.94
+    viking               viking-gestir        0.85
+    viking               viking-bondi         0.88
+    viking-berserker     viking-huscarl       0.76
+    viking-berserker     viking-gestir        0.78
+    viking-berserker     viking-bondi         0.79
+    viking-huscarl       viking-gestir        0.88
+    viking-huscarl       viking-bondi         0.86
+    viking-gestir        viking-bondi         0.90
+    pirate               pirate-captain       0.92
+    pirate               pirate-skirmisher    0.87
+    pirate               pirate-sharpshooter  0.95
+    pirate               pirate-buccaneer     0.83
+    pirate-captain       pirate-skirmisher    0.80
+    pirate-captain       pirate-sharpshooter  0.87
+    pirate-captain       pirate-buccaneer     0.78
+    pirate-skirmisher    pirate-sharpshooter  0.88
+    pirate-skirmisher    pirate-buccaneer     0.76
+    pirate-sharpshooter  pirate-buccaneer     0.82
+
+[V6] Warna dominan dari piksel kostum saja dan jarak warna (CIE76 Delta E; target >= 15)
+  metode: frame kunci idle (atau sel pertama bila belum ada idle); piksel yang berbeda dari Normal idle
+  pada posisi sama; warna tubuh (BEFKMbf) tidak dihitung; 16 W + 8 P (mata) dikurangkan.
+  Kostum teologi: piksel aura (mask identik untuk keduanya, 7.2e) tidak dihitung sebagai pakaian.
+  Normal tidak berkostum: warnanya bulu B.
+  normal             (idle)     dominan B (139, 90, 55)   100%   kedua -
+  normal-gblk        (idle)     dominan n (236, 226, 150)  84%   kedua N (96, 70, 30)
+  referee            (idle)     dominan W (250, 247, 240)  36%   kedua P (26, 18, 14)
+  judge              (idle)     dominan L (30, 30, 36)     69%   kedua l (64, 64, 74)
+  skeptic            (idle)     dominan v (58, 122, 48)    55%   kedua O (255, 214, 90)
+  champion           (idle)     dominan O (255, 214, 90)   76%   kedua r (255, 130, 96)
+  greek-philosopher  (idle)     dominan c (214, 194, 160)  30%   kedua m (232, 228, 218)
+  academic           (idle)     dominan W (250, 247, 240)  42%   kedua L (30, 30, 36)
+  scientist          (idle)     dominan k (44, 76, 60)     41%   kedua h (196, 196, 202)
+  mathematician      (idle)     dominan p (98, 58, 140)    40%   kedua X (176, 136, 84)
+  lawyer             (idle)     dominan J (40, 56, 104)    60%   kedua U (150, 62, 40)
+  hacker             (idle)     dominan q (42, 44, 54)     53%   kedua L (30, 30, 36)
+  detective          (idle)     dominan d (156, 118, 72)   34%   kedua x (128, 94, 56)
+  gamer              (idle)     dominan o (238, 142, 52)   38%   kedua L (30, 30, 36)
+  knight             (idle)     dominan z (164, 32, 40)    36%   kedua G (214, 214, 220)
+  viking             (idle)     dominan D (74, 42, 26)     33%   kedua s (168, 162, 156)
+  pirate             (idle)     dominan i (122, 32, 52)    44%   kedua L (30, 30, 36)
+  wizard             (idle)     dominan 3 (66, 110, 220)   68%   kedua 4 (44, 78, 170)
+  pak-haji           (idle)     dominan V (96, 176, 72)    27%   kedua S (240, 238, 234)
+  priest             (idle)     dominan g (150, 150, 160)  66%   kedua D (74, 42, 26)
+  pasangan terdekat:
+    referee            academic           W vs W  Delta E   0.0  < 15
+    judge              hacker             L vs q  Delta E   7.2  < 15
+    normal             detective          B vs d  Delta E  12.2  < 15
+    normal-gblk        greek-philosopher  n vs c  Delta E  23.1
+    skeptic            pak-haji           v vs V  Delta E  23.8
+    greek-philosopher  academic           c vs W  Delta E  24.2
+    referee            greek-philosopher  W vs c  Delta E  24.2
+    scientist          hacker             k vs q  Delta E  24.5
+  aksen varian knight (target Delta E >= 10 antar saudara): knight-heavy=G, knight-archer=v, knight-manatarms=J, knight-assassin=l
+    knight-heavy         knight-archer        Delta E  65.8
+    knight-heavy         knight-manatarms     Delta E  67.6
+    knight-heavy         knight-assassin      Delta E  58.4
+    knight-archer        knight-manatarms     Delta E  81.4
+    knight-archer        knight-assassin      Delta E  58.2
+    knight-manatarms     knight-assassin      Delta E  25.4
+  aksen varian viking (target Delta E >= 10 antar saudara): viking-berserker=c, viking-huscarl=s, viking-gestir=k, viking-bondi=d
+    viking-berserker     viking-huscarl       Delta E  20.1
+    viking-berserker     viking-gestir        Delta E  54.7
+    viking-berserker     viking-bondi         Delta E  30.1
+    viking-huscarl       viking-gestir        Delta E  41.2
+    viking-huscarl       viking-bondi         Delta E  31.8
+    viking-gestir        viking-bondi         Delta E  42.3
+  aksen varian pirate (target Delta E >= 10 antar saudara): pirate-captain=w, pirate-skirmisher=R, pirate-sharpshooter=k, pirate-buccaneer=x
+    pirate-captain       pirate-skirmisher    Delta E  95.0
+    pirate-captain       pirate-sharpshooter  Delta E  40.6
+    pirate-captain       pirate-buccaneer     Delta E  57.3
+    pirate-skirmisher    pirate-sharpshooter  Delta E  91.2
+    pirate-skirmisher    pirate-buccaneer     Delta E  57.9
+    pirate-sharpshooter  pirate-buccaneer     Delta E  35.4
+
+[V7] Ukuran prop di 1x (kotak pembatas, digambar sendirian; target heuristik >= 6x6)
+  referee: peluit                 9x8   ok
+  referee: papan klip             8x10  ok
+  judge: palu                     9x9   ok
+  judge: landasan                 7x3   di bawah 6x6
+  judge: papan skor               9x12  ok
+  skeptic: monokel                8x14  ok
+  skeptic: stempel                7x9   ok
+  skeptic: kertas bercap         10x7   ok
+  champion: piala                12x11  ok
+  champion: medali                7x7   ok
+  greek: gulungan terbuka        10x11  ok
+  greek: gulungan menggelinding  11x4   di bawah 6x6
+  academic: topi toga            21x10  ok
+  academic: ijazah terbuka       15x8   ok
+  academic: ijazah kusut          8x6   ok
+  normal: pisang                  6x17  ok
+  scientist: papan tulis (asli)  29x16  ok
+  mathematician: batu tulis      11x9   ok
+  mathematician: jangka           7x9   ok
+  detective: kaca pembesar (asli) 12x13  ok
+  hacker: laptop (asli)          24x15  ok
+  lawyer: map tertutup           10x9   ok
+  lawyer: map terbuka            16x8   ok
+  lawyer: dasi                    2x8   di bawah 6x6
+  gamer: gamepad                 14x6   ok
+  gamer: headset                 26x19  ok
+  gamer: kaleng                   4x6   di bawah 6x6
+  normal-gblk: papan GBLK        27x21  ok
+  knight: pedang                  4x15  di bawah 6x6
+  knight: perisai                 9x11  ok
+  knight: helm terbuka           20x8   ok
+  knight: panji                   8x5   di bawah 6x6
+  viking: kapak                  10x15  ok
+  viking: perisai bundar         12x12  ok
+  viking: helm bertanduk         26x11  ok
+  pirate: cutlass                 9x13  ok
+  pirate: teropong               15x4   di bawah 6x6
+  pirate: tricorn                25x8   ok
+  wizard: tongkat                 7x27  ok
+  wizard: topi runcing           25x12  ok
+  wizard: buku mantra            13x7   ok
+  pak-haji: kopiah putih         18x6   ok
+  pak-haji: tasbih                8x8   ok
+  priest: buku polos              9x7   ok
+  priest: kalung salib            6x5   di bawah 6x6
+  knight-heavy: pedang besar      6x19  ok
+  knight-heavy: pelindung bahu    8x6   ok
+  knight-archer: busur panjang    5x25  di bawah 6x6
+  knight-archer: tabung panah     7x14  ok
+  knight-archer: papan sasaran   10x22  ok
+  knight-manatarms: halberd       6x30  ok
+  knight-manatarms: gada          8x13  ok
+  knight-assassin: belati         4x9   di bawah 6x6
+  knight-assassin: bom asap       4x6   di bawah 6x6
+  viking-berserker: ikat kepala bulu 18x3   di bawah 6x6
+  viking-huscarl: kapak besar     6x22  ok
+  viking-gestir: tombak lempar    3x29  di bawah 6x6
+  viking-bondi: busur pendek      4x16  di bawah 6x6
+  viking-bondi: seax              7x4   di bawah 6x6
+  pirate-captain: topi kapten    28x9   ok
+  pirate-captain: blunderbuss     7x18  ok
+  pirate-captain: burung beo      8x10  ok
+  pirate-skirmisher: bandana     25x9   ok
+  pirate-skirmisher: tong mesiu   5x6   di bawah 6x6
+  pirate-sharpshooter: senapan panjang 11x26  ok
+  pirate-buccaneer: palu besar   10x16  ok
+  pirate-buccaneer: jangkar      14x15  ok
+  judge: timbangan (victory)     17x11  ok
+  skeptic: monokel tergantung     6x13  ok
+  lawyer: kertas berkas          16x5   di bawah 6x6
+  champion: hati kecil            5x4   di bawah 6x6
+
+[V8] Audit teks (semua pemanggil mini_text diinstrumentasi) dan beat per rentang frame
+  berserker-hero/idle  (12 frame, 1950 ms, kunci f0)  teks: -
+    f0-11    1950 ms  mata=-       alis=-       mulut=-     
+  berserker-hero/run  (12 frame, 880 ms, kunci f10)  teks: -
+    f0-11     880 ms  mata=-       alis=-       mulut=-     
+  berserker-hero/rage  (12 frame, 1660 ms, kunci f6)  teks: -
+    f0-11    1660 ms  mata=-       alis=-       mulut=-     
+  berserker-hero/attack-leap  (14 frame, 1470 ms, kunci f8)  teks: -
+    f0-13    1470 ms  mata=-       alis=-       mulut=-     
+  berserker-hero/attack-smash  (12 frame, 1350 ms, kunci f7)  teks: -
+    f0-11    1350 ms  mata=-       alis=-       mulut=-     
+  berserker-hero/miss  (10 frame, 1400 ms, kunci f6)  teks: -
+    f0-9     1400 ms  mata=-       alis=-       mulut=-     
+  berserker-hero/exhaustion  (12 frame, 2130 ms, kunci f5)  teks: -
+    f0-11    2130 ms  mata=-       alis=-       mulut=-     
+  berserker-hero/defeated  (14 frame, 2640 ms, kunci f3)  teks: -
+    f0-13    2640 ms  mata=-       alis=-       mulut=-     
+
+[VT] Audit teologi 7.2 (keputusan pemilik 11c: pemeriksaan i-vi, wajib lulus)
+  state pak-haji: defeated, happy, idle, thinking, victory | priest: defeated, happy, idle, thinking, victory
+  (ii) defeated  16 frame, durasi [200] ms, sama untuk keduanya
+  (ii) happy     12 frame, durasi [150] ms, sama untuk keduanya
+  (ii) idle      16 frame, durasi [180] ms, sama untuk keduanya
+  (ii) thinking  12 frame, durasi [170] ms, sama untuk keduanya
+  (ii) victory   16 frame, durasi [160] ms, sama untuk keduanya
+  (ii) lulus
+  (i)  defeated  mask aura 69-318 piksel per frame, identik di 16 frame; terlihat rata-rata pak-haji 83, priest 66
+  (i)  happy     mask aura 280-361 piksel per frame, identik di 12 frame; terlihat rata-rata pak-haji 128, priest 107
+  (i)  idle      mask aura 280-361 piksel per frame, identik di 16 frame; terlihat rata-rata pak-haji 128, priest 107
+  (i)  thinking  mask aura 318-318 piksel per frame, identik di 12 frame; terlihat rata-rata pak-haji 131, priest 107
+  (i)  victory   mask aura 464-596 piksel per frame, identik di 16 frame; terlihat rata-rata pak-haji 187, priest 158
+  (i)  lulus
+  (iii) pak-haji-defeated    teks mini_text: tidak ada (titik digambar sebagai piksel)
+  (iii) pak-haji-happy       teks mini_text: tidak ada (titik digambar sebagai piksel)
+  (iii) pak-haji-idle        teks mini_text: tidak ada (titik digambar sebagai piksel)
+  (iii) pak-haji-thinking    teks mini_text: tidak ada (titik digambar sebagai piksel)
+  (iii) pak-haji-victory     teks mini_text: tidak ada (titik digambar sebagai piksel)
+  (iii) priest-defeated      teks mini_text: tidak ada (titik digambar sebagai piksel)
+  (iii) priest-happy         teks mini_text: tidak ada (titik digambar sebagai piksel)
+  (iii) priest-idle          teks mini_text: tidak ada (titik digambar sebagai piksel)
+  (iii) priest-thinking      teks mini_text: tidak ada (titik digambar sebagai piksel)
+  (iii) priest-victory       teks mini_text: tidak ada (titik digambar sebagai piksel)
+  (iii) lulus
+  (iv) warna salib 'y': pak-haji 0 piksel di semua frame; priest kotak 3x4 (6 px); buku polos warna CDK
+  (iv) lulus (glyph: hanya lewat mini_text yang diinstrumentasi di iii)
+  (v)  dagu (30 piksel zona) tanpa GHSWghm; di atas alis tanpa VZkv: lulus
+  (vi) area kopiah tanpa Llq, tanpa warna batik Uu; kopiah putih pak-haji min 40 piksel W: lulus
+  kontrol positif greek-philosopher-idle janggut 26, daun 20, kopiah hitam 0, batik 0 piksel -> terdeteksi
+  kontrol positif kondangan              janggut 0, daun 0, kopiah hitam 30, batik 135 piksel -> terdeteksi
+
+[V9] Audit tarian (dance-*: 16 frame x 120 ms, pose besar di beat f0/f4/f8/f12)
+  normal/dance-a           transisi beat [677, 662, 665, 677], lainnya maks 19  lulus
+  champion/dance-a         transisi beat [721, 670, 673, 721], lainnya maks 19  lulus
+  gamer/dance-a            transisi beat [619, 589, 610, 619], lainnya maks 20  lulus
+  normal-gblk/dance-a      transisi beat [873, 859, 860, 873], lainnya maks 19  lulus
+  normal-gblk/dance-b      transisi beat [834, 828, 832, 844], lainnya maks 19  lulus
+  normal-gblk/dance-c      transisi beat [962, 932, 941, 956], lainnya maks 19  lulus
+  viking/dance-a           transisi beat [586, 557, 575, 597], lainnya maks 20  lulus
+  pirate/dance-a           transisi beat [548, 518, 536, 559], lainnya maks 20  lulus
+
+[V11] Berserker Hero (kanvas 128x96, GIF x4): spesifikasi, aset = kode, wajah, kepala, 4.4, seam, warna, kontras
+  state         frame loop  kanvas skala kunci GIF KB    temuan
+  idle             12 ya    128x96     4 0     109.0     lulus
+      wajah min 179 px, terlihat 1.00 dari acuan; tinggi kepala 48-48 px (langkah 0.0%, rentang 0.0%); seam 126 <= langkah maks 2015
+      kunci f0: helm 65x47, moncong 34x14, tanduk [21.9, 21.9] px, rongga mata [(7, 6), (7, 7)], gigi 6 (lebar [2]), pelat bahu [38, 45, 139]
+  run              12 ya    128x96     4 10    110.0     lulus
+      wajah min 161 px, terlihat 1.00 dari acuan; tinggi kepala 49-49 px (langkah 0.0%, rentang 0.0%); seam 3679 <= langkah maks 3747; IoU run berurutan maks 0.86
+      kunci f10: helm 65x49, moncong 34x14, tanduk [21.9, 21.9] px, rongga mata [(7, 6), (7, 7)], gigi 6 (lebar [2]), pelat bahu [18, 24, 98]
+  rage             12 tidak 128x96     4 6     110.7     lulus
+      wajah min 173 px, terlihat 1.00 dari acuan; tinggi kepala 49-49 px (langkah 0.0%, rentang 0.0%); tidak loop; frame marah f4-f11
+      kunci f6: helm 65x49, moncong 34x14, tanduk [21.9, 21.9] px, rongga mata [(7, 6), (7, 7)], gigi 6 (lebar [2]), pelat bahu [39, 48, 139]
+  attack-leap      14 ya    128x96     4 8     128.7     lulus
+      wajah min 173 px, terlihat 1.00 dari acuan; tinggi kepala 48-49 px (langkah 2.0%, rentang 2.0%); seam 3145 <= langkah maks 4262; smear sebelum tumbukan f[6, 7], frame tumbukan 260 ms (median 105)
+      kunci f8: helm 65x49, moncong 34x14, tanduk [21.9, 21.9] px, rongga mata [(7, 6), (7, 7)], gigi 6 (lebar [2]), pelat bahu [38, 45, 130]
+  attack-smash     12 ya    128x96     4 7     108.8     lulus
+      wajah min 173 px, terlihat 1.00 dari acuan; tinggi kepala 48-49 px (langkah 2.0%, rentang 2.0%); seam 1926 <= langkah maks 3564; smear sebelum tumbukan f[5, 6], frame tumbukan 240 ms (median 110)
+      kunci f7: helm 65x49, moncong 34x14, tanduk [21.9, 21.9] px, rongga mata [(7, 6), (7, 7)], gigi 6 (lebar [2]), pelat bahu [38, 45, 130]
+  miss             10 ya    128x96     4 6     90.1      lulus
+      wajah min 150 px, terlihat 1.00 dari acuan; tinggi kepala 48-49 px (langkah 2.0%, rentang 2.0%); seam 1893 <= langkah maks 3679; smear sebelum tumbukan f[3, 4], frame tumbukan 220 ms (median 140)
+      kunci f6: helm 65x49, moncong 34x14, tanduk [21.9, 21.9] px, rongga mata [(7, 6), (7, 7)], gigi 6 (lebar [2]), pelat bahu [38, 45, 131]
+  exhaustion       12 ya    128x96     4 5     100.4     lulus
+      wajah min 206 px, terlihat 1.00 dari acuan; tinggi kepala 49-49 px (langkah 0.0%, rentang 0.0%); seam 165 <= langkah maks 1856
+      kunci f5: helm 65x49, moncong 34x14, tanduk [21.9, 21.9] px, rongga mata [(7, 6), (7, 7)], gigi 6 (lebar [2]), pelat bahu [39, 48, 95]
+  defeated         14 ya    128x96     4 3     109.7     lulus
+      wajah min 187 px, terlihat 1.00 dari acuan; tinggi kepala 49-49 px (langkah 0.0%, rentang 0.0%); seam 57 <= langkah maks 1877
+      kunci f3: helm 65x49, moncong 34x14, tanduk [21.9, 21.9] px, rongga mata [(7, 6), (7, 7)], gigi 6 (lebar [2]), pelat bahu [38, 45, 109]
+  warna seluruh karakter: 26 (batas 28); di luar palet yang diizinkan: 0
+  bilah (digambar sendiri, tanpa rotasi): terlebar 16 px, luk per sisi [5, 5], amplitudo luk terkecil 4 px
+  kontras luminans WCAG (rasio; laporan, bukan lulus/gagal) terhadap latar terang (250, 247, 240) dan gelap (24, 28, 44):
+    o2   garis tepi besi      terang 16.19:1   gelap  1.02:1
+    o1   garis tepi organik   terang 15.46:1   gelap  1.02:1
+    is   besi bayangan        terang 14.36:1   gelap  1.10:1
+    ib   besi tengah          terang 10.20:1   gelap  1.55:1
+    il   besi terang          terang  5.68:1   gelap  2.78:1
+    rm   rim light baja-biru  terang  2.60:1   gelap  6.09:1
+  PERINGATAN: garis tepi besi hampir menyatu dengan latar gelap (1.02:1); keterbacaan siluet di latar gelap bergantung pada rim light dan isi besi terang
+  V11: lulus
+
+[V10] Ukuran
+  GIF pra-Fase 2 terbesar: 171429 byte (batas per GIF baru, dihitung setelah optimize)
+  gerbang A:  2 aset, GIF terbesar 111960 byte, total file   222284 byte
+  gerbang B:  8 aset, GIF terbesar 111841 byte, total file   858967 byte
+  gerbang C:  9 aset, GIF terbesar 136520 byte, total file  1004656 byte
+  gerbang D:  6 aset, GIF terbesar 124003 byte, total file   642031 byte
+  gerbang E: 10 aset, GIF terbesar 115337 byte, total file   977908 byte
+  gerbang G: 15 aset, GIF terbesar  95216 byte, total file  1224060 byte
+  gerbang H: 24 aset, GIF terbesar 106870 byte, total file  1898721 byte
+  gerbang I: 10 aset, GIF terbesar 115568 byte, total file   953349 byte
+  gerbang J: 36 aset, GIF terbesar 106520 byte, total file  2816640 byte
+  gerbang F: 36 aset, GIF terbesar  98384 byte, total file  2694681 byte
+  gerbang K:  8 aset, GIF terbesar 131783 byte, total file  1014303 byte
+  hero: 8 aset, GIF terbesar 131783 byte (batas 204800), total GIF + sheet 1014303 byte (batas 1572864)
+  sel berlaku 171, terisi 171, tersisa 0
+  rata-rata per aset profil baru: GIF 80396 byte, sheet 3890 byte (145 aset)
+             dd78be8   sekarang  pertambahan proyeksi akhir
+  GIF        3029800   14687353     11657553       11657553
+  sheet       365586     929726       564140         564140
+  proyeksi pertambahan total: 12221693 byte (11.66 MB); ambang peringatan 15 MB, batas keras 16 MB
+  opsi D (GIF aset baru dibuat saat rilis, tidak disimpan): hemat 11657553 byte sekarang, 11657553 byte di akhir
+
+HASIL: LULUS
+exit=0

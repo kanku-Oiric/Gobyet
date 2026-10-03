@@ -59,6 +59,8 @@ Urutan fallback: **kostum+state → kostum+idle → base+state → base+idle →
 
 `keyframe` dipilih sebagai pose yang paling mewakili state, tidak harus frame 0.
 
+`canvasOf(manifest, cell)` memberi `{ w, h }` kanvas satu sel: field opsional `canvas` milik sel bila ada, bila tidak `manifest.canvas` (64×48). `gifScaleOf(manifest, cell)` begitu juga untuk `gif_scale` (bawaan 8). Sel dengan `canvas` atau `gif_scale` yang tidak valid dianggap rusak dan dilewati resolver (tidak dirender dengan ukuran tebakan). Manifest lama tanpa field itu tidak berubah perilakunya. `frameAt` memperlakukan `loop: false` sebagai berhenti di frame terakhir.
+
 ## Asset
 
 - Semua frame berukuran 64×48 dan transparan.
@@ -114,8 +116,8 @@ Aset baru juga punya field `gate`, yaitu gerbang persetujuan tempat aset itu dib
 |---|---|
 | `format` | `"gobyet-pack/1"` |
 | `generated_by`, `paths` | keterangan asal dan basis path (relatif terhadap manifest) |
-| `canvas` | `{ "w": 64, "h": 48 }` |
-| `gif_scale` | `8` (GIF 512×384) |
+| `canvas` | `{ "w": 64, "h": 48 }`: kanvas bawaan semua sel. Sel boleh menimpanya dengan field `canvas` sendiri. |
+| `gif_scale` | `8` (GIF 512×384): skala bawaan. Sel boleh menimpanya dengan `gif_scale` sendiri. |
 | `costumes[]` | `{ id, label, group, base?, caption?, applies }`. `group` adalah kategori (`core`, `special`, `role`, `domain`, `fantasy`, `theology`). `base` = kostum induk untuk fallback varian. `caption` = keterangan (mis. kepanjangan GBLK). `applies` = `{ state: "required" \| "optional" }`. |
 | `states[]` | `{ id, label, required, costumes? }`. Diturunkan dari `applies`, hanya untuk kompatibilitas manifest lama. |
 | `fallback` | urutan langkah resolver (lihat Resolver) |
@@ -132,6 +134,39 @@ Isi satu sel:
 ```
 
 `sheet4x` hanya ada di aset lama (asli dan gerbang A-C). `gate` hanya ada di aset baru.
+
+Field sel opsional, ditulis hanya bila ada: `canvas` (`{ "w", "h" }`, bilangan bulat positif) dan `gif_scale` (bilangan bulat ≥ 1). Sel tanpa field itu memakai `canvas` dan `gif_scale` tingkat atas, jadi manifest dan sel lama tetap valid dan tidak berubah. `loop` boleh `false` (sel tidak berputar: GIF diekspor tanpa blok loop dan berhenti di frame terakhir; validator melewati seam loop sel itu). Satu-satunya pemakai sejauh ini adalah Berserker Hero:
+
+```json
+{ "status": "final", "origin": "baru", "source": "berserker-hero-rage", "gate": "K",
+  "sheet": "../sheets/berserker-hero-rage.png", "gif": "../gif/berserker-hero-rage.gif",
+  "frames": 12, "durations_ms": [200, 140, 140, 180, 70, 90, 110, 70, 70, 70, 120, 400],
+  "loop": false, "keyframe": 6, "canvas": { "w": 128, "h": 96 }, "gif_scale": 4 }
+```
+
+## Berserker Hero (Gerbang K, kanvas 128×96)
+
+Karakter utama original, kostum `berserker-hero` (label "Berserker Hero", group `fantasy`, `base: viking-berserker`). Dirancang hanya dari spesifikasi tugas (bagian 4), tanpa rujukan karakter berlisensi dan tanpa memakai gambar AI milik pemilik sebagai acuan. **Status: menunggu persetujuan gaya dari pemilik.** Dokumen ini tidak menyatakan gayanya bagus atau disetujui.
+
+| State | Frame | Loop | Isi |
+|---|---:|---|---|
+| `idle` | 12 | ya | berdiri tegak, ujung pedang di lantai, napas, tabard bergoyang, berkedip |
+| `run` | 12 | ya | lari condong ke depan: kontak, serap, lintas, dorong, melayang; debu dan garis kecepatan |
+| `rage` | 12 | **tidak** | mengumpulkan amarah lalu meledak: wajah merah (`face="A"`), titik teal di rongga mata, tabard mengembang |
+| `attack-leap` | 14 | ya | jongkok, melompat, tebas turun, mendarat di balok kayu |
+| `attack-smash` | 12 | ya | antisipasi, ayunan dengan smear, tumbukan ditahan ke balok kayu |
+| `miss` | 10 | ya | ayunan meleset, pedang menancap lantai di depan balok, malu |
+| `exhaustion` | 12 | ya | bungkuk, napas berat, keringat |
+| `defeated` | 14 | ya | berlutut bertumpu pada pedang, kepala tertunduk |
+
+- **Kode:** `src/hero.py` (rig: bagian helm, pedang, zirah, pose, efek; `PartCanvas` mencatat pemilik tiap piksel), `src/hero_scenes.py` (tabel pose per frame dan durasi), `src/hero_check.py` (pengukuran untuk validator). Rig lama tidak berubah: `monkey.Canvas(w, h)` dan `monkey.PAL_HERO` aditif, nilai bawaan 64×48 tetap.
+- **Target serangan** selalu lantai atau balok kayu; tidak ada karakter lain di kanvas, tidak ada darah, luka, atau kematian. `defeated` adalah berlutut yang tenang.
+- **Ekspor cepat hanya hero:** `python3 src/export.py berserker-hero` (argumen = awalan nama animasi; manifest tetap ditulis lengkap). Tanpa argumen mengekspor semuanya.
+- **Validasi cepat hero:** `python3 src/validate_pack.py --hero-only` (V1, V2/V3, V4, V10, V11). Validasi penuh tanpa flag itu tetap yang menentukan.
+- **Hash:** `pack/sha256-hero.txt` (`python3 tools/hero_hashes.py`, `--check` untuk memeriksa). Berkas ini berdiri sendiri; `sha256-asli.txt`, `-disetujui.txt`, `-dibuat.txt` tidak disentuh.
+- **Bukti gaya:** `python3 tools/hero_phase_d.py` menulis lembar kontak per state, siluet isi hitam, dan tabel ukuran ke `pack/reports/hero-fase-cd/`. Laporan: `pack/reports/hero-fase-cd.md` (Fase C/D) dan `pack/reports/hero-fase-b.md` (tiga pose kunci).
+- **Preview:** `pack/preview.html` punya bagian "Berserker Hero: lembar kontak per state": pemutar 2× per state, semua frame berurutan, bernomor, 2×, bisa digulir mendatar (termasuk di ponsel 390 px), pilihan latar terang atau gelap, dan mode Statis = frame kunci. Kostum berkanvas sendiri tidak ikut tes buta (ukurannya membocorkan identitas).
+
 
 ## Menambah kostum, state, atau varian
 
@@ -174,6 +209,7 @@ Isi satu sel:
 ```sh
 python3 src/validate_pack.py --gate D          # V1-V10; --all untuk tabel beat semua aset baru
 python3 src/validate_pack.py --palette-study   # tambahan: studi palet (bagian 6.1)
+python3 src/validate_pack.py --hero-only       # cepat: hanya Berserker Hero (V1, V2/V3, V4, V10, V11)
 python3 -m unittest src/test_validate_pack.py  # audit teks V8 menangkap semua pemanggil mini_text
 node --test pack/resolver.test.js              # resolver, rantai varian, applies, manifest
 node tools/e2e_preview.js                      # uji browser (Playwright, alat dev opsional; lihat tools/README.md)
@@ -181,6 +217,8 @@ node tools/e2e_preview.js                      # uji browser (Playwright, alat d
 
 - `pack/sha256-asli.txt` mengunci 27 file `gif/` dan `sheets/` yang ada sebelum Fase 2.
 - `pack/sha256-disetujui.txt` mengunci aset baru yang gayanya sudah disetujui pemilik.
+- `pack/sha256-hero.txt` mengunci aset Berserker Hero (Gerbang K) yang sudah dibuat dan belum disetujui. V1 memeriksanya bersama tiga berkas lain.
+- **V11 (Berserker Hero):** spesifikasi (8 state, jumlah frame, loop, canvas 128×96, `gif_scale` 4, ≤ 28 warna); setiap frame sheet identik piksel dengan render ulang dari kode; durasi tidak seragam; wajah, mata, hidung/mulut, dan telinga terlihat penuh di semua frame (dibanding kepala digambar sendirian); tinggi kotak kepala berubah ≤ 10%; tidak ada warna merah wajah di luar wajah dan mulut; seam loop ≤ langkah terbesar; siluet `run` berurutan IoU ≤ 0,90; batas keterbacaan 4.4 di frame kunci (helm ≥ 34×26, moncong ≥ 10×8, tanduk ≥ 14 px, rongga mata ≥ 4×3, ≥ 6 gigi lebar 2, tiga pelat bahu, bilah terlebar ≥ 10 px dengan 5 luk beramplitudo ≥ 3 px); kontras luminans garis tepi terhadap latar terang dan gelap dilaporkan (bukan lulus/gagal).
 - Validator keluar dengan kode 1 bila:
   - ada hash yang berubah;
   - warna di luar palet yang diizinkan, atau ada piksel semi-transparan;
@@ -252,6 +290,7 @@ Pembeda pasangan ini adalah siluet dan prop, bukan warna.
 
   Total pertambahan 11.207.390 B (10,69 MB), di bawah ambang 15 MB dan batas 16 MB. Proyeksi awal 13,23 MB turun karena aset baru rata-rata lebih kecil (GIF 78.609 B).
 - Opsi A (sheet4x opsional) dan B (GIF `optimize=True`) berlaku untuk aset baru mulai Gerbang D. Aset A, B, dan C tidak diekspor ulang.
+- **Berserker Hero (Gerbang K):** tiap GIF ≤ 200 KB setelah optimize, total GIF + sheet satu karakter ≤ 1,5 MB (V10 memeriksanya sebagai GAGAL bila lewat). Angka nyata ada di `pack/reports/hero-fase-cd.md`.
 
 ### Rancangan opsi D: GIF dibuat saat rilis (belum diimplementasikan)
 

@@ -331,3 +331,52 @@ class HeroMeasure(unittest.TestCase):
         for name, fn in self.hero.KEYPOSES.items():
             got = hashlib.sha256(self.hero.render_pose(fn()).image(1).tobytes()).hexdigest()[:8]
             self.assertEqual(got, want[name], name)
+
+
+class HeroFindings(unittest.TestCase):
+    """vp.hero_findings (V11 per state) pada sheet yang dibangun dari kode: lulus untuk 8 state, dan gagal bila dirusak."""
+
+    @classmethod
+    def setUpClass(cls):
+        import hero_scenes
+        cls.hs = hero_scenes
+        cls.cache = {}
+
+    def build(self, state):
+        if state not in self.cache:
+            t = self.hs.TRACKS[state]
+            sheet = [t.frame(i).image(1) for i in range(t.n)]
+            cell = {"frames": t.n, "durations_ms": [int(t.duration(i)) for i in range(t.n)], "loop": t.loop, "keyframe": t.keyframe}
+            self.cache[state] = (t, sheet, cell)
+        return self.cache[state]
+
+    def test_every_state_passes(self):
+        for state in vp.HERO_SPEC:
+            t, sheet, cell = self.build(state)
+            bad, info = vp.hero_findings(state, t, sheet, cell)
+            self.assertEqual(bad, [], state)
+
+    def test_attack_needs_smear_before_impact_and_a_held_impact_frame(self):
+        t, sheet, cell = self.build("attack-smash")
+        bad, _ = vp.hero_findings("attack-smash", t, sheet, dict(cell, keyframe=0))          # kunci di awal: tidak ada smear sebelumnya
+        self.assertTrue(any("smear" in b for b in bad), bad)
+        flat = dict(cell, durations_ms=[100] * cell["frames"])
+        bad, _ = vp.hero_findings("attack-smash", t, sheet, flat)
+        self.assertTrue(any("1,5 x median" in b for b in bad), bad)
+
+    def test_red_face_and_teal_dots_only_in_rage(self):
+        t, sheet, cell = self.build("rage")
+        bad, info = vp.hero_findings("rage", t, sheet, cell)
+        self.assertEqual(bad, [])
+        self.assertIsNotNone(info["amuk"])
+        bad, _ = vp.hero_findings("idle", t, sheet, dict(cell))                                # rage dinilai sebagai state lain
+        self.assertTrue(any("selain rage" in b for b in bad), bad)
+        bad, _ = vp.hero_findings("rage", *self.build("idle")[:2], self.build("idle")[2])      # idle dinilai sebagai rage: tidak ada frame marah
+        self.assertTrue(any("frame marah" in b for b in bad), bad)
+
+    def test_manifest_keyframes_match_the_code(self):
+        import pack
+        for state, (frames, loop) in vp.HERO_SPEC.items():
+            name, kf, gate = pack.NEW[("berserker-hero", state)]
+            self.assertEqual(kf, self.hs.META[state]["keyframe"], state)
+            self.assertEqual(name, "berserker-hero-" + state)

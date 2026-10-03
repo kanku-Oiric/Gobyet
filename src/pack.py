@@ -283,7 +283,7 @@ NEW = {
     ("berserker-hero", "rage"): ("berserker-hero-rage", 6, "K"),
     ("berserker-hero", "attack-leap"): ("berserker-hero-attack-leap", 8, "K"),
     ("berserker-hero", "attack-smash"): ("berserker-hero-attack-smash", 7, "K"),
-    ("berserker-hero", "miss"): ("berserker-hero-miss", 5, "K"),
+    ("berserker-hero", "miss"): ("berserker-hero-miss", 6, "K"),
     ("berserker-hero", "exhaustion"): ("berserker-hero-exhaustion", 5, "K"),
     ("berserker-hero", "defeated"): ("berserker-hero-defeated", 3, "K"),
 }

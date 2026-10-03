@@ -257,7 +257,7 @@ def _smash_fx(i, p):
     gx, gy = p["grip"]
     crack = 0 if i < 7 else (1 if i == 7 else 2)
     out = [lambda cv, g: H.wood_block(cv, hx + 5, FLOOR, 18, 11, crack=crack)]
-    if 4 <= i <= 6:
+    if 5 <= i <= 6:                                             # dua frame smear sebelum tumbukan (tumbukan sendiri memuat ekor smear)
         k = 6 - i
         out.append(lambda cv, g: H.fx_smear(cv, gx, gy, 44, p["ang"] - 62, p["ang"] - 2, 2 if k < 2 else 1))
         out.append(lambda cv, g: H.fx_smear(cv, gx, gy, 33, p["ang"] - 50, p["ang"] - 6, 1))
@@ -326,7 +326,7 @@ def _leap_fx(i, p):
     out = [lambda cv, g: H.wood_block(cv, hx + 5, FLOOR, 18, 11, crack=crack)]
     if i == 2:
         out.append(lambda cv, g: H.fx_dust(cv, p["cx"] - 3, FLOOR - 1, 1, 0.8))              # debu tolakan
-    if 5 <= i <= 7:
+    if 6 <= i <= 7:                                             # dua frame smear sebelum tumbukan
         k = 7 - i
         out.append(lambda cv, g: H.fx_smear(cv, gx, gy, 44, p["ang"] - 66, p["ang"] - 2, 2 if k < 2 else 1))
         out.append(lambda cv, g: H.fx_smear(cv, gx, gy, 33, p["ang"] - 54, p["ang"] - 6, 1))
