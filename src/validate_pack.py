@@ -50,10 +50,23 @@ from costumes import CX, CY  # noqa: E402
 W, H = monkey.W, monkey.H
 PAL_RGB = {tuple(v) for v in monkey.PAL.values()}
 EXT_RGB = PAL_RGB | {tuple(v) for v in monkey.PAL_EXT.values()}
+HERO_RGB = EXT_RGB | {tuple(v) for v in monkey.PAL_HERO.values()}  # kostum berkanvas sendiri boleh memakai PAL_HERO
 REV = {tuple(v): k for k, v in list(monkey.PAL.items()) + list(monkey.PAL_EXT.items())}
 FAILS = []
 LOCK_FILES = ("sha256-asli.txt", "sha256-disetujui.txt")  # terkunci: seam di atas ambang = DIKETAHUI
 MADE_FILE = "sha256-dibuat.txt"  # aset gerbang yang sudah dibuat tetapi belum disetujui: hash wajib tetap
+HERO_FILE = "sha256-hero.txt"  # aset Berserker Hero (Gerbang K): hash wajib tetap setelah dibuat (berkas terpisah, tiga berkas lama tidak disentuh)
+HERO = "berserker-hero"
+HERO_GIF_LIMIT = 200 * 1024  # satu GIF hero setelah optimize
+HERO_TOTAL_LIMIT = int(1.5 * 1024 * 1024)  # semua GIF + sheet hero
+HERO_MAX_COLORS = 28
+HERO_HEAD_VARIATION = 0.10  # tinggi kotak kepala berubah paling banyak 10% antar frame
+HERO_RUN_IOU_MAX = 0.90  # run: siluet dua frame berurutan harus jelas berbeda
+HERO_LIGHT, HERO_DARK = (250, 247, 240), (24, 28, 44)  # dua latar pratinjau untuk laporan kontras
+# Spesifikasi hero: state -> (jumlah frame, loop). Ditulis ulang di sini (bukan dibaca dari hero_scenes) supaya
+# validator memeriksa kode terhadap spesifikasi, bukan terhadap dirinya sendiri.
+HERO_SPEC = {"idle": (12, True), "run": (12, True), "rage": (12, False), "attack-leap": (14, True), "attack-smash": (12, True),
+             "miss": (10, True), "exhaustion": (12, True), "defeated": (14, True)}
 GROUPS = ("core", "role", "domain", "fantasy", "theology", "special")
 SEAM_FACTOR = 1.25
 POP_RATIO, POP_MIN = 0.9, 100  # SEAM-POP: seam >= 0,9 x maks dan maks > 100 px (peringatan)
@@ -94,20 +107,53 @@ def cell_path(p):
     return os.path.normpath(os.path.join(ROOT, "pack", p))
 
 
-def cells(m):
+def cells(m, only=None):
     for costume, row in m["cells"].items():
+        if only and costume != only:
+            continue
         for state, cell in row.items():
             yield costume, state, cell
 
 
-def frames_of(sheet_path, scale=1):
+def cell_canvas(cell):
+    """(lebar, tinggi) kanvas sel: field opsional `canvas`, bawaan kanvas global 64x48."""
+    c = cell.get("canvas")
+    return (c["w"], c["h"]) if c else (W, H)
+
+
+def cell_scale(cell, default=8):
+    """Skala GIF sel: field opsional `gif_scale`, bawaan skala global (8)."""
+    return cell.get("gif_scale", default)
+
+
+def canvas_problems(cell):
+    """Daftar masalah skema untuk field opsional canvas dan gif_scale (kosong = valid atau tidak ada)."""
+    bad = []
+    if "canvas" in cell:
+        c = cell["canvas"]
+        ok = isinstance(c, dict) and set(c) == {"w", "h"} and all(isinstance(c[k], int) and not isinstance(c[k], bool) and c[k] > 0 for k in c)
+        if not ok:
+            bad.append("canvas %r bukan {w, h} bilangan bulat positif" % (c,))
+    if "gif_scale" in cell:
+        g = cell["gif_scale"]
+        if not isinstance(g, int) or isinstance(g, bool) or g < 1:
+            bad.append("gif_scale %r bukan bilangan bulat >= 1" % (g,))
+    return bad
+
+
+def has_custom_canvas(m, costume):
+    return any("canvas" in c for c in m["cells"].get(costume, {}).values())
+
+
+def frames_of(sheet_path, scale=1, canvas=None):
     im = Image.open(sheet_path).convert("RGBA")
-    fw = W * scale
-    return [im.crop((i * fw, 0, (i + 1) * fw, H * scale)) for i in range(im.width // fw)]
+    cw, ch = canvas or (W, H)
+    fw = cw * scale
+    return [im.crop((i * fw, 0, (i + 1) * fw, ch * scale)) for i in range(im.width // fw)]
 
 
 def keyframe_image(cell):
-    return frames_of(cell_path(cell["sheet"]))[cell["keyframe"]]
+    return frames_of(cell_path(cell["sheet"]), 1, cell_canvas(cell))[cell["keyframe"]]
 
 
 def locked_files():
@@ -135,7 +181,7 @@ def base_costumes(m):
 # ------------------------------------------------------------------ V1
 def check_hashes():
     print("\n[V1] Hash aset yang dikunci dan aset yang sudah dibuat")
-    for name in LOCK_FILES + (MADE_FILE,):
+    for name in LOCK_FILES + (MADE_FILE, HERO_FILE):
         path = os.path.join(ROOT, "pack", name)
         if not os.path.exists(path):
             print("  %s: tidak ada (dilewati)" % name)
@@ -159,7 +205,9 @@ def check_hashes():
 
 # ------------------------------------------------------------------ V2 + V3
 def gif_timeline_matches(cell, gif_path, sheet_frames):
-    """Setiap frame GIF hasil decode = frame sheet (diperbesar 8x) yang aktif pada waktu mulainya."""
+    """Setiap frame GIF hasil decode = frame sheet (diperbesar skala sel: 8x bawaan) yang aktif pada waktu mulainya."""
+    cw, ch = cell_canvas(cell)
+    sc = cell_scale(cell)
     starts, t = [], 0
     for d in cell["durations_ms"]:
         starts.append(t)
@@ -171,7 +219,7 @@ def gif_timeline_matches(cell, gif_path, sheet_frames):
     for fr in ImageSequence.Iterator(gif):
         idx = max(i for i, s in enumerate(starts) if s <= t)
         if idx not in big:
-            big[idx] = sheet_frames[idx].resize((W * 8, H * 8), Image.NEAREST).convert("RGBa").tobytes()
+            big[idx] = sheet_frames[idx].resize((cw * sc, ch * sc), Image.NEAREST).convert("RGBa").tobytes()
         if fr.convert("RGBA").convert("RGBa").tobytes() != big[idx]:
             bad.append(n)
         t += fr.info.get("duration", 0)
@@ -179,7 +227,7 @@ def gif_timeline_matches(cell, gif_path, sheet_frames):
     return n, t, loop, bad
 
 
-def check_manifest_and_palette(m):
+def check_manifest_and_palette(m, only=None):
     print("\n[V2] Manifest dan schema, [V3] palet, kanvas, alfa, isi GIF")
     ids = [c["id"] for c in m["costumes"]]
     states = [s["id"] for s in m["states"]]
@@ -195,7 +243,7 @@ def check_manifest_and_palette(m):
                 fail("%s: applies %s=%r tidak valid" % (c["id"], st, rule))
     applicable = sum(len(c.get("applies", {})) for c in m["costumes"])
     n = 0
-    for costume, state, cell in cells(m):
+    for costume, state, cell in cells(m, only):
         n += 1
         tag = "%s/%s" % (costume, state)
         entry = next((c for c in m["costumes"] if c["id"] == costume), None)
@@ -211,8 +259,15 @@ def check_manifest_and_palette(m):
         k = cell.get("keyframe")
         if not isinstance(k, int) or not 0 <= k < cell["frames"]:
             fail("%s: keyframe %r tidak valid" % (tag, k))
-        if len(cell["durations_ms"]) != cell["frames"] or cell.get("loop") is not True:
+        if len(cell["durations_ms"]) != cell["frames"] or not isinstance(cell.get("loop"), bool):
             fail("%s: durations/loop tidak cocok dengan jumlah frame" % tag)
+        problems = canvas_problems(cell)
+        for problem in problems:
+            fail("%s: %s" % (tag, problem))
+        if problems:
+            continue
+        cw, ch = cell_canvas(cell)
+        sc = cell_scale(cell)
         keys = ["sheet", "gif"] + (["sheet4x"] if "sheet4x" in cell else [])
         if "sheet4x" not in cell and not is_modern(cell):
             fail("%s: aset lama wajib punya sheet4x" % tag)
@@ -221,13 +276,13 @@ def check_manifest_and_palette(m):
         if missing:
             fail("%s: file hilang %s" % (tag, missing))
             continue
-        allowed = EXT_RGB if is_modern(cell) else PAL_RGB
+        allowed = (HERO_RGB if "canvas" in cell else EXT_RGB) if is_modern(cell) else PAL_RGB
         one = Image.open(paths["sheet"]).convert("RGBA")
-        if one.size != (W * cell["frames"], H):
+        if one.size != (cw * cell["frames"], ch):
             fail("%s: ukuran sheet 1x %s" % (tag, one.size))
         if "sheet4x" in paths:
             four = Image.open(paths["sheet4x"]).convert("RGBA")
-            if four.size != (W * 4 * cell["frames"], H * 4) or four.tobytes() != one.resize(four.size, Image.NEAREST).tobytes():
+            if four.size != (cw * 4 * cell["frames"], ch * 4) or four.tobytes() != one.resize(four.size, Image.NEAREST).tobytes():
                 fail("%s: sheet 4x bukan pembesaran nearest dari sheet 1x" % tag)
         alphas = {a for (_, _, _, a) in pixels(one)}
         if not alphas <= {0, 255}:
@@ -236,11 +291,12 @@ def check_manifest_and_palette(m):
         if not colors <= allowed:
             fail("%s: warna di luar palet yang diizinkan %s" % (tag, sorted(colors - allowed)[:5]))
         gw, gh = Image.open(paths["gif"]).size
-        if (gw, gh) != (W * 8, H * 8):
-            fail("%s: ukuran GIF %sx%s" % (tag, gw, gh))
+        if (gw, gh) != (cw * sc, ch * sc):
+            fail("%s: ukuran GIF %sx%s (harus %dx%d)" % (tag, gw, gh, cw * sc, ch * sc))
             continue
-        gn, gt, loop, bad = gif_timeline_matches(cell, paths["gif"], frames_of(paths["sheet"]))
-        if gn > cell["frames"] or gt != sum(cell["durations_ms"]) or loop != 0 or bad:
+        gn, gt, loop, bad = gif_timeline_matches(cell, paths["gif"], frames_of(paths["sheet"], 1, (cw, ch)))
+        want_loop = 0 if cell.get("loop") else None          # loop=false: GIF tanpa blok loop (berhenti di frame terakhir)
+        if gn > cell["frames"] or gt != sum(cell["durations_ms"]) or loop != want_loop or bad:
             fail("%s: GIF %d frame/%d ms/loop %r, frame beda %s vs manifest %d frame/%d ms" % (
                 tag, gn, gt, loop, bad[:5], cell["frames"], sum(cell["durations_ms"])))
     print("  %d kostum, %d state, %d sel berlaku, %d sel terisi; %d gagal" % (len(ids), len(states), applicable, n, len(FAILS)))
@@ -262,7 +318,7 @@ def seam_metrics(steps, seam):
             "gagal": seam > SEAM_FACTOR * mx, "pop": seam >= POP_RATIO * mx and mx > POP_MIN}
 
 
-def check_seams(m):
+def check_seams(m, only=None):
     print("\n[V4] Loop seam (piksel berbeda; seam = frame terakhir -> frame pertama)")
     print("  ambang = %.2f x selisih maksimum antar-frame berurutan di aset itu sendiri" % SEAM_FACTOR)
     print("  SEAM-POP (peringatan) = seam >= %.1f x maks dan maks > %d px; seam/med = seam dibagi median langkah internal"
@@ -270,8 +326,11 @@ def check_seams(m):
     print("  %-26s %-8s %6s %6s %7s %6s %7s  %s" % ("sel", "status", "maks", "median", "ambang", "seam", "seam/med", "hasil"))
     locked = locked_files()
     pops = []
-    for costume, state, cell in cells(m):
-        fr = frames_of(cell_path(cell["sheet"]))
+    for costume, state, cell in cells(m, only):
+        if cell.get("loop") is False:  # sel tidak berputar (loop=false): tidak ada sambungan loop untuk diukur
+            print("  %-26s %-8s tidak loop (loop=false), seam tidak berlaku" % (costume + "/" + state, "baru"))
+            continue
+        fr = frames_of(cell_path(cell["sheet"]), 1, cell_canvas(cell))
         steps = [diff(fr[i], fr[i + 1]) for i in range(len(fr) - 1)]
         r = seam_metrics(steps, diff(fr[-1], fr[0]))
         lk = is_locked(cell, locked)
@@ -326,10 +385,10 @@ def check_silhouettes(m):
                 fail("%s: IoU defeated vs idle %.2f > 0,85" % (costume, v))
     if not found:
         print("    belum ada kostum dengan idle dan defeated")
-    print("  c) varian vs saudara sefaksi (dilaporkan)")
+    print("  c) varian vs saudara sefaksi (dilaporkan; kostum berkanvas sendiri dikecualikan: indeks piksel tidak sebanding)")
     fams = {}
     for c in m["costumes"]:
-        if c.get("base") and c.get("group") == "fantasy" and "idle" in m["cells"].get(c["id"], {}):
+        if c.get("base") and c.get("group") == "fantasy" and "idle" in m["cells"].get(c["id"], {}) and not has_custom_canvas(m, c["id"]):
             fams.setdefault(c["base"], []).append(c["id"])
     if not fams:
         print("    belum ada varian dengan idle")
@@ -431,7 +490,7 @@ def check_colors(m):
         print("    %-18s %-18s %s vs %s  Delta E %5.1f%s" % (a, b, dom[a][1], dom[b][1], d, "  < 15" if d < 15 else ""))
     fams = {}
     for c in m["costumes"]:
-        if c.get("base") and c.get("group") == "fantasy" and m["cells"].get(c["id"]):
+        if c.get("base") and c.get("group") == "fantasy" and m["cells"].get(c["id"]) and not has_custom_canvas(m, c["id"]):
             fams.setdefault(c["base"], []).append(c["id"])
     for base, members in fams.items():
         acc = {x: costume_colors(m, x)[1].most_common(1)[0][0] for x in members}
@@ -887,16 +946,28 @@ def check_sizes(m, gate):
         if cell["origin"] != "baru":
             continue
         g = os.path.getsize(cell_path(cell["gif"]))
-        if g > limit:
+        if "canvas" in cell:  # kostum berkanvas sendiri (hero): batas keras 200 KB per GIF setelah optimize
+            if g > HERO_GIF_LIMIT:
+                fail("%s/%s: GIF %d byte > batas hero %d" % (costume, state, g, HERO_GIF_LIMIT))
+        elif g > limit:
             print("  MELEBIHI: %s/%s GIF %d byte > %d (dilaporkan sesuai keputusan pemilik 9)" % (costume, state, g, limit))
         total = sum(os.path.getsize(cell_path(cell[k])) for k in ("gif", "sheet", "sheet4x") if k in cell)
         per_gate.setdefault(cell["gate"], []).append((costume + "/" + state, g, total))
-    for gt in [g for g in ("A", "B", "C", "D", "E", "G", "H", "I", "J", "F") if g in per_gate]:
+    for gt in [g for g in ("A", "B", "C", "D", "E", "G", "H", "I", "J", "F", "K") if g in per_gate]:
         rows = per_gate[gt]
         print("  gerbang %s: %2d aset, GIF terbesar %6d byte, total file %8d byte" % (
             gt, len(rows), max(r[1] for r in rows), sum(r[2] for r in rows)))
     if gate and gate not in per_gate:
         fail("gerbang %s tidak punya aset di manifest" % gate)
+    hero_rows = [(c + "/" + st, os.path.getsize(cell_path(cl["gif"])), sum(os.path.getsize(cell_path(cl[k])) for k in ("gif", "sheet", "sheet4x") if k in cl))
+                 for c, st, cl in cells(m) if "canvas" in cl]
+    if hero_rows:
+        hero_gif_max, hero_total = max(r[1] for r in hero_rows), sum(r[2] for r in hero_rows)
+        print("  hero: %d aset, GIF terbesar %d byte (batas %d), total GIF + sheet %d byte (batas %d)%s" % (
+            len(hero_rows), hero_gif_max, HERO_GIF_LIMIT, hero_total, HERO_TOTAL_LIMIT,
+            "" if hero_gif_max <= HERO_GIF_LIMIT and hero_total <= HERO_TOTAL_LIMIT else "  MELEBIHI"))
+        if hero_total > HERO_TOTAL_LIMIT:
+            fail("total berkas hero %d byte > batas %d" % (hero_total, HERO_TOTAL_LIMIT))
     applicable = sum(len(c.get("applies", {})) for c in m["costumes"])
     filled = sum(1 for _ in cells(m))
     remaining = applicable - filled
@@ -928,6 +999,139 @@ def check_sizes(m, gate):
         fail("proyeksi ukuran %d byte melewati ambang peringatan %d byte (STOP-DARURAT)" % (projection, WARN_BYTES))
 
 
+# ------------------------------------------------------------------ V11
+def hero_findings(state, track, sheet_frames, cell):
+    """Pemeriksaan satu state hero terhadap aset hasil ekspor. Mengembalikan (daftar_gagal, baris_laporan)."""
+    import hero_check as hc
+    bad, info = [], {}
+    n = cell["frames"]
+    cvs = [track.frame(i) for i in range(n)]
+    poses = [track.pose(i) for i in range(n)]
+    # aset = kode: setiap frame sheet identik piksel dengan render ulang
+    diffs = [i for i in range(n) if sheet_frames[i].tobytes() != cvs[i].image(1).tobytes()]
+    if diffs:
+        bad.append("frame sheet beda dari render kode: %s" % diffs[:6])
+    if [int(track.duration(i)) for i in range(n)] != cell["durations_ms"]:
+        bad.append("durasi manifest beda dari kode")
+    if len(set(cell["durations_ms"])) < 3:
+        bad.append("durasi hampir seragam: %s" % sorted(set(cell["durations_ms"])))
+    # wajah, mata, hidung, mulut, dan telinga terlihat penuh di SEMUA frame (dibanding kepala digambar sendirian)
+    worst, skin = 1.0, 10 ** 9
+    for i, (cv, p) in enumerate(zip(cvs, poses)):
+        vis = hc.visibility(cv, p)
+        skin = min(skin, vis["face"][0])
+        for part, (seen, ref) in vis.items():
+            if ref and seen < ref:
+                bad.append("f%d: %s terlihat %d dari %d piksel" % (i, part, seen, ref))
+            worst = min(worst, seen / float(ref) if ref else 1.0)
+        if vis["face"][0] == 0 or vis["eye"][0] == 0 or vis["mouth"][0] == 0:
+            bad.append("f%d: wajah, mata, atau hidung/mulut tidak terlihat" % i)
+    info["wajah_min_px"], info["terlihat_min"] = skin, worst
+    # tinggi kotak kepala (helm + kepala) antar frame berurutan dan sepanjang state
+    hh = [hc.head_height(cv) for cv in cvs]
+    pairs = list(zip(hh, hh[1:])) + ([(hh[-1], hh[0])] if cell.get("loop") else [])
+    step = max(abs(a - b) / float(max(a, b)) for a, b in pairs)
+    span = (max(hh) - min(hh)) / float(max(hh))
+    info["kepala_tinggi"], info["kepala_langkah"], info["kepala_rentang"] = (min(hh), max(hh)), step, span
+    if step > HERO_HEAD_VARIATION or span > HERO_HEAD_VARIATION:
+        bad.append("tinggi kepala %s: langkah %.1f%%, rentang %.1f%% > %d%%" % ((min(hh), max(hh)), 100 * step, 100 * span, 100 * HERO_HEAD_VARIATION))
+    # tidak ada darah: warna merah wajah (ra/rb) hanya milik wajah dan mulut
+    for i, cv in enumerate(cvs):
+        red = {cv.owner.get(k) for k, c in cv.px.items() if c in ("ra", "rb")}
+        if red - {"face", "mouth", None}:
+            bad.append("f%d: warna merah wajah di bagian %s" % (i, sorted(x for x in red - {"face", "mouth"} if x)))
+    # loop: seam <= langkah terbesar (lebih ketat dari V4); run: siluet berurutan harus jelas berbeda
+    if cell.get("loop"):
+        steps = [diff(sheet_frames[i], sheet_frames[i + 1]) for i in range(n - 1)]
+        seam = diff(sheet_frames[-1], sheet_frames[0])
+        info["seam"] = (seam, max(steps))
+        if seam > max(steps):
+            bad.append("seam %d > langkah terbesar %d" % (seam, max(steps)))
+    if state == "run":
+        masks = [set(cv.px) for cv in cvs]
+        ious = [hc.iou(masks[i], masks[(i + 1) % n]) for i in range(n)]
+        info["run_iou_maks"] = max(ious)
+        if max(ious) > HERO_RUN_IOU_MAX:
+            bad.append("siluet run berurutan terlalu mirip: IoU %.2f > %.2f (f%d)" % (max(ious), HERO_RUN_IOU_MAX, ious.index(max(ious))))
+    # batas keterbacaan 4.4 di frame kunci
+    kf = cell["keyframe"]
+    r = hc.readability(cvs[kf])
+    info["kunci"] = (kf, r)
+    for f in hc.readability_failures(r):
+        bad.append("frame kunci f%d: %s" % (kf, f))
+    return bad, info
+
+
+def check_hero(m):
+    print("\n[V11] Berserker Hero (kanvas 128x96, GIF x4): spesifikasi, aset = kode, wajah, kepala, 4.4, seam, warna, kontras")
+    row = m["cells"].get(HERO)
+    if not row:
+        print("  belum ada kostum %s di manifest (dilewati)" % HERO)
+        return
+    import hero_check as hc
+    import hero_scenes as hs
+    before = len(FAILS)
+    entry = next((c for c in m["costumes"] if c["id"] == HERO), None)
+    if not entry or entry.get("base") != "viking-berserker" or entry.get("group") != "fantasy" or entry.get("label") != "Berserker Hero":
+        fail("%s: entri kostum harus label 'Berserker Hero', group fantasy, base viking-berserker (ada: %r)" % (HERO, entry))
+    if sorted(row) != sorted(HERO_SPEC) or sorted(entry.get("applies", {})) != sorted(HERO_SPEC):
+        fail("%s: state sel %s / applies %s != spesifikasi %s" % (HERO, sorted(row), sorted(entry.get("applies", {})), sorted(HERO_SPEC)))
+    colors = set()
+    print("  %-13s %5s %-5s %-6s %5s %-5s %-9s %s" % ("state", "frame", "loop", "kanvas", "skala", "kunci", "GIF KB", "temuan"))
+    for state, (frames, loop) in HERO_SPEC.items():
+        cell = row.get(state)
+        if cell is None:
+            continue
+        tag = "%s/%s" % (HERO, state)
+        if cell["frames"] != frames or cell.get("loop") is not loop:
+            fail("%s: %d frame, loop=%r; spesifikasi %d frame, loop=%r" % (tag, cell["frames"], cell.get("loop"), frames, loop))
+        if cell.get("canvas") != {"w": 128, "h": 96} or cell.get("gif_scale") != 4:
+            fail("%s: canvas %r gif_scale %r; spesifikasi 128x96 dan 4" % (tag, cell.get("canvas"), cell.get("gif_scale")))
+        if state not in hs.TRACKS:
+            fail("%s: tidak ada di hero_scenes.TRACKS" % tag)
+            continue
+        sheet = frames_of(cell_path(cell["sheet"]), 1, cell_canvas(cell))
+        if len(sheet) != cell["frames"]:
+            fail("%s: sheet berisi %d frame, manifest %d" % (tag, len(sheet), cell["frames"]))
+            continue
+        for fr in sheet:
+            colors |= {p[:3] for p in pixels(fr) if p[3]}
+        bad, info = hero_findings(state, hs.TRACKS[state], sheet, cell)
+        for b in bad:
+            fail("%s: %s" % (tag, b))
+        print("  %-13s %5d %-5s %-6s %5s %-5s %-9.1f %s" % (
+            state, cell["frames"], "ya" if cell.get("loop") else "tidak", "%dx%d" % cell_canvas(cell), cell_scale(cell), cell["keyframe"],
+            os.path.getsize(cell_path(cell["gif"])) / 1024.0, "lulus" if not bad else "GAGAL (%d)" % len(bad)))
+        kf, r = info["kunci"]
+        print("      wajah min %d px, terlihat %.2f dari acuan; tinggi kepala %d-%d px (langkah %.1f%%, rentang %.1f%%)%s%s" % (
+            info["wajah_min_px"], info["terlihat_min"], info["kepala_tinggi"][0], info["kepala_tinggi"][1], 100 * info["kepala_langkah"],
+            100 * info["kepala_rentang"],
+            ("; seam %d <= langkah maks %d" % info["seam"]) if "seam" in info else "; tidak loop",
+            ("; IoU run berurutan maks %.2f" % info["run_iou_maks"]) if "run_iou_maks" in info else ""))
+        print("      kunci f%d: helm %dx%d, moncong %dx%d, tanduk %s px, rongga mata %s, gigi %d (lebar %s), pelat bahu %s" % (
+            kf, r["helm"][0], r["helm"][1], r["snout"][0], r["snout"][1], r["horn_px"], r["socket"], r["teeth"], r["teeth_width"], r["plates"]))
+    allowed = {tuple(v) for v in monkey.PAL_HERO.values()} | EXT_RGB
+    stray = colors - allowed
+    print("  warna seluruh karakter: %d (batas %d); di luar palet yang diizinkan: %d" % (len(colors), HERO_MAX_COLORS, len(stray)))
+    if len(colors) > HERO_MAX_COLORS:
+        fail("%s: %d warna > %d" % (HERO, len(colors), HERO_MAX_COLORS))
+    if stray:
+        fail("%s: warna di luar palet %s" % (HERO, sorted(stray)[:5]))
+    b = hc.blade_static()
+    print("  bilah (digambar sendiri, tanpa rotasi): terlebar %d px, luk per sisi %s, amplitudo luk terkecil %d px" % (b["lebar"], b["luk"], b["amplitudo_min"]))
+    for f in hc.blade_failures(b):
+        fail("%s: %s" % (HERO, f))
+    print("  kontras luminans WCAG (rasio; laporan, bukan lulus/gagal) terhadap latar terang %s dan gelap %s:" % (HERO_LIGHT, HERO_DARK))
+    pal = monkey.PAL_HERO
+    for key, label in (("o2", "garis tepi besi"), ("o1", "garis tepi organik"), ("is", "besi bayangan"), ("ib", "besi tengah"),
+                       ("il", "besi terang"), ("rm", "rim light baja-biru")):
+        print("    %-4s %-20s terang %5.2f:1   gelap %5.2f:1" % (key, label, hc.contrast(pal[key], HERO_LIGHT), hc.contrast(pal[key], HERO_DARK)))
+    dark_edge = hc.contrast(pal["o2"], HERO_DARK)
+    if dark_edge < 1.5:
+        print("  PERINGATAN: garis tepi besi hampir menyatu dengan latar gelap (%.2f:1); keterbacaan siluet di latar gelap bergantung pada rim light dan isi besi terang" % dark_edge)
+    print("  V11: %s" % ("lulus" if len(FAILS) == before else "%d GAGAL" % (len(FAILS) - before)))
+
+
 def main():
     gate = sys.argv[sys.argv.index("--gate") + 1] if "--gate" in sys.argv else None
     show_all = "--all" in sys.argv
@@ -936,6 +1140,14 @@ def main():
         print("\nHASIL: %s" % ("LULUS" if not FAILS else "%d GAGAL" % len(FAILS)))
         sys.exit(1 if FAILS else 0)
     m = load_manifest()
+    if "--hero-only" in sys.argv:  # pemeriksaan cepat khusus Berserker Hero (V1, V2/V3, V4, V10, V11); V1 tetap penuh
+        check_hashes()
+        check_manifest_and_palette(m, HERO)
+        check_seams(m, HERO)
+        check_hero(m)
+        check_sizes(m, gate)
+        print("\nHASIL (--hero-only; bukan pengganti validasi penuh): %s" % ("LULUS" if not FAILS else "%d GAGAL" % len(FAILS)))
+        sys.exit(1 if FAILS else 0)
     check_hashes()
     check_manifest_and_palette(m)
     check_seams(m)
@@ -947,6 +1159,7 @@ def main():
     check_texts_and_beats(m, gate, show_all)
     check_theology()
     check_dances(m)
+    check_hero(m)
     check_sizes(m, gate)
     print("\nHASIL: %s" % ("LULUS" if not FAILS else "%d GAGAL" % len(FAILS)))
     sys.exit(1 if FAILS else 0)

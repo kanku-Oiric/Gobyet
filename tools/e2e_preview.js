@@ -5,9 +5,11 @@
 //
 // Menyalakan server statis kecil (modul bawaan Node) di akar repo, lalu memeriksa:
 // jumlah sel (asli, baru, placeholder, tidak berlaku), console error, request gagal, gerak vs statis,
-// mode statis/reduced motion = frame kunci per piksel, tampilan 4x = sheet 1x diperbesar (dan sama
-// dengan sheet4x bila file itu ada), tes buta (urutan tetap, label tersembunyi), dan scroll
-// horizontal di ponsel. Keluar dengan kode 1 bila ada pemeriksaan yang gagal.
+// mode statis/reduced motion = frame kunci per piksel (kanvas per sel: 64x48, hero 128x96), tampilan 4x =
+// sheet 1x diperbesar (dan sama dengan sheet4x bila file itu ada), tes buta (urutan tetap, label tersembunyi),
+// lembar kontak Berserker Hero (semua frame, bernomor, 2x, sama dengan sheet per piksel, bisa digulir, pilihan
+// latar terang/gelap, GIF termuat 512x384), dan scroll horizontal di ponsel. Keluar dengan kode 1 bila ada
+// pemeriksaan yang gagal.
 "use strict";
 const http = require("node:http");
 const fs = require("node:fs");
@@ -65,20 +67,26 @@ function serve() {
   const staticCheck = (p) => p.evaluate(async () => {
     const cs = [...document.querySelectorAll("canvas[data-src]")].filter((c) => !c.hidden && c.id !== "playCanvas");
     const load = (src) => new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = src; });
+    const man = await (await fetch("manifest.json")).json();
+    const dimOf = {};   // url sheet -> kanvas satu frame (kanvas sel bila ada, bila tidak kanvas global)
+    for (const row of Object.values(man.cells)) for (const cell of Object.values(row)) dimOf[new URL(cell.sheet, document.baseURI).href] = cell.canvas || man.canvas;
     const cache = {}, frameMismatch = [], pixelMismatch = [];
+    let heroCanvases = 0;
     for (const c of cs) {
       const f = +c.dataset.frame, k = +c.dataset.keyframe, w = c.width, h = c.height;
       const name = c.dataset.src.split("/").pop();
+      const d = dimOf[c.dataset.src];
+      if (d.w === 128) heroCanvases++;
       if (f !== k) frameMismatch.push(name + " frame " + f + " != kunci " + k);
       const im = cache[c.dataset.src] || (cache[c.dataset.src] = await load(c.dataset.src));
       const off = document.createElement("canvas"); off.width = w; off.height = h;
       const ctx = off.getContext("2d"); ctx.imageSmoothingEnabled = false;
-      ctx.drawImage(im, k * 64, 0, 64, 48, 0, 0, w, h);
+      ctx.drawImage(im, k * d.w, 0, d.w, d.h, 0, 0, w, h);
       const a = ctx.getImageData(0, 0, w, h).data, b = c.getContext("2d").getImageData(0, 0, w, h).data;
       let diff = 0; for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) diff++;
       if (diff) pixelMismatch.push(name + " " + w + "x" + h + " " + diff);
     }
-    return { canvases: cs.length, frame_mismatch: frameMismatch, pixel_mismatch: pixelMismatch };
+    return { canvases: cs.length, hero_canvases: heroCanvases, frame_mismatch: frameMismatch, pixel_mismatch: pixelMismatch };
   });
   // Filter panel banding: tiap pilihan menampilkan tepat sel gerbangnya; gabungan semua gerbang = semua sel bergerbang.
   const filterCheck = async (p, measure) => {
@@ -107,6 +115,58 @@ function serve() {
     await p.waitForTimeout(600);
     return out;
   };
+  // Lembar kontak hero: tiap state punya semua frame berurutan, bernomor, 2x, sama dengan sheet per piksel.
+  const heroCheck = (p) => p.evaluate(async () => {
+    const man = await (await fetch("manifest.json")).json();
+    const row = man.cells["berserker-hero"] || {};
+    const load = (src) => new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = () => rej(new Error(src)); im.src = src; });
+    const out = { states: {}, problems: [] };
+    for (const [state, cell] of Object.entries(row)) {
+      const box = document.querySelector('.hero-state[data-state="' + state + '"]');
+      if (!box) { out.problems.push(state + ": tidak ada lembar kontak"); continue; }
+      const cvs = [...box.querySelectorAll(".strip canvas")];
+      const caps = [...box.querySelectorAll(".strip figcaption")].map((c) => c.textContent);
+      const seq = cvs.map((c) => +c.dataset.sheetFrame);
+      const d = cell.canvas, im = await load(new URL(cell.sheet, document.baseURI).href);
+      let pixelBad = 0, undrawn = 0, sizeBad = 0;
+      cvs.forEach((c, i) => {
+        if (c.dataset.drawn !== "1") undrawn++;
+        const r = c.getBoundingClientRect();
+        if (c.width !== d.w * 2 || c.height !== d.h * 2 || Math.round(r.width) !== d.w * 2 || Math.round(r.height) !== d.h * 2) sizeBad++;
+        const off = document.createElement("canvas"); off.width = d.w * 2; off.height = d.h * 2;
+        const ctx = off.getContext("2d"); ctx.imageSmoothingEnabled = false;
+        ctx.drawImage(im, i * d.w, 0, d.w, d.h, 0, 0, d.w * 2, d.h * 2);
+        const a = ctx.getImageData(0, 0, off.width, off.height).data, b = c.getContext("2d").getImageData(0, 0, off.width, off.height).data;
+        for (let k = 0; k < a.length; k++) if (a[k] !== b[k]) { pixelBad++; break; }
+      });
+      const numbered = caps.every((t, i) => t.indexOf(i + " · " + cell.durations_ms[i] + " ms") === 0);
+      const keyed = [...box.querySelectorAll(".strip figure.key")].map((f) => [...f.parentNode.children].indexOf(f));
+      const strip = box.querySelector(".strip");
+      const player = box.querySelector(".hero-player canvas");
+      out.states[state] = { frames: cvs.length, expected: cell.frames, in_order: JSON.stringify(seq) === JSON.stringify(cvs.map((_, i) => i)),
+        numbered, keyframe_marked: JSON.stringify(keyed) === JSON.stringify([cell.keyframe]), undrawn, size_bad: sizeBad, pixel_bad: pixelBad,
+        scrollable: strip.scrollWidth > strip.clientWidth, strip_client_w: strip.clientWidth, player_ok: !!player && player.width === d.w * 2 };
+      const o = out.states[state];
+      if (o.frames !== o.expected) out.problems.push(state + ": " + o.frames + " frame tampil, manifest " + o.expected);
+      if (!o.in_order) out.problems.push(state + ": frame tidak berurutan");
+      if (!o.numbered) out.problems.push(state + ": nomor atau durasi di keterangan salah");
+      if (!o.keyframe_marked) out.problems.push(state + ": frame kunci tidak ditandai tepat satu kali");
+      if (o.undrawn || o.size_bad || o.pixel_bad) out.problems.push(state + ": undrawn " + o.undrawn + ", ukuran salah " + o.size_bad + ", beda piksel " + o.pixel_bad);
+      if (!o.player_ok) out.problems.push(state + ": pemutar tidak ada atau ukuran salah");
+    }
+    if (!Object.keys(row).length) out.problems.push("manifest tidak punya sel hero");
+    return out;
+  });
+  const heroGifCheck = (p) => p.evaluate(async () => {
+    const man = await (await fetch("manifest.json")).json();
+    const load = (src) => new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = () => rej(new Error(src)); im.src = src; });
+    const out = {};
+    for (const [state, cell] of Object.entries(man.cells["berserker-hero"] || {})) {
+      const im = await load(new URL(cell.gif, document.baseURI).href);
+      out[state] = im.naturalWidth + "x" + im.naturalHeight;
+    }
+    return out;
+  });
   const blindState = (p) => p.$$eval("#blind figure", (fs) => fs.map((f) => ({ costume: f.dataset.costume, caption: f.querySelector("figcaption").textContent })));
 
   // ---- desktop
@@ -133,7 +193,7 @@ function serve() {
   const h1 = await hashOf(d.p, realSel); await d.p.waitForTimeout(900); const h2 = await hashOf(d.p, realSel);
   report.animates = h1 !== h2;
   check(report.animates, "mode animasi tidak bergerak");
-  report.blank_cells = await d.p.$$eval("#matrix .cell canvas:not([hidden])", (cs) => cs.filter((c) => { const x = c.getContext("2d").getImageData(0, 0, 64, 48).data; for (let i = 3; i < x.length; i += 4) if (x[i]) return false; return true; }).length);
+  report.blank_cells = await d.p.$$eval("#matrix .cell canvas:not([hidden])", (cs) => cs.filter((c) => { const x = c.getContext("2d").getImageData(0, 0, c.width, c.height).data; for (let i = 3; i < x.length; i += 4) if (x[i]) return false; return true; }).length);
   check(report.blank_cells === 0, "ada sel matriks yang kosong");
   report.blind_before = await blindState(d.p);
   check(report.blind_before.every((b) => /^#\d+$/.test(b.caption)), "label tes buta terlihat sebelum tombol ditekan");
@@ -143,6 +203,19 @@ function serve() {
   await d.p.waitForTimeout(600);
   report.static_desktop = await staticCheck(d.p);
   check(!report.static_desktop.frame_mismatch.length && !report.static_desktop.pixel_mismatch.length, "mode statis != frame kunci (desktop)");
+  check(report.static_desktop.hero_canvases >= 8 + 8, "mode statis: kanvas hero (pemutar + banding) tidak ikut diperiksa");
+  report.hero_desktop = await heroCheck(d.p);
+  check(!report.hero_desktop.problems.length, "lembar kontak hero (desktop): " + report.hero_desktop.problems.join("; "));
+  report.hero_gifs = await heroGifCheck(d.p);
+  check(Object.keys(report.hero_gifs).length === 8 && Object.values(report.hero_gifs).every((v) => v === "512x384"), "GIF hero tidak termuat 512x384");
+  // latar terang/gelap: warna latar kanvas lembar kontak berganti dan kembali
+  const bgOf = () => d.p.$eval(".strip canvas", (c) => getComputedStyle(c).backgroundColor);
+  report.hero_bg = { light: await bgOf() };
+  await d.p.click("#btnHeroDark"); report.hero_bg.dark = await bgOf();
+  await d.p.locator("#heroSection").screenshot({ path: path.join(OUT, "hero-dark.png") });
+  await d.p.click("#btnHeroLight"); report.hero_bg.light_again = await bgOf();
+  check(report.hero_bg.light === "rgb(250, 247, 240)" && report.hero_bg.dark === "rgb(24, 28, 44)" && report.hero_bg.light_again === report.hero_bg.light, "pilihan latar terang/gelap hero tidak bekerja");
+  await d.p.locator("#heroSection").screenshot({ path: path.join(OUT, "hero-light.png") });
   const s1 = await hashOf(d.p, realSel); await d.p.waitForTimeout(900); const s2 = await hashOf(d.p, realSel);
   report.static_button_holds = s1 === s2;
   check(report.static_button_holds, "tombol Statis tidak menghentikan gerak");
@@ -197,6 +270,19 @@ function serve() {
   check(!report.static_phone.frame_mismatch.length && !report.static_phone.pixel_mismatch.length, "reduced motion != frame kunci (ponsel)");
   report.phone_overflow = await m.p.evaluate(() => document.documentElement.scrollWidth - innerWidth);
   check(report.phone_overflow === 0, "scroll horizontal di ponsel");
+  report.hero_phone = await heroCheck(m.p);
+  check(!report.hero_phone.problems.length, "lembar kontak hero (ponsel): " + report.hero_phone.problems.join("; "));
+  report.hero_phone_scroll = await m.p.evaluate(() => [...document.querySelectorAll(".hero-state")].map((b) => {
+    const s = b.querySelector(".strip"), before = s.scrollLeft; s.scrollLeft = 400; const moved = s.scrollLeft;
+    s.scrollLeft = before;
+    return { state: b.dataset.state, strip_w: Math.round(s.getBoundingClientRect().width), scrollable: s.scrollWidth > s.clientWidth, moved_px: moved - before,
+      within_viewport: s.getBoundingClientRect().right <= innerWidth };
+  }));
+  check(report.hero_phone_scroll.length === 8 && report.hero_phone_scroll.every((x) => x.scrollable && x.moved_px > 0 && x.within_viewport),
+    "lembar kontak hero di ponsel tidak bisa digulir atau melebihi layar");
+  report.phone_overflow_after_hero = await m.p.evaluate(() => document.documentElement.scrollWidth - innerWidth);
+  check(report.phone_overflow_after_hero === 0, "scroll horizontal di ponsel setelah menggulir lembar kontak hero");
+  await m.p.locator("#heroSection").screenshot({ path: path.join(OUT, "hero-phone.png") });
   await m.p.screenshot({ path: path.join(OUT, "preview-phone.png") });
   const latest = report.filter_phone.options.filter((o) => /^[A-Z](:[a-z0-9-]+)?$/.test(o))[0];
   if (latest) { await m.p.selectOption("#cmpFilter", latest); await m.p.waitForTimeout(600); }

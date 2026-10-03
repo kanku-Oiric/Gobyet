@@ -435,6 +435,14 @@ def gauntlet(cv, hx, hy, r=4.3):
 def sabaton(cv, fx, fy, toe=1):
     """Sepatu pelat menghadap kanan; (fx, fy) = pusat pergelangan, telapak di fy + 3."""
     sole = fy + 3.2
+    if toe < 0:                                                                             # kaki belakang berlutut: ujung sepatu ke kiri
+        m = poly([(fx + 4.2, sole - 6.5), (fx - 3.0, sole - 6.5), (fx - 4.0, sole - 3.5), (fx - 8.6, sole - 2.2),
+                  (fx - 9.4, sole - 0.2), (fx + 5.0, sole - 0.2)])
+        solid3(cv, m, IRON, "o2", name="sabaton")
+        part(cv, "sabaton")
+        cv.fill({(int(fx - 5), int(sole) - 3), (int(fx - 6), int(sole) - 3), (int(fx - 7), int(sole) - 2)}, "il")
+        cv.fill({(int(fx - 1) + i, int(sole) - 5) for i in range(5)}, "kb")
+        return
     m = poly([(fx - 4.2, sole - 6.5), (fx + 3.0, sole - 6.5), (fx + 4.0, sole - 3.5), (fx + 8.6 * toe, sole - 2.2),
               (fx + 9.4 * toe, sole - 0.2), (fx - 5.0, sole - 0.2)])
     solid3(cv, m, IRON, "o2", name="sabaton")
@@ -521,11 +529,12 @@ def belt(cv, tcx, by):
     cv.put(int(round(tcx)) - 1, by + 1, "kl")
 
 
-def tabard(cv, tcx, by, sway=0.0, lift=0.0):
-    """Tabard kain teal pendek di depan sabuk. sway = ayunan (px) ujung bawah; lift = terangkat saat berlari."""
+def tabard(cv, tcx, by, sway=0.0, lift=0.0, flare=0.0):
+    """Tabard kain teal pendek di depan sabuk. sway = ayunan (px) ujung bawah; lift = terangkat saat berlari;
+    flare = melebar ke samping (mengembang saat rage)."""
     L = 16.0 - lift * 3
-    pts = [(tcx - 6.0, by + 4.0), (tcx + 6.0, by + 4.0), (tcx + 7.4 + sway, by + L - 2), (tcx + 3.0 + sway * 1.1, by + L + 1.8),
-           (tcx - 0.5 + sway * 1.1, by + L - 1), (tcx - 4.0 + sway, by + L + 1.8), (tcx - 7.4 + sway * 0.9, by + L - 2)]
+    pts = [(tcx - 6.0, by + 4.0), (tcx + 6.0, by + 4.0), (tcx + 7.4 + sway + flare, by + L - 2), (tcx + 3.0 + sway * 1.1, by + L + 1.8),
+           (tcx - 0.5 + sway * 1.1, by + L - 1), (tcx - 4.0 + sway, by + L + 1.8), (tcx - 7.4 + sway * 0.9 - flare, by + L - 2)]
     m = poly(pts)
     solid3(cv, m, TEAL, "o1", depth=2, name="tabard")
     part(cv, "tabard")
@@ -542,7 +551,8 @@ def pose(**kw):
              fl=(-7.0, 0.0), fr=(7.0, 0.0),          # kaki: (dx dari cx, angkat dari lantai)
              grip=None, ang=0.0, sword_layer="front", lh_u=-6.5, lh=None, rh=None,
              eyes="look", brows="angry", mouth="frown", face="F", rage=False,
-             sway=0.0, lift=0.0, tail_phase=0.0, twist=0.0, head_front=False, fx=())
+             sway=0.0, lift=0.0, flare=0.0, tail_phase=0.0, twist=0.0, head_front=False, fx=(),
+             legs_front=False, toe_l=1, toe_r=1)       # tambahan aditif: kaki digambar di depan tabard (berlutut), arah ujung sepatu
     p.update(kw)
     return p
 
@@ -585,13 +595,18 @@ def draw_hero(cv, p):
     draw_tail(cv, (p["cx"] - 8.0, g["hip_y"] - 2.0), p["tail_phase"])
     if g["sword"] and p["sword_layer"] == "back":
         sword_parts(cv, g["sword"])
-    for hip, foot, bend in ((g["hip_l"], g["foot_l"], -1), (g["hip_r"], g["foot_r"], -1)):
-        leg(cv, hip, foot, bend)
-        sabaton(cv, foot[0], foot[1])
+    def legs():
+        for hip, foot, bend, toe in ((g["hip_l"], g["foot_l"], -1, p["toe_l"]), (g["hip_r"], g["foot_r"], -1, p["toe_r"])):
+            leg(cv, hip, foot, bend)
+            sabaton(cv, foot[0], foot[1], toe)
+    if not p["legs_front"]:
+        legs()
     chest(cv, tcx, tcy)
     by = skirt(cv, tcx, tcy)
-    tabard(cv, tcx, by, p["sway"], p["lift"])
+    tabard(cv, tcx, by, p["sway"], p["lift"], p["flare"])
     belt(cv, tcx, by)
+    if p["legs_front"]:
+        legs()
     hx, hy = g["head"]
 
     def head_all():
@@ -683,8 +698,9 @@ def fx_burst(cv, x, y, r=7):
             cv.put(int(x + math.cos(a) * rr), int(y + math.sin(a) * rr * 0.9), "kl" if i < 2 else "kb")
 
 
-def wood_block(cv, x, y_floor, w=18, h=10):
-    """Balok kayu di lantai (sasaran): sisi depan bergaris serat, sisi atas lebih terang. x = tengah."""
+def wood_block(cv, x, y_floor, w=18, h=10, crack=1):
+    """Balok kayu di lantai (sasaran): sisi depan bergaris serat, sisi atas lebih terang. x = tengah.
+    crack: 0 utuh, 1 retak kecil, 2 retak panjang dengan takik terbelah di atas."""
     x0, y0 = int(x - w / 2), int(y_floor - h)
     front = rect(x0, y0 + 3, w, h - 3)
     top = poly([(x0 + 1, y0 + 3), (x0 + 4, y0), (x0 + w + 2, y0), (x0 + w, y0 + 3)])
@@ -693,7 +709,13 @@ def wood_block(cv, x, y_floor, w=18, h=10):
     part(cv, "block")
     for yy in (y0 + 5, y0 + 7):
         cv.fill({(xx, yy) for xx in range(x0 + 2, x0 + w - 2) if (xx + yy) % 5 != 0}, "fs")
-    cv.fill({(x0 + w // 2 + dx, y0 + 3 + dy) for dx, dy in ((0, 0), (-1, 1), (0, 2), (1, 3))}, "o1")   # retak
+    if crack >= 1:
+        cv.fill({(x0 + w // 2 + dx, y0 + 3 + dy) for dx, dy in ((0, 0), (-1, 1), (0, 2), (1, 3))}, "o1")   # retak
+    if crack >= 2:
+        cv.fill({(x0 + w // 2 + dx, y0 + 3 + dy) for dx, dy in ((1, 4), (0, 5), (-1, 6), (0, 7))}, "o1")
+        for dx in (-1, 0, 1):                                                                           # takik terbelah di sisi atas
+            cv.px.pop((x0 + w // 2 + 1 + dx, y0), None)
+            cv.put(x0 + w // 2 + 1 + dx, y0 + 1, "o1")
 
 
 def fx_speed(cv, x, y, n=3, length=9):
@@ -705,6 +727,48 @@ def fx_speed(cv, x, y, n=3, length=9):
         for i in range(L):
             if i % 5 != 4:
                 cv.put(int(x - i), int(yy), "pl" if k == 1 else "rm")
+
+
+def fx_roar(cv, x, y, k):
+    """Garis teriak pendek yang memancar dari mulut (x, y) ke kanan; k = 0..2 menggeser panjangnya."""
+    part(cv, "roar")
+    for j, a in enumerate((-38, -14, 10, 34)):
+        r = math.radians(a)
+        L = 5 + (j + k) % 3 * 2
+        for i in range(L):
+            cv.put(int(x + math.cos(r) * (8 + i)), int(y + math.sin(r) * (8 + i)), "pl" if i < L - 2 else "rm")
+
+
+def fx_sweat(cv, x, y):
+    """Setetes keringat (tetes terbalik 3 px) berwarna pucat dengan sorotan."""
+    part(cv, "sweat")
+    cv.fill({(x, y), (x - 1, y + 1), (x, y + 1), (x + 1, y + 1), (x - 1, y + 2), (x, y + 2), (x + 1, y + 2), (x, y + 3)}, "pl")
+    cv.put(x - 1, y + 1, "ew")
+    cv.fill({(x + 1, y + 2), (x, y + 3)}, "rm")
+
+
+def fx_breath(cv, x, y, k):
+    """Kepulan napas kecil di depan mulut yang membesar dan memudar (k = 0..2)."""
+    part(cv, "breath")
+    r = 1.4 + k * 0.9
+    m = ellipse(x + k * 2.0, y - k * 0.8, r, r * 0.8)
+    if k >= 2:
+        m = {q for q in m if (q[0] + q[1]) % 2 == 0}
+        cv.fill(m, "pl")
+    else:
+        cv.fill(m, "pl")
+        cv.fill(edge(m), "rm")
+
+
+def fx_teal_sparks(cv, x, y, k, seed=0):
+    """Percikan teal pucat 1-2 px di sekitar titik (x, y): kilau kecil dari rongga mata saat rage."""
+    import random
+    rnd = random.Random(seed * 7 + k)
+    part(cv, "spark")
+    for j in range(4):
+        a = rnd.uniform(-math.pi, 0)
+        r = 4 + rnd.uniform(0, 5) + k
+        cv.put(int(x + math.cos(a) * r), int(y + math.sin(a) * r), "zl" if j % 2 == 0 else "zb")
 
 
 # ================================================================== tiga pose kunci (Fase B)

@@ -408,6 +408,22 @@
         "defeated": "required",
         "happy": "optional"
       }
+    },
+    {
+      "id": "berserker-hero",
+      "label": "Berserker Hero",
+      "group": "fantasy",
+      "base": "viking-berserker",
+      "applies": {
+        "idle": "required",
+        "run": "required",
+        "rage": "required",
+        "attack-leap": "required",
+        "attack-smash": "required",
+        "miss": "required",
+        "exhaustion": "required",
+        "defeated": "required"
+      }
     }
   ],
   "states": [
@@ -445,7 +461,41 @@
     {
       "id": "victory",
       "label": "victory",
-      "required": true
+      "required": true,
+      "costumes": [
+        "normal",
+        "normal-gblk",
+        "referee",
+        "judge",
+        "skeptic",
+        "champion",
+        "greek-philosopher",
+        "academic",
+        "scientist",
+        "mathematician",
+        "lawyer",
+        "hacker",
+        "detective",
+        "gamer",
+        "knight",
+        "knight-heavy",
+        "knight-archer",
+        "knight-manatarms",
+        "knight-assassin",
+        "viking",
+        "viking-berserker",
+        "viking-huscarl",
+        "viking-gestir",
+        "viking-bondi",
+        "pirate",
+        "pirate-captain",
+        "pirate-skirmisher",
+        "pirate-sharpshooter",
+        "pirate-buccaneer",
+        "wizard",
+        "pak-haji",
+        "priest"
+      ]
     },
     {
       "id": "defeated",
@@ -471,7 +521,8 @@
         "pirate",
         "wizard",
         "pak-haji",
-        "priest"
+        "priest",
+        "berserker-hero"
       ]
     },
     {
@@ -595,6 +646,54 @@
       "required": false,
       "costumes": [
         "normal-gblk"
+      ]
+    },
+    {
+      "id": "run",
+      "label": "run",
+      "required": true,
+      "costumes": [
+        "berserker-hero"
+      ]
+    },
+    {
+      "id": "rage",
+      "label": "rage",
+      "required": true,
+      "costumes": [
+        "berserker-hero"
+      ]
+    },
+    {
+      "id": "attack-leap",
+      "label": "attack-leap",
+      "required": true,
+      "costumes": [
+        "berserker-hero"
+      ]
+    },
+    {
+      "id": "attack-smash",
+      "label": "attack-smash",
+      "required": true,
+      "costumes": [
+        "berserker-hero"
+      ]
+    },
+    {
+      "id": "miss",
+      "label": "miss",
+      "required": true,
+      "costumes": [
+        "berserker-hero"
+      ]
+    },
+    {
+      "id": "exhaustion",
+      "label": "exhaustion",
+      "required": true,
+      "costumes": [
+        "berserker-hero"
       ]
     }
   ],
@@ -5181,6 +5280,250 @@
         "loop": true,
         "keyframe": 4,
         "gate": "J"
+      }
+    },
+    "berserker-hero": {
+      "idle": {
+        "status": "final",
+        "origin": "baru",
+        "source": "berserker-hero-idle",
+        "sheet": "../sheets/berserker-hero-idle.png",
+        "gif": "../gif/berserker-hero-idle.gif",
+        "frames": 12,
+        "durations_ms": [
+          240,
+          140,
+          140,
+          160,
+          160,
+          200,
+          180,
+          160,
+          90,
+          140,
+          160,
+          180
+        ],
+        "loop": true,
+        "keyframe": 0,
+        "canvas": {
+          "w": 128,
+          "h": 96
+        },
+        "gif_scale": 4,
+        "gate": "K"
+      },
+      "run": {
+        "status": "final",
+        "origin": "baru",
+        "source": "berserker-hero-run",
+        "sheet": "../sheets/berserker-hero-run.png",
+        "gif": "../gif/berserker-hero-run.gif",
+        "frames": 12,
+        "durations_ms": [
+          70,
+          80,
+          70,
+          60,
+          100,
+          60,
+          70,
+          80,
+          70,
+          60,
+          100,
+          60
+        ],
+        "loop": true,
+        "keyframe": 10,
+        "canvas": {
+          "w": 128,
+          "h": 96
+        },
+        "gif_scale": 4,
+        "gate": "K"
+      },
+      "rage": {
+        "status": "final",
+        "origin": "baru",
+        "source": "berserker-hero-rage",
+        "sheet": "../sheets/berserker-hero-rage.png",
+        "gif": "../gif/berserker-hero-rage.gif",
+        "frames": 12,
+        "durations_ms": [
+          200,
+          140,
+          140,
+          180,
+          70,
+          90,
+          110,
+          70,
+          70,
+          70,
+          120,
+          400
+        ],
+        "loop": false,
+        "keyframe": 6,
+        "canvas": {
+          "w": 128,
+          "h": 96
+        },
+        "gif_scale": 4,
+        "gate": "K"
+      },
+      "attack-leap": {
+        "status": "final",
+        "origin": "baru",
+        "source": "berserker-hero-attack-leap",
+        "sheet": "../sheets/berserker-hero-attack-leap.png",
+        "gif": "../gif/berserker-hero-attack-leap.gif",
+        "frames": 14,
+        "durations_ms": [
+          140,
+          130,
+          60,
+          60,
+          120,
+          50,
+          40,
+          40,
+          260,
+          130,
+          110,
+          100,
+          100,
+          130
+        ],
+        "loop": true,
+        "keyframe": 8,
+        "canvas": {
+          "w": 128,
+          "h": 96
+        },
+        "gif_scale": 4,
+        "gate": "K"
+      },
+      "attack-smash": {
+        "status": "final",
+        "origin": "baru",
+        "source": "berserker-hero-attack-smash",
+        "sheet": "../sheets/berserker-hero-attack-smash.png",
+        "gif": "../gif/berserker-hero-attack-smash.gif",
+        "frames": 12,
+        "durations_ms": [
+          120,
+          100,
+          120,
+          180,
+          50,
+          40,
+          40,
+          240,
+          120,
+          100,
+          100,
+          140
+        ],
+        "loop": true,
+        "keyframe": 7,
+        "canvas": {
+          "w": 128,
+          "h": 96
+        },
+        "gif_scale": 4,
+        "gate": "K"
+      },
+      "miss": {
+        "status": "final",
+        "origin": "baru",
+        "source": "berserker-hero-miss",
+        "sheet": "../sheets/berserker-hero-miss.png",
+        "gif": "../gif/berserker-hero-miss.gif",
+        "frames": 10,
+        "durations_ms": [
+          140,
+          100,
+          130,
+          50,
+          40,
+          200,
+          220,
+          240,
+          140,
+          140
+        ],
+        "loop": true,
+        "keyframe": 5,
+        "canvas": {
+          "w": 128,
+          "h": 96
+        },
+        "gif_scale": 4,
+        "gate": "K"
+      },
+      "exhaustion": {
+        "status": "final",
+        "origin": "baru",
+        "source": "berserker-hero-exhaustion",
+        "sheet": "../sheets/berserker-hero-exhaustion.png",
+        "gif": "../gif/berserker-hero-exhaustion.gif",
+        "frames": 12,
+        "durations_ms": [
+          200,
+          150,
+          150,
+          170,
+          220,
+          260,
+          220,
+          150,
+          90,
+          150,
+          170,
+          200
+        ],
+        "loop": true,
+        "keyframe": 5,
+        "canvas": {
+          "w": 128,
+          "h": 96
+        },
+        "gif_scale": 4,
+        "gate": "K"
+      },
+      "defeated": {
+        "status": "final",
+        "origin": "baru",
+        "source": "berserker-hero-defeated",
+        "sheet": "../sheets/berserker-hero-defeated.png",
+        "gif": "../gif/berserker-hero-defeated.gif",
+        "frames": 14,
+        "durations_ms": [
+          200,
+          180,
+          180,
+          200,
+          200,
+          220,
+          200,
+          160,
+          120,
+          180,
+          200,
+          200,
+          200,
+          200
+        ],
+        "loop": true,
+        "keyframe": 3,
+        "canvas": {
+          "w": 128,
+          "h": 96
+        },
+        "gif_scale": 4,
+        "gate": "K"
       }
     }
   },

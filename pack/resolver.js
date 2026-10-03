@@ -29,10 +29,21 @@
     return v !== null && typeof v === "object" && !Array.isArray(v);
   }
 
+  function positiveInt(v) {
+    return typeof v === "number" && isFinite(v) && v >= 1 && Math.floor(v) === v;
+  }
+
+  /* Field opsional canvas {w, h} per sel (mis. Berserker Hero 128x96). Bila ada, harus bilangan bulat positif. */
+  function validCanvas(c) {
+    return isObject(c) && positiveInt(c.w) && positiveInt(c.h);
+  }
+
   /* Sel dianggap layak render hanya bila semua field yang dibutuhkan renderer valid. */
   function validCell(cell) {
     if (!isObject(cell)) return false;
     if (typeof cell.sheet !== "string" || !cell.sheet) return false;
+    if (cell.canvas !== undefined && !validCanvas(cell.canvas)) return false;
+    if (cell.gif_scale !== undefined && !positiveInt(cell.gif_scale)) return false;
     var n = cell.frames;
     if (typeof n !== "number" || !isFinite(n) || n < 1 || Math.floor(n) !== n) return false;
     var d = cell.durations_ms;
@@ -76,6 +87,24 @@
       if (isObject(c) && c.w > 0 && c.h > 0) return { w: c.w, h: c.h };
     } catch (e) { /* abaikan */ }
     return { w: 64, h: 48 };
+  }
+
+  /* Kanvas satu sel: field canvas milik sel bila ada dan valid, bila tidak kanvas global manifest (bawaan 64x48).
+     Manifest lama tanpa field itu tidak berubah perilakunya. */
+  function canvasOf(manifest, cell) {
+    try {
+      if (isObject(cell) && validCanvas(cell.canvas)) return { w: cell.canvas.w, h: cell.canvas.h };
+    } catch (e) { /* abaikan */ }
+    return canvas(manifest);
+  }
+
+  /* Skala GIF satu sel: gif_scale sel bila valid, bila tidak gif_scale global manifest (bawaan 8). */
+  function gifScaleOf(manifest, cell) {
+    try {
+      if (isObject(cell) && positiveInt(cell.gif_scale)) return cell.gif_scale;
+      if (isObject(manifest) && positiveInt(manifest.gif_scale)) return manifest.gif_scale;
+    } catch (e) { /* abaikan */ }
+    return 8;
   }
 
   function placeholder(costume, state, tried, reason) {
@@ -183,5 +212,6 @@
   }
 
   return { resolve: resolve, frameAt: frameAt, matrix: matrix, applies: applies, cellRule: cellRule, baseOf: baseOf,
-    canvas: canvas, validCell: validCell, STEPS: STEPS.concat(["placeholder"]) };
+    canvas: canvas, canvasOf: canvasOf, gifScaleOf: gifScaleOf, validCanvas: validCanvas, validCell: validCell,
+    STEPS: STEPS.concat(["placeholder"]) };
 });

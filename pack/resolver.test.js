@@ -154,19 +154,21 @@ test("seluruh matriks kostum x state teresolusi tanpa error", () => {
   assert.equal(kinds.exact + kinds.fallback, costumes.length * states.length);
 });
 
-test("applies: tabel sel berlaku 163 (78 kostum lama + 85 kostum baru), semua sel terisi berlaku", () => {
+test("applies: tabel sel berlaku 163 (78 kostum lama + 85 kostum baru) + 8 sel Berserker Hero, semua sel terisi berlaku", () => {
   const { costumes, states } = P.matrix(M);
-  let total = 0, req = 0;
+  let total = 0, req = 0, hero = 0;
   const old12 = ["normal", "referee", "judge", "skeptic", "champion", "greek-philosopher", "academic", "scientist",
     "mathematician", "lawyer", "hacker", "detective"];
   let oldTotal = 0;
   for (const c of costumes) for (const s of states) {
     const rule = P.cellRule(c, s);
     if (!rule) continue;
+    if (c.id === "berserker-hero") { hero++; continue; }   // kostum Gerbang K dihitung terpisah, tabel lama tidak bergeser
     total++; if (rule === "required") req++;
     if (old12.includes(c.id)) oldTotal++;
   }
   assert.equal(total, 163);
+  assert.equal(hero, 8);
   assert.equal(oldTotal, 78);
   for (const [costume, row] of Object.entries(M.cells)) {
     const c = costumes.find((x) => x.id === costume);
@@ -240,12 +242,12 @@ test("frameAt: mengikuti durasi, loop, dan reduced motion", () => {
   assert.equal(P.frameAt(null, 100), 0);
 });
 
-test("manifest: setiap asset yang dirujuk benar-benar ada dan ukurannya cocok", () => {
+test("manifest: setiap asset yang dirujuk benar-benar ada dan ukurannya cocok (kanvas per sel)", () => {
   const dir = path.dirname(manifestPath);
-  const { w, h } = M.canvas;
   for (const [costume, row] of Object.entries(M.cells)) {
     for (const [state, cell] of Object.entries(row)) {
       assert.ok(P.validCell(cell), costume + "/" + state);
+      const { w, h } = P.canvasOf(M, cell);
       for (const key of ["sheet", "gif"].concat(cell.sheet4x ? ["sheet4x"] : [])) {
         assert.ok(fs.existsSync(path.join(dir, cell[key])), costume + "/" + state + " " + key + " hilang: " + cell[key]);
       }
@@ -273,20 +275,134 @@ test("aset baru: ditandai, punya gerbang, terhubung ke file yang ada dengan ukur
       baru.push(costume + "/" + state);
       assert.ok(/^[A-Z]$/.test(cell.gate || ""), costume + "/" + state + " tanpa gerbang");
       assert.equal(cell.source, costume + "-" + state, "nama file aset baru mengikuti <kostum>-<state>");
-      assert.deepEqual(pngSize(path.join(dir, cell.sheet)), { w: 64 * cell.frames, h: 48 });
-      if (cell.sheet4x) assert.deepEqual(pngSize(path.join(dir, cell.sheet4x)), { w: 256 * cell.frames, h: 192 });
-      assert.deepEqual(gifSize(path.join(dir, cell.gif)), { w: 512, h: 384 });
+      const cv = P.canvasOf(M, cell), sc = P.gifScaleOf(M, cell);
+      assert.deepEqual(pngSize(path.join(dir, cell.sheet)), { w: cv.w * cell.frames, h: cv.h });
+      if (cell.sheet4x) assert.deepEqual(pngSize(path.join(dir, cell.sheet4x)), { w: cv.w * 4 * cell.frames, h: cv.h * 4 });
+      assert.deepEqual(gifSize(path.join(dir, cell.gif)), { w: cv.w * sc, h: cv.h * sc });
       assert.equal(P.resolve(M, costume, state).kind, "exact");
     }
   }
   assert.ok(baru.length >= 1, "belum ada aset baru di manifest");
 });
 
-test("GIF semua sel berukuran 512x384 (kanvas 64x48 x8)", () => {
+test("GIF semua sel berukuran 512x384 (kanvas 64x48 x8, atau kanvas sel x skala sel: hero 128x96 x4)", () => {
   const dir = path.dirname(manifestPath);
   for (const row of Object.values(M.cells)) {
     for (const cell of Object.values(row)) {
-      assert.deepEqual(gifSize(path.join(dir, cell.gif)), { w: M.canvas.w * M.gif_scale, h: M.canvas.h * M.gif_scale }, cell.gif);
+      const cv = P.canvasOf(M, cell), sc = P.gifScaleOf(M, cell);
+      assert.deepEqual(gifSize(path.join(dir, cell.gif)), { w: cv.w * sc, h: cv.h * sc }, cell.gif);
+      assert.deepEqual(gifSize(path.join(dir, cell.gif)), { w: 512, h: 384 }, cell.gif);
     }
   }
+});
+
+test("canvas per sel: bawaan manifest (64x48), field sel menimpa, manifest lama tanpa field tetap valid", () => {
+  const cell = (extra) => Object.assign({ sheet: "a.png", frames: 1, durations_ms: [100] }, extra);
+  const m = { canvas: { w: 64, h: 48 }, gif_scale: 8 };
+  assert.deepEqual(P.canvasOf(m, cell({})), { w: 64, h: 48 });
+  assert.deepEqual(P.canvasOf(m, cell({ canvas: { w: 128, h: 96 } })), { w: 128, h: 96 });
+  assert.deepEqual(P.canvasOf(null, cell({})), { w: 64, h: 48 });
+  assert.deepEqual(P.canvasOf({}, null), { w: 64, h: 48 });
+  assert.equal(P.gifScaleOf(m, cell({})), 8);
+  assert.equal(P.gifScaleOf(m, cell({ gif_scale: 4 })), 4);
+  assert.equal(P.gifScaleOf({}, cell({})), 8);
+  assert.ok(P.validCell(cell({ canvas: { w: 128, h: 96 }, gif_scale: 4 })));
+  // field canvas atau gif_scale yang rusak membuat sel tidak valid (tidak dirender dengan ukuran tebakan)
+  for (const bad of [{ canvas: null }, { canvas: {} }, { canvas: { w: 0, h: 96 } }, { canvas: { w: 128.5, h: 96 } }, { canvas: [128, 96] },
+    { canvas: { w: "128", h: 96 } }, { gif_scale: 0 }, { gif_scale: "4" }, { gif_scale: 2.5 }]) {
+    assert.equal(P.validCell(cell(bad)), false, JSON.stringify(bad));
+  }
+});
+
+test("Berserker Hero: 8 sel exact, kanvas 128x96 dan GIF x4 per sel, rage tidak loop, sel lama tidak punya field baru", () => {
+  const want = { idle: [12, true], run: [12, true], rage: [12, false], "attack-leap": [14, true], "attack-smash": [12, true],
+    miss: [10, true], exhaustion: [12, true], defeated: [14, true] };
+  const row = M.cells["berserker-hero"];
+  assert.deepEqual(Object.keys(row).sort(), Object.keys(want).sort());
+  for (const [state, [frames, loop]] of Object.entries(want)) {
+    const r = P.resolve(M, "berserker-hero", state);
+    assert.equal(r.kind, "exact", state);
+    assert.equal(r.cell.gate, "K");
+    assert.equal(r.cell.frames, frames, state);
+    assert.equal(r.cell.loop, loop, state);
+    assert.deepEqual(P.canvasOf(M, r.cell), { w: 128, h: 96 });
+    assert.equal(P.gifScaleOf(M, r.cell), 4);
+    assert.equal(r.cell.sheet4x, undefined);
+  }
+  for (const [costume, r] of Object.entries(M.cells)) {
+    if (costume === "berserker-hero") continue;
+    for (const cell of Object.values(r)) {
+      assert.equal(cell.canvas, undefined, costume);
+      assert.equal(cell.gif_scale, undefined, costume);
+      assert.equal(cell.loop, true, costume);
+    }
+  }
+  assert.deepEqual(M.canvas, { w: 64, h: 48 });
+  assert.equal(M.gif_scale, 8);
+});
+
+test("Berserker Hero: rage tidak berputar (berhenti di frame terakhir), state lain berputar", () => {
+  const rage = M.cells["berserker-hero"].rage;
+  const total = rage.durations_ms.reduce((a, b) => a + b, 0);
+  assert.equal(P.frameAt(rage, 0), 0);
+  assert.equal(P.frameAt(rage, total - 1), rage.frames - 1);
+  assert.equal(P.frameAt(rage, total), rage.frames - 1);
+  assert.equal(P.frameAt(rage, total * 5 + 17), rage.frames - 1);
+  const run = M.cells["berserker-hero"].run;
+  const rt = run.durations_ms.reduce((a, b) => a + b, 0);
+  assert.equal(P.frameAt(run, rt), 0);
+  assert.equal(P.frameAt(run, rt * 3 + 1), 0);
+  assert.equal(P.frameAt(rage, 10, true), rage.keyframe);
+});
+
+test("Berserker Hero: fallback via base viking-berserker bila hero tidak punya idle; hero+idle dipakai dulu bila ada", () => {
+  // Manifest sungguhan: hero punya idle, jadi state yang tidak ada jatuh ke idle hero (costume+idle), bukan ke induk.
+  assert.deepEqual(M.costumes.find((c) => c.id === "berserker-hero").base, "viking-berserker");
+  assert.equal(P.baseOf(M, "berserker-hero"), "viking-berserker");
+  const real = P.resolve(M, "berserker-hero", "victory");
+  assert.equal(real.step, "costume+idle");
+  assert.deepEqual(real.resolved, { costume: "berserker-hero", state: "idle" });
+  assert.deepEqual(P.canvasOf(M, real.cell), { w: 128, h: 96 });
+  // Fixture: hero tanpa idle jatuh ke viking-berserker (kanvas 64x48 induk), lalu ke normal.
+  const cell = (n, extra) => Object.assign({ sheet: n + ".png", frames: 1, durations_ms: [100] }, extra);
+  const m = {
+    canvas: { w: 64, h: 48 },
+    costumes: [{ id: "normal" }, { id: "viking-berserker", base: "viking" }, { id: "berserker-hero", base: "viking-berserker" }],
+    cells: {
+      normal: { idle: cell("n") },
+      "viking-berserker": { idle: cell("vi"), victory: cell("vv") },
+      "berserker-hero": { run: cell("hr", { canvas: { w: 128, h: 96 }, gif_scale: 4 }) },
+    },
+  };
+  let r = P.resolve(m, "berserker-hero", "victory");
+  assert.equal(r.step, "base+state");
+  assert.deepEqual(r.resolved, { costume: "viking-berserker", state: "victory" });
+  assert.deepEqual(P.canvasOf(m, r.cell), { w: 64, h: 48 });
+  assert.deepEqual(r.tried, ["berserker-hero/victory", "berserker-hero/idle", "viking-berserker/victory"]);
+  r = P.resolve(m, "berserker-hero", "shocked");
+  assert.equal(r.step, "base+idle");
+  r = P.resolve(m, "berserker-hero", "run");
+  assert.equal(r.kind, "exact");
+  assert.deepEqual(P.canvasOf(m, r.cell), { w: 128, h: 96 });
+  // sel hero dengan canvas rusak dilewati: rantai berlanjut ke induk
+  const broken = JSON.parse(JSON.stringify(m));
+  broken.cells["berserker-hero"].run.canvas = { w: -1, h: 96 };
+  r = P.resolve(broken, "berserker-hero", "run");
+  assert.equal(r.step, "base+idle");
+});
+
+test("Berserker Hero: state baru ada di manifest dan hanya berlaku untuk hero; defeated berlaku juga untuk hero", () => {
+  const { costumes, states } = P.matrix(M);
+  const hero = costumes.find((c) => c.id === "berserker-hero");
+  assert.equal(hero.label, "Berserker Hero");
+  assert.equal(hero.group, "fantasy");
+  for (const id of ["run", "rage", "attack-leap", "attack-smash", "miss", "exhaustion"]) {
+    const s = states.find((x) => x.id === id);
+    assert.ok(s, id);
+    assert.deepEqual(s.costumes, ["berserker-hero"], id);
+    assert.equal(P.cellRule(hero, s), "required");
+    assert.equal(P.cellRule(costumes.find((c) => c.id === "normal"), s), null);
+  }
+  assert.ok(states.find((x) => x.id === "defeated").costumes.includes("berserker-hero"));
+  assert.equal(P.cellRule(hero, states.find((x) => x.id === "victory")), null);
 });

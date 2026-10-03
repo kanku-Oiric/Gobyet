@@ -104,6 +104,26 @@ details.fam > .scroll { border: 0; border-top: 1px solid var(--line); border-rad
 .big canvas { width: 256px; height: 192px; }
 .big { width: 256px; height: 192px; }
 .play-cell { width: auto; }
+/* Berserker Hero (kanvas 128x96): lembar kontak per state, semua frame berurutan, bernomor, 2x, bisa digulir mendatar. */
+#heroSection { --hero-stage: #faf7f0; --hero-ink: #2b1a10; }
+#heroSection[data-herobg="dark"] { --hero-stage: #181c2c; --hero-ink: #e7ecf8; }
+.hero-state { display: grid; gap: 8px; padding-block: 12px; border-top: 1px solid var(--line); min-width: 0; }
+.hero-state:first-of-type { border-top: 0; }
+.hero-state h3 { color: var(--ink); }
+.hero-head { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; min-width: 0; }
+.hero-head .muted { font: 12px/1.3 var(--f-mono); }
+.hero-body { display: grid; gap: 10px; grid-template-columns: auto minmax(0, 1fr); align-items: start; min-width: 0; }
+@media (max-width: 700px) { .hero-body { grid-template-columns: minmax(0, 1fr); } }
+.hero-player { width: 256px; height: 192px; border-radius: 8px; background: var(--hero-stage); overflow: hidden; }
+.hero-player canvas { width: 256px; height: 192px; display: block; image-rendering: pixelated; image-rendering: crisp-edges; }
+.strip { display: flex; gap: 8px; overflow-x: auto; max-width: 100%; padding-bottom: 8px; -webkit-overflow-scrolling: touch; scroll-snap-type: x proximity; }
+.strip:focus-visible { outline: 2px solid var(--ph); outline-offset: 2px; }
+.strip figure { margin: 0; flex: none; display: grid; gap: 3px; justify-items: center; scroll-snap-align: start; }
+.strip canvas { width: 256px; height: 192px; display: block; background: var(--hero-stage); border-radius: 6px; image-rendering: pixelated; image-rendering: crisp-edges; }
+.strip figure.key canvas { outline: 3px solid var(--new); outline-offset: -3px; }
+.strip figcaption { font: 12px/1.2 var(--f-mono); color: var(--muted); white-space: nowrap; }
+.strip figcaption b { color: var(--ink); font-size: 13px; }
+
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 </head>
@@ -114,7 +134,7 @@ details.fam > .scroll { border: 0; border-top: 1px solid var(--line); border-rad
     <p class="muted">Kostum menentukan siapa Gobyet, state menentukan dia sedang apa. Setiap sel diselesaikan oleh resolver dengan fallback berantai: kostum+state → kostum+idle → normal+state → normal+idle → placeholder.</p>
     <div class="row">
       <span class="chip real">ASLI</span><span class="muted">7 aset yang sudah ada sebelum Fase 2</span>
-      <span class="chip new">BARU</span><span class="muted">aset hasil generate Fase 2</span>
+      <span class="chip new">BARU</span><span class="muted">aset hasil generate Fase 2 dan sesudahnya (termasuk Berserker Hero, gerbang K)</span>
       <span class="chip ph">PLACEHOLDER</span><span class="muted">belum ada asset; yang tampil adalah hasil fallback, diredupkan</span>
       <span class="chip na">—</span><span class="muted">state tidak berlaku untuk kostum ini</span>
     </div>
@@ -132,9 +152,20 @@ details.fam > .scroll { border: 0; border-top: 1px solid var(--line); border-rad
     <div class="stats" id="stats"></div>
   </section>
 
+  <section class="panel" id="heroSection" data-herobg="light" aria-labelledby="heroTitle" hidden>
+    <h2 id="heroTitle">Berserker Hero: lembar kontak per state</h2>
+    <p class="muted" style="margin-bottom:12px">Kostum berkanvas sendiri 128×96 (kostum lain 64×48). Tiap state: pemutar 2× (di mode Statis menampilkan frame kunci), lalu semua frame berurutan, bernomor, 2×, dengan durasi per frame; frame kunci diberi bingkai biru. Geser mendatar untuk melihat semua frame. Ini pratinjau bahan penilaian gaya; bukan pernyataan bahwa gayanya bagus atau disetujui.</p>
+    <div class="row" style="margin-bottom:10px">
+      <span class="muted">Latar</span>
+      <button type="button" id="btnHeroLight" aria-pressed="true">Terang</button>
+      <button type="button" id="btnHeroDark" aria-pressed="false">Gelap</button>
+    </div>
+    <div id="heroBox"></div>
+  </section>
+
   <section class="panel" aria-labelledby="cmpTitle">
     <h2 id="cmpTitle">Banding gaya</h2>
-    <p class="muted" style="margin-bottom:12px">Tiap aset tampil 1× (piksel asli 64×48) dan 4× (sheet 1× yang sama, diperbesar tanpa smoothing). Baris pertama: idle semua kostum dasar yang sudah jadi. Setelah itu per gerbang, yang terbaru di atas. Aset baru berlabel gerbangnya. Di mode Statis yang tampil adalah frame kunci dari manifest.</p>
+    <p class="muted" style="margin-bottom:12px">Tiap aset tampil 1× (piksel asli 64×48) dan 4× (sheet 1× yang sama, diperbesar tanpa smoothing); aset berkanvas 128×96 (hero) tampil 2× saja. Baris pertama: idle semua kostum dasar yang sudah jadi. Setelah itu per gerbang, yang terbaru di atas. Aset baru berlabel gerbangnya. Di mode Statis yang tampil adalah frame kunci dari manifest.</p>
     <div class="row" style="margin-bottom:10px">
       <label class="muted" for="cmpFilter">Tampilkan</label>
       <select id="cmpFilter" style="max-width:100%;min-width:0"></select>
@@ -223,7 +254,9 @@ details.fam > .scroll { border: 0; border-top: 1px solid var(--line); border-rad
   function cellView(result) {
     var wrap = el("div", "cell");
     var frame = el("div", "frame");
-    var cv = el("canvas"); cv.width = 64; cv.height = 48;
+    var cv = el("canvas");
+    var dim = P.canvasOf(manifest, result.cell);          // kanvas sel (bawaan 64x48; hero 128x96)
+    cv.width = dim.w; cv.height = dim.h;
     frame.appendChild(cv);
     wrap.appendChild(frame);
     var tag, note;
@@ -328,7 +361,7 @@ details.fam > .scroll { border: 0; border-top: 1px solid var(--line); border-rad
   }
 
   // ---- banding gaya: 1x dan 4x dari sheet 1x yang sama (tanpa smoothing), dibangkitkan dari manifest
-  var GATE_ORDER = ["A", "B", "C", "D", "E", "G", "H", "I", "J", "F"];  // urutan kerja sebenarnya
+  var GATE_ORDER = ["A", "B", "C", "D", "E", "G", "H", "I", "J", "F", "K"];  // urutan kerja sebenarnya
   var SPLIT_OVER = 24;
   function isBaseCostume(c) { return !c.base || c.group === "special"; }
   function compareGroups() {
@@ -370,19 +403,26 @@ details.fam > .scroll { border: 0; border-top: 1px solid var(--line); border-rad
     var r = P.resolve(manifest, pair[0], pair[1]);
     if (r.kind !== "exact") return null;
     var isNew = r.cell.origin === "baru";
-    var fig = el("figure", "cmp " + (isNew ? "baru" : "asli"));
-    var c4 = el("canvas", "x4"); c4.width = 256; c4.height = 192;
+    var dim = P.canvasOf(manifest, r.cell), custom = dim.w !== 64 || dim.h !== 48;
+    var fig = el("figure", "cmp " + (isNew ? "baru" : "asli") + (custom ? " hero" : ""));
+    var c4 = el("canvas", "x4"); c4.width = 256; c4.height = 192;    // 4x untuk 64x48; 2x untuk 128x96 (bidang tampil sama besar)
     var meta = el("div", "meta");
-    var c1 = el("canvas", "x1"); c1.width = 64; c1.height = 48;
     var cap = el("figcaption");
     var label = isNew ? "BARU · gerbang " + (r.cell.gate || "?") : "ASLI";
-    [pair[0], pair[1], label].forEach(function (t) { cap.appendChild(el("span", null, t)); });
+    var captions = [pair[0], pair[1], label];
+    if (custom) captions.push(dim.w + "×" + dim.h + " · 2×");
+    captions.forEach(function (t) { cap.appendChild(el("span", null, t)); });
     cap.title = label + " · " + pair[0] + "/" + pair[1] + " · " + r.cell.source;
-    meta.appendChild(c1); meta.appendChild(cap);
-    fig.appendChild(c4); fig.appendChild(meta);
-    fig.setAttribute("aria-label", pair[0] + " " + pair[1] + ", " + label + ", 1x dan diperbesar");
+    fig.appendChild(c4);
+    if (!custom) {                                                   // 1x hanya untuk kanvas 64x48 (hero 128x96 tidak diperkecil)
+      var c1 = el("canvas", "x1"); c1.width = 64; c1.height = 48;
+      meta.appendChild(c1);
+      cmpCells.push({ canvas: c1, cell: r.cell, url: assetUrl(r.cell.sheet), last: -1 });
+    }
+    meta.appendChild(cap);
+    fig.appendChild(meta);
+    fig.setAttribute("aria-label", pair[0] + " " + pair[1] + ", " + label + (custom ? ", " + dim.w + "x" + dim.h + " diperbesar 2x" : ", 1x dan diperbesar"));
     fig.setAttribute("data-cell", pair[0] + "/" + pair[1]);
-    cmpCells.push({ canvas: c1, cell: r.cell, url: assetUrl(r.cell.sheet), last: -1 });
     cmpCells.push({ canvas: c4, cell: r.cell, url: assetUrl(r.cell.sheet), last: -1 });
     return fig;
   }
@@ -409,6 +449,83 @@ details.fam > .scroll { border: 0; border-top: 1px solid var(--line); border-rad
     cells = cells.concat(cmpCells);
     $("cmpCount").textContent = n + " aset";
   }
+
+  // ---- Berserker Hero: lembar kontak per state (semua frame berurutan, bernomor, 2x, bisa digulir mendatar)
+  var HERO_ID = "berserker-hero";
+  var HERO_ORDER = ["idle", "run", "rage", "attack-leap", "attack-smash", "miss", "exhaustion", "defeated"];
+  var heroSheets = [];   // {canvas, cell, url, index, done}
+  function buildHero() {
+    var sec = $("heroSection"), box = $("heroBox");
+    box.textContent = "";
+    heroSheets = [];
+    var row = manifest && manifest.cells && manifest.cells[HERO_ID];
+    if (!row || typeof row !== "object") { sec.hidden = true; return; }
+    var states = HERO_ORDER.filter(function (s) { return row[s]; })
+      .concat(Object.keys(row).filter(function (s) { return HERO_ORDER.indexOf(s) === -1; }));
+    var shown = 0;
+    states.forEach(function (state) {
+      var cell = row[state];
+      if (!P.validCell(cell)) return;
+      var dim = P.canvasOf(manifest, cell);
+      var total = cell.durations_ms.reduce(function (a, b) { return a + b; }, 0);
+      var wrap = el("div", "hero-state");
+      wrap.setAttribute("data-state", state);
+      var head = el("div", "hero-head");
+      head.appendChild(el("h3", null, state));
+      head.appendChild(el("span", "muted", cell.frames + " frame · " + total + " ms · " +
+        (cell.loop === false ? "tidak loop (berhenti di frame terakhir)" : "loop") + " · kunci f" + cell.keyframe + " · " + dim.w + "×" + dim.h));
+      wrap.appendChild(head);
+      var body = el("div", "hero-body");
+      var player = el("div", "hero-player");
+      var pc = el("canvas"); pc.width = dim.w * 2; pc.height = dim.h * 2;
+      player.appendChild(pc);
+      player.setAttribute("role", "img");
+      player.setAttribute("aria-label", "pemutar " + state + " 2x; mode Statis menampilkan frame kunci f" + cell.keyframe);
+      body.appendChild(player);
+      var strip = el("div", "strip");
+      strip.tabIndex = 0;
+      strip.setAttribute("role", "group");
+      strip.setAttribute("aria-label", "lembar kontak " + state + ": " + cell.frames + " frame berurutan, 2x");
+      for (var i = 0; i < cell.frames; i++) {
+        var fig = el("figure", i === cell.keyframe ? "key" : null);
+        var cv = el("canvas"); cv.width = dim.w * 2; cv.height = dim.h * 2;
+        cv.setAttribute("data-sheet-frame", String(i));
+        cv.setAttribute("data-sheet-state", state);
+        cv.setAttribute("data-sheet-src", assetUrl(cell.sheet));
+        var cap = el("figcaption");
+        cap.appendChild(el("b", null, String(i)));
+        cap.appendChild(document.createTextNode(" · " + cell.durations_ms[i] + " ms" + (i === cell.keyframe ? " · kunci" : "")));
+        fig.appendChild(cv); fig.appendChild(cap);
+        strip.appendChild(fig);
+        heroSheets.push({ canvas: cv, cell: cell, url: assetUrl(cell.sheet), index: i, done: false });
+      }
+      body.appendChild(strip);
+      wrap.appendChild(body);
+      box.appendChild(wrap);
+      cells.push({ canvas: pc, cell: cell, url: assetUrl(cell.sheet), last: -1 });
+      shown++;
+    });
+    sec.hidden = !shown;
+  }
+  function drawSheet(h) {
+    if (h.done) return;
+    var im = image(h.url);
+    if (im.failed) { h.done = true; return; }
+    if (!im.complete || !im.naturalWidth) return;
+    var d = P.canvasOf(manifest, h.cell), ctx = h.canvas.getContext("2d");
+    ctx.imageSmoothingEnabled = false;
+    ctx.clearRect(0, 0, h.canvas.width, h.canvas.height);
+    ctx.drawImage(im, h.index * d.w, 0, d.w, d.h, 0, 0, h.canvas.width, h.canvas.height);
+    h.canvas.setAttribute("data-drawn", "1");
+    h.done = true;
+  }
+  function setHeroBg(dark) {
+    $("heroSection").setAttribute("data-herobg", dark ? "dark" : "light");
+    $("btnHeroLight").setAttribute("aria-pressed", String(!dark));
+    $("btnHeroDark").setAttribute("aria-pressed", String(dark));
+  }
+  $("btnHeroLight").addEventListener("click", function () { setHeroBg(false); });
+  $("btnHeroDark").addEventListener("click", function () { setHeroBg(true); });
 
   // ---- tes buta: idle 1x tanpa label, urutan acak dengan seed tetap
   var BLIND_SEED = 20260930;
@@ -439,7 +556,10 @@ details.fam > .scroll { border: 0; border-top: 1px solid var(--line); border-rad
     var box = $("blind");
     box.textContent = "";
     var withIdle = P.matrix(manifest).costumes.filter(function (c) {
-      return P.resolve(manifest, c.id, "idle").kind === "exact";
+      var r = P.resolve(manifest, c.id, "idle");
+      var dim = r.kind === "exact" ? P.canvasOf(manifest, r.cell) : null;
+      // kostum berkanvas sendiri (hero 128x96) tidak ikut: ukuran berbeda membocorkan identitasnya
+      return r.kind === "exact" && dim.w === 64 && dim.h === 48;
     });
     var total = 0;
     FAMILIES.forEach(function (fam, f) {
@@ -511,7 +631,9 @@ details.fam > .scroll { border: 0; border-top: 1px solid var(--line); border-rad
       : r.kind === "fallback" ? "PLACEHOLDER: belum ada asset untuk " + r.requested.costume + "/" + r.requested.state + ", tampil " + r.resolved.costume + "/" + r.resolved.state
       : "PLACEHOLDER CSS: " + r.reason;
     play.cell = r.cell; play.url = r.cell ? assetUrl(r.cell.sheet) : null; play.last = -1;
-    var ctx = play.canvas.getContext("2d"); ctx.clearRect(0, 0, 64, 48);
+    var pd = P.canvasOf(m, r.cell);
+    if (play.canvas.width !== pd.w || play.canvas.height !== pd.h) { play.canvas.width = pd.w; play.canvas.height = pd.h; }
+    var ctx = play.canvas.getContext("2d"); ctx.clearRect(0, 0, play.canvas.width, play.canvas.height);
   }
   ["selCostume", "selState", "selManifest"].forEach(function (id) { $(id).addEventListener("change", updatePlay); });
 
@@ -526,10 +648,11 @@ details.fam > .scroll { border: 0; border-top: 1px solid var(--line); border-rad
     if (f === c.last) return;
     c.last = f;
     var w = c.canvas.width, h = c.canvas.height;
+    var src = P.canvasOf(manifest, c.cell);                  // ukuran satu frame di sheet (bawaan 64x48; hero 128x96)
     var ctx = c.canvas.getContext("2d");
     ctx.imageSmoothingEnabled = false;
     ctx.clearRect(0, 0, w, h);
-    ctx.drawImage(im, f * 64, 0, 64, 48, 0, 0, w, h);
+    ctx.drawImage(im, f * src.w, 0, src.w, src.h, 0, 0, w, h);
     // penanda untuk uji otomatis: frame yang sedang tampil dan frame kunci sel ini
     c.canvas.setAttribute("data-frame", String(f));
     c.canvas.setAttribute("data-keyframe", String(c.cell.keyframe));
@@ -538,6 +661,7 @@ details.fam > .scroll { border: 0; border-top: 1px solid var(--line); border-rad
   function tick(now) {
     var t = now - t0;
     cells.forEach(function (c) { draw(c, t); });
+    heroSheets.forEach(drawSheet);
     draw(play, t);
     requestAnimationFrame(tick);
   }
@@ -545,6 +669,7 @@ details.fam > .scroll { border: 0; border-top: 1px solid var(--line); border-rad
   function start(m, url) {
     manifest = m; manifestUrl = url;
     buildMatrix();
+    buildHero();
     buildCompare();
     buildBlind();
     fillSelects();

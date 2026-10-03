@@ -43,11 +43,13 @@ COSTUMES = [
     ("wizard", "Wizard", "fantasy"),
     ("pak-haji", "Pak Haji", "theology"),
     ("priest", "Priest", "theology"),
+    ("berserker-hero", "Berserker Hero", "fantasy"),   # karakter utama original 128x96 (src/hero.py, src/hero_scenes.py)
 ]
 
 # Field opsional per kostum, ditulis ke manifest hanya bila ada. base = kostum induk untuk fallback.
 COSTUME_META = {
     "normal-gblk": {"base": "normal", "caption": "GBLK = Gamers Berkembang Lewat Kebodohan"},
+    "berserker-hero": {"base": "viking-berserker"},
 }
 for _faction, _variants in (("knight", ("heavy", "archer", "manatarms", "assassin")),
                             ("viking", ("berserker", "huscarl", "gestir", "bondi")),
@@ -56,7 +58,8 @@ for _faction, _variants in (("knight", ("heavy", "archer", "manatarms", "assassi
         COSTUME_META["%s-%s" % (_faction, _v)] = {"base": _faction}
 
 STATE_IDS = ["idle", "thinking", "victory", "defeated", "judging", "suspicious", "attack", "shocked", "happy",
-             "dance-a", "dance-b", "dance-c", "reveal"]
+             "dance-a", "dance-b", "dance-c", "reveal",
+             "run", "rage", "attack-leap", "attack-smash", "miss", "exhaustion"]   # state baru khusus Berserker Hero
 
 # APPLIES: satu-satunya sumber sel yang berlaku. {kostum: {state: "required" | "optional"}}.
 # Sel yang tidak tercantum tidak berlaku ("-" di preview).
@@ -81,6 +84,8 @@ for _c in ("pak-haji", "priest"):
 for _c, _meta in COSTUME_META.items():
     if _meta.get("base") in ("knight", "viking", "pirate"):
         APPLIES[_c] = {"idle": R, "victory": R, "attack": O}
+APPLIES["berserker-hero"] = {"idle": R, "run": R, "rage": R, "attack-leap": R, "attack-smash": R, "miss": R,
+                             "exhaustion": R, "defeated": R}
 
 
 def _states():
@@ -272,7 +277,44 @@ NEW = {
     ("hacker", "happy"): ("hacker-happy", 5, "F"),
     ("detective", "defeated"): ("detective-defeated", 8, "F"),
     ("detective", "happy"): ("detective-happy", 4, "F"),
+    # Gerbang K: Berserker Hero (kanvas 128x96, GIF x4). Frame kunci = pose paling mewakili (lihat hero_scenes.META).
+    ("berserker-hero", "idle"): ("berserker-hero-idle", 0, "K"),
+    ("berserker-hero", "run"): ("berserker-hero-run", 10, "K"),
+    ("berserker-hero", "rage"): ("berserker-hero-rage", 6, "K"),
+    ("berserker-hero", "attack-leap"): ("berserker-hero-attack-leap", 8, "K"),
+    ("berserker-hero", "attack-smash"): ("berserker-hero-attack-smash", 7, "K"),
+    ("berserker-hero", "miss"): ("berserker-hero-miss", 5, "K"),
+    ("berserker-hero", "exhaustion"): ("berserker-hero-exhaustion", 5, "K"),
+    ("berserker-hero", "defeated"): ("berserker-hero-defeated", 3, "K"),
 }
+
+# Kanvas dan skala GIF per kostum (opsional; kostum yang tidak tercantum memakai kanvas global 64x48 dan gif_scale
+# global 8). Ditulis ke manifest sebagai field per-sel `canvas` dan `gif_scale`. NO_LOOP = sel yang tidak berputar
+# (loop=false): GIF diekspor tanpa blok loop dan berhenti di frame terakhir.
+CANVAS_OF = {"berserker-hero": ({"w": 128, "h": 96}, 4)}
+NO_LOOP = {("berserker-hero", "rage")}
+
+
+def cell_of(name):
+    """(kostum, state) sel yang memakai animasi `name`, atau None (animasi ekstra)."""
+    for key, v in list(ORIGINAL.items()) + [(k, (x[0], x[1])) for k, x in NEW.items()]:
+        if v[0] == name:
+            return key
+    return None
+
+
+def canvas_of(name):
+    """(w, h, gif_scale) untuk animasi `name`; default kanvas global dan skala 8."""
+    key = cell_of(name)
+    if key and key[0] in CANVAS_OF:
+        c, sc = CANVAS_OF[key[0]]
+        return c["w"], c["h"], sc
+    return 64, 48, 8
+
+
+def loops(name):
+    key = cell_of(name)
+    return not (key and key in NO_LOOP)
 
 # Profil export. Aset gerbang A-C (dan semua aset asli) diekspor dengan pengaturan lama: palet PAL saja,
 # optimize=False, sheet 1x dan @4x. Aset baru mulai Gerbang D: palet PAL + PAL_EXT, GIF optimize=True,
@@ -320,9 +362,11 @@ def manifest(scenes):
             "gif": "../gif/%s.gif" % name,
             "frames": n,
             "durations_ms": [int(ms(i)) for i in range(n)],
-            "loop": True,
+            "loop": (costume, state) not in NO_LOOP,
             "keyframe": keyframe,
         }
+        if costume in CANVAS_OF:
+            cell["canvas"], cell["gif_scale"] = CANVAS_OF[costume]
         if gate:
             cell["gate"] = gate
         if modern(name):
