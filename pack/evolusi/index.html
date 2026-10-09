@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Evolusi Berserker Hero</title>
+<style>
+  :root {
+    --bg: #f6f3ec; --card: #ffffff; --ink: #1d1b22; --muted: #5d5866; --line: #ddd6ca; --accent: #a6122a;
+    --stage-light: #faf7f0; --stage-dark: #181c2c; --stage-gray: #808080;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --bg: #121218; --card: #1c1c25; --ink: #ece8f0; --muted: #a39dab; --line: #34323f; --accent: #ff5a6e; }
+  }
+  :root[data-theme="dark"] { --bg: #121218; --card: #1c1c25; --ink: #ece8f0; --muted: #a39dab; --line: #34323f; --accent: #ff5a6e; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 1120px; margin: 0 auto; padding: 20px 16px 48px; }
+  h1 { font-size: 24px; margin: 0 0 4px; }
+  p.lead { color: var(--muted); margin: 0 0 16px; }
+  .bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 18px; }
+  .bar button { border: 1px solid var(--line); background: var(--card); color: var(--ink); border-radius: 6px; padding: 6px 10px; cursor: pointer; font: inherit; }
+  .bar button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+  .stage { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px; margin-bottom: 16px; }
+  .stage h2 { font-size: 18px; margin: 0 0 2px; }
+  .stage .tag { display: inline-block; font-size: 12px; padding: 1px 8px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); margin-left: 6px; vertical-align: 2px; }
+  .stage p { margin: 4px 0 10px; color: var(--muted); }
+  .row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 6px; }
+  figure { margin: 0; flex: 0 0 auto; }
+  figure .box { background: var(--stage-light); border-radius: 6px; padding: 4px; line-height: 0; }
+  body.bg-dark figure .box { background: var(--stage-dark); }
+  body.bg-gray figure .box { background: var(--stage-gray); }
+  figure img { image-rendering: pixelated; width: 256px; height: 192px; display: block; }
+  figcaption { font-size: 12px; color: var(--muted); margin-top: 4px; text-align: center; }
+  .arrow { text-align: center; color: var(--muted); font-size: 20px; margin: -6px 0 10px; }
+  @media (max-width: 600px) { figure img { width: 192px; height: 144px; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>Evolusi Berserker Hero</h1>
+  <p class="lead">Tiga tahap karakter utama di pack Gobyet, dari yang tertua ke yang sekarang. Kanvas 128×96, diperbesar 2× di halaman ini. Tahap 1 dan 2 disimpan sebagai evolusi atas keputusan pemilik; tahap 3 masih menunggu persetujuan gaya.</p>
+  <div class="bar" role="group" aria-label="Latar">
+    <span>Latar:</span>
+    <button type="button" data-bg="light" aria-pressed="true">Terang</button>
+    <button type="button" data-bg="dark" aria-pressed="false">Gelap</button>
+    <button type="button" data-bg="gray" aria-pressed="false">Abu tengah</button>
+  </div>
+
+  <section class="stage" id="v1">
+    <h2>Evolusi 1: Gobyet berhelm tengkorak naga <span class="tag">v1, 8 state animasi</span></h2>
+    <p>Gobyet berzirah besi hitam dengan helm tengkorak naga dan tabard teal. Wajah Gobyet terlihat penuh. Gayanya kemudian ditolak pemilik; timing dan emote dibawa ke tahap berikutnya.</p>
+    <div class="row" data-gifs="v1/berserker-hero-{s}.gif" data-states="idle,run,rage,attack-leap,attack-smash,miss,exhaustion,defeated"></div>
+  </section>
+  <div class="arrow" aria-hidden="true">↓</div>
+
+  <section class="stage" id="v2">
+    <h2>Evolusi 2: Gobyet berzirah hitam-merah <span class="tag">v2, 3 pose kunci</span></h2>
+    <p>Badan chibi mekanis dari rujukan pertama dengan palet hitam dan merah darah dari rujukan kedua, masih berbasis Gobyet. Ditolak pemilik ("rombak dari awal"), jadi tidak pernah dianimasikan.</p>
+    <div class="row" data-pngs="v2/berserker-hero-v2-{s}.png" data-states="idle,run,attack-smash"></div>
+  </section>
+  <div class="arrow" aria-hidden="true">↓</div>
+
+  <section class="stage" id="v3">
+    <h2>Evolusi 3: prajurit zirah dengan perisai naga <span class="tag">v3, 9 state animasi, sekarang</span></h2>
+    <p>Helm penuh bersalib merah, pedang hitam berinti api, perisai naga besar bersayap, tepi terang di sekeliling siluet. Wajah monyet Gobyet hanya terlihat saat topeng dibuka (state <code>victory</code>).</p>
+    <div class="row" data-gifs="../../gif/berserker-hero-{s}.gif" data-states="idle,run,rage,attack-leap,attack-smash,miss,exhaustion,defeated,victory"></div>
+  </section>
+
+  <section class="stage" id="banding">
+    <h2>Pose kunci berdampingan</h2>
+    <p>idle, run, dan attack-smash dari ketiga tahap (render statis dari kode tiap tahap).</p>
+    <div class="row" data-compare="idle,run,attack-smash"></div>
+  </section>
+</main>
+<script>
+(function () {
+  function fig(src, cap) {
+    var f = document.createElement("figure");
+    var b = document.createElement("div");
+    b.className = "box";
+    var im = document.createElement("img");
+    im.src = src; im.alt = cap; im.loading = "lazy"; im.width = 256; im.height = 192;
+    b.appendChild(im); f.appendChild(b);
+    var c = document.createElement("figcaption");
+    c.textContent = cap; f.appendChild(c);
+    return f;
+  }
+  document.querySelectorAll(".row[data-gifs], .row[data-pngs]").forEach(function (row) {
+    var pat = row.getAttribute("data-gifs") || row.getAttribute("data-pngs");
+    row.getAttribute("data-states").split(",").forEach(function (s) { row.appendChild(fig(pat.replace("{s}", s), s)); });
+  });
+  document.querySelectorAll(".row[data-compare]").forEach(function (row) {
+    row.getAttribute("data-compare").split(",").forEach(function (s) {
+      ["v1", "v2", "v3"].forEach(function (v) { row.appendChild(fig(v + "/berserker-hero-" + v + "-" + s + ".png", v + " " + s)); });
+    });
+  });
+  var bgKey = "evolusi-bg";
+  function setBg(v) {
+    document.body.classList.remove("bg-dark", "bg-gray");
+    if (v !== "light") document.body.classList.add("bg-" + v);
+    document.querySelectorAll(".bar button").forEach(function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-bg") === v ? "true" : "false"); });
+    try { localStorage.setItem(bgKey, v); } catch (e) {}
+  }
+  document.querySelectorAll(".bar button").forEach(function (b) { b.addEventListener("click", function () { setBg(b.getAttribute("data-bg")); }); });
+  var saved = null;
+  try { saved = localStorage.getItem(bgKey); } catch (e) {}
+  setBg(saved === "dark" || saved === "gray" ? saved : "light");
+})();
+</script>
+</body>
+</html>

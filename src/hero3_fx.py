@@ -1,9 +1,9 @@
 """Efek dan properti untuk Berserker Hero v3, semuanya berpalet v3 (tanpa warna bulu atau wajah Gobyet).
 
 Nama bagian (`part`) sama dengan efek v1 supaya pemeriksaan pemilik piksel di validator tetap berlaku: dust, chip, burst, smear, block, speed, sweat,
-breath, spark, roar. Tambahan v3: rock (batu), ichor (tetes cairan monster), glint (kilau bilah bersih), steam (uap dari topeng), ember (bara rage).
+breath, spark, roar. Tambahan v3: rock (batu), ichor (tetes darah monster), glint (kilau bilah bersih), steam (uap dari topeng), ember (bara rage).
 
-Warna: besi hitam `n0..n4`, merah `q0..q4`, inti cahaya `wh` (hero3.HERO3_PAL); batu `s1..s3`, kayu `w1..w3`, cairan monster `m1..m3`
+Warna: besi hitam `n0..n4`, merah `q0..q4`, inti cahaya `wh` (hero3.HERO3_PAL); batu `s1..s3`, kayu `w1..w3`, darah monster `m1..m3` (merah darah gelap)
 (HERO3_FX_PAL, didaftarkan ke `monkey.PAL_HERO`). Semua deterministik (seed tetap), tanpa alfa parsial.
 """
 import math
@@ -17,7 +17,7 @@ from hero import part, poly, solid3, FLOOR
 HERO3_FX_PAL = {
     "s1": (62, 60, 66), "s2": (104, 100, 104), "s3": (158, 150, 142),         # batu dan debu: bayangan, dasar, sorotan (abu hangat)
     "w1": (84, 54, 36), "w2": (132, 88, 52), "w3": (180, 128, 76),            # kayu: bayangan, dasar, sorotan
-    "m1": (34, 96, 58), "m2": (86, 176, 76), "m3": (178, 232, 120),           # cairan monster: hijau asam gelap, dasar, kilau (bukan merah, supaya tidak menyatu dengan api bilah)
+    "m1": (74, 2, 12), "m2": (140, 10, 22), "m3": (232, 96, 88),             # darah monster: merah darah gelap, dasar, kilau basah (lebih gelap dari api bilah; kilau membedakan noda)
 }
 monkey.PAL_HERO.update({k: v for k, v in HERO3_FX_PAL.items() if k not in monkey.PAL_HERO})
 assert not set(HERO3_FX_PAL) & (set(monkey.PAL) | set(monkey.PAL_EXT)), "kunci palet fx hero3 bentrok"
@@ -170,7 +170,7 @@ def fx_roar(cv, x, y, k):
             cv.put(int(x + math.cos(r) * (8 + i)), int(y + math.sin(r) * (8 + i)), "wh" if i < L - 2 else "q4")
 
 
-# ------------------------------------------------------------------ batu, cairan monster, kilau
+# ------------------------------------------------------------------ batu, darah monster, kilau
 def rock(cv, x, y_floor, w=18, h=10):
     """Batu pijakan di lantai (x = tengah): bentuk tidak beraturan, sisi atas terang, retakan, satu kerikil di samping. h = tinggi puncak."""
     x0, base = int(x - w / 2), int(y_floor)
@@ -189,7 +189,7 @@ def rock(cv, x, y_floor, w=18, h=10):
 
 
 def fx_ichor_drip(cv, x, y, k):
-    """Setetes cairan monster jatuh dari ujung bilah ke lantai (k = 0..3 tinggi jatuh); membentuk bintik kecil di lantai saat k = 3."""
+    """Setetes darah monster jatuh dari ujung bilah ke lantai (k = 0..3 tinggi jatuh); membentuk bintik kecil di lantai saat k = 3."""
     part(cv, "ichor")
     if k < 3:
         yy = y + k * 3

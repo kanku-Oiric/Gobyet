@@ -1,5 +1,5 @@
-"""Uji rig Berserker Hero v3 (tanpa basis Gobyet): kanvas dan tepi, tidak ada unsur Gobyet, palet, sisi elemen asimetris, visor salib, ekspresi,
-pedang, dan bahwa hero v1 tidak berubah.
+"""Uji rig Berserker Hero v3 (zirah bukan Gobyet; wajah monyet Gobyet hanya di balik topeng): kanvas dan tepi, identitas, palet, sisi elemen
+asimetris, visor salib, ekspresi, perisai naga, tepi terang, darah monster merah, pedang, dan bahwa hero v1 tidak berubah.
 
     python3 -m unittest src/test_hero3.py -v
 """
@@ -14,8 +14,9 @@ import hero  # noqa: E402
 import hero3  # noqa: E402
 import monkey  # noqa: E402
 
-GOBYET_COLOR_KEYS = {"fs", "fb", "fl", "ei", "cs", "cb", "cl", "ra", "rb", "ew", "mo"}          # bulu, telinga, wajah, mata, hidung dan mulut Gobyet
+GOBYET_COLOR_KEYS = {"fs", "fb", "fl", "ei", "cs", "cb", "cl", "ra", "rb", "ew", "mo"}          # kunci Gobyet hero v1/v2: tidak dipakai v3 sama sekali
 GOBYET_PARTS = {"face", "eye", "ear", "mouth", "brow", "skull", "neck", "helm_cap", "tail"}      # nama bagian rig Gobyet v1/v2
+FACE_KEYS = set(hero3.GOBYET_FACE_KEYS)                                                          # bulu, wajah, mulut Gobyet di balik topeng
 
 
 def px_hash(cv):
@@ -40,23 +41,23 @@ class Hero3Model(unittest.TestCase):
             self.assertGreaterEqual(min(xs), 1, name)                     # ekor panah tidak terpotong di tepi kiri
             self.assertLessEqual(max(xs), cv.w - 2, name)                 # pedang, balok, debu tidak terpotong di tepi kanan
 
-    def test_no_gobyet_base(self):
-        """Basis bukan Gobyet: tanpa warna bulu/wajah/mata Gobyet dan tanpa bagian wajah, telinga, atau mulut Gobyet (efek balok kayu dikecualikan)."""
+    def test_no_gobyet_base_and_face_hidden_when_mask_closed(self):
+        """Basis bukan Gobyet: dengan topeng tertutup tidak ada warna atau bagian Gobyet sama sekali (v1/v2 maupun wajah di balik topeng)."""
         for name, p in self.poses.items():
             cv = hero3.render_pose(dict(p, fx=()))
-            self.assertFalse(set(cv.px.values()) & GOBYET_COLOR_KEYS, name)
-            self.assertFalse({o for o in cv.owner.values()} & GOBYET_PARTS, name)
+            self.assertFalse(set(cv.px.values()) & (GOBYET_COLOR_KEYS | FACE_KEYS), name)
+            self.assertFalse({o for o in cv.owner.values()} & (GOBYET_PARTS | {"gobyet_face", "gobyet_eye"}), name)
         for style in hero3.EYE_STYLES:
             cv = hero3.PartCanvas()
             hero3.helm3(cv, 40, 40, style, "closed")
-            self.assertFalse(set(cv.px.values()) & GOBYET_COLOR_KEYS, style)
+            self.assertFalse(set(cv.px.values()) & (GOBYET_COLOR_KEYS | FACE_KEYS), style)
 
     def test_palette_within_limit_and_registered(self):
         keys = set()
         for p in self.poses.values():
             keys |= set(hero3.render_pose(dict(p, fx=())).px.values())
         self.assertLessEqual(len(keys), 28)
-        self.assertEqual(len(keys), 11)                                   # tepat 11 kunci hero3 tanpa efek (efek memakai batu, kayu, cairan monster)
+        self.assertEqual(len(keys), 11)                                   # tepat 11 kunci hero3 tanpa efek (tepi terang memakai n4; efek: batu, kayu, darah)
         for k in keys:
             self.assertIn(k, monkey.PAL_HERO)
         self.assertTrue(set(hero3.HERO3_PAL) <= set(monkey.PAL_HERO))
@@ -111,18 +112,58 @@ class Hero3Model(unittest.TestCase):
                         if o == part:
                             self.assertEqual(cv.px.get((2 * hx - 1 - x, y)), cv.px[(x, y)], (eyes, mouth, part, x, y))
 
-    def test_mask_opens_monotonically_with_a_machine_cavity_and_no_gobyet_colors(self):
+    def test_mask_opens_monotonically_onto_the_gobyet_monkey_face(self):
         sizes = []
         for m in (0.0, 0.125, 0.25, 0.5, 0.75, 1.0):
             cv = hero3.PartCanvas()
             hero3.helm3(cv, 60, 40, "look", "closed", 0.0, m)
-            sizes.append(sum(1 for o in cv.owner.values() if o in ("cavity", "cavity_eye", "cavity_teeth")))
-            self.assertFalse(set(cv.px.values()) & GOBYET_COLOR_KEYS, m)
-            if m >= 0.5:                                   # terbuka lebar: dua lensa mata menyala di dalam rongga
-                self.assertGreaterEqual(sum(1 for o in cv.owner.values() if o == "cavity_eye"), 12, m)
+            sizes.append(sum(1 for o in cv.owner.values() if o in ("cavity", "gobyet_face", "gobyet_eye")))
+            self.assertFalse(set(cv.px.values()) & GOBYET_COLOR_KEYS, m)                 # kunci v1/v2 tidak pernah dipakai
+            face = {c for k, c in cv.px.items() if cv.owner.get(k) in ("gobyet_face", "gobyet_eye")}
+            stray = {c for k, c in cv.px.items() if c in FACE_KEYS and cv.owner.get(k) not in ("gobyet_face", "gobyet_eye")}
+            self.assertFalse(stray, m)                                                  # warna Gobyet hanya di wajah
+            if m >= 0.5:                                   # terbuka lebar: bulu cokelat, wajah krem, dan dua mata Gobyet terlihat
+                self.assertGreaterEqual(sum(1 for o in cv.owner.values() if o == "gobyet_eye"), 12, m)
+                self.assertTrue({"B", "F"} <= face, (m, face))
         self.assertEqual(sizes[0], 0)
         self.assertEqual(sizes, sorted(sizes))
-        self.assertGreaterEqual(sizes[-1], 250)
+        self.assertGreaterEqual(sizes[-1], 300)
+
+    def test_dragon_shield_is_big_and_has_dragon_features(self):
+        cv = hero3.render_pose(dict(self.poses["idle"], fx=()))
+        cnt = {}
+        for o in cv.owner.values():
+            cnt[o] = cnt.get(o, 0) + 1
+        shield = sum(cnt.get(k, 0) for k in ("pauldron_big", "horn_fin", "dragon_horn", "dragon_eye", "dragon_brow", "dragon_scale", "dragon_glow"))
+        self.assertGreaterEqual(shield, 1100)                                           # perisai diperbesar atas permintaan pemilik
+        for k, lo in (("dragon_eye", 60), ("dragon_horn", 30), ("dragon_scale", 60), ("horn_fin", 200)):
+            self.assertGreaterEqual(cnt.get(k, 0), lo, k)                              # mata celah, tanduk, sisik, sayap naga
+        pts = [k for k, o in cv.owner.items() if o in ("pauldron_big", "horn_fin")]
+        ys = [y for _, y in pts]
+        xs = [x for x, _ in pts]
+        self.assertGreaterEqual(max(ys) - min(ys) + 1, 60)                             # perisai tinggi (dari ujung tombak ke ujung bawah)
+        self.assertGreaterEqual(max(xs) - min(xs) + 1, 30)
+        eye = [k for k, o in cv.owner.items() if o == "dragon_eye"]
+        slit = [k for k in eye if cv.px[k] == "n0"]
+        self.assertGreaterEqual(len(slit), 8)                                           # pupil celah tegak
+
+    def test_every_dark_edge_has_a_light_edge(self):
+        for name, p in self.poses.items():
+            cv = hero3.render_pose(p)
+            unlit = 0
+            for (x, y), c in cv.px.items():
+                if c in hero3.RIM_DARK and cv.owner.get((x, y)) not in hero3.RIM_SKIP:
+                    for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                        k = (x + dx, y + dy)
+                        if k not in cv.px and 0 <= k[0] < cv.w and 0 <= k[1] < hero3.FLOOR:
+                            unlit += 1
+            self.assertEqual(unlit, 0, name)
+            self.assertTrue(all(cv.px[k] == hero3.RIM_COLOR for k, o in cv.owner.items() if o == "rim" and k in cv.px), name)
+
+    def test_monster_blood_is_red(self):
+        for k in ("m1", "m2", "m3"):
+            r, g, b = monkey.PAL_HERO[k]
+            self.assertGreater(r, 2 * max(g, b), k)                                     # merah, bukan hijau atau ungu
 
     def test_stain_is_wiped_progressively_from_the_guard_toward_the_tip(self):
         counts = []
@@ -134,7 +175,7 @@ class Hero3Model(unittest.TestCase):
         self.assertEqual(counts[-1], 0)
         self.assertEqual(counts[1:], sorted(counts[1:], reverse=True))
         cv = hero3.PartCanvas()
-        hero3.sword3(cv, hero3.SwordFrame(82, 48, 88.0), 1, None)                # tanpa noda: tidak ada piksel cairan monster
+        hero3.sword3(cv, hero3.SwordFrame(82, 48, 88.0), 1, None)                # tanpa noda: tidak ada piksel darah monster
         self.assertEqual(sum(1 for o in cv.owner.values() if o == "ichor"), 0)
 
     def test_feet_never_detach_from_the_hips(self):

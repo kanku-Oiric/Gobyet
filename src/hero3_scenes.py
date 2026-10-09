@@ -1,4 +1,4 @@
-"""Animasi Berserker Hero v3 (kostum `berserker-hero`, kanvas 128x96, tanpa basis Gobyet): sembilan state.
+"""Animasi Berserker Hero v3 (kostum `berserker-hero`, kanvas 128x96; zirah bukan Gobyet, wajah Gobyet di balik topeng): sembilan state.
 
     idle 12, run 12, rage 12 (tidak loop), attack-leap 14, attack-smash 12, miss 10, exhaustion 12, defeated 14, victory 16 (tidak loop).
 
@@ -6,8 +6,8 @@ Tiap state dibangun dari tabel pose per frame yang diinterpolasi (smoothstep) la
 berkedip. Durasi per frame tidak seragam: pose kunci ditahan lebih lama, ayunan cepat. Pola durasi dan urutan beat tiap state mengikuti yang sudah
 dilihat pemilik pada hero v1 (gaya v1 ditolak, timing dan emote dipertahankan); isinya digambar ulang dengan rig `hero3`.
 
-State baru `victory` (permintaan pemilik): topeng membuka dan menutup, pedang ditusukkan ke tanah, satu kaki naik ke batu sambil tangan mengusap
-cairan monster dari bilah. Cairan monster berwarna hijau asam (bukan merah) dan hanya ada di state ini.
+State baru `victory` (permintaan pemilik): topeng membuka (wajah Gobyet tersenyum) dan menutup, pedang ditusukkan ke tanah, satu kaki naik ke batu sambil tangan mengusap
+darah monster dari bilah. Darah monster berwarna merah darah gelap (dibedakan dari merah zirah) dan hanya ada di state ini.
 
 SCENES mengikuti konvensi modul adegan lain: {nama: (fungsi_frame, jumlah_frame, fungsi_durasi_ms)}.
 """
@@ -82,9 +82,28 @@ def pose_of(spec):
     return d
 
 
-# per state: pengali jari-jari ekor dan putaran tambahan kipas (derajat), dicari agar tepi kiri tetap >= 1 px (pelindung bahu raksasa menahan cx >= 46)
+# per state: pengali jari-jari ekor dan putaran tambahan kipas (derajat), dicari agar tepi kiri tetap >= 1 px (perisai naga menahan cx >= 52)
 TAIL_SCALE = {"rage": 0.6, "attack-leap": 0.8, "attack-smash": 1.0, "miss": 0.9, "exhaustion": 0.95, "defeated": 0.75, "victory": 1.0}
 TAIL_ROT = {"rage": 10.0, "attack-leap": 55.0, "attack-smash": 55.0, "miss": 25.0, "exhaustion": 10.0, "defeated": 10.0, "victory": 25.0}
+
+
+# State serangan (keputusan pemilik "ekor sedang"): di frame tumbukan kipas ekor dipindah ke atas-belakang dan dibesarkan supaya tidak tertutup perisai
+# naga; di frame lain ekor kembali bertahap ke bentuk dasar state itu supaya tidak terpotong tepi kanvas. (skala, putaran, dx, dy) dasar dan puncak,
+# dan bobot puncak per frame (0 = dasar, 1 = puncak). Nilai dicari otomatis terhadap tepi kanvas dan ukuran ekor idle; lihat laporan.
+TAIL_PEAK = {
+    "attack-leap": ((1.2, 90.0, 8.0, -24.0), [0.5, 0.75, 0.5, 0.5, 0.5, 0.5, 0.75, 0.75, 1.0, 1.0, 1.0, 1.0, 0.5, 0.5]),
+    "attack-smash": ((0.8, 30.0, 4.0, -24.0), [1.0] * 12),
+    "miss": ((0.8, 15.0, 8.0, -24.0), [1.0] * 10),
+}
+
+
+def tail_params(name, i):
+    base = (TAIL_SCALE.get(name, 1.0), TAIL_ROT.get(name, 0.0), 0.0, 0.0)
+    if name not in TAIL_PEAK:
+        return base
+    peak, weights = TAIL_PEAK[name]
+    w = weights[i % len(weights)]
+    return tuple(a + (b - a) * w for a, b in zip(base, peak))
 
 
 class Track:
@@ -100,8 +119,10 @@ class Track:
         p = at(self.keys, i, self.n, self.loop)
         if self.post:
             self.post(i, p)
-        p["tail_k"] = p["tail_k"] * TAIL_SCALE.get(self.name, 1.0)           # ekor dikecilkan per state supaya tidak terpotong tepi kiri kanvas
-        p["tail_rot"] = p["tail_rot"] + TAIL_ROT.get(self.name, 0.0)
+        sc, rot, dx, dy = tail_params(self.name, i)                          # ekor per state (dan per frame di state serangan)
+        p["tail_k"] = p["tail_k"] * sc
+        p["tail_rot"] = p["tail_rot"] + rot
+        p["tail_dx"], p["tail_dy"] = dx, dy
         p = quant(p)
         if self.fx:
             p["fx"] = list(self.fx(i, p))
@@ -515,7 +536,7 @@ DEF_TRACK = Track("defeated", 14, _def_keys(), [200, 180, 180, 200, 200, 220, 20
                   label="berlutut bertumpu pada pedang yang menancap, kepala tertunduk, visor meredup, napas pelan; bermartabat")
 
 
-# ================================================================== victory (tidak loop): topeng buka-tutup, pedang ditusuk ke tanah, kaki naik batu, usap cairan monster
+# ================================================================== victory (tidak loop): topeng buka-tutup memperlihatkan wajah Gobyet, pedang ditusuk ke tanah, kaki naik batu, usap darah monster
 _VC = 54
 ROCK_X, ROCK_W, ROCK_H = _VC + 19, 24, 12
 _ROCK = (lambda cv: FX.rock(cv, ROCK_X, FLOOR, ROCK_W, ROCK_H),)
@@ -531,10 +552,10 @@ def _vk(**kw):
 
 VICT_KEYS = [
     key(0, **_vk()),
-    key(1, **_vk(mask=0.25, tail_phase=0.6)),
-    key(2, **_vk(mask=0.625, hdy=-1, tail_phase=0.8)),
-    key(3, **_vk(mask=1.0, hdy=-1, hdx=1, tail_phase=1.0, sway=0.5)),
-    key(4, **_vk(mask=0.5, hdx=2, hdy=0, tail_phase=1.3, sway=0.0)),
+    key(1, **_vk(mask=0.25, tail_phase=0.6, face=("look", "flat", "smirk"))),
+    key(2, **_vk(mask=0.625, hdy=-1, tail_phase=0.8, face=("look", "flat", "smirk"))),
+    key(3, **_vk(mask=1.0, hdy=-1, hdx=1, tail_phase=1.0, sway=0.5, face=("look", "flat", "smile"))),
+    key(4, **_vk(mask=0.5, hdx=2, hdy=0, tail_phase=1.3, sway=0.0, face=("look", "flat", "smirk"))),
     key(5, **_vk(mask=0.0, eyes="wide", hdx=0, tail_phase=1.6)),
     key(6, **_vk(eyes="angry", crouch=1, lean=-1, grip=(_XS + 1, 42), ang=60, sway=-1.0, tail_phase=1.8)),
     key(7, **_vk(eyes="angry", crouch=3, lean=-2, grip=(_XS + 2, 40), ang=-44, sway=-2.0, tail_phase=2.0, hdy=1)),
@@ -592,7 +613,7 @@ def _vict_fx(i, p):
 
 VICT_TRACK = Track("victory", 16, VICT_KEYS, [160, 100, 100, 300, 100, 140, 100, 70, 60, 200, 140, 160, 120, 120, 140, 1500], keyframe=13,
                    loop=False, fx=_vict_fx,
-                   label="topeng membuka dan menutup, pedang dicabut lalu ditusukkan ke tanah, satu kaki naik ke batu sambil tangan mengusap cairan monster, bilah bersih berkilau")
+                   label="topeng membuka memperlihatkan wajah Gobyet lalu menutup, pedang dicabut lalu ditusukkan ke tanah, satu kaki naik ke batu sambil tangan mengusap darah monster, bilah bersih berkilau")
 
 TRACKS = {t.name: t for t in (IDLE_TRACK, RUN_TRACK, RAGE_TRACK, LEAP_TRACK, SMASH_TRACK, MISS_TRACK, EXH_TRACK, DEF_TRACK, VICT_TRACK)}
 

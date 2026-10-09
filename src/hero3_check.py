@@ -1,4 +1,4 @@
-"""Pengukuran Berserker Hero v3 (tanpa basis Gobyet) untuk validator V11 dan uji; hanya membaca, tidak menulis aset.
+"""Pengukuran Berserker Hero v3 (basis zirah; wajah monyet Gobyet hanya di balik topeng) untuk validator V11 dan uji; hanya membaca, tidak menulis aset.
 
 Semua ukuran memakai peta pemilik piksel (`hero.PartCanvas`): hanya piksel yang masih terlihat setelah semua lapisan digambar yang dihitung. Angka bersifat
 heuristik dan bukan pernyataan bahwa gaya bagus atau disetujui. Batas minimum keterbacaan (MIN_*) adalah usulan saya dari pengukuran sembilan frame kunci
@@ -11,25 +11,29 @@ from hero_check import bbox, contrast, iou, side_flags, CENTER_TOL  # noqa: F401
 
 FLOOR = R.FLOOR
 
-# identitas: bukan Gobyet
-GOBYET_COLOR_KEYS = {"fs", "fb", "fl", "ei", "cs", "cb", "cl", "ra", "rb", "ew", "mo"}          # bulu, telinga, wajah, mata, hidung, mulut Gobyet
-GOBYET_PARTS = {"face", "eye", "ear", "mouth", "brow", "skull", "neck", "helm_cap", "socket", "socket_glow"}
-ICHOR_KEYS = {"m1", "m2", "m3"}                                                                   # cairan monster (hijau asam): hanya di state victory
+# identitas: badan dan zirah bukan Gobyet; wajah monyet Gobyet (monkey.head asli) hanya boleh terlihat di balik topeng yang terbuka
+GOBYET_COLOR_KEYS = {"fs", "fb", "fl", "ei", "cs", "cb", "cl", "ra", "rb", "ew", "mo"}          # kunci Gobyet hero v1/v2 (tidak dipakai v3 sama sekali)
+GOBYET_PARTS = {"face", "eye", "ear", "mouth", "brow", "skull", "neck", "helm_cap", "socket", "socket_glow"}   # bagian kepala Gobyet hero v1/v2
+GOBYET_FACE_KEYS = set(R.GOBYET_FACE_KEYS)                                                        # bulu, wajah, mulut Gobyet di balik topeng
+FACE_PARTS = ("gobyet_face", "gobyet_eye")
+ICHOR_KEYS = {"m1", "m2", "m3"}                                                                   # darah monster (merah darah gelap): hanya di state victory
 
 FX_PARTS = {"dust", "chip", "burst", "smear", "block", "speed", "sweat", "breath", "spark", "roar", "steam", "ichor", "glint", "rock"}
-HEAD_PARTS = {"helm", "visor_plate", "visor", "grill", "brow_band", "cheek", "ear_disc", "chin", "cavity", "cavity_eye", "cavity_teeth", "sensor", "fin"}
-CAVITY_PARTS = ("cavity", "cavity_eye", "cavity_teeth")
+HEAD_PARTS = {"helm", "visor_plate", "visor", "grill", "brow_band", "cheek", "ear_disc", "chin", "cavity", "gobyet_face", "gobyet_eye", "sensor", "fin"}
+CAVITY_PARTS = ("cavity", "gobyet_face", "gobyet_eye")
+SHIELD_PARTS = ("pauldron_big", "horn_fin", "dragon_horn", "dragon_eye", "dragon_brow", "dragon_scale", "dragon_glow")
 
 # elemen asimetris yang harus tetap di sisinya: -1 kiri, +1 kanan, relatif titik tengah badan (acuan "badan") atau titik tengah helm (acuan "helm").
-# Pelindung bahu raksasa di kiri layar, bundar di kanan, ekor ke belakang; jambul menyapu ke belakang helm (saat lari badan condong ke depan,
+# Perisai naga (badan perisai) di kiri layar, bahu bundar di kanan, ekor ke belakang; jambul menyapu ke belakang helm (saat lari badan condong ke depan,
 # jadi jambul diukur terhadap helm, bukan terhadap badan).
-SIDED = (("pelindung_bahu_raksasa", ("pauldron_big",), -1, True, "badan"), ("pelindung_bahu_bundar", ("pauldron_small",), +1, True, "badan"),
+SIDED = (("perisai_naga", ("pauldron_big",), -1, True, "badan"), ("pelindung_bahu_bundar", ("pauldron_small",), +1, True, "badan"),
          ("jambul", ("crest",), -1, True, "helm"), ("ekor_panah", ("tail_arrow",), -1, False, "badan"))
 
 # batas keterbacaan frame kunci (piksel terlihat)
 MIN_HELM = (30, 28)          # lebar, tinggi helm
-MIN_EYES = 40                # visor (lengan salib) atau lensa rongga: piksel
-MIN_PAULDRON = 280
+MIN_EYES = 40                # visor (lengan salib) atau mata Gobyet di balik topeng: piksel
+MIN_PAULDRON = 280           # badan perisai naga (dulu pelindung bahu raksasa)
+MIN_SHIELD = 650             # seluruh perisai naga: badan, sayap, tanduk, mata, sisik
 MIN_WEAPON = 300
 MIN_GAUNTLET = 100
 MIN_CREST = 250
@@ -71,38 +75,55 @@ def head_height(cv):
 
 
 def eyes_visible(cv):
-    """(piksel visor, piksel lensa rongga, piksel rongga seluruhnya): mata terbaca bila salah satu dari dua yang pertama cukup banyak."""
-    return count(cv, ("visor",)), count(cv, ("cavity_eye",)), count(cv, CAVITY_PARTS)
+    """(piksel visor, piksel mata Gobyet, piksel isi topeng seluruhnya): mata terbaca bila salah satu dari dua yang pertama cukup banyak."""
+    return count(cv, ("visor",)), count(cv, ("gobyet_eye",)), count(cv, CAVITY_PARTS)
 
 
 def readability(cv):
     h = bbox(owners_of(cv, ("helm",)))
     vis, eye, _ = eyes_visible(cv)
-    return {"helm": (h[2], h[3]) if h else (0, 0), "mata": vis + eye, "bahu": count(cv, ("pauldron_big",)), "pedang": count(cv, ("weapon",)),
-            "kepalan": count(cv, ("gauntlet",)), "jambul": count(cv, ("crest",))}
+    return {"helm": (h[2], h[3]) if h else (0, 0), "mata": vis + eye, "bahu": count(cv, ("pauldron_big",)), "perisai": count(cv, SHIELD_PARTS),
+            "pedang": count(cv, ("weapon",)), "kepalan": count(cv, ("gauntlet",)), "jambul": count(cv, ("crest",)), "ekor": count(cv, ("tail_arrow",))}
 
 
 def readability_failures(r):
     f = []
     if r["helm"][0] < MIN_HELM[0] or r["helm"][1] < MIN_HELM[1]:
         f.append("helm %dx%d < %dx%d" % (r["helm"] + MIN_HELM))
-    for key, lo, label in (("mata", MIN_EYES, "visor/lensa"), ("bahu", MIN_PAULDRON, "pelindung bahu raksasa"), ("pedang", MIN_WEAPON, "pedang"),
+    for key, lo, label in (("mata", MIN_EYES, "visor/mata Gobyet"), ("bahu", MIN_PAULDRON, "badan perisai naga"), ("perisai", MIN_SHIELD, "perisai naga"),
+                           ("pedang", MIN_WEAPON, "pedang"),
                            ("kepalan", MIN_GAUNTLET, "kepalan"), ("jambul", MIN_CREST, "jambul")):
         if r[key] < lo:
             f.append("%s terlihat %d piksel < %d" % (label, r[key], lo))
     return f
 
 
-def identity_findings(cv):
-    """Daftar pelanggaran 'bukan Gobyet' pada satu frame: warna kunci Gobyet atau nama bagian Gobyet."""
+def identity_findings(cv, mask=None):
+    """Pelanggaran identitas pada satu frame: kunci atau bagian Gobyet hero v1/v2 di mana pun; warna wajah Gobyet di luar wajah di balik topeng;
+    wajah Gobyet terlihat padahal topeng tertutup (mask = 0)."""
     bad = []
     keys = set(cv.px.values()) & GOBYET_COLOR_KEYS
     if keys:
-        bad.append("warna Gobyet %s" % sorted(keys))
+        bad.append("warna Gobyet v1/v2 %s" % sorted(keys))
     parts = {o for o in cv.owner.values() if o} & GOBYET_PARTS
     if parts:
-        bad.append("bagian Gobyet %s" % sorted(parts))
+        bad.append("bagian Gobyet v1/v2 %s" % sorted(parts))
+    stray = sorted({c for k, c in cv.px.items() if c in GOBYET_FACE_KEYS and cv.owner.get(k) not in FACE_PARTS})
+    if stray:
+        bad.append("warna wajah Gobyet %s di luar wajah di balik topeng" % stray)
+    if mask is not None and mask <= 0 and count(cv, FACE_PARTS):
+        bad.append("wajah Gobyet terlihat padahal topeng tertutup")
     return bad
+
+
+def dark_edge_unlit(cv):
+    """Piksel tepi karakter (bukan efek) berwarna gelap yang masih bersebelahan langsung dengan piksel kosong: harus 0 bila tepi terang terpasang."""
+    out = 0
+    for (x, y), c in cv.px.items():
+        if c in R.RIM_DARK and cv.owner.get((x, y)) not in R.RIM_SKIP:
+            if any((x + dx, y + dy) not in cv.px and 0 <= x + dx < cv.w and 0 <= y + dy < R.FLOOR for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1))):
+                out += 1
+    return out
 
 
 def mirrored(cv, center):
@@ -137,15 +158,17 @@ def victory_series(cvs, poses):
     for cv, p in zip(cvs, poses):
         w = [y for (x, y), o in cv.owner.items() if o == "weapon"]
         c = Counter(cv.owner.values())
-        out.append({"rongga": sum(c[k] for k in CAVITY_PARTS), "noda": c["ichor"], "batu": c["rock"], "pedang_atas": min(w) if w else None,
+        out.append({"rongga": sum(c[k] for k in CAVITY_PARTS), "wajah": c["gobyet_face"] + c["gobyet_eye"], "mata_gobyet": c["gobyet_eye"], "noda": c["ichor"], "batu": c["rock"], "pedang_atas": min(w) if w else None,
                     "pedang_bawah": max(w) if w else None, "sudut": p["ang"], "debu": c["dust"] > 0, "kilau": c["glint"] > 0,
                     "kaki_di_batu": foot_on_rock(cv), "tangan_di_pedang": hand_on_blade(cv)})
     return out
 
 
 MIN_ROCK = 80                 # batu terlihat di setiap frame victory
-MIN_CAVITY_PEAK = 250         # rongga topeng saat terbuka penuh
-MIN_STAIN = 150               # noda cairan monster di awal
+MIN_CAVITY_PEAK = 250         # isi topeng saat terbuka penuh
+MIN_FACE_PEAK = 200           # wajah Gobyet (bulu, wajah, mata) saat topeng terbuka penuh
+MIN_FACE_EYES = 12            # mata Gobyet saat topeng terbuka penuh
+MIN_STAIN = 150               # noda darah monster di awal
 MIN_FOOT_CONTACT = 6          # piksel sepatu terangkat yang menapak batu
 
 
@@ -166,7 +189,11 @@ def victory_findings(cvs, poses):
         peak = cav.index(max(cav))
         info["topeng"] = (opened[0], peak, opened[-1], max(cav))
         if max(cav) < MIN_CAVITY_PEAK:
-            bad.append("rongga topeng terbuka penuh hanya %d piksel < %d" % (max(cav), MIN_CAVITY_PEAK))
+            bad.append("isi topeng terbuka penuh hanya %d piksel < %d" % (max(cav), MIN_CAVITY_PEAK))
+        info["wajah"] = (s[peak]["wajah"], s[peak]["mata_gobyet"])
+        if s[peak]["wajah"] < MIN_FACE_PEAK or s[peak]["mata_gobyet"] < MIN_FACE_EYES:
+            bad.append("wajah Gobyet di puncak bukaan f%d: %d piksel (mata %d) < %d (mata %d)" % (peak, s[peak]["wajah"], s[peak]["mata_gobyet"], MIN_FACE_PEAK,
+                                                                                               MIN_FACE_EYES))
         if not (opened[0] < peak < opened[-1]):
             bad.append("topeng harus membuka lalu menutup (awal buka f%d, puncak f%d, tutup f%d)" % (opened[0], peak, opened[-1]))
         if any(cav[i] > cav[i + 1] for i in range(opened[0], peak)) or any(cav[i] < cav[i + 1] for i in range(peak, opened[-1])):
@@ -190,7 +217,7 @@ def victory_findings(cvs, poses):
     stain = [x["noda"] for x in s]
     info["noda"] = stain
     if stain[0] < MIN_STAIN:
-        bad.append("noda cairan monster di awal hanya %d piksel < %d" % (stain[0], MIN_STAIN))
+        bad.append("noda darah monster di awal hanya %d piksel < %d" % (stain[0], MIN_STAIN))
     if stain[-1] != 0:
         bad.append("noda belum hilang di frame akhir (%d piksel)" % stain[-1])
     if stab is not None:

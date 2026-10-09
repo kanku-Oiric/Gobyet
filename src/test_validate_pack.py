@@ -258,7 +258,7 @@ class HeroMeasure(unittest.TestCase):
                 self.assertFalse([k for k in cv.px if k[1] >= self.R.FLOOR], (t.name, i))
                 xs, ys = [x for x, _ in cv.px], [y for _, y in cv.px]
                 self.assertTrue(min(xs) >= 1 and max(xs) <= 126 and min(ys) >= 1, (t.name, i, min(xs), max(xs), min(ys)))
-        self.assertLessEqual(used, set(monkey.PAL_HERO))
+        self.assertLessEqual(used, set(monkey.PAL_HERO) | set(self.R.GOBYET_FACE_KEYS))   # wajah Gobyet di balik topeng memakai kunci PAL asli
         self.assertLessEqual(len(used), vp.HERO_MAX_COLORS)
 
     def test_every_keyframe_passes_readability(self):
@@ -267,20 +267,50 @@ class HeroMeasure(unittest.TestCase):
             self.assertEqual(self.hc.readability_failures(r), [], (state, r))
 
     def test_readability_failures_each_limit(self):
-        ok = {"helm": (34, 31), "mata": 86, "bahu": 419, "pedang": 836, "kepalan": 176, "jambul": 422}
+        ok = {"helm": (34, 31), "mata": 86, "bahu": 723, "perisai": 1280, "pedang": 836, "kepalan": 176, "jambul": 410}
         self.assertEqual(self.hc.readability_failures(ok), [])
-        for key, bad in (("helm", (28, 31)), ("helm", (34, 20)), ("mata", 10), ("bahu", 100), ("pedang", 50), ("kepalan", 20), ("jambul", 40)):
+        for key, bad in (("helm", (28, 31)), ("helm", (34, 20)), ("mata", 10), ("bahu", 100), ("perisai", 300), ("pedang", 50), ("kepalan", 20),
+                         ("jambul", 40)):
             self.assertTrue(self.hc.readability_failures(dict(ok, **{key: bad})), (key, bad))
 
     def test_identity_check_flags_gobyet_colors_and_parts(self):
         clean = self.R.render_pose(self.R.pose_idle())
-        self.assertEqual(self.hc.identity_findings(clean), [])
+        self.assertEqual(self.hc.identity_findings(clean, 0.0), [])
         cv = self.hero.PartCanvas()
         self.hero.part(cv, "face")
         cv.put(10, 10, "cb")
         found = self.hc.identity_findings(cv)
         self.assertEqual(len(found), 2, found)
-        self.assertTrue(any("warna Gobyet" in f for f in found) and any("bagian Gobyet" in f for f in found))
+        self.assertTrue(any("warna Gobyet v1/v2" in f for f in found) and any("bagian Gobyet v1/v2" in f for f in found))
+
+    def test_identity_check_allows_gobyet_face_only_behind_an_open_mask(self):
+        t = self.hs.TRACKS["victory"]
+        peak = t.frame(3)
+        self.assertEqual(self.hc.identity_findings(peak, t.pose(3)["mask"]), [])
+        self.assertGreater(self.hc.count(peak, self.hc.FACE_PARTS), 0)
+        self.assertTrue(self.hc.identity_findings(peak, 0.0))                       # wajah terlihat padahal topeng dinyatakan tertutup
+        cv = self.hero.PartCanvas()
+        self.hero.part(cv, "pauldron_big")
+        cv.put(10, 10, "B")                                                         # bulu Gobyet di zirah
+        self.assertTrue(any("di luar wajah" in f for f in self.hc.identity_findings(cv)))
+
+    def test_every_dark_edge_has_a_light_edge(self):
+        for state, t in self.hs.TRACKS.items():
+            for i in range(t.n):
+                self.assertEqual(self.hc.dark_edge_unlit(t.frame(i)), 0, (state, i))
+        cv = self.R.render_pose(self.R.pose_idle())
+        rim = [k for k, o in cv.owner.items() if o == "rim" and k in cv.px]
+        for k in rim[:40]:                                                          # tanpa tepi terang: tepi gelap terbuka lagi
+            del cv.px[k]
+        self.assertGreater(self.hc.dark_edge_unlit(cv), 0)
+
+    def test_attack_tail_is_medium(self):
+        ref = self.hc.count(self.hs.TRACKS["idle"].frame(0), ("tail_arrow",))
+        lo, hi = vp.HERO_TAIL_MEDIUM
+        for state in vp.HERO_ATTACKS:
+            t = self.hs.TRACKS[state]
+            k = self.hc.count(t.frame(t.keyframe), ("tail_arrow",))
+            self.assertTrue(lo * ref <= k <= hi * ref, (state, k, ref))
 
     def test_head_height_is_stable_within_a_state(self):
         for state, t in self.hs.TRACKS.items():
@@ -367,7 +397,7 @@ class HeroFindings(unittest.TestCase):
     def test_monster_fluid_outside_victory_is_rejected(self):
         t, sheet, cell = self.build("victory")
         bad, _ = vp.hero_findings("idle", t, sheet, dict(cell))
-        self.assertTrue(any("cairan monster" in b for b in bad), bad)
+        self.assertTrue(any("darah monster" in b for b in bad), bad)
 
     def test_manifest_keyframes_match_the_code(self):
         import pack
@@ -403,7 +433,7 @@ class HeroSides(unittest.TestCase):
             t = self.hs.TRACKS[state]
             cv, tc = t.frame(i), self.R.geometry(t.pose(i))["tcx"]
             got = self.flagged([self.hc.mirrored(cv, tc)], [tc])
-            for name in ("pelindung_bahu_raksasa", "pelindung_bahu_bundar", "jambul"):
+            for name in ("perisai_naga", "pelindung_bahu_bundar", "jambul"):
                 self.assertEqual(got.get(name), [0], (state, i, name))
 
     def test_second_half_flip_is_caught(self):
@@ -412,7 +442,7 @@ class HeroSides(unittest.TestCase):
         cs = [self.R.geometry(t.pose(i))["tcx"] for i in range(t.n)]
         flipped = [self.hc.mirrored(cv, c) if i >= 6 else cv for i, (cv, c) in enumerate(zip(cvs, cs))]
         got = self.flagged(flipped, cs)
-        self.assertEqual(got["pelindung_bahu_raksasa"], [6, 7, 8, 9, 10, 11])
+        self.assertEqual(got["perisai_naga"], [6, 7, 8, 9, 10, 11])
 
     def test_every_hero_frame_keeps_its_side_and_big_elements_stay_visible(self):
         for state, t in self.hs.TRACKS.items():

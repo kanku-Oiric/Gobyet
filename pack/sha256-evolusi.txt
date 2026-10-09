@@ -1,0 +1,17 @@
+72d115a441d3c9b425ba4c2b3df963a84fbe055a8bce67f7e05fdc6836d96ee1  pack/evolusi/v1/berserker-hero-attack-leap.gif
+b9f22dda074b84c6bc520fc2ebf5a9ba623911e75ae84cf60d6e2c7f503e077b  pack/evolusi/v1/berserker-hero-attack-smash.gif
+2764ae4bf73d9e63bb85b7da7ca1a10b561759a3194ad3648b71b4536292e7c8  pack/evolusi/v1/berserker-hero-defeated.gif
+233eace495e05c6798823a66bc3ce9c96108c72ce5324950485ff27f59622645  pack/evolusi/v1/berserker-hero-exhaustion.gif
+a9304405d2bc89102ca26e4a6842df5f233bb7fbd3da0b5c3519e225220fb112  pack/evolusi/v1/berserker-hero-idle.gif
+5faf6218b340d06fcdaaafaa718a066760a07beba814d55166004aac5b300f3f  pack/evolusi/v1/berserker-hero-miss.gif
+1aa26e6984e1a86912963f4e56b1ca4dcad9000f02011718e051d56a3cd52a91  pack/evolusi/v1/berserker-hero-rage.gif
+a58a1eeff7beeee1bf43753404a5c098f7c9d91704ab357f6910710db1cdd84a  pack/evolusi/v1/berserker-hero-run.gif
+79cc613d5dd6e33bf52378e9000ccf928612b04b671abd75f7ab56782b8df346  pack/evolusi/v1/berserker-hero-v1-attack-smash.png
+dbb0b1b95861f74334b11f3de29701d25a36e30e69eac36f765b0a5eec14efb6  pack/evolusi/v1/berserker-hero-v1-idle.png
+6bacf927208d59094edf6b383e4deaefc025cbd3c641cba851a1435c3bff2281  pack/evolusi/v1/berserker-hero-v1-run.png
+f7facc81726465ae291be79d552e41063cff9da524836eb7d684d4d8e7962675  pack/evolusi/v2/berserker-hero-v2-attack-smash.png
+77f0d7f3cc6b3869631c9878018167fecef84c584bfb74afb90866b7b9224ddb  pack/evolusi/v2/berserker-hero-v2-idle.png
+bac64f67a37b38f6ee1652fd12e0db0afb7e6aa6f8c2230d3084fc2eacc3344b  pack/evolusi/v2/berserker-hero-v2-run.png
+a767ecf0148f002cb1ea4d9a0e13c180146f83d761f940e58c9d9c5c60dacaae  pack/evolusi/v3/berserker-hero-v3-attack-smash.png
+7d657e12b2402aeba3bafcdfa7dc42d4b96fe0eaf607044186c7929baa736b2d  pack/evolusi/v3/berserker-hero-v3-idle.png
+7657f1ee02f97378441c3a03bc4f50e828877752996db33c8643408bf5bc5319  pack/evolusi/v3/berserker-hero-v3-run.png

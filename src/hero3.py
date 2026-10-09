@@ -1,15 +1,18 @@
 """Berserker Hero v3 (kostum `berserker-hero`, kanvas 128x96): rombak dari awal atas arahan pemilik.
 
 Arah (dari pemilik; gambar referensi tidak disimpan di repo):
-  - model badan mengikuti referensi pertama: prajurit mesin chibi, helm dan jambul sangat besar tanpa leher, satu pelindung bahu raksasa
-    dengan sirip tanduk dan panel "wajah" kecil, bahu satunya bundar, perut berpola sisik heksagonal, sepatu pendek bercakar, ekor kipas
-    panah melengkung di belakang;
-  - BASIS BUKAN GOBYET: tidak ada kepala, wajah, telinga, atau bulu Gobyet. Kepala adalah helm penuh bermata cahaya;
+  - model badan mengikuti referensi pertama: prajurit mesin chibi, helm dan jambul sangat besar tanpa leher, perut berpola sisik heksagonal,
+    sepatu pendek bercakar, ekor kipas panah melengkung di belakang, bahu bundar di sisi senjata;
+  - basis zirah bukan Gobyet: helm penuh bermata cahaya. Wajah monyet Gobyet (monkey.head asli) hanya terlihat di balik topeng yang dibuka
+    (keputusan pemilik setelah fase animasi: "dalamnya wajah monyet Gobyet");
   - kepala referensi pertama dipertahankan (jambul menyapu ke belakang, pita V di atas wajah, sirip samping, rahang bergrill) tetapi
     coraknya mengikuti referensi kedua: besi hitam, garis merah darah, salib merah menyala di visor;
   - zirah dan senjata mengikuti referensi kedua: pelat hitam bergaris merah, pedang hitam raksasa berinti api merah;
+  - perisai naga di bahu kiri (menggantikan pelindung bahu raksasa): bentuk dari gambar perisai pemilik (ujung tombak, sayap mengembang,
+    permata tengah, meruncing ke bawah), dibuat semirip mungkin dengan naga, warna disesuaikan karakter, diperbesar atas permintaan pemilik;
+  - tepi terang 1 px di sekeliling tepi gelap (keputusan pemilik: halo di preview dan tepi terang di aset);
   - sedikit modern: strip cahaya, panel rapi, ventilasi, baut; kesan mekanis tetap.
-Bentuk dan nada warna turunan, bukan salinan piksel. "Merah darah" hanya warna dan corak: tidak ada darah, luka, atau kematian brutal.
+Bentuk dan nada warna turunan, bukan salinan piksel. Darah monster (merah darah gelap) hanya ada di state victory.
 
 Rig: bentuk besar digambar dari poligon bernada tiga (`solid3`, cahaya kiri atas), detail kecil dari piksel eksplisit. `PartCanvas` mencatat
 pemilik tiap piksel supaya bagian yang terlihat dapat diukur. Emosi dibawa oleh visor (lengan salib), alis V, dan grill mulut.
@@ -150,7 +153,7 @@ EYE_STYLES = {
     "look": (0.0, 3, 2, 8), "angry": (-3.0, 3, 2, 8), "rage": (-4.0, 4, 2, 9), "wide": (0.0, 4, 2, 8), "dim": (1.5, 2, 0, 7),
     "tired": (2.5, 2, 0, 6), "shut": (0.0, 1, 0, 7), "glare": (-2.0, 2, 2, 9),
 }
-MASK_MAX_SHIFT = 8                    # geser maksimum tiap pintu topeng (piksel)
+MASK_MAX_SHIFT = 10                   # geser maksimum tiap pintu topeng (piksel)
 
 
 def _mirror(hx, col):
@@ -251,55 +254,42 @@ def face_closed(cv, hx, hy, eyes, mouth, plate):
     grill(cv, hx, hy, mouth)
 
 
-def cavity(cv, hx, hy, g, plate, eyes="look"):
-    """Rongga di balik topeng yang terbuka selebar 2g piksel: tungku merah gelap, dua lensa mata menyala, celah hidung, deretan gigi baja bercelah api.
-    Wajah mesin, bukan wajah Gobyet atau manusia."""
+GOBYET_FACE_DY = 6                    # pusat kepala Gobyet di balik topeng, di bawah pusat helm (piksel)
+GOBYET_FACE_KEYS = ("B", "b", "F", "f", "M")                         # bulu, wajah krem, hidung dan mulut Gobyet (kunci PAL asli)
+GOBYET_REMAP = {"K": "n0", "P": "n0", "W": "wh", "E": "b", "T": "q2"}   # garis tepi, pupil, putih mata, dalam telinga, lidah: warna hero yang sudah ada
+GOBYET_EXPR = {   # ekspresi visor hero -> (mata, alis) monkey.head
+    "look": ("look", "flat"), "angry": ("angry", "angry"), "rage": ("angry", "angry"), "glare": ("angry", "angry"), "wide": ("wide", "up"),
+    "dim": ("relief", "worried"), "tired": ("relief", "worried"), "shut": ("blink", "flat"), "x": ("blink", "worried"),
+}
+
+
+def cavity(cv, hx, hy, g, plate, eyes="look", mouth="closed", face=None):
+    """Di balik topeng yang terbuka selebar 2g piksel: wajah monyet Gobyet (monkey.head asli, skala 1) di dalam ruang helm yang gelap.
+    Hanya warna bulu, wajah, dan mulut Gobyet yang ditambahkan; garis tepi, pupil, dan putih mata memakai warna hero.
+    face = (mata, alis, mulut) monkey.head; bawaan diturunkan dari ekspresi visor."""
     inside = {(x, y) for (x, y) in plate if hx - g <= x < hx + g}
     part(cv, "cavity")
     for (x, y) in inside:
-        cv.put(x, y, "q0" if y < hy + 6 else "q1")
-    for (x, y) in inside:                                      # dinding dalam: satu kolom gelap di tiap sisi
+        cv.put(x, y, OUT)
+    if face is None:
+        e, b = GOBYET_EXPR.get(eyes, ("look", "flat"))
+        face = (e, b, "shout" if mouth == "shout" else "smirk")
+    tmp = monkey.Canvas(cv.w, cv.h)
+    monkey.head(tmp, hx, hy + GOBYET_FACE_DY, face[0], face[1], face[2])
+    for (x, y), c in tmp.px.items():
+        if (x, y) in inside:
+            part(cv, "gobyet_eye" if c in ("W", "P") else "gobyet_face")
+            cv.put(x, y, GOBYET_REMAP.get(c, c))
+    part(cv, "cavity")
+    for (x, y) in inside:                                      # dinding dalam pintu: satu kolom bayangan di tiap sisi
         if x in (hx - g, hx + g - 1):
             cv.put(x, y, OUT)
-    if g <= 3:                                                 # celah sempit: hanya cahaya yang bocor di tengah
-        part(cv, "cavity_eye")
-        for (x, y) in inside:
-            if hx - 1 <= x <= hx and hy - 2 <= y <= hy + 9:
-                cv.put(x, y, "q4" if hy <= y <= hy + 2 else "q3")
-        return
-    part(cv, "cavity_eye")
-    tilt = 1 if eyes in ("angry", "rage", "glare") else 0
-    for s in (-1, 1):
-        for i in range(0, 4):
-            x = hx + 1 + i if s > 0 else _mirror(hx, hx + 1 + i)
-            if (x, hy) not in inside:
-                continue
-            ytop = hy + (tilt if i < 1 else 0)
-            for dy in range(0, 2):
-                cv.put(x, ytop + dy, "q4" if dy == 0 else "q3")
-            cv.put(x, ytop + 2, "q2")
-        xx = hx + 2 if s > 0 else _mirror(hx, hx + 2)
-        if (xx, hy) in inside:
-            cv.put(xx, hy, "wh")
-    part(cv, "cavity")
-    for (x, y) in inside:                                      # celah hidung
-        if hx - 1 <= x <= hx and hy + 3 <= y <= hy + 6:
-            cv.put(x, y, "q0")
-    part(cv, "cavity_teeth")
-    for (x, y) in inside:                                      # gigi baja: pelat tegak lebar 2 px selang-seling dengan celah api
-        if not hy + 8 <= y <= hy + 12:
-            continue
-        tooth = ((x - hx + 16) // 2) % 2 == 0
-        if tooth:
-            cv.put(x, y, "n4" if y == hy + 8 else ("n3" if y < hy + 12 else "n2"))
-        else:
-            cv.put(x, y, "q3" if y <= hy + 10 else "q1")
 
 
-def helm3(cv, hx, hy, eyes="look", mouth="closed", sway=0.0, mask=0.0):
+def helm3(cv, hx, hy, eyes="look", mouth="closed", sway=0.0, mask=0.0, face=None):
     """Helm penuh: kubah gelap bertepi V di atas wajah, garis V merah (alis), visor salib menyala di pelat wajah gelap, sayap pipi,
     cakram telinga mekanis, rahang meruncing dengan grill. mask 0..1: pelat wajah terbelah dua dan tiap pintu meluncur ke samping masuk ke sisi helm,
-    membuka rongga mesin berlensa merah (0 = tertutup, 1 = terbuka penuh)."""
+    memperlihatkan wajah monyet Gobyet di dalamnya (0 = tertutup, 1 = terbuka penuh)."""
     shell = poly(tr([(-6, -15), (6, -15), (11.5, -14), (15.5, -10), (17, -4), (16.5, 3), (13, 9), (9, 13.5), (5.5, 16), (-5.5, 16), (-9, 13.5),
                      (-13, 9), (-16.5, 3), (-17, -4), (-15.5, -10), (-11.5, -14)], hx, hy))
     wing_r = poly(tr([(15, -11), (21, -15), (26, -13), (22, -8), (25, -3), (18, -2), (15, -4)], hx, hy))
@@ -313,7 +303,7 @@ def helm3(cv, hx, hy, eyes="look", mouth="closed", sway=0.0, mask=0.0):
     else:
         tmp = PartCanvas()
         face_closed(tmp, hx, hy, eyes, mouth, plate)
-        cavity(cv, hx, hy, g, plate, eyes)
+        cavity(cv, hx, hy, g, plate, eyes, mouth, face)
         for (x, y), c in tmp.px.items():                      # pintu kiri (x < hx) bergeser ke kiri, pintu kanan ke kanan; yang keluar pelat tersembunyi di sisi helm
             nx = x - g if x < hx else x + g
             if (nx, y) in plate:
@@ -424,44 +414,106 @@ def hip_plates(cv, tcx, by):
 
 
 # ================================================================== pelindung bahu
+SHIELD_KX, SHIELD_KY, SHIELD_BW = 1.3, 1.1, 10.0      # skala perisai (lebar, tinggi) dan setengah lebar badan perisai dalam satuan rancangan
+SHIELD_AX = -10                                        # sumbu perisai relatif sendi bahu kiri (batas kolom sx-11 | sx-10)
+SHIELD_WRIST = (-7.0, -13.0)                           # pergelangan sayap (satuan rancangan, sisi kiri sumbu)
+SHIELD_TIPS = ((-16.5, -31.0), (-17.0, -15.0), (-14.0, -2.0))   # ujung tiga jari tulang sayap
+SHIELD_WING = ((-6, -18), (-10, -24), SHIELD_TIPS[0], (-13, -21), (-14.5, -19), SHIELD_TIPS[1], (-13.5, -10), (-12.5, -8), SHIELD_TIPS[2], (-10, -3),
+               (-8, 0), (-6, 2))
+SHIELD_BODY = ((0, -32), (-2, -26), (-3, -20), (-0.75 * SHIELD_BW, -15), (-SHIELD_BW, -7), (-SHIELD_BW, 3), (-0.88 * SHIELD_BW, 10),
+               (-0.62 * SHIELD_BW, 17), (-2.5, 23), (0, 27))   # separuh kiri badan perisai, dari ujung tombak ke ujung bawah
+
+
 def pauldron_big(cv, sx, sy):
-    """Pelindung bahu raksasa (sisi kiri layar): cangkang bersudut, dua sirip tanduk tinggi, panel wajah mesin kecil (dua jendela mata merah),
-    cincin berinti merah, tiga cakar merah di bawah."""
-    fin1 = poly([(sx - 24, sy - 9), (sx - 29, sy - 29), (sx - 13, sy - 10)])
-    fin2 = poly([(sx - 16, sy - 10), (sx - 9, sy - 35), (sx - 1, sy - 11)])
-    solid3(cv, fin1, IRON, OUT, depth=1, name="horn_fin")
-    solid3(cv, fin2, IRON, OUT, depth=1, name="horn_fin")
-    part(cv, "horn_fin")
-    cv.fill({(int(sx - 9), int(sy - 29 + i)) for i in range(0, 14)}, "q2")
-    cv.fill({(int(sx - 26), int(sy - 22 + i)) for i in range(0, 8)}, "q2")
-    shell = poly([(sx - 26, sy - 10), (sx - 3, sy - 12), (sx + 1, sy - 5), (sx + 1, sy + 7), (sx - 4, sy + 14), (sx - 22, sy + 14), (sx - 27, sy + 6)])
-    body = solid3(cv, shell, IRON, OUT, depth=2, name="pauldron_big")
+    """Perisai naga di bahu kiri (menggantikan pelindung bahu raksasa; bentuk dari gambar perisai pemilik, dibuat mirip naga, warna karakter):
+    badan perisai tinggi dengan ujung tombak di atas dan meruncing di bawah, dua tanduk, satu mata naga bercelah sebagai permata, alis dan chevron
+    merah, sisik di bagian bawah dengan tepi merah menyala, serta dua sayap naga (tiga jari tulang, selaput merah gelap bergerigi) yang
+    mengembang ke samping-atas. Simetris terhadap sumbunya; sayap kanan sebagian tertutup helm."""
+    sx, sy = int(round(sx)), int(round(sy))
+    ax = sx + SHIELD_AX
+    kx, ky = SHIELD_KX, SHIELD_KY
+
+    def P(u, v):
+        return (ax + u * kx, sy + v * ky)
+
+    def col(c):
+        return 2 * ax - 1 - c
+
+    def sym(pts, c):
+        for (x, y) in pts:
+            cv.put(int(x), int(y), c)
+            cv.put(col(int(x)), int(y), c)
+
+    # sayap naga
+    for s in (1, -1):
+        f = (lambda p, s=s: (p[0] * s, p[1]))
+        m = solid3(cv, poly([P(*f(p)) for p in SHIELD_WING]), RED, OUT, depth=1, name="horn_fin")
+        part(cv, "horn_fin")
+        wr = f(SHIELD_WRIST)
+        for tip in SHIELD_TIPS:
+            tp = f(tip)
+            n = int(max(abs(tp[0] - wr[0]) * kx, abs(tp[1] - wr[1]) * ky)) + 1
+            for i in range(0, n + 1):
+                t = i / float(n)
+                x, y = P(wr[0] + (tp[0] - wr[0]) * t, wr[1] + (tp[1] - wr[1]) * t)
+                x, y = int(x), int(y)
+                if (x, y) in m:
+                    cv.put(x, y, "n3")
+                    if (x, y + 1) in m:
+                        cv.put(x, y + 1, "n1")
+    # dua tanduk di kiri-kanan ujung tombak
+    for s in (1, -1):
+        h = blade_poly(P(-1 * s, -24), P(-6 * s, -28), P(-6 * s, -37), 5.5 * kx * 0.8, taper=0.8)
+        solid3(cv, h, STEELL, OUT, depth=1, name="dragon_horn")
+    # badan perisai
+    left = SHIELD_BODY
+    body = solid3(cv, poly([P(*p) for p in left] + [P(-u, v) for (u, v) in reversed(left)]), IRON, OUT, depth=2, name="pauldron_big")
     part(cv, "pauldron_big")
-    cv.fill(edge(body), "q1")
-    # panel wajah mesin: bingkai, dua mata merah persegi, mulut
-    face = rect(int(sx - 24), int(sy - 5), 12, 9)
-    solid3(cv, face, STEELL, OUT, depth=1, name="face_panel")
-    part(cv, "face_panel")
-    for ex in (sx - 22, sx - 17):
-        cv.fill(rect(int(ex), int(sy - 3), 3, 3), "q3")
-        cv.put(int(ex) + 1, int(sy - 2), "wh")
-    cv.fill(hline(int(sx - 22), int(sx - 16), int(sy + 1)), OUT)
-    ring = ellipse(sx - 6, sy + 3, 4.6, 4.6)
-    solid3(cv, ring, STEELL, OUT, depth=1, name="ring")
-    part(cv, "ring")
-    cv.fill(ellipse(sx - 6, sy + 3, 2.0, 2.0), "q2")
-    cv.put(int(sx - 7), int(sy + 2), "q4")
-    cv.fill({(x, int(sy + 9)) for (x, y) in body if y == int(sy + 9)}, OUT)
-    bolts(cv, [(sx - 25, sy - 8), (sx - 5, sy - 9), (sx - 23, sy + 11), (sx - 4, sy + 11)])
-    for bx in (-20, -13, -7):
-        sp = poly([(sx + bx - 2.5, sy + 14), (sx + bx + 2.5, sy + 14), (sx + bx, sy + 21)])
-        solid3(cv, sp, REDB, ROUT, depth=1, name="claw")
+    for y in range(int(sy - 31 * ky), int(sy + 4 * ky)):          # tulang punggung merah di sumbu
+        if (ax - 1, y) in body:
+            sym([(ax - 1, y)], "q1")
+    rim = edge(body)
+    part(cv, "dragon_scale")                                       # sisik: baris lengkung selang-seling di bagian bawah
+    for row, y in enumerate(range(int(sy + 4 * ky), int(sy + 24 * ky), 3)):
+        off = 2 if row % 2 else 0
+        for x in range(ax - 14 + off, ax + 14, 4):
+            for i in range(4):
+                xx = x + i
+                if (xx, y) in body and (xx, y + 2) in body and (xx, y) not in rim and (xx, y + 2) not in rim:
+                    cv.put(xx, y, "n3" if i in (1, 2) else "n2")
+                    if i in (0, 3):
+                        cv.put(xx, y + 2, "n0")
+    # mata naga: permata merah menyala dengan pupil celah tegak
+    part(cv, "dragon_eye")
+    eh = int(round(5 * ky))
+    ey0 = int(round(sy - 19 * ky))
+    for r in range(2 * eh + 1):
+        t = abs(r - eh) / float(eh)
+        w = max(1, int(round(3.4 * kx * (1 - t ** 1.6))))
+        for i in range(w):
+            sym([(ax - 1 - i, ey0 + r)], "q3" if i == w - 1 else "q4")
+    sym([(ax - 1, ey0 + r) for r in range(2, 2 * eh - 1)], "n0")
+    sym([(ax - 2, ey0 + 2)], "wh")
+    # alis di atas mata, chevron di bawahnya, tepi bawah merah menyala
+    part(cv, "dragon_brow")
+    n = int(6 * kx)
+    for i in range(n):
+        sym([(ax - 2 - n + i, ey0 - 2 + int(i * 0.5))], "q2")
+    n = int(5 * kx)
+    for i in range(n):
+        sym([(ax - 1 - n + i, int(sy - 3 * ky) + i)], "q3")
+    part(cv, "dragon_glow")
+    for (x, y) in rim:
+        if y > sy + 7 * ky:
+            cv.put(x, y, "q2")
+    b = (ax - int(9 * kx), int(sy - 13 * ky))
+    bolts(cv, [b, (col(b[0]), b[1])])
 
 
 def pauldron_small(cv, sx, sy):
     """Pelindung bahu sisi senjata: cakram bundar berlapis cincin dengan paku kecil di atas."""
     sp = poly([(sx - 1.5, sy - 8.5), (sx + 2, sy - 15), (sx + 5, sy - 8.5)])
-    solid3(cv, sp, IRON, OUT, depth=1, name="horn_fin")
+    solid3(cv, sp, IRON, OUT, depth=1, name="shoulder_spike")
     m = ellipse(sx + 2, sy + 1, 8.8, 9.6)
     body = solid3(cv, m, IRON, OUT, depth=2, name="pauldron_small")
     part(cv, "pauldron_small")
@@ -543,11 +595,11 @@ def tail_fan(cv, center, phase=0.0, rot=0.0, k=1.0):
 BLADE_START, BLADE_LEN, BLADE_HW = 8.0, 40.0, 9.5
 
 
-STAIN_BLOBS = ((13.5, -3.5, 4.0), (20.0, 3.5, 4.4), (25.0, -2.0, 3.4), (11.5, 6.0, 2.0), (23.0, 6.5, 2.0), (17.0, -7.0, 2.0))   # (u, v, jari-jari) noda cairan monster
+STAIN_BLOBS = ((13.5, -3.5, 4.0), (20.0, 3.5, 4.4), (25.0, -2.0, 3.4), (11.5, 6.0, 2.0), (23.0, 6.5, 2.0), (17.0, -7.0, 2.0))   # (u, v, jari-jari) noda darah monster
 
 
 def stain_color(u, v, stain_u):
-    """Warna noda cairan monster (hijau asam) di titik (u, v) bilah, atau None. Noda hanya ada untuk u >= stain_u: sapuan tangan dari pelindung ke
+    """Warna noda darah monster (merah darah gelap) di titik (u, v) bilah, atau None. Noda hanya ada untuk u >= stain_u: sapuan tangan dari pelindung ke
     ujung menghapus noda di belakangnya dan mendorong olesan tipis di depannya."""
     if stain_u is None:
         return None
@@ -643,7 +695,7 @@ def pose(**kw):
     p = dict(cx=64, lean=0.0, crouch=0.0, dy=0.0, hdx=0.0, hdy=0.0,
              fl=(-9.0, 0.0), fr=(9.0, 0.0),
              grip=None, ang=0.0, sword_layer="front", lh_u=-6.5, lh=None, rh=None, glow=1,
-             eyes="look", mouth="closed", sway=0.0, tail_phase=0.0, tail_rot=0.0, tail_k=1.0, twist=0.0, fx=(), mask=0.0, stain_u=None, heat=0, flare=0.0,
+             eyes="look", mouth="closed", sway=0.0, tail_phase=0.0, tail_rot=0.0, tail_k=1.0, tail_dx=0.0, tail_dy=0.0, twist=0.0, fx=(), mask=0.0, face=None, stain_u=None, heat=0, flare=0.0,
              props=(), legs_front=False, toe_l=1, toe_r=1)
     p.update(kw)
     return p
@@ -690,12 +742,12 @@ def geometry(p):
 
 def draw_hero(cv, p):
     """Urutan: ekor, pedang (bila di belakang), kaki, dada, perut, pelat pinggul, kerah, jambul, pelindung bahu raksasa, lengan,
-    pedang (di depan), sarung tangan, helm, efek, rim light."""
+    pedang (di depan), sarung tangan, helm, efek, tepi terang, rim light."""
     g = geometry(p)
     tcx, tcy = g["tcx"], g["tcy"]
     for prop in p["props"]:
         prop(cv)
-    tail_fan(cv, (g["sh_l"][0] - 8.0, g["sh_l"][1] + 4.0), p["tail_phase"], p["tail_rot"], p["tail_k"])
+    tail_fan(cv, (g["sh_l"][0] - 8.0 + p["tail_dx"], g["sh_l"][1] + 4.0 + p["tail_dy"]), p["tail_phase"], p["tail_rot"], p["tail_k"])
     if g["sword"] and p["sword_layer"] == "back":
         sword3(cv, g["sword"], p["glow"], p["stain_u"])
     if not p["legs_front"]:
@@ -727,17 +779,40 @@ def draw_hero(cv, p):
         sword3(cv, g["sword"], p["glow"], p["stain_u"])
     for side, sh, elbow, hand in arms:
         gauntlet(cv, hand[0], hand[1])
-    helm3(cv, ihx, ihy, p["eyes"], p["mouth"], p["sway"], p["mask"])
+    helm3(cv, ihx, ihy, p["eyes"], p["mouth"], p["sway"], p["mask"], p["face"])
     if p["heat"]:
         heat_pass(cv, p["heat"])
     for f in p["fx"]:
         f(cv, g)
+    edge_light(cv)
     rim_pass3(cv)
     return g
 
 
+RIM_COLOR = "n4"                                                   # tepi terang memakai baja terang yang sudah ada (palet tidak bertambah)
+RIM_DARK = {"n0", "n1", "n2", "q0", "q1"}                          # warna yang menyatu dengan latar gelap (kontras < 1,4:1 terhadap #181c2c)
+RIM_SKIP = {"dust", "chip", "burst", "smear", "block", "speed", "sweat", "breath", "spark", "roar", "steam", "ichor", "glint", "rock"}
+
+
+def edge_light(cv):
+    """Tepi terang 1 px (keputusan pemilik: halo di preview dan tepi terang di aset): setiap piksel kosong yang bertetangga (4 arah) dengan piksel
+    karakter berwarna gelap diisi baja terang. Efek dan properti (debu, batu, balok, darah) tidak diberi tepi. Di latar terang tepi ini terbaca
+    sebagai garis abu tipis; di latar gelap ia memisahkan besi hitam dari latar; di latar abu tengah garis hitam di dalamnya yang terbaca."""
+    add = set()
+    for (x, y), c in cv.px.items():
+        if c in RIM_DARK and cv.owner.get((x, y)) not in RIM_SKIP:
+            for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                k = (x + dx, y + dy)
+                if k not in cv.px and 0 <= k[0] < cv.w and 0 <= k[1] < cv.h:
+                    add.add(k)
+    part(cv, "rim")
+    for (x, y) in add:
+        cv.put(x, y, RIM_COLOR)
+    return cv
+
+
 HEAT_MAP = {1: {"q0": "q1", "q1": "q2", "q2": "q3", "q3": "q4"}, 2: {"q0": "q2", "q1": "q3", "q2": "q3", "q3": "q4"}}
-HEAT_SKIP = {"ichor", "rock", "block", "dust", "chip", "burst", "smear", "spark", "glint", "steam", "cavity", "cavity_eye", "cavity_teeth"}
+HEAT_SKIP = {"ichor", "rock", "block", "dust", "chip", "burst", "smear", "spark", "glint", "steam", "cavity", "gobyet_face", "gobyet_eye"}
 
 
 def heat_pass(cv, level):
