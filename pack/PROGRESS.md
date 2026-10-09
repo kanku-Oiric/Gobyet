@@ -18,7 +18,7 @@ Huruf gerbang tidak berurutan dengan urutan kerja. Urutan kerja sebenarnya: A, B
 | 8 | I | Pak Haji (5), Priest (5), audit 7.2 otomatis `[VT]` | 10 | selesai, validasi lulus; idle lebih dulu, pemeriksaan i-vi lulus sebelum state lain; hash di `sha256-dibuat.txt`; laporan `pack/reports/gate-I.md` | `316fe79`, tag `fase2-gate-I` |
 | 9 | J | 12 varian kelas × idle, attack, victory | 36 | selesai, validasi lulus; hash di `sha256-dibuat.txt`; laporan `pack/reports/gate-J.md` | `13fe94f`, tag `fase2-gate-J` |
 | 10 | F | sisa sel 12 kostum lama (14 wajib + 22 opsional), dokumentasi bagian 14, laporan akhir | 36 | selesai, validasi lulus; 163/163 sel terisi; hash di `sha256-dibuat.txt`; laporan `pack/reports/gate-F.md` dan `pack/reports/final.md` | `7fc8b43`, tag `fase2-gate-F` |
-| 11 | K | Berserker Hero (kanvas 128×96): idle, run, rage, attack-leap, attack-smash, miss, exhaustion, defeated | 8 | dibuat, **menunggu persetujuan gaya pemilik**; hash di `sha256-hero.txt`; laporan `pack/reports/hero-fase-cd.md` (Fase B: `hero-fase-b.md`; perbaikan teknis: `hero-fase-teknis.md`); branch `claude/gobyet-hero`, tidak di-merge | lihat `git log claude/gobyet-hero` |
+| 11 | K | Berserker Hero v3 (kanvas 128×96, bukan Gobyet): idle, run, rage, attack-leap, attack-smash, miss, exhaustion, defeated, victory | 9 | dibuat, **menunggu persetujuan gaya pemilik**; hash di `sha256-hero.txt` (18 berkas); laporan `pack/reports/hero3-animasi.md` (model: `hero3-model.md`; v1/v2 yang ditolak: `hero-fase-*.md`, `hero2-body.md`); branch `claude/gobyet-hero`, tidak di-merge | lihat `git log claude/gobyet-hero` |
 
 **Mode kerja (keputusan pemilik setelah STOP-1):** G, H, I, J, lalu F dijalankan berurutan tanpa berhenti. Yang tetap berlaku hanya STOP-DARURAT dan STOP final setelah F. Syarat lanjut otomatis: validasi bagian 11 lulus. GAGAL baru diperbaiki di dalam gerbang itu tanpa menyentuh aset yang sudah dikunci atau ditandai. STOP-DARURAT berlaku bila:
 - GAGAL tidak bisa diperbaiki;
@@ -74,8 +74,8 @@ Dibangkitkan oleh `python3 tools/progress_table.py` dari `pack/manifest.json`. J
 | `wizard` | fantasy | 6 | 6 | - | - |
 | `pak-haji` | theology | 5 | 5 | - | - |
 | `priest` | theology | 5 | 5 | - | - |
-| `berserker-hero ← viking-berserker` | fantasy | 8 | 8 | - | - |
-| **Total** | | **171** | **171** | | |
+| `berserker-hero ← viking-berserker` | fantasy | 9 | 9 | - | - |
+| **Total** | | **172** | **172** | | |
 <!-- tabel-sel:selesai -->
 
 ## Cara melanjutkan
@@ -92,7 +92,7 @@ python3 tools/progress_table.py                # perbarui tabel sel di atas
 File hash:
 - **`pack/sha256-asli.txt`:** 27 file pra-Fase 2.
 - **`pack/sha256-disetujui.txt`:** aset gerbang yang disetujui pemilik (A-E). Tambahkan `sha256sum` dari `gif/<nama>.gif`, `sheets/<nama>.png`, dan `sheets/<nama>@4x.png` (bila ada) hanya setelah pemilik menyetujui.
-- **`pack/sha256-hero.txt`:** 16 file aset Berserker Hero (8 GIF + 8 sheet 1×), dibuat dan belum disetujui. Dibangkitkan `python3 tools/hero_hashes.py`; V1 memeriksanya. Berkas ini berdiri sendiri supaya tiga berkas kunci lain tidak berubah.
+- **`pack/sha256-hero.txt`:** 18 file aset Berserker Hero v3 (9 GIF + 9 sheet 1×), dibuat dan belum disetujui. Dibangkitkan `python3 tools/hero_hashes.py`; V1 memeriksanya. Berkas ini berdiri sendiri supaya tiga berkas kunci lain tidak berubah. Isinya sengaja berganti total saat gaya v1 diganti v3 atas arahan pemilik.
 - **`pack/sha256-dibuat.txt`:** aset gerbang G ke atas yang sudah dibuat tetapi belum disetujui. Tiap gerbang berikutnya memverifikasi bahwa file-file ini tidak berubah. Mengubahnya hanya lewat protokol revisi (bagian 10), dengan memperbarui hash secara eksplisit.
 
 Mengembalikan satu gerbang: `git checkout fase2-gate-<X> -- gif sheets src pack` (atau hash commit gerbang dari tabel di atas) (lalu `python3 src/export.py` dan validator), atau `git revert` commit gerbang itu.
@@ -100,7 +100,7 @@ Mengembalikan satu gerbang: `git checkout fase2-gate-<X> -- gif sheets src pack`
 ## Catatan yang harus diingat
 
 - **README di `main`.** Commit `a7a6d21` (README saja, atas permintaan pemilik) menampilkan galeri Fase 2 dengan URL gambar `raw.githubusercontent.com/.../claude/gobyet-fase2/gif/...`. Setelah PR di-merge, README di branch (path relatif) menggantikannya. Sebelum merge, pastikan tidak ada URL yang masih menunjuk ke branch. Jangan push ke `main` lagi.
-- **Profil export.** Aset gerbang A-C dan aset asli memakai jalur lama (palet `PAL`, `optimize=False`, sheet 1× dan 4×). Aset baru mulai D memakai palet lokal (`PAL` + `PAL_EXT`), `optimize=True`, dan hanya sheet 1×. Lihat `pack.modern()` dan `export.local_palette()`. Gerbang K menambah `PAL_HERO` di urutan palet lokal (sesudah `PAL_EXT`), kanvas 128×96 per sel (`pack.CANVAS_OF`), GIF ×4, dan `loop: false` untuk `berserker-hero/rage` (`pack.NO_LOOP`); semuanya aditif.
+- **Profil export.** Aset gerbang A-C dan aset asli memakai jalur lama (palet `PAL`, `optimize=False`, sheet 1× dan 4×). Aset baru mulai D memakai palet lokal (`PAL` + `PAL_EXT`), `optimize=True`, dan hanya sheet 1×. Lihat `pack.modern()` dan `export.local_palette()`. Gerbang K menambah `PAL_HERO` di urutan palet lokal (sesudah `PAL_EXT`), kanvas 128×96 per sel (`pack.CANVAS_OF`), GIF ×4, dan `loop: false` untuk `berserker-hero/rage` dan `berserker-hero/victory` (`pack.NO_LOOP`); sheet hero diekspor dengan PNG `optimize` (piksel identik, hanya kanvas non-64×48); semuanya aditif.
 - **`PAL_EXT`:** 13 kunci.
   - `p j`: ungu Mathematician.
   - `J w`: jas Lawyer.

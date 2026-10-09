@@ -1,0 +1,569 @@
+{
+  "states": {
+    "idle": {
+      "frame": 12,
+      "loop": true,
+      "kunci": 0,
+      "durasi_ms": [
+        240,
+        140,
+        140,
+        160,
+        160,
+        200,
+        180,
+        160,
+        90,
+        140,
+        160,
+        180
+      ],
+      "total_ms": 1950,
+      "gif_byte": 157110,
+      "sheet_byte": 13623,
+      "langkah_maks_piksel": 2457,
+      "seam_piksel": 402,
+      "keterbacaan_kunci": {
+        "helm": [
+          34,
+          31
+        ],
+        "mata": 86,
+        "bahu": 419,
+        "pedang": 836,
+        "kepalan": 176,
+        "jambul": 422
+      }
+    },
+    "run": {
+      "frame": 12,
+      "loop": true,
+      "kunci": 10,
+      "durasi_ms": [
+        70,
+        80,
+        70,
+        60,
+        100,
+        60,
+        70,
+        80,
+        70,
+        60,
+        100,
+        60
+      ],
+      "total_ms": 880,
+      "gif_byte": 157639,
+      "sheet_byte": 17122,
+      "langkah_maks_piksel": 4482,
+      "seam_piksel": 4009,
+      "keterbacaan_kunci": {
+        "helm": [
+          34,
+          31
+        ],
+        "mata": 86,
+        "bahu": 433,
+        "pedang": 862,
+        "kepalan": 177,
+        "jambul": 389
+      }
+    },
+    "rage": {
+      "frame": 12,
+      "loop": false,
+      "kunci": 6,
+      "durasi_ms": [
+        200,
+        140,
+        140,
+        180,
+        70,
+        90,
+        110,
+        70,
+        70,
+        70,
+        120,
+        1500
+      ],
+      "total_ms": 2760,
+      "gif_byte": 144120,
+      "sheet_byte": 25074,
+      "langkah_maks_piksel": 5477,
+      "seam_piksel": null,
+      "keterbacaan_kunci": {
+        "helm": [
+          34,
+          31
+        ],
+        "mata": 110,
+        "bahu": 425,
+        "pedang": 856,
+        "kepalan": 165,
+        "jambul": 493
+      }
+    },
+    "attack-leap": {
+      "frame": 14,
+      "loop": true,
+      "kunci": 8,
+      "durasi_ms": [
+        140,
+        130,
+        60,
+        60,
+        120,
+        50,
+        40,
+        40,
+        260,
+        130,
+        110,
+        100,
+        100,
+        130
+      ],
+      "total_ms": 1470,
+      "gif_byte": 173181,
+      "sheet_byte": 30401,
+      "langkah_maks_piksel": 5028,
+      "seam_piksel": 3203,
+      "keterbacaan_kunci": {
+        "helm": [
+          34,
+          31
+        ],
+        "mata": 110,
+        "bahu": 414,
+        "pedang": 497,
+        "kepalan": 176,
+        "jambul": 413
+      }
+    },
+    "attack-smash": {
+      "frame": 12,
+      "loop": true,
+      "kunci": 7,
+      "durasi_ms": [
+        120,
+        100,
+        120,
+        180,
+        50,
+        40,
+        40,
+        240,
+        120,
+        100,
+        100,
+        140
+      ],
+      "total_ms": 1350,
+      "gif_byte": 149148,
+      "sheet_byte": 24756,
+      "langkah_maks_piksel": 4806,
+      "seam_piksel": 39,
+      "keterbacaan_kunci": {
+        "helm": [
+          34,
+          31
+        ],
+        "mata": 110,
+        "bahu": 426,
+        "pedang": 524,
+        "kepalan": 176,
+        "jambul": 413
+      }
+    },
+    "miss": {
+      "frame": 10,
+      "loop": true,
+      "kunci": 6,
+      "durasi_ms": [
+        140,
+        100,
+        130,
+        50,
+        40,
+        200,
+        220,
+        240,
+        140,
+        140
+      ],
+      "total_ms": 1400,
+      "gif_byte": 121038,
+      "sheet_byte": 22301,
+      "langkah_maks_piksel": 4453,
+      "seam_piksel": 2369,
+      "keterbacaan_kunci": {
+        "helm": [
+          34,
+          31
+        ],
+        "mata": 102,
+        "bahu": 370,
+        "pedang": 588,
+        "kepalan": 128,
+        "jambul": 436
+      }
+    },
+    "exhaustion": {
+      "frame": 12,
+      "loop": true,
+      "kunci": 5,
+      "durasi_ms": [
+        200,
+        150,
+        150,
+        170,
+        220,
+        260,
+        220,
+        150,
+        90,
+        150,
+        170,
+        200
+      ],
+      "total_ms": 2130,
+      "gif_byte": 134707,
+      "sheet_byte": 11619,
+      "langkah_maks_piksel": 2558,
+      "seam_piksel": 370,
+      "keterbacaan_kunci": {
+        "helm": [
+          34,
+          31
+        ],
+        "mata": 62,
+        "bahu": 410,
+        "pedang": 525,
+        "kepalan": 169,
+        "jambul": 408
+      }
+    },
+    "defeated": {
+      "frame": 14,
+      "loop": true,
+      "kunci": 3,
+      "durasi_ms": [
+        200,
+        180,
+        180,
+        200,
+        200,
+        220,
+        200,
+        160,
+        120,
+        180,
+        200,
+        200,
+        200,
+        200
+      ],
+      "total_ms": 2640,
+      "gif_byte": 140833,
+      "sheet_byte": 11157,
+      "langkah_maks_piksel": 2051,
+      "seam_piksel": 122,
+      "keterbacaan_kunci": {
+        "helm": [
+          34,
+          31
+        ],
+        "mata": 62,
+        "bahu": 411,
+        "pedang": 407,
+        "kepalan": 176,
+        "jambul": 410
+      }
+    },
+    "victory": {
+      "frame": 16,
+      "loop": false,
+      "kunci": 13,
+      "durasi_ms": [
+        160,
+        100,
+        100,
+        300,
+        100,
+        140,
+        100,
+        70,
+        60,
+        200,
+        140,
+        160,
+        120,
+        120,
+        140,
+        1500
+      ],
+      "total_ms": 3510,
+      "gif_byte": 200253,
+      "sheet_byte": 28968,
+      "langkah_maks_piksel": 5093,
+      "seam_piksel": null,
+      "keterbacaan_kunci": {
+        "helm": [
+          34,
+          31
+        ],
+        "mata": 86,
+        "bahu": 409,
+        "pedang": 683,
+        "kepalan": 176,
+        "jambul": 411
+      }
+    }
+  },
+  "victory": {
+    "gagal": [],
+    "urutan": {
+      "topeng": [
+        1,
+        3,
+        4,
+        308
+      ],
+      "angkat": 7,
+      "tusuk": 9,
+      "kaki": [
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "noda": [
+        226,
+        226,
+        226,
+        226,
+        226,
+        226,
+        226,
+        226,
+        229,
+        227,
+        223,
+        211,
+        195,
+        97,
+        55,
+        0
+      ],
+      "sebagian": [
+        12,
+        13,
+        14
+      ]
+    },
+    "seri": [
+      {
+        "rongga": 0,
+        "noda": 226,
+        "batu": 140,
+        "pedang_atas": 30,
+        "pedang_bawah": 89,
+        "sudut": 86,
+        "debu": false,
+        "kilau": false,
+        "kaki_di_batu": 0,
+        "tangan_di_pedang": true
+      },
+      {
+        "rongga": 100,
+        "noda": 226,
+        "batu": 140,
+        "pedang_atas": 30,
+        "pedang_bawah": 89,
+        "sudut": 86,
+        "debu": false,
+        "kilau": false,
+        "kaki_di_batu": 0,
+        "tangan_di_pedang": true
+      },
+      {
+        "rongga": 206,
+        "noda": 226,
+        "batu": 140,
+        "pedang_atas": 30,
+        "pedang_bawah": 89,
+        "sudut": 86,
+        "debu": false,
+        "kilau": false,
+        "kaki_di_batu": 0,
+        "tangan_di_pedang": true
+      },
+      {
+        "rongga": 308,
+        "noda": 226,
+        "batu": 140,
+        "pedang_atas": 30,
+        "pedang_bawah": 89,
+        "sudut": 86,
+        "debu": false,
+        "kilau": false,
+        "kaki_di_batu": 0,
+        "tangan_di_pedang": true
+      },
+      {
+        "rongga": 170,
+        "noda": 226,
+        "batu": 140,
+        "pedang_atas": 30,
+        "pedang_bawah": 89,
+        "sudut": 86,
+        "debu": false,
+        "kilau": false,
+        "kaki_di_batu": 0,
+        "tangan_di_pedang": true
+      },
+      {
+        "rongga": 0,
+        "noda": 226,
+        "batu": 140,
+        "pedang_atas": 30,
+        "pedang_bawah": 89,
+        "sudut": 86,
+        "debu": false,
+        "kilau": false,
+        "kaki_di_batu": 0,
+        "tangan_di_pedang": true
+      },
+      {
+        "rongga": 0,
+        "noda": 226,
+        "batu": 169,
+        "pedang_atas": 26,
+        "pedang_bawah": 82,
+        "sudut": 60,
+        "debu": false,
+        "kilau": false,
+        "kaki_di_batu": 0,
+        "tangan_di_pedang": true
+      },
+      {
+        "rongga": 0,
+        "noda": 226,
+        "batu": 163,
+        "pedang_atas": 5,
+        "pedang_bawah": 52,
+        "sudut": -44,
+        "debu": false,
+        "kilau": false,
+        "kaki_di_batu": 0,
+        "tangan_di_pedang": true
+      },
+      {
+        "rongga": 0,
+        "noda": 229,
+        "batu": 158,
+        "pedang_atas": 29,
+        "pedang_bawah": 89,
+        "sudut": 70,
+        "debu": false,
+        "kilau": false,
+        "kaki_di_batu": 0,
+        "tangan_di_pedang": true
+      },
+      {
+        "rongga": 0,
+        "noda": 227,
+        "batu": 90,
+        "pedang_atas": 31,
+        "pedang_bawah": 89,
+        "sudut": 88,
+        "debu": true,
+        "kilau": false,
+        "kaki_di_batu": 0,
+        "tangan_di_pedang": true
+      },
+      {
+        "rongga": 0,
+        "noda": 223,
+        "batu": 126,
+        "pedang_atas": 31,
+        "pedang_bawah": 89,
+        "sudut": 88,
+        "debu": true,
+        "kilau": false,
+        "kaki_di_batu": 0,
+        "tangan_di_pedang": true
+      },
+      {
+        "rongga": 0,
+        "noda": 211,
+        "batu": 115,
+        "pedang_atas": 31,
+        "pedang_bawah": 89,
+        "sudut": 88,
+        "debu": true,
+        "kilau": false,
+        "kaki_di_batu": 17,
+        "tangan_di_pedang": true
+      },
+      {
+        "rongga": 0,
+        "noda": 195,
+        "batu": 152,
+        "pedang_atas": 31,
+        "pedang_bawah": 89,
+        "sudut": 88,
+        "debu": false,
+        "kilau": false,
+        "kaki_di_batu": 17,
+        "tangan_di_pedang": true
+      },
+      {
+        "rongga": 0,
+        "noda": 97,
+        "batu": 150,
+        "pedang_atas": 31,
+        "pedang_bawah": 89,
+        "sudut": 88,
+        "debu": false,
+        "kilau": false,
+        "kaki_di_batu": 17,
+        "tangan_di_pedang": true
+      },
+      {
+        "rongga": 0,
+        "noda": 55,
+        "batu": 147,
+        "pedang_atas": 31,
+        "pedang_bawah": 89,
+        "sudut": 88,
+        "debu": false,
+        "kilau": true,
+        "kaki_di_batu": 17,
+        "tangan_di_pedang": true
+      },
+      {
+        "rongga": 0,
+        "noda": 0,
+        "batu": 169,
+        "pedang_atas": 31,
+        "pedang_bawah": 89,
+        "sudut": 88,
+        "debu": false,
+        "kilau": true,
+        "kaki_di_batu": 21,
+        "tangan_di_pedang": true
+      }
+    ]
+  },
+  "ukuran_total": {
+    "gif": 1378029,
+    "sheet": 185021,
+    "gif_dan_sheet": 1563050,
+    "batas_total": 1572864,
+    "batas_per_gif": 204800
+  }
+}

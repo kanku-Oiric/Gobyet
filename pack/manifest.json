@@ -422,7 +422,8 @@
         "attack-smash": "required",
         "miss": "required",
         "exhaustion": "required",
-        "defeated": "required"
+        "defeated": "required",
+        "victory": "required"
       }
     }
   ],
@@ -461,41 +462,7 @@
     {
       "id": "victory",
       "label": "victory",
-      "required": true,
-      "costumes": [
-        "normal",
-        "normal-gblk",
-        "referee",
-        "judge",
-        "skeptic",
-        "champion",
-        "greek-philosopher",
-        "academic",
-        "scientist",
-        "mathematician",
-        "lawyer",
-        "hacker",
-        "detective",
-        "gamer",
-        "knight",
-        "knight-heavy",
-        "knight-archer",
-        "knight-manatarms",
-        "knight-assassin",
-        "viking",
-        "viking-berserker",
-        "viking-huscarl",
-        "viking-gestir",
-        "viking-bondi",
-        "pirate",
-        "pirate-captain",
-        "pirate-skirmisher",
-        "pirate-sharpshooter",
-        "pirate-buccaneer",
-        "wizard",
-        "pak-haji",
-        "priest"
-      ]
+      "required": true
     },
     {
       "id": "defeated",
@@ -5518,6 +5485,40 @@
         ],
         "loop": true,
         "keyframe": 3,
+        "canvas": {
+          "w": 128,
+          "h": 96
+        },
+        "gif_scale": 4,
+        "gate": "K"
+      },
+      "victory": {
+        "status": "final",
+        "origin": "baru",
+        "source": "berserker-hero-victory",
+        "sheet": "../sheets/berserker-hero-victory.png",
+        "gif": "../gif/berserker-hero-victory.gif",
+        "frames": 16,
+        "durations_ms": [
+          160,
+          100,
+          100,
+          300,
+          100,
+          140,
+          100,
+          70,
+          60,
+          200,
+          140,
+          160,
+          120,
+          120,
+          140,
+          1500
+        ],
+        "loop": false,
+        "keyframe": 13,
         "canvas": {
           "w": 128,
           "h": 96

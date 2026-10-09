@@ -43,7 +43,7 @@ COSTUMES = [
     ("wizard", "Wizard", "fantasy"),
     ("pak-haji", "Pak Haji", "theology"),
     ("priest", "Priest", "theology"),
-    ("berserker-hero", "Berserker Hero", "fantasy"),   # karakter utama original 128x96 (src/hero.py, src/hero_scenes.py)
+    ("berserker-hero", "Berserker Hero", "fantasy"),   # karakter utama original 128x96, bukan Gobyet (src/hero3.py, src/hero3_scenes.py)
 ]
 
 # Field opsional per kostum, ditulis ke manifest hanya bila ada. base = kostum induk untuk fallback.
@@ -85,7 +85,7 @@ for _c, _meta in COSTUME_META.items():
     if _meta.get("base") in ("knight", "viking", "pirate"):
         APPLIES[_c] = {"idle": R, "victory": R, "attack": O}
 APPLIES["berserker-hero"] = {"idle": R, "run": R, "rage": R, "attack-leap": R, "attack-smash": R, "miss": R,
-                             "exhaustion": R, "defeated": R}
+                             "exhaustion": R, "defeated": R, "victory": R}
 
 
 def _states():
@@ -277,7 +277,7 @@ NEW = {
     ("hacker", "happy"): ("hacker-happy", 5, "F"),
     ("detective", "defeated"): ("detective-defeated", 8, "F"),
     ("detective", "happy"): ("detective-happy", 4, "F"),
-    # Gerbang K: Berserker Hero (kanvas 128x96, GIF x4). Frame kunci = pose paling mewakili (lihat hero_scenes.META).
+    # Gerbang K: Berserker Hero (kanvas 128x96, GIF x4). Frame kunci = pose paling mewakili (lihat hero3_scenes.META).
     ("berserker-hero", "idle"): ("berserker-hero-idle", 0, "K"),
     ("berserker-hero", "run"): ("berserker-hero-run", 10, "K"),
     ("berserker-hero", "rage"): ("berserker-hero-rage", 6, "K"),
@@ -286,13 +286,14 @@ NEW = {
     ("berserker-hero", "miss"): ("berserker-hero-miss", 6, "K"),
     ("berserker-hero", "exhaustion"): ("berserker-hero-exhaustion", 5, "K"),
     ("berserker-hero", "defeated"): ("berserker-hero-defeated", 3, "K"),
+    ("berserker-hero", "victory"): ("berserker-hero-victory", 13, "K"),
 }
 
 # Kanvas dan skala GIF per kostum (opsional; kostum yang tidak tercantum memakai kanvas global 64x48 dan gif_scale
 # global 8). Ditulis ke manifest sebagai field per-sel `canvas` dan `gif_scale`. NO_LOOP = sel yang tidak berputar
 # (loop=false): GIF diekspor tanpa blok loop dan berhenti di frame terakhir.
 CANVAS_OF = {"berserker-hero": ({"w": 128, "h": 96}, 4)}
-NO_LOOP = {("berserker-hero", "rage")}
+NO_LOOP = {("berserker-hero", "rage"), ("berserker-hero", "victory")}
 
 
 def cell_of(name):

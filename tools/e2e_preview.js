@@ -203,11 +203,11 @@ function serve() {
   await d.p.waitForTimeout(600);
   report.static_desktop = await staticCheck(d.p);
   check(!report.static_desktop.frame_mismatch.length && !report.static_desktop.pixel_mismatch.length, "mode statis != frame kunci (desktop)");
-  check(report.static_desktop.hero_canvases >= 8 + 8, "mode statis: kanvas hero (pemutar + banding) tidak ikut diperiksa");
+  check(report.static_desktop.hero_canvases >= 9 + 9, "mode statis: kanvas hero (pemutar + banding) tidak ikut diperiksa");
   report.hero_desktop = await heroCheck(d.p);
   check(!report.hero_desktop.problems.length, "lembar kontak hero (desktop): " + report.hero_desktop.problems.join("; "));
   report.hero_gifs = await heroGifCheck(d.p);
-  check(Object.keys(report.hero_gifs).length === 8 && Object.values(report.hero_gifs).every((v) => v === "512x384"), "GIF hero tidak termuat 512x384");
+  check(Object.keys(report.hero_gifs).length === 9 && Object.values(report.hero_gifs).every((v) => v === "512x384"), "GIF hero tidak termuat 512x384");
   // latar terang/gelap/abu tengah: warna latar kanvas lembar kontak berganti dan kembali
   const bgOf = () => d.p.$eval(".strip .stage", (c) => getComputedStyle(c).backgroundColor);
   const filterOf = () => d.p.$eval(".strip canvas", (c) => getComputedStyle(c).filter);
@@ -248,7 +248,8 @@ function serve() {
     badges: [...document.querySelectorAll(".hero-state .once")].map((b) => b.closest(".hero-state").dataset.state),
     replay: [...document.querySelectorAll(".hero-state button.replay")].map((b) => b.closest(".hero-state").dataset.state),
   }));
-  check(JSON.stringify(report.hero_once.badges) === '["rage"]' && JSON.stringify(report.hero_once.replay) === '["rage"]', "indikator diputar sekali dan Putar ulang harus hanya untuk rage");
+  check(JSON.stringify(report.hero_once.badges) === '["rage","victory"]' && JSON.stringify(report.hero_once.replay) === '["rage","victory"]',
+    "indikator diputar sekali dan Putar ulang harus hanya untuk rage dan victory");
   const rageCell = manifestData.cells["berserker-hero"].rage, rageTotal = rageCell.durations_ms.reduce((a, b) => a + b, 0);
   await d.p.locator('.hero-state[data-state="rage"]').scrollIntoViewIfNeeded();
   const frameNow = () => d.p.$eval('.hero-state[data-state="rage"] .hero-player canvas', (c) => +c.dataset.frame);
@@ -267,6 +268,20 @@ function serve() {
   check(report.hero_replay.before === rageCell.frames - 1 && report.hero_replay.just_after <= 2 && report.hero_replay.after === rageCell.frames - 1 &&
     report.hero_replay.later === rageCell.frames - 1 && report.hero_replay.frames_seen.length >= 6,
     "Putar ulang rage: harus mulai dari frame awal, melewati beberapa frame, lalu berhenti di frame terakhir");
+  // victory (16 frame, diputar sekali): Putar ulang mulai dari frame awal, melewati banyak frame, lalu berhenti di frame terakhir
+  const vicCell = manifestData.cells["berserker-hero"].victory, vicTotal = vicCell.durations_ms.reduce((a, b) => a + b, 0);
+  await d.p.locator('.hero-state[data-state="victory"]').scrollIntoViewIfNeeded();
+  const vicNow = () => d.p.$eval('.hero-state[data-state="victory"] .hero-player canvas', (c) => +c.dataset.frame);
+  await d.p.waitForTimeout(vicTotal + 600);
+  const vicBefore = await vicNow();
+  await d.p.click('.hero-state[data-state="victory"] button.replay');
+  await d.p.waitForTimeout(120);
+  const vicSeen = new Set([await vicNow()]);
+  for (let k = 0; k < 18; k++) { await d.p.waitForTimeout(220); vicSeen.add(await vicNow()); }
+  await d.p.waitForTimeout(vicTotal);
+  report.hero_replay_victory = { before: vicBefore, frames_seen: [...vicSeen].sort((a, b) => a - b), after: await vicNow() };
+  check(vicBefore === vicCell.frames - 1 && report.hero_replay_victory.after === vicCell.frames - 1 && vicSeen.size >= 6 && Math.min(...vicSeen) <= 2,
+    "Putar ulang victory: harus mulai dari frame awal, melewati banyak frame, lalu berhenti di frame terakhir");
   await d.p.click("#btnStatic");                                  // kembali ke mode Statis: Putar ulang dinonaktifkan dan frame kunci tetap
   await d.p.waitForTimeout(300);
   report.hero_replay_static = { frame_before: await frameNow(), disabled: await d.p.$eval('.hero-state[data-state="rage"] button.replay', (b) => b.getAttribute("aria-disabled")) };
@@ -337,7 +352,7 @@ function serve() {
     return { state: b.dataset.state, strip_w: Math.round(s.getBoundingClientRect().width), scrollable: s.scrollWidth > s.clientWidth, moved_px: moved - before,
       within_viewport: s.getBoundingClientRect().right <= innerWidth };
   }));
-  check(report.hero_phone_scroll.length === 8 && report.hero_phone_scroll.every((x) => x.scrollable && x.moved_px > 0 && x.within_viewport),
+  check(report.hero_phone_scroll.length === 9 && report.hero_phone_scroll.every((x) => x.scrollable && x.moved_px > 0 && x.within_viewport),
     "lembar kontak hero di ponsel tidak bisa digulir atau melebihi layar");
   report.phone_overflow_after_hero = await m.p.evaluate(() => document.documentElement.scrollWidth - innerWidth);
   check(report.phone_overflow_after_hero === 0, "scroll horizontal di ponsel setelah menggulir lembar kontak hero");

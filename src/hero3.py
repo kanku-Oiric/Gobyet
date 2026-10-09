@@ -20,6 +20,7 @@ import monkey
 from monkey import ellipse, rect, edge, chain
 
 import hero as H
+import hero3_fx as FX
 from hero import PartCanvas, part, poly, thick, bezier, inner, solid3, ik, SwordFrame, floor_clip, FLOOR
 
 # ------------------------------------------------------------------ palet (11 kunci baru; efek memakai kunci HERO_PAL v1)
@@ -131,19 +132,17 @@ CREST = (   # (pangkal, kendali, ujung, lebar pangkal): bilah jambul menyapu ke 
 )
 
 
-def crest(cv, cx, cy, sway=0.0):
-    """Jambul bilah merah darah menyapu ke belakang-atas (digambar di belakang helm); sway menggeser ujung (piksel)."""
+def crest(cv, cx, cy, sway=0.0, flare=0.0):
+    """Jambul bilah merah darah menyapu ke belakang-atas (digambar di belakang helm); sway menggeser ujung (piksel); flare (0..5) membentangkan
+    dan menaikkan ujung bilah saat amarah meledak."""
     for k, (p0, p1, p2, w0) in enumerate(CREST):
-        tip = (p2[0] - sway * (0.4 + 0.12 * k), p2[1] + sway * 0.12 * (k % 3))
-        ctl = (p1[0] - sway * 0.25, p1[1])
+        tip = (p2[0] - sway * (0.4 + 0.12 * k) - flare * (1.1 + 0.25 * k), p2[1] + sway * 0.12 * (k % 3) - flare * (0.7 + 0.3 * (k % 2)))
+        ctl = (p1[0] - sway * 0.25 - flare * 0.6, p1[1] - flare * 0.4)
+        tip = (tip[0], max(tip[1], 2.0 - cy))                    # ujung bilah tidak pernah keluar dari tepi atas kanvas (saat melompat, mengamuk)
+        ctl = (ctl[0], max(ctl[1], 1.0 - cy))
         m = blade_poly((cx + p0[0], cy + p0[1]), (cx + ctl[0], cy + ctl[1]), (cx + tip[0], cy + tip[1]), w0, taper=0.62)
         tone = RED if k % 2 == 0 else ("q0", "q1", "q2")
         solid3(cv, m, tone, ROUT, depth=1, name="crest")
-        mid = bezier((cx + p0[0], cy + p0[1]), (cx + ctl[0], cy + ctl[1]), (cx + tip[0], cy + tip[1]), 14)
-        for i in range(2, 11):                                 # urat terang di sepanjang bilah
-            x, y = mid[i]
-            if (int(x), int(y)) in m and (int(x), int(y) + 1) in m:
-                cv.put(int(x), int(y), "q3" if (k % 2 and i % 3 == 0) else ("q2" if k % 2 else "q1"))
 
 
 EYE_STYLES = {
@@ -151,38 +150,47 @@ EYE_STYLES = {
     "look": (0.0, 3, 2, 8), "angry": (-3.0, 3, 2, 8), "rage": (-4.0, 4, 2, 9), "wide": (0.0, 4, 2, 8), "dim": (1.5, 2, 0, 7),
     "tired": (2.5, 2, 0, 6), "shut": (0.0, 1, 0, 7), "glare": (-2.0, 2, 2, 9),
 }
+MASK_MAX_SHIFT = 8                    # geser maksimum tiap pintu topeng (piksel)
+
+
+def _mirror(hx, col):
+    """Kolom cermin `col` (kolom sisi kanan) terhadap sumbu tengah helm, yang jatuh di batas antara kolom hx-1 dan hx."""
+    return 2 * hx - 1 - col
 
 
 def visor(cv, hx, hy, eyes="look"):
-    """Visor salib: batang tegak di tengah dan lengan datar yang menjadi mata; lengan miring, tebal, redup mengubah ekspresi."""
+    """Visor salib: batang tegak 4 kolom di tengah (hx-2..hx+1) dan dua lengan datar yang menjadi mata; lengan miring, tebal, redup mengubah ekspresi.
+    Semua tata letak simetris terhadap sumbu helm (batas kolom hx-1 dan hx)."""
     part(cv, "visor")
-    if eyes == "x":                                            # defeated: visor padam, dua tanda silang redup
+    if eyes == "x":                                            # kalah: visor padam, dua tanda silang redup
         for y in range(hy - 3, hy + 9):
+            cv.put(hx - 1, y, "q0")
             cv.put(hx, y, "q0")
-        for s in (-1, 1):
+        for cx0 in (hx + 6, _mirror(hx, hx + 6)):
             for i in range(-2, 3):
-                cv.put(hx + s * 7 + i, hy + 1 + i, "q1")
-                cv.put(hx + s * 7 + i, hy + 1 - i, "q1")
-            cv.put(hx + s * 7, hy + 1, "q2")
+                cv.put(cx0 + i, hy + 1 + i, "q1")
+                cv.put(cx0 + i, hy + 1 - i, "q1")
+            cv.put(cx0, hy + 1, "q2")
         return
     tilt, thick_, bright, length = EYE_STYLES[eyes]
-    # batang tegak
-    for y in range(hy - 3, hy + 9):
-        cv.put(hx - 1, y, "q1")
-        cv.put(hx + 1, y, "q1")
+    for y in range(hy - 3, hy + 9):                            # batang tegak
+        cv.put(hx - 2, y, "q1" if bright else "q0")
+        cv.put(hx + 1, y, "q1" if bright else "q0")
+        cv.put(hx - 1, y, "q3" if bright else "q1")
         cv.put(hx, y, "q3" if bright else "q1")
     if bright:
         for y in (hy + 0, hy + 1, hy + 2):
+            cv.put(hx - 1, y, "q4")
             cv.put(hx, y, "q4")
-    cv.put(hx, hy + 1, "wh" if bright == 2 else "q3")
-    # lengan mata
+    if bright == 2:
+        cv.put(hx - 1, hy + 1, "wh")
+        cv.put(hx, hy + 1, "wh")
     for s in (-1, 1):
         for i in range(length):
-            x = hx + s * (2 + i)
+            x = hx + 2 + i if s > 0 else _mirror(hx, hx + 2 + i)
             y0 = hy + 1 + int(round(tilt * i / float(length - 1)))
-            rows = list(range(thick_))
             top = y0 - thick_ // 2
-            for r in rows:
+            for r in range(thick_):
                 yy = top + r
                 if thick_ == 1:
                     c = "q2" if bright else "q1"
@@ -196,69 +204,153 @@ def visor(cv, hx, hy, eyes="look"):
                     c = "q2" if bright else "q1"
                 cv.put(x, yy, c)
         if bright == 2 and eyes != "shut":                     # titik inti putih di dekat batang tegak
-            cv.put(hx + s * 4, hy + 1 + int(round(tilt * 2 / float(length - 1))), "wh")
+            xx = hx + 4 if s > 0 else _mirror(hx, hx + 4)
+            cv.put(xx, hy + 1 + int(round(tilt * 2 / float(length - 1))), "wh")
 
 
 def grill(cv, hx, hy, mouth="closed"):
-    """Grill mulut di bawah visor: tiga celah (tertutup) atau celah terbuka bercahaya (teriak)."""
+    """Grill mulut di bawah visor: tiga celah (tertutup, lebar genap supaya simetris) atau celah terbuka bercahaya (teriak)."""
     part(cv, "grill")
     if mouth == "shout":
-        cv.fill(rect(hx - 4, hy + 8, 9, 5), OUT)
-        cv.fill(rect(hx - 3, hy + 9, 7, 3), "q2")
-        cv.fill(rect(hx - 2, hy + 10, 5, 1), "q4")
-        for x in (hx - 1, hx + 1):
+        cv.fill(rect(hx - 4, hy + 8, 8, 5), OUT)
+        cv.fill(rect(hx - 3, hy + 9, 6, 3), "q2")
+        cv.fill(rect(hx - 2, hy + 10, 4, 1), "q4")
+        for x in (hx - 1, hx):
             cv.fill(rect(x, hy + 9, 1, 3), OUT)
         return
-    for i, (w, dy) in enumerate(((7, 8), (5, 10), (3, 12))):  # lebar celah menyempit ke dagu
+    for w, dy in ((8, 8), (6, 10), (4, 12)):                   # celah menyempit ke dagu
         cv.fill(rect(hx - w // 2, hy + dy, w, 1), OUT)
         cv.fill(rect(hx - w // 2, hy + dy + 1, w, 1), "q1")
 
 
-def helm3(cv, hx, hy, eyes="look", mouth="closed", sway=0.0):
+def _vtop(u):
+    """Garis V di atas wajah (u = jarak mendatar dari sumbu helm): ujung luar tinggi, tengah rendah."""
+    return -9.0 + 6.0 * (1.0 - min(1.0, abs(u) / 16.0))
+
+
+def _plate(hx, hy):
+    """Pelat wajah (daerah di bawah garis V, di dalam helm): himpunan piksel isi, tanpa tepi."""
+    pts = [(-16, _vtop(-16)), (-8, _vtop(-8)), (0, _vtop(0)), (8, _vtop(8)), (16, _vtop(16)), (13, 9), (9, 13.5), (5.5, 16), (-5.5, 16), (-9, 13.5),
+           (-13, 9)]
+    m = poly(tr(pts, hx, hy))
+    return m - edge(m)
+
+
+def face_closed(cv, hx, hy, eyes, mouth, plate):
+    """Isi pelat wajah (pintu topeng): pelat gelap, jahitan pipi, lampu indikator, visor salib, grill."""
+    part(cv, "visor_plate")
+    cv.fill(plate, "n1")
+    part(cv, "cheek")
+    for col in (hx + 7,):                                      # jahitan tegak dan sorot tipis di tiap pipi (kiri = cermin kanan)
+        for c, hi in ((col, col - 1), (_mirror(hx, col), _mirror(hx, col) + 1)):
+            px(cv, vline(c, hy + 4, hy + 11), "n0")
+            px(cv, vline(hi, hy + 4, hy + 10), "n2")
+    px(cv, [(hx + 10, hy + 6), (_mirror(hx, hx + 10), hy + 6)], "q2")
+    px(cv, hline(hx + 8, hx + 11, hy + 12) + hline(_mirror(hx, hx + 11), _mirror(hx, hx + 8), hy + 12), "n0")
+    visor(cv, hx, hy, eyes)
+    grill(cv, hx, hy, mouth)
+
+
+def cavity(cv, hx, hy, g, plate, eyes="look"):
+    """Rongga di balik topeng yang terbuka selebar 2g piksel: tungku merah gelap, dua lensa mata menyala, celah hidung, deretan gigi baja bercelah api.
+    Wajah mesin, bukan wajah Gobyet atau manusia."""
+    inside = {(x, y) for (x, y) in plate if hx - g <= x < hx + g}
+    part(cv, "cavity")
+    for (x, y) in inside:
+        cv.put(x, y, "q0" if y < hy + 6 else "q1")
+    for (x, y) in inside:                                      # dinding dalam: satu kolom gelap di tiap sisi
+        if x in (hx - g, hx + g - 1):
+            cv.put(x, y, OUT)
+    if g <= 3:                                                 # celah sempit: hanya cahaya yang bocor di tengah
+        part(cv, "cavity_eye")
+        for (x, y) in inside:
+            if hx - 1 <= x <= hx and hy - 2 <= y <= hy + 9:
+                cv.put(x, y, "q4" if hy <= y <= hy + 2 else "q3")
+        return
+    part(cv, "cavity_eye")
+    tilt = 1 if eyes in ("angry", "rage", "glare") else 0
+    for s in (-1, 1):
+        for i in range(0, 4):
+            x = hx + 1 + i if s > 0 else _mirror(hx, hx + 1 + i)
+            if (x, hy) not in inside:
+                continue
+            ytop = hy + (tilt if i < 1 else 0)
+            for dy in range(0, 2):
+                cv.put(x, ytop + dy, "q4" if dy == 0 else "q3")
+            cv.put(x, ytop + 2, "q2")
+        xx = hx + 2 if s > 0 else _mirror(hx, hx + 2)
+        if (xx, hy) in inside:
+            cv.put(xx, hy, "wh")
+    part(cv, "cavity")
+    for (x, y) in inside:                                      # celah hidung
+        if hx - 1 <= x <= hx and hy + 3 <= y <= hy + 6:
+            cv.put(x, y, "q0")
+    part(cv, "cavity_teeth")
+    for (x, y) in inside:                                      # gigi baja: pelat tegak lebar 2 px selang-seling dengan celah api
+        if not hy + 8 <= y <= hy + 12:
+            continue
+        tooth = ((x - hx + 16) // 2) % 2 == 0
+        if tooth:
+            cv.put(x, y, "n4" if y == hy + 8 else ("n3" if y < hy + 12 else "n2"))
+        else:
+            cv.put(x, y, "q3" if y <= hy + 10 else "q1")
+
+
+def helm3(cv, hx, hy, eyes="look", mouth="closed", sway=0.0, mask=0.0):
     """Helm penuh: kubah gelap bertepi V di atas wajah, garis V merah (alis), visor salib menyala di pelat wajah gelap, sayap pipi,
-    cakram telinga mekanis, rahang meruncing dengan grill."""
+    cakram telinga mekanis, rahang meruncing dengan grill. mask 0..1: pelat wajah terbelah dua dan tiap pintu meluncur ke samping masuk ke sisi helm,
+    membuka rongga mesin berlensa merah (0 = tertutup, 1 = terbuka penuh)."""
     shell = poly(tr([(-6, -15), (6, -15), (11.5, -14), (15.5, -10), (17, -4), (16.5, 3), (13, 9), (9, 13.5), (5.5, 16), (-5.5, 16), (-9, 13.5),
                      (-13, 9), (-16.5, 3), (-17, -4), (-15.5, -10), (-11.5, -14)], hx, hy))
     wing_r = poly(tr([(15, -11), (21, -15), (26, -13), (22, -8), (25, -3), (18, -2), (15, -4)], hx, hy))
     solid3(cv, wing_r, IRON, OUT, depth=1, name="fin")
     px(cv, [(hx + 20 + i, hy - 11 - (i // 3)) for i in range(0, 5)], "q2", "fin")
     solid3(cv, shell, IRON, OUT, depth=2, name="helm")
-    # pelat wajah gelap di bawah garis V (ujung luar tinggi, tengah rendah)
-    vtop = lambda x: -9.0 + 6.0 * (1.0 - min(1.0, abs(x) / 16.0))
-    plate = poly(tr([(-16, vtop(-16)), (-8, vtop(-8)), (0, vtop(0)), (8, vtop(8)), (16, vtop(16)), (13, 9), (9, 13.5), (5.5, 16), (-5.5, 16),
-                     (-9, 13.5), (-13, 9)], hx, hy))
-    part(cv, "visor_plate")
-    cv.fill(plate - edge(plate), "n1")
-    for x in range(-15, 16):                                  # garis V merah (alis): terang di atas, gelap di bawah
-        y = int(round(vtop(x)))
-        cv.put(hx + x, hy + y + 1, "q0")
+    plate = _plate(hx, hy)
+    g = int(round(max(0.0, min(1.0, mask)) * MASK_MAX_SHIFT))
+    if g == 0:
+        face_closed(cv, hx, hy, eyes, mouth, plate)
+    else:
+        tmp = PartCanvas()
+        face_closed(tmp, hx, hy, eyes, mouth, plate)
+        cavity(cv, hx, hy, g, plate, eyes)
+        for (x, y), c in tmp.px.items():                      # pintu kiri (x < hx) bergeser ke kiri, pintu kanan ke kanan; yang keluar pelat tersembunyi di sisi helm
+            nx = x - g if x < hx else x + g
+            if (nx, y) in plate:
+                keep = cv.part
+                cv.part = tmp.owner.get((x, y))
+                cv.put(nx, y, c)
+                cv.part = keep
+        for y in range(hy - 4, hy + 17):                      # tepi dalam pintu: sorot di sisi pintu, garis gelap di sisi rongga
+            for nx, hi in ((hx - 1 - g, n3_if(cv, hx - 1 - g, y)), (hx + g, n3_if(cv, hx + g, y))):
+                if (nx, y) in plate and hi:
+                    cv.put(nx, y, "n3")
+    # garis V merah (alis): terang di atas, gelap di bawah; sumbu simetri di batas kolom hx-1 dan hx
     part(cv, "brow_band")
-    for x in range(-15, 16):
-        y = int(round(vtop(x)))
-        cv.put(hx + x, hy + y - 1, "q3" if abs(x) % 4 else "q4")
+    for x in range(-16, 16):
+        y = int(round(_vtop(x + 0.5)))
+        cv.put(hx + x, hy + y + 1, "q0")
         cv.put(hx + x, hy + y, "q2")
-    # kubah: plat sensor di atas, jahitan miring, baut
+        cv.put(hx + x, hy + y - 1, "q3" if (abs(x + 0.5) // 1) % 4 else "q4")
     plate_top = poly(tr([(-3.5, -19), (3.5, -19), (5, -12), (-5, -12)], hx, hy))
     solid3(cv, plate_top, STEELL, OUT, depth=1, name="sensor")
-    px(cv, vline(hx, hy - 18, hy - 13), "q3", "sensor")
-    px(cv, [(hx - 6 - i, hy - 13 + i) for i in range(0, 5)] + [(hx + 6 + i, hy - 13 + i) for i in range(0, 5)], "n0", "helm")
-    bolts(cv, [(hx - 10, hy - 10), (hx + 10, hy - 10), (hx - 14, hy - 6), (hx + 14, hy - 6)])
-    for s in (-1, 1):                                         # cakram telinga mekanis, ventilasi pipi
+    px(cv, vline(hx - 1, hy - 18, hy - 13) + vline(hx, hy - 18, hy - 13), "q3", "sensor")
+    px(cv, [(hx + 6 + i, hy - 13 + i) for i in range(0, 5)] + [(_mirror(hx, hx + 6 + i), hy - 13 + i) for i in range(0, 5)], "n0", "helm")
+    bolts(cv, [(hx + 10, hy - 10), (_mirror(hx, hx + 10), hy - 10), (hx + 14, hy - 6), (_mirror(hx, hx + 14), hy - 6)])
+    for s in (-1, 1):                                         # cakram telinga mekanis dan ventilasi pipi
         disc = ellipse(hx + s * 16.5, hy + 1.5, 3.2, 3.6)
         solid3(cv, disc, STEELL, OUT, depth=1, name="ear_disc")
-        cv.put(hx + s * 16 + (0 if s > 0 else -1), hy + 1, "q3")
-        px(cv, [(hx + s * 13, hy + 5 + i) for i in range(0, 3)] + [(hx + s * 12, hy + 5 + i) for i in range(0, 3)], "n0", "cheek")
-        px(cv, [(hx + s * 11, hy + 8 + i) for i in range(0, 3)], "q1", "cheek")
-    part(cv, "cheek")                                          # pelat pipi: jahitan tegak, sorot tipis, lampu indikator merah
-    for s in (-1, 1):
-        px(cv, vline(hx + s * 7, hy + 4, hy + 11), "n0")
-        px(cv, vline(hx + s * 7 - s, hy + 4, hy + 10), "n2")
-        px(cv, [(hx + s * 10, hy + 6)], "q2")
-        px(cv, hline(hx + s * 7 + (1 if s > 0 else -4), hx + s * 7 + (4 if s > 0 else -1), hy + 12), "n0")
-    visor(cv, hx, hy, eyes)
-    grill(cv, hx, hy, mouth)
+        cv.put(hx + 16 if s > 0 else _mirror(hx, hx + 16), hy + 1, "q3")
+        col = hx + 13 if s > 0 else _mirror(hx, hx + 13)
+        px(cv, [(col, hy + 5 + i) for i in range(0, 3)] + [(col - s, hy + 5 + i) for i in range(0, 3)], "n0", "cheek")
+        px(cv, [(hx + 11 if s > 0 else _mirror(hx, hx + 11), hy + 8 + i) for i in range(0, 3)], "q1", "cheek")
     part(cv, "chin")
-    cv.fill(hline(hx - 3, hx + 3, hy + 15), "q1")
+    cv.fill(hline(hx - 4, hx + 3, hy + 15), "q1")
+
+
+def n3_if(cv, x, y):
+    """True bila piksel (x, y) sudah milik pintu topeng (pelat wajah atau visor), supaya sorot tepi hanya jatuh di pintu."""
+    return cv.owner.get((x, y)) in ("visor_plate", "cheek", "visor", "grill")
 
 
 def collar(cv, tcx, tcy):
@@ -437,20 +529,44 @@ def tail_fan(cv, center, phase=0.0, rot=0.0, k=1.0):
             m = arrow(x, y, ang, sz, sz * 0.9)
             lit, mid, dark = (("q4", "q3", "q2") if kk == 0 else ("q3", "q2", "q1"))
             part(cv, "tail_arrow")
-            for (ax, ay) in m:                                   # tanpa garis tepi: tiga nada rata, terang di tepi atas-kiri, gelap di bawah-kanan
+            for (ax, ay) in m:                                   # tanpa garis tepi: dua nada rata (dasar dan bayangan di tepi bawah-kanan), sorotan hanya di ujung
                 c = mid
-                if (ax - 1, ay) not in m or (ax, ay - 1) not in m:
-                    c = lit
-                elif (ax + 1, ay) not in m or (ax, ay + 1) not in m:
+                if (ax + 1, ay) not in m or (ax, ay + 1) not in m:
                     c = dark
                 cv.put(ax, ay, c)
+            tx, ty = x + math.cos(ang) * sz * 0.5, y + math.sin(ang) * sz * 0.5
+            if (int(tx), int(ty)) in m:
+                cv.put(int(tx), int(ty), lit)
 
 
 # ================================================================== pedang hitam raksasa berinti api merah
 BLADE_START, BLADE_LEN, BLADE_HW = 8.0, 40.0, 9.5
 
 
-def sword3(cv, sf, glow=1):
+STAIN_BLOBS = ((13.5, -3.5, 4.0), (20.0, 3.5, 4.4), (25.0, -2.0, 3.4), (11.5, 6.0, 2.0), (23.0, 6.5, 2.0), (17.0, -7.0, 2.0))   # (u, v, jari-jari) noda cairan monster
+
+
+def stain_color(u, v, stain_u):
+    """Warna noda cairan monster (hijau asam) di titik (u, v) bilah, atau None. Noda hanya ada untuk u >= stain_u: sapuan tangan dari pelindung ke
+    ujung menghapus noda di belakangnya dan mendorong olesan tipis di depannya."""
+    if stain_u is None:
+        return None
+    if u < stain_u:
+        return None
+    if u < stain_u + 4.0 and stain_u > 0.5 and abs(v) < BLADE_HW - 1.5:               # olesan: dorongan noda di depan tangan
+        return "m1" if (int(u) + int(v)) % 2 == 0 else "m2"
+    for (bu, bv, r) in STAIN_BLOBS:
+        d = math.hypot((u - bu) / (r * 1.3), (v - bv) / r)
+        if d < 1.0:
+            if d > 0.74:
+                return "m1"
+            return "m3" if (d < 0.5 and v < bv - 0.3 and u < bu + 0.5) else "m2"
+        if bu <= 18.0 and abs(v - bv) < 0.7 and bu <= u <= bu + r * 2.9:               # alur tetesan ke arah ujung (hanya noda dekat pelindung)
+            return "m1" if int(u) % 2 else "m2"
+    return None
+
+
+def sword3(cv, sf, glow=1, stain_u=None):
     """Pedang agung: bilah lebar hitam dengan inti api bergelombang (pinggir merah menyala, inti hitam), pelindung baja, gagang dan pomel.
     glow 0..2 mengatur kecerahan api. Semua digambar di sumbu u (sepanjang pedang) dan v (melintang) lalu diputar oleh `sf`."""
     ca, sa = sf.ca, sf.sa
@@ -482,6 +598,13 @@ def sword3(cv, sf, glow=1):
                 c = "q3" if edge_d > 1.6 else "q2"
                 if glow == 2 and abs(math.sin(u * 0.62 + 1.5)) > 0.86 and edge_d > 2.4:
                     c = "q4"
+        if (x, y) not in ring:
+            sc = stain_color(u, v, stain_u)
+            if sc:
+                part(cv, "ichor")
+                cv.put(x, y, sc)
+                part(cv, "weapon")
+                continue
         cv.put(x, y, c)
     # kilatan api yang menjulur di luar tepi (deterministik)
     for u in (14, 22, 30, 37):
@@ -520,10 +643,19 @@ def pose(**kw):
     p = dict(cx=64, lean=0.0, crouch=0.0, dy=0.0, hdx=0.0, hdy=0.0,
              fl=(-9.0, 0.0), fr=(9.0, 0.0),
              grip=None, ang=0.0, sword_layer="front", lh_u=-6.5, lh=None, rh=None, glow=1,
-             eyes="look", mouth="closed", sway=0.0, tail_phase=0.0, tail_rot=0.0, tail_k=1.0, twist=0.0, fx=(),
-             legs_front=False, toe_l=1, toe_r=1)
+             eyes="look", mouth="closed", sway=0.0, tail_phase=0.0, tail_rot=0.0, tail_k=1.0, twist=0.0, fx=(), mask=0.0, stain_u=None, heat=0, flare=0.0,
+             props=(), legs_front=False, toe_l=1, toe_r=1)
     p.update(kw)
     return p
+
+
+def _reach(hip, foot):
+    """Jepit tumit ke jangkauan kaki (paha + betis): kaki tidak pernah terlepas dari pinggul; target di luar jangkauan digeser sepanjang arahnya."""
+    d = math.hypot(foot[0] - hip[0], foot[1] - hip[1])
+    lim = THIGH + SHIN - 0.3
+    if d <= lim:
+        return foot
+    return (hip[0] + (foot[0] - hip[0]) * lim / d, hip[1] + (foot[1] - hip[1]) * lim / d)
 
 
 def geometry(p):
@@ -535,8 +667,8 @@ def geometry(p):
              sh_l=(tcx - SH_X + p["twist"], tcy - SH_Y), sh_r=(tcx + SH_X + p["twist"] * 0.3, tcy - SH_Y),
              head=(tcx + lean * 0.4 + p["hdx"], tcy - HEAD_DY + p["hdy"]),
              hip_l=(cx - 6.5, hip_y), hip_r=(cx + 6.5, hip_y))
-    g["foot_l"] = (cx + p["fl"][0], FLOOR - 3 - p["fl"][1])
-    g["foot_r"] = (cx + p["fr"][0], FLOOR - 3 - p["fr"][1])
+    g["foot_l"] = _reach(g["hip_l"], (cx + p["fl"][0], FLOOR - 3 - p["fl"][1]))
+    g["foot_r"] = _reach(g["hip_r"], (cx + p["fr"][0], FLOOR - 3 - p["fr"][1]))
     if p["grip"] is not None:
         sf = SwordFrame(p["grip"][0], p["grip"][1], p["ang"])
         g["sword"] = sf
@@ -561,9 +693,11 @@ def draw_hero(cv, p):
     pedang (di depan), sarung tangan, helm, efek, rim light."""
     g = geometry(p)
     tcx, tcy = g["tcx"], g["tcy"]
+    for prop in p["props"]:
+        prop(cv)
     tail_fan(cv, (g["sh_l"][0] - 8.0, g["sh_l"][1] + 4.0), p["tail_phase"], p["tail_rot"], p["tail_k"])
     if g["sword"] and p["sword_layer"] == "back":
-        sword3(cv, g["sword"], p["glow"])
+        sword3(cv, g["sword"], p["glow"], p["stain_u"])
     if not p["legs_front"]:
         _legs(cv, g, p)
     chest(cv, tcx, tcy)
@@ -574,7 +708,7 @@ def draw_hero(cv, p):
     collar(cv, tcx, tcy)
     hx, hy = g["head"]
     ihx, ihy = int(round(hx)), int(round(hy))
-    crest(cv, ihx, ihy, p["sway"])
+    crest(cv, ihx, ihy, p["sway"], p["flare"])
     arms = []
     for side, sh, hand in (("l", g["sh_l"], g["lh"]), ("r", g["sh_r"], g["rh"])):
         if hand is None:
@@ -590,14 +724,29 @@ def draw_hero(cv, p):
         solid3(cv, fore, IRON, OUT, name="vambrace")
         solid3(cv, ellipse(elbow[0], elbow[1], 3.3, 3.3), STEELL, OUT, name="elbow")
     if g["sword"] and p["sword_layer"] == "front":
-        sword3(cv, g["sword"], p["glow"])
+        sword3(cv, g["sword"], p["glow"], p["stain_u"])
     for side, sh, elbow, hand in arms:
         gauntlet(cv, hand[0], hand[1])
-    helm3(cv, ihx, ihy, p["eyes"], p["mouth"], p["sway"])
+    helm3(cv, ihx, ihy, p["eyes"], p["mouth"], p["sway"], p["mask"])
+    if p["heat"]:
+        heat_pass(cv, p["heat"])
     for f in p["fx"]:
         f(cv, g)
     rim_pass3(cv)
     return g
+
+
+HEAT_MAP = {1: {"q0": "q1", "q1": "q2", "q2": "q3", "q3": "q4"}, 2: {"q0": "q2", "q1": "q3", "q2": "q3", "q3": "q4"}}
+HEAT_SKIP = {"ichor", "rock", "block", "dust", "chip", "burst", "smear", "spark", "glint", "steam", "cavity", "cavity_eye", "cavity_teeth"}
+
+
+def heat_pass(cv, level):
+    """Amarah: semua merah pada badan naik 1 (atau 2) tingkat ke arah menyala; efek dan rongga topeng tidak ikut."""
+    m = HEAT_MAP[level]
+    for k, c in list(cv.px.items()):
+        if c in m and cv.owner.get(k) not in HEAT_SKIP:
+            cv.px[k] = m[c]
+    return cv
 
 
 def _legs(cv, g, p):
@@ -636,11 +785,11 @@ def pose_smash_hit():
     sf = SwordFrame(gx, gy, ang)
     ux = (FLOOR - 11 - gy) / math.sin(math.radians(ang))
     hx, hy = sf.w(ux, 0)
-    p["fx"] = [lambda cv, g: H.fx_dust(cv, hx + 3, FLOOR - 1, 1, 1.0),
-               lambda cv, g: H.wood_block(cv, hx + 3, FLOOR, 16, 11),
-               lambda cv, g: H.fx_smear(cv, gx, gy, 34, -34, 40, 2),
-               lambda cv, g: H.fx_burst(cv, hx - 1, hy - 2, 6),
-               lambda cv, g: H.fx_chips(cv, hx + 1, FLOOR - 10, 1, seed=3, n=9, power=1.0)]
+    p["fx"] = [lambda cv, g: FX.fx_dust(cv, hx + 3, FLOOR - 1, 1, 1.0),
+               lambda cv, g: FX.wood_block(cv, hx + 3, FLOOR, 16, 11),
+               lambda cv, g: FX.fx_smear(cv, gx, gy, 34, -34, 40, 2),
+               lambda cv, g: FX.fx_burst(cv, hx - 1, hy - 2, 6),
+               lambda cv, g: FX.fx_chips(cv, hx + 1, FLOOR - 10, 1, seed=3, n=9, power=1.0)]
     return p
 
 

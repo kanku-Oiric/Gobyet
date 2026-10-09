@@ -56,7 +56,7 @@ class Hero3Model(unittest.TestCase):
         for p in self.poses.values():
             keys |= set(hero3.render_pose(dict(p, fx=())).px.values())
         self.assertLessEqual(len(keys), 28)
-        self.assertEqual(len(keys), 11)                                   # tepat 11 kunci hero3 tanpa efek
+        self.assertEqual(len(keys), 11)                                   # tepat 11 kunci hero3 tanpa efek (efek memakai batu, kayu, cairan monster)
         for k in keys:
             self.assertIn(k, monkey.PAL_HERO)
         self.assertTrue(set(hero3.HERO3_PAL) <= set(monkey.PAL_HERO))
@@ -86,7 +86,7 @@ class Hero3Model(unittest.TestCase):
         xs = [x for x, _ in vis]
         ys = [y for _, y in vis]
         self.assertGreaterEqual(max(xs) - min(xs) + 1, 15)               # lengan datar salib
-        self.assertGreaterEqual(max(ys) - min(ys) + 1, 11)               # batang tegak salib
+        self.assertGreaterEqual(max(ys) - min(ys) + 1, 9)                # batang tegak salib (bagian atasnya tertutup garis V)
         base = {k: cv.px[k] for k in vis}
         seen = {}
         for style in hero3.EYE_STYLES:
@@ -98,6 +98,51 @@ class Hero3Model(unittest.TestCase):
         hero3.helm3(c3, 40, 40, "x", "closed")
         self.assertTrue([k for k, o in c3.owner.items() if o == "visor"])
         self.assertNotEqual({k: c3.px[k] for k in c3.px if c3.owner.get(k) == "visor"}, base)
+
+    def test_closed_face_is_mirror_symmetric_about_the_helm_axis(self):
+        """Visor salib, grill, dan garis V tepat simetris terhadap sumbu helm (batas kolom hx-1 dan hx); cahaya dari kiri atas hanya menggeser nada cakram telinga."""
+        hx, hy = 60, 40
+        for eyes in hero3.EYE_STYLES:
+            for mouth in ("closed", "shout"):
+                cv = hero3.PartCanvas()
+                hero3.helm3(cv, hx, hy, eyes, mouth)
+                for part in ("visor", "grill", "brow_band"):
+                    for (x, y), o in cv.owner.items():
+                        if o == part:
+                            self.assertEqual(cv.px.get((2 * hx - 1 - x, y)), cv.px[(x, y)], (eyes, mouth, part, x, y))
+
+    def test_mask_opens_monotonically_with_a_machine_cavity_and_no_gobyet_colors(self):
+        sizes = []
+        for m in (0.0, 0.125, 0.25, 0.5, 0.75, 1.0):
+            cv = hero3.PartCanvas()
+            hero3.helm3(cv, 60, 40, "look", "closed", 0.0, m)
+            sizes.append(sum(1 for o in cv.owner.values() if o in ("cavity", "cavity_eye", "cavity_teeth")))
+            self.assertFalse(set(cv.px.values()) & GOBYET_COLOR_KEYS, m)
+            if m >= 0.5:                                   # terbuka lebar: dua lensa mata menyala di dalam rongga
+                self.assertGreaterEqual(sum(1 for o in cv.owner.values() if o == "cavity_eye"), 12, m)
+        self.assertEqual(sizes[0], 0)
+        self.assertEqual(sizes, sorted(sizes))
+        self.assertGreaterEqual(sizes[-1], 250)
+
+    def test_stain_is_wiped_progressively_from_the_guard_toward_the_tip(self):
+        counts = []
+        for u in (0, 8, 17, 30, 60):
+            cv = hero3.PartCanvas()
+            hero3.sword3(cv, hero3.SwordFrame(82, 48, 88.0), 1, u)
+            counts.append(sum(1 for o in cv.owner.values() if o == "ichor"))
+        self.assertGreaterEqual(counts[0], 150)
+        self.assertEqual(counts[-1], 0)
+        self.assertEqual(counts[1:], sorted(counts[1:], reverse=True))
+        cv = hero3.PartCanvas()
+        hero3.sword3(cv, hero3.SwordFrame(82, 48, 88.0), 1, None)                # tanpa noda: tidak ada piksel cairan monster
+        self.assertEqual(sum(1 for o in cv.owner.values() if o == "ichor"), 0)
+
+    def test_feet_never_detach_from_the_hips(self):
+        for name, p in self.poses.items():
+            g = hero3.geometry(p)
+            for hip, foot in (("hip_l", "foot_l"), ("hip_r", "foot_r")):
+                d = ((g[hip][0] - g[foot][0]) ** 2 + (g[hip][1] - g[foot][1]) ** 2) ** 0.5
+                self.assertLessEqual(d, hero3.THIGH + hero3.SHIN, (name, hip, d))
 
     def test_sword_is_black_core_with_red_flame(self):
         for name, p in self.poses.items():

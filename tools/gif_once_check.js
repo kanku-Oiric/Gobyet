@@ -1,12 +1,12 @@
 #!/usr/bin/env node
-// Uji perilaku GIF tanpa loop (berserker-hero-rage.gif) di Chromium headless (Playwright, alat dev opsional).
+// Uji perilaku GIF tanpa loop (berserker-hero-rage.gif dan berserker-hero-victory.gif) di Chromium headless (Playwright, alat dev opsional).
 //
 //   node tools/gif_once_check.js [folder-keluaran] [gif-pembanding-sebelum.gif]
 //
 // Menampilkan GIF di <img> 512x384 pada latar abu, lalu mengambil tangkapan layar pada beberapa waktu:
-//  - rage (loop=false): setelah total durasi harus berhenti di frame terakhir dan tidak berubah lagi;
+//  - rage dan victory (loop=false): setelah total durasi harus berhenti di frame terakhir dan tidak berubah lagi;
 //  - kontrol positif: run (loop tak hingga) harus tetap bergerak (tangkapan berbeda) pada waktu yang sama;
-//  - frame terakhir yang tampil harus sama dengan frame terakhir sheet (frame 11 x4) yang dirender di kanvas pada latar yang sama.
+//  - frame terakhir yang tampil harus sama dengan frame terakhir sheet (x4) yang dirender di kanvas pada latar yang sama.
 // Hanya Chromium yang tersedia di lingkungan ini; penampil lain tidak diuji (lihat pack/README.md).
 "use strict";
 const http = require("node:http");
@@ -23,8 +23,9 @@ const ROOT = path.resolve(__dirname, "..");
 const OUT = path.resolve(process.argv[2] || path.join(ROOT, "tools", "out"));
 const BEFORE = process.argv[3] ? path.resolve(process.argv[3]) : null;
 const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, "pack", "manifest.json"), "utf8"));
-const rage = manifest.cells["berserker-hero"].rage;
-const total = rage.durations_ms.reduce((a, b) => a + b, 0);
+const ONCE = ["rage", "victory"];
+const cellOf = (state) => manifest.cells["berserker-hero"][state];
+const totalOf = (state) => cellOf(state).durations_ms.reduce((a, b) => a + b, 0);
 
 function serve() {
   const server = http.createServer((req, res) => {
@@ -44,7 +45,8 @@ function serve() {
   const server = await serve();
   const base = "http://127.0.0.1:" + server.address().port;
   const browser = await chromium.launch();
-  const report = { chromium: browser.version(), rage_total_ms: total, rage_last_frame_ms: rage.durations_ms[rage.frames - 1], fails: [] };
+  const report = { chromium: browser.version(), fails: [] };
+  for (const st of ONCE) { report[st + "_total_ms"] = totalOf(st); report[st + "_last_frame_ms"] = cellOf(st).durations_ms[cellOf(st).frames - 1]; }
   const check = (ok, msg) => { if (!ok) report.fails.push(msg); };
   const same = (a, b) => Buffer.compare(a, b) === 0;
 
@@ -66,8 +68,8 @@ function serve() {
     return out;
   }
 
-  // frame terakhir acuan: sheet frame 11 diperbesar 4x tanpa smoothing pada latar yang sama
-  async function reference() {
+  // frame terakhir acuan: frame terakhir sheet diperbesar 4x tanpa smoothing pada latar yang sama
+  async function reference(state) {
     const ctx = await browser.newContext({ viewport: { width: 560, height: 430 } });
     const p = await ctx.newPage();
     await p.setContent('<body style="margin:0;background:#808080"><canvas id="c" width="512" height="384" style="display:block;margin:10px"></canvas></body>');
@@ -75,23 +77,29 @@ function serve() {
       const im = new Image(); await new Promise((r, j) => { im.onload = r; im.onerror = j; im.src = args.url; });
       const c = document.getElementById("c").getContext("2d"); c.imageSmoothingEnabled = false;
       c.drawImage(im, args.k * 128, 0, 128, 96, 0, 0, 512, 384);
-    }, { url: base + "/sheets/berserker-hero-rage.png", k: rage.frames - 1 });
+    }, { url: base + "/sheets/berserker-hero-" + state + ".png", k: cellOf(state).frames - 1 });
     const png = await p.locator("#c").screenshot();
     await ctx.close();
     return png;
   }
 
-  const times = [400, total + 500, total + 3000, total + 6500];
-  const r = await shots("/gif/berserker-hero-rage.gif", times);
-  r.forEach((x, i) => fs.writeFileSync(path.join(OUT, "rage-t" + x.t + ".png"), x.png));
-  const ref = await reference();
-  fs.writeFileSync(path.join(OUT, "rage-frame-terakhir-acuan.png"), ref);
-  report.rage_times_ms = times;
-  report.rage_stops_after_total = same(r[1].png, r[2].png) && same(r[2].png, r[3].png);
-  report.rage_last_frame_equals_sheet_frame = same(r[3].png, ref);
-  report.rage_early_differs_from_last = !same(r[0].png, r[3].png);
-  check(report.rage_stops_after_total, "rage: tangkapan setelah total durasi berubah (GIF berputar lagi)");
-  check(report.rage_last_frame_equals_sheet_frame, "rage: frame akhir yang tampil beda dari frame terakhir sheet");
+  let rageShots = null;
+  for (const st of ONCE) {
+    const total = totalOf(st);
+    const times = [400, total + 500, total + 3000, total + 6500];
+    const r = await shots("/gif/berserker-hero-" + st + ".gif", times);
+    r.forEach((x, i) => fs.writeFileSync(path.join(OUT, st + "-t" + x.t + ".png"), x.png));
+    const ref = await reference(st);
+    fs.writeFileSync(path.join(OUT, st + "-frame-terakhir-acuan.png"), ref);
+    report[st + "_times_ms"] = times;
+    report[st + "_stops_after_total"] = same(r[1].png, r[2].png) && same(r[2].png, r[3].png);
+    report[st + "_last_frame_equals_sheet_frame"] = same(r[3].png, ref);
+    report[st + "_early_differs_from_last"] = !same(r[0].png, r[3].png);
+    check(report[st + "_stops_after_total"], st + ": tangkapan setelah total durasi berubah (GIF berputar lagi)");
+    check(report[st + "_last_frame_equals_sheet_frame"], st + ": frame akhir yang tampil beda dari frame terakhir sheet");
+    check(report[st + "_early_differs_from_last"], st + ": tangkapan awal sama dengan frame akhir (uji tidak sahih)");
+    if (st === "rage") rageShots = r;
+  }
 
   // kontrol positif: run berputar tak hingga, jadi tangkapan pada waktu berbeda harus berbeda
   const run = await shots("/gif/berserker-hero-run.gif", [300, 420, 540, 660, 780]);
@@ -101,7 +109,7 @@ function serve() {
   if (BEFORE) {      // GIF rage sebelum perubahan (frame akhir 400 ms): perilaku Chromium yang sama?
     const b = await shots("/before.gif", [400, 1660 + 500, 1660 + 3000, 1660 + 6500]);
     report.before_stops = same(b[1].png, b[2].png) && same(b[2].png, b[3].png);
-    report.before_last_equals_after_last = same(b[3].png, r[3].png);
+    report.before_last_equals_after_last = same(b[3].png, rageShots[3].png);
   }
   await browser.close(); server.close();
   fs.writeFileSync(path.join(OUT, "gif-sekali.json"), JSON.stringify(report, null, 2));

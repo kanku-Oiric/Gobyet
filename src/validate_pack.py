@@ -70,10 +70,10 @@ HERO_LIGHT, HERO_DARK, HERO_GRAY = (250, 247, 240), (24, 28, 44), (128, 128, 128
 HERO_HALO_KEY = "bb"  # halo pratinjau = nada tulang palet hero (krem), kontur 1 px CSS di luar siluet; aset tidak diubah
 # Spesifikasi hero: state -> (jumlah frame, loop). Ditulis ulang di sini (bukan dibaca dari hero_scenes) supaya
 # validator memeriksa kode terhadap spesifikasi, bukan terhadap dirinya sendiri.
-HERO_LAST_HOLD_MS = {"rage": 1500}  # state yang tidak berputar: frame terakhir ditahan segini lama (penampil GIF yang mengulang tetap tampak berhenti)
+HERO_LAST_HOLD_MS = {"rage": 1500, "victory": 1500}  # state yang tidak berputar: frame terakhir ditahan segini lama (penampil GIF yang mengulang tetap tampak berhenti)
 HERO_ATTACKS = {"attack-leap": ("dust", "chip"), "attack-smash": ("dust", "chip"), "miss": ("dust",)}  # state serangan -> bagian efek di frame tumbukan
 HERO_SPEC = {"idle": (12, True), "run": (12, True), "rage": (12, False), "attack-leap": (14, True), "attack-smash": (12, True),
-             "miss": (10, True), "exhaustion": (12, True), "defeated": (14, True)}
+             "miss": (10, True), "exhaustion": (12, True), "defeated": (14, True), "victory": (16, False)}
 GROUPS = ("core", "role", "domain", "fantasy", "theology", "special")
 SEAM_FACTOR = 1.25
 POP_RATIO, POP_MIN = 0.9, 100  # SEAM-POP: seam >= 0,9 x maks dan maks > 100 px (peringatan)
@@ -1035,8 +1035,9 @@ def check_sizes(m, gate):
 
 # ------------------------------------------------------------------ V11
 def hero_findings(state, track, sheet_frames, cell):
-    """Pemeriksaan satu state hero terhadap aset hasil ekspor. Mengembalikan (daftar_gagal, baris_laporan)."""
-    import hero_check as hc
+    """Pemeriksaan satu state hero (v3, tanpa basis Gobyet) terhadap aset hasil ekspor. Mengembalikan (daftar_gagal, info)."""
+    import hero3 as R
+    import hero3_check as hc
     bad, info = [], {}
     n = cell["frames"]
     cvs = [track.frame(i) for i in range(n)]
@@ -1052,26 +1053,33 @@ def hero_findings(state, track, sheet_frames, cell):
         bad.append("frame terakhir %d ms, harus %d ms (state tidak berputar)" % (cell["durations_ms"][-1], hold))
     if len(set(cell["durations_ms"])) < 3:
         bad.append("durasi hampir seragam: %s" % sorted(set(cell["durations_ms"])))
-    # wajah, mata, hidung, mulut, dan telinga terlihat penuh di SEMUA frame (dibanding kepala digambar sendirian)
-    worst, skin = 1.0, 10 ** 9
-    for i, (cv, p) in enumerate(zip(cvs, poses)):
-        vis = hc.visibility(cv, p)
-        skin = min(skin, vis["face"][0])
-        for part, (seen, ref) in vis.items():
-            if ref and seen < ref:
-                bad.append("f%d: %s terlihat %d dari %d piksel" % (i, part, seen, ref))
-            worst = min(worst, seen / float(ref) if ref else 1.0)
-        if vis["face"][0] == 0 or vis["eye"][0] == 0 or vis["mouth"][0] == 0:
-            bad.append("f%d: wajah, mata, atau hidung/mulut tidak terlihat" % i)
-    info["wajah_min_px"], info["terlihat_min"] = skin, worst
-    # asimetri: bahu berlapis 3 pelat, gesper, dan tanduk patah tetap di sisi yang sama di setiap frame (centroid x relatif titik tengah badan)
-    import hero
-    asym = hc.asymmetry(cvs, [hero.geometry(p)["tcx"] for p in poses], state)
-    info["asimetri"] = asym
-    for name, a in asym.items():
-        for i, why in a["tanda"]:
-            bad.append("asimetri %s f%d: %s" % (name, i, why))
-    # tinggi kotak kepala (helm + kepala) antar frame berurutan dan sepanjang state
+    # identitas: bukan Gobyet (tanpa warna atau bagian kepala, wajah, telinga, bulu Gobyet), tidak ada piksel di tepi kanvas
+    for i, cv in enumerate(cvs):
+        for b in hc.identity_findings(cv):
+            bad.append("f%d: %s" % (i, b))
+        xs, ys = [x for x, _ in cv.px], [y for _, y in cv.px]
+        if min(xs) < 1 or max(xs) > cv.w - 2 or min(ys) < 1:
+            bad.append("f%d: piksel di tepi kanvas (x %d..%d, y mulai %d): bagian bisa terpotong" % (i, min(xs), max(xs), min(ys)))
+    # aturan darah: cairan monster (hijau) hanya di victory
+    for i, cv in enumerate(cvs):
+        keys = set(cv.px.values()) & hc.ICHOR_KEYS
+        if (keys or hc.count(cv, ("ichor",))) and state != "victory":
+            bad.append("f%d: cairan monster di state %s (hanya boleh di victory)" % (i, state))
+    # mata: visor salib atau lensa rongga terlihat di semua frame
+    eyes = [hc.eyes_visible(cv) for cv in cvs]
+    low = [i for i, (v, e, _) in enumerate(eyes) if v + e < 24]
+    if low:
+        bad.append("visor atau lensa terlihat kurang dari 24 piksel di frame %s" % low)
+    info["mata_min"] = min(v + e for v, e, _ in eyes)
+    # sisi: pelindung bahu raksasa kiri, bundar kanan, jambul dan ekor ke belakang di setiap frame
+    sd = hc.sides(cvs, [R.geometry(p)["tcx"] for p in poses], state)
+    info["sisi"] = sd
+    for name, v in sd.items():
+        for i, why in v["tanda"]:
+            bad.append("sisi %s f%d: %s" % (name, i, why))
+        if v["wajib_terlihat"] and v["tidak_terlihat"]:
+            bad.append("sisi %s tidak terlihat di frame %s" % (name, v["tidak_terlihat"]))
+    # tinggi kotak kepala (helm dan isinya) antar frame berurutan dan sepanjang state
     hh = [hc.head_height(cv) for cv in cvs]
     pairs = list(zip(hh, hh[1:])) + ([(hh[-1], hh[0])] if cell.get("loop") else [])
     step = max(abs(a - b) / float(max(a, b)) for a, b in pairs)
@@ -1079,11 +1087,6 @@ def hero_findings(state, track, sheet_frames, cell):
     info["kepala_tinggi"], info["kepala_langkah"], info["kepala_rentang"] = (min(hh), max(hh)), step, span
     if step > HERO_HEAD_VARIATION or span > HERO_HEAD_VARIATION:
         bad.append("tinggi kepala %s: langkah %.1f%%, rentang %.1f%% > %d%%" % ((min(hh), max(hh)), 100 * step, 100 * span, 100 * HERO_HEAD_VARIATION))
-    # tidak ada darah: warna merah wajah (ra/rb) hanya milik wajah dan mulut (pemeriksaan ini terpisah dari wajah merah rage di bawah)
-    for i, cv in enumerate(cvs):
-        red = {cv.owner.get(k) for k, c in cv.px.items() if c in ("ra", "rb")}
-        if red - {"face", "mouth", None}:
-            bad.append("f%d: warna merah wajah di bagian %s" % (i, sorted(x for x in red - {"face", "mouth"} if x)))
     # loop: seam <= langkah terbesar (lebih ketat dari V4); run: siluet berurutan harus jelas berbeda
     if cell.get("loop"):
         steps = [diff(sheet_frames[i], sheet_frames[i + 1]) for i in range(n - 1)]
@@ -1114,19 +1117,27 @@ def hero_findings(state, track, sheet_frames, cell):
         for need in HERO_ATTACKS[state]:
             if need not in have:
                 bad.append("frame tumbukan f%d tanpa %s" % (kf, need))
-    # wajah merah dan titik teal rongga mata hanya pada rage (frame kunci dan akhir marah, empat frame awal tenang)
-    glow = [sum(1 for o in cv.owner.values() if o == "socket_glow") for cv in cvs]
-    red = [sum(1 for k, c in cv.px.items() if c == "ra" and cv.owner.get(k) == "face") for cv in cvs]
+    # amuk: garis kejut dan bara hanya pada rage (tiga frame awal tenang, frame kunci meledak lebih terang dari frame awal)
+    roar = [i for i, cv in enumerate(cvs) if "roar" in cv.owner.values()]
+    ember = [i for i, cv in enumerate(cvs) if "spark" in cv.owner.values()]
     if state == "rage":
-        angry = [i for i in range(n) if glow[i] == 8 and red[i] >= 60]
-        info["amuk"] = (angry[0], angry[-1]) if angry else None
-        if kf not in angry or n - 1 not in angry or len(angry) < 6:
-            bad.append("rage: frame marah (wajah merah + dua titik teal 2x2) %s; harus mencakup kunci f%d dan frame akhir" % (angry, kf))
-        if any(glow[i] or red[i] for i in range(3)):
-            bad.append("rage: tiga frame awal harus tenang (tanpa wajah merah atau titik teal)")
-    elif any(glow) or any(red):
-        bad.append("wajah merah atau titik teal rongga mata di state selain rage (f%s)" % [i for i in range(n) if glow[i] or red[i]][:5])
-    # batas keterbacaan 4.4 di frame kunci
+        info["amuk"] = (roar[0], roar[-1]) if roar else None
+        if kf not in roar or len(roar) < 4 or len(ember) < 4:
+            bad.append("rage: garis kejut %s dan bara %s harus ada di >= 4 frame dan mencakup frame kunci f%d" % (roar, ember, kf))
+        if any(i in roar or i in ember for i in range(3)):
+            bad.append("rage: tiga frame awal harus tenang (tanpa garis kejut atau bara)")
+        hot = [sum(1 for c in cv.px.values() if c in ("q3", "q4")) for cv in cvs]
+        info["panas"] = (hot[0], hot[kf])
+        if hot[kf] < 1.25 * hot[0]:
+            bad.append("rage: merah menyala di frame kunci %d piksel kurang dari 1,25 x frame awal %d" % (hot[kf], hot[0]))
+    elif roar or ember:
+        bad.append("garis kejut atau bara di state selain rage (f%s)" % sorted(set(roar + ember))[:5])
+    # victory: urutan yang diminta pemilik
+    if state == "victory":
+        vb, vi = hc.victory_findings(cvs, poses)
+        bad.extend(vb)
+        info["victory"] = vi
+    # batas keterbacaan di frame kunci
     r = hc.readability(cvs[kf])
     info["kunci"] = (kf, r)
     for f in hc.readability_failures(r):
@@ -1135,13 +1146,13 @@ def hero_findings(state, track, sheet_frames, cell):
 
 
 def check_hero(m):
-    print("\n[V11] Berserker Hero (kanvas 128x96, GIF x4): spesifikasi, aset = kode, wajah, kepala, 4.4, seam, warna, kontras")
+    print("\n[V11] Berserker Hero (kanvas 128x96, GIF x4, bukan Gobyet): spesifikasi, aset = kode, identitas, mata, sisi, kepala, seam, victory, warna, kontras")
     row = m["cells"].get(HERO)
     if not row:
         print("  belum ada kostum %s di manifest (dilewati)" % HERO)
         return
-    import hero_check as hc
-    import hero_scenes as hs
+    import hero3_check as hc
+    import hero3_scenes as hs
     before = len(FAILS)
     entry = next((c for c in m["costumes"] if c["id"] == HERO), None)
     if not entry or entry.get("base") != "viking-berserker" or entry.get("group") != "fantasy" or entry.get("label") != "Berserker Hero":
@@ -1160,11 +1171,11 @@ def check_hero(m):
         if cell.get("canvas") != {"w": 128, "h": 96} or cell.get("gif_scale") != 4:
             fail("%s: canvas %r gif_scale %r; spesifikasi 128x96 dan 4" % (tag, cell.get("canvas"), cell.get("gif_scale")))
         if state not in hs.TRACKS:
-            fail("%s: tidak ada di hero_scenes.TRACKS" % tag)
+            fail("%s: tidak ada di hero3_scenes.TRACKS" % tag)
             continue
         meta = hs.META[state]
         if (meta["frames"], meta["keyframe"], meta["loop"]) != (cell["frames"], cell["keyframe"], cell["loop"]):
-            fail("%s: manifest (frame %d, kunci f%d, loop %r) != hero_scenes.META (frame %d, kunci f%d, loop %r)" % (
+            fail("%s: manifest (frame %d, kunci f%d, loop %r) != hero3_scenes.META (frame %d, kunci f%d, loop %r)" % (
                 tag, cell["frames"], cell["keyframe"], cell["loop"], meta["frames"], meta["keyframe"], meta["loop"]))
         sheet = frames_of(cell_path(cell["sheet"]), 1, cell_canvas(cell))
         if len(sheet) != cell["frames"]:
@@ -1179,31 +1190,29 @@ def check_hero(m):
             state, cell["frames"], "ya" if cell.get("loop") else "tidak", "%dx%d" % cell_canvas(cell), cell_scale(cell), cell["keyframe"],
             os.path.getsize(cell_path(cell["gif"])) / 1024.0, "lulus" if not bad else "GAGAL (%d)" % len(bad)))
         kf, r = info["kunci"]
-        asym = info["asimetri"]
 
         def rng(name):
-            v = [dx for dx, n in asym[name]["seri"] if n]
+            v = [dx for dx, k in info["sisi"][name]["seri"] if k]
             return "%.1f..%.1f" % (min(v), max(v)) if v else "tidak terlihat"
-        flagged = sum(len(a["tanda"]) for a in asym.values())
-        hidden = sorted({i for a in asym.values() for i in a["tidak_terlihat"]})
-        print("      asimetri (dx px relatif tengah badan, - kiri / + kanan): pelat bahu 1/2/3 %s | %s | %s; gesper %s (cahaya %s); tanduk patah %s; "
-              "tambahan: bahu kecil %s, ekor %s, moncong %s; frame ditandai %d%s" % (
-                  rng("pelat_bahu_1"), rng("pelat_bahu_2"), rng("pelat_bahu_3"), rng("gesper"),
-                  "%.1f..%.1f" % (min(v for v in asym["cahaya_gesper"]["seri"] if v is not None), max(v for v in asym["cahaya_gesper"]["seri"] if v is not None)),
-                  rng("tanduk_patah"), rng("bahu_kecil"), rng("ekor"), rng("moncong"), flagged,
-                  ("; elemen tidak terlihat di f%s" % hidden) if hidden else ""))
         extra = ""
         if "smear" in info:
             extra = "; smear sebelum tumbukan f%s, frame tumbukan %d ms (median %g)" % (info["smear"], info["tahan"][0], info["tahan"][1])
         if state == "rage":
-            extra = "; frame marah f%d-f%d" % info["amuk"] if info.get("amuk") else "; tidak ada frame marah"
-        print("      wajah min %d px, terlihat %.2f dari acuan; tinggi kepala %d-%d px (langkah %.1f%%, rentang %.1f%%)%s%s" % (
-            info["wajah_min_px"], info["terlihat_min"], info["kepala_tinggi"][0], info["kepala_tinggi"][1], 100 * info["kepala_langkah"],
-            100 * info["kepala_rentang"],
+            extra = "; garis kejut f%d-f%d, merah menyala %d -> %d piksel" % (info["amuk"] + info["panas"]) if info.get("amuk") else "; tidak ada frame amuk"
+        print("      sisi (dx px relatif tengah badan, - kiri / + kanan): bahu raksasa %s, bahu bundar %s, jambul %s, ekor %s" % (
+            rng("pelindung_bahu_raksasa"), rng("pelindung_bahu_bundar"), rng("jambul"), rng("ekor_panah")))
+        print("      mata min %d px; tinggi kepala %d-%d px (langkah %.1f%%, rentang %.1f%%)%s%s%s" % (
+            info["mata_min"], info["kepala_tinggi"][0], info["kepala_tinggi"][1], 100 * info["kepala_langkah"], 100 * info["kepala_rentang"],
             ("; seam %d <= langkah maks %d (seam/median %.2f)" % (info["seam"] + (info["seam_median"],))) if "seam" in info else "; tidak loop",
-            ("; IoU run berurutan maks %.2f" % info["run_iou_maks"]) if "run_iou_maks" in info else "") + extra)
-        print("      kunci f%d: helm %dx%d, moncong %dx%d, tanduk %s px, rongga mata %s, gigi %d (lebar %s), pelat bahu %s" % (
-            kf, r["helm"][0], r["helm"][1], r["snout"][0], r["snout"][1], r["horn_px"], r["socket"], r["teeth"], r["teeth_width"], r["plates"]))
+            ("; IoU run berurutan maks %.2f" % info["run_iou_maks"]) if "run_iou_maks" in info else "", extra))
+        print("      kunci f%d: helm %dx%d, mata %d px, bahu raksasa %d px, pedang %d px, kepalan %d px, jambul %d px" % (
+            kf, r["helm"][0], r["helm"][1], r["mata"], r["bahu"], r["pedang"], r["kepalan"], r["jambul"]))
+        if state == "victory":
+            v = info["victory"]
+            tb = v.get("topeng")
+            tb = tb if tb else (-1, -1, -1, 0)
+            print("      urutan: topeng buka f%d, puncak f%d, tutup f%d (rongga puncak %d px); pedang terangkat f%d, menusuk f%d; kaki di batu f%s; noda %d -> %d px, sebagian f%s" % (
+                tb[0], tb[1], tb[2], tb[3], v["angkat"], v["tusuk"] if v["tusuk"] is not None else -1, v["kaki"], v["noda"][0], v["noda"][-1], v["sebagian"]))
     allowed = {tuple(v) for v in monkey.PAL_HERO.values()} | EXT_RGB
     stray = colors - allowed
     print("  warna seluruh karakter: %d (batas %d); di luar palet yang diizinkan: %d" % (len(colors), HERO_MAX_COLORS, len(stray)))
@@ -1211,24 +1220,20 @@ def check_hero(m):
         fail("%s: %d warna > %d" % (HERO, len(colors), HERO_MAX_COLORS))
     if stray:
         fail("%s: warna di luar palet %s" % (HERO, sorted(stray)[:5]))
-    b = hc.blade_static()
-    print("  bilah (digambar sendiri, tanpa rotasi): terlebar %d px, luk per sisi %s, amplitudo luk terkecil %d px" % (b["lebar"], b["luk"], b["amplitudo_min"]))
-    for f in hc.blade_failures(b):
-        fail("%s: %s" % (HERO, f))
     pal = monkey.PAL_HERO
     halo = tuple(pal[HERO_HALO_KEY])
-    print("  kontras luminans WCAG (rasio; laporan, bukan lulus/gagal) tepi hero terhadap empat latar pratinjau: terang %s, gelap %s, abu tengah %s, halo krem %s" % (
+    print("  kontras luminans WCAG (rasio; laporan, bukan lulus/gagal) warna kunci hero terhadap empat latar pratinjau: terang %s, gelap %s, abu tengah %s, halo krem %s" % (
         HERO_LIGHT, HERO_DARK, HERO_GRAY, halo))
-    print("    %-4s %-20s %9s %9s %11s | %s" % ("kunci", "", "terang", "gelap", "abu tengah", "dengan halo (tetangga tepi = halo, sama di semua latar)"))
-    for key, label in (("o2", "garis tepi besi"), ("o1", "garis tepi organik"), ("is", "besi bayangan"), ("ib", "besi tengah"),
-                       ("il", "besi terang"), ("rm", "rim light baja-biru")):
-        print("    %-4s %-20s %8.2f:1 %8.2f:1 %10.2f:1 | %.2f:1" % (
+    print("    %-4s %-22s %9s %9s %11s | %s" % ("kunci", "", "terang", "gelap", "abu tengah", "dengan halo (tetangga tepi = halo, sama di semua latar)"))
+    for key, label in (("n0", "garis tepi besi hitam"), ("n1", "besi bayangan"), ("n2", "besi dasar"), ("n3", "besi terang"), ("n4", "baja terang"),
+                       ("q1", "merah gelap"), ("q2", "merah"), ("q3", "merah terang"), ("q4", "merah menyala")):
+        print("    %-4s %-22s %8.2f:1 %8.2f:1 %10.2f:1 | %.2f:1" % (
             (key, label) + tuple(hc.contrast(pal[key], bg) for bg in (HERO_LIGHT, HERO_DARK, HERO_GRAY)) + (hc.contrast(pal[key], halo),)))
     print("    halo itu sendiri terhadap latar: terang %.2f:1, gelap %.2f:1, abu tengah %.2f:1" % tuple(hc.contrast(halo, bg) for bg in (HERO_LIGHT, HERO_DARK, HERO_GRAY)))
     for bg_name, bg in (("gelap", HERO_DARK), ("abu tengah", HERO_GRAY)):
-        no, yes = hc.contrast(pal["o2"], bg), hc.contrast(pal["o2"], halo)
+        no, yes = hc.contrast(pal["n0"], bg), hc.contrast(pal["n0"], halo)
         if no < 3.0:
-            print("  PERINGATAN: garis tepi besi terhadap latar %s hanya %.2f:1 tanpa halo; dengan halo %.2f:1" % (bg_name, no, yes))
+            print("  PERINGATAN: garis tepi besi hitam terhadap latar %s hanya %.2f:1 tanpa halo; dengan halo %.2f:1" % (bg_name, no, yes))
     print("  V11: %s" % ("lulus" if len(FAILS) == before else "%d GAGAL" % (len(FAILS) - before)))
 
 

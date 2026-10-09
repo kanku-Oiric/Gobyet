@@ -154,7 +154,7 @@ test("seluruh matriks kostum x state teresolusi tanpa error", () => {
   assert.equal(kinds.exact + kinds.fallback, costumes.length * states.length);
 });
 
-test("applies: tabel sel berlaku 163 (78 kostum lama + 85 kostum baru) + 8 sel Berserker Hero, semua sel terisi berlaku", () => {
+test("applies: tabel sel berlaku 163 (78 kostum lama + 85 kostum baru) + 9 sel Berserker Hero, semua sel terisi berlaku", () => {
   const { costumes, states } = P.matrix(M);
   let total = 0, req = 0, hero = 0;
   const old12 = ["normal", "referee", "judge", "skeptic", "champion", "greek-philosopher", "academic", "scientist",
@@ -168,7 +168,7 @@ test("applies: tabel sel berlaku 163 (78 kostum lama + 85 kostum baru) + 8 sel B
     if (old12.includes(c.id)) oldTotal++;
   }
   assert.equal(total, 163);
-  assert.equal(hero, 8);
+  assert.equal(hero, 9);
   assert.equal(oldTotal, 78);
   for (const [costume, row] of Object.entries(M.cells)) {
     const c = costumes.find((x) => x.id === costume);
@@ -314,9 +314,9 @@ test("canvas per sel: bawaan manifest (64x48), field sel menimpa, manifest lama 
   }
 });
 
-test("Berserker Hero: 8 sel exact, kanvas 128x96 dan GIF x4 per sel, rage tidak loop, sel lama tidak punya field baru", () => {
+test("Berserker Hero: 9 sel exact, kanvas 128x96 dan GIF x4 per sel, rage dan victory tidak loop, sel lama tidak punya field baru", () => {
   const want = { idle: [12, true], run: [12, true], rage: [12, false], "attack-leap": [14, true], "attack-smash": [12, true],
-    miss: [10, true], exhaustion: [12, true], defeated: [14, true] };
+    miss: [10, true], exhaustion: [12, true], defeated: [14, true], victory: [16, false] };
   const row = M.cells["berserker-hero"];
   assert.deepEqual(Object.keys(row).sort(), Object.keys(want).sort());
   for (const [state, [frames, loop]] of Object.entries(want)) {
@@ -341,6 +341,18 @@ test("Berserker Hero: 8 sel exact, kanvas 128x96 dan GIF x4 per sel, rage tidak 
   assert.equal(M.gif_scale, 8);
 });
 
+test("Berserker Hero: victory tidak berputar (topeng, pedang, batu, usapan) dan menahan frame akhir 1500 ms seperti rage", () => {
+  const vic = M.cells["berserker-hero"].victory;
+  const vtotal = vic.durations_ms.reduce((a, b) => a + b, 0);
+  assert.equal(vic.loop, false);
+  assert.equal(vic.durations_ms[vic.frames - 1], 1500);
+  assert.equal(P.frameAt(vic, vtotal - 1500 - 1), vic.frames - 2);
+  assert.equal(P.frameAt(vic, vtotal - 1500), vic.frames - 1);
+  assert.equal(P.frameAt(vic, vtotal * 3 + 5), vic.frames - 1);
+  assert.equal(P.frameAt(vic, 0), 0);
+  assert.equal(P.frameAt(vic, 10, true), vic.keyframe);
+});
+
 test("Berserker Hero: rage tidak berputar (berhenti di frame terakhir), state lain berputar", () => {
   const rage = M.cells["berserker-hero"].rage;
   const total = rage.durations_ms.reduce((a, b) => a + b, 0);
@@ -363,7 +375,7 @@ test("Berserker Hero: fallback via base viking-berserker bila hero tidak punya i
   // Manifest sungguhan: hero punya idle, jadi state yang tidak ada jatuh ke idle hero (costume+idle), bukan ke induk.
   assert.deepEqual(M.costumes.find((c) => c.id === "berserker-hero").base, "viking-berserker");
   assert.equal(P.baseOf(M, "berserker-hero"), "viking-berserker");
-  const real = P.resolve(M, "berserker-hero", "victory");
+  const real = P.resolve(M, "berserker-hero", "thinking");
   assert.equal(real.step, "costume+idle");
   assert.deepEqual(real.resolved, { costume: "berserker-hero", state: "idle" });
   assert.deepEqual(P.canvasOf(M, real.cell), { w: 128, h: 96 });
@@ -395,7 +407,7 @@ test("Berserker Hero: fallback via base viking-berserker bila hero tidak punya i
   assert.equal(r.step, "base+idle");
 });
 
-test("Berserker Hero: state baru ada di manifest dan hanya berlaku untuk hero; defeated berlaku juga untuk hero", () => {
+test("Berserker Hero: state baru ada di manifest dan hanya berlaku untuk hero; defeated dan victory berlaku juga untuk hero", () => {
   const { costumes, states } = P.matrix(M);
   const hero = costumes.find((c) => c.id === "berserker-hero");
   assert.equal(hero.label, "Berserker Hero");
@@ -408,5 +420,6 @@ test("Berserker Hero: state baru ada di manifest dan hanya berlaku untuk hero; d
     assert.equal(P.cellRule(costumes.find((c) => c.id === "normal"), s), null);
   }
   assert.ok(states.find((x) => x.id === "defeated").costumes.includes("berserker-hero"));
-  assert.equal(P.cellRule(hero, states.find((x) => x.id === "victory")), null);
+  assert.equal(P.cellRule(hero, states.find((x) => x.id === "victory")), "required");
+  assert.equal(P.cellRule(hero, states.find((x) => x.id === "thinking")), null);
 });

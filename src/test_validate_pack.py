@@ -234,9 +234,10 @@ class HeroPackSpec(unittest.TestCase):
 class HeroMeasure(unittest.TestCase):
     def setUp(self):
         import hero
-        import hero_check
-        import hero_scenes
-        self.hero, self.hc, self.hs = hero, hero_check, hero_scenes
+        import hero3
+        import hero3_check
+        import hero3_scenes
+        self.hero, self.R, self.hc, self.hs = hero, hero3, hero3_check, hero3_scenes
 
     def test_spec_frames_loop_keyframes_and_non_uniform_durations(self):
         self.assertEqual(sorted(self.hs.TRACKS), sorted(vp.HERO_SPEC))
@@ -246,56 +247,43 @@ class HeroMeasure(unittest.TestCase):
             self.assertTrue(0 <= t.keyframe < t.n, state)
             self.assertGreaterEqual(len({t.duration(i) for i in range(t.n)}), 3, state)
 
-    def test_all_frames_stay_in_palette_canvas_and_above_the_floor(self):
-        keys = set(self.hero.HERO_PAL)
+    def test_all_frames_stay_in_palette_canvas_margins_and_above_the_floor(self):
+        import monkey
         used = set()
         for t in self.hs.TRACKS.values():
             for i in range(t.n):
                 cv = t.frame(i)
                 self.assertEqual((cv.w, cv.h), (128, 96))
                 used |= set(cv.px.values())
-                self.assertFalse([k for k in cv.px if k[1] >= self.hero.FLOOR], (t.name, i))
-        self.assertLessEqual(used, keys | set(self.hero.monkey.PAL) | set(self.hero.monkey.PAL_EXT))
-        self.assertLessEqual(len(used), 28)
+                self.assertFalse([k for k in cv.px if k[1] >= self.R.FLOOR], (t.name, i))
+                xs, ys = [x for x, _ in cv.px], [y for _, y in cv.px]
+                self.assertTrue(min(xs) >= 1 and max(xs) <= 126 and min(ys) >= 1, (t.name, i, min(xs), max(xs), min(ys)))
+        self.assertLessEqual(used, set(monkey.PAL_HERO))
+        self.assertLessEqual(len(used), vp.HERO_MAX_COLORS)
 
-    def test_idle_keyframe_passes_readability_and_blade(self):
-        cv = self.hero.render_pose(self.hero.pose_idle())
-        r = self.hc.readability(cv)
-        self.assertEqual(self.hc.readability_failures(r), [], r)
-        self.assertEqual(self.hc.blade_failures(self.hc.blade_static()), [])
+    def test_every_keyframe_passes_readability(self):
+        for state, t in self.hs.TRACKS.items():
+            r = self.hc.readability(t.frame(t.keyframe))
+            self.assertEqual(self.hc.readability_failures(r), [], (state, r))
 
     def test_readability_failures_each_limit(self):
-        ok = {"helm": (40, 30), "snout": (12, 9), "horn_px": [20.0, 20.0], "socket": [(5, 4), (5, 4)], "teeth": 6, "teeth_width": [2],
-              "plates": [20, 20, 20]}
+        ok = {"helm": (34, 31), "mata": 86, "bahu": 419, "pedang": 836, "kepalan": 176, "jambul": 422}
         self.assertEqual(self.hc.readability_failures(ok), [])
-        for key, bad in (("helm", (30, 30)), ("helm", (40, 20)), ("snout", (8, 9)), ("horn_px", [20.0, 10.0]), ("socket", [(5, 4), (3, 4)]),
-                         ("teeth", 5), ("teeth_width", [1]), ("plates", [20, 20, 4])):
+        for key, bad in (("helm", (28, 31)), ("helm", (34, 20)), ("mata", 10), ("bahu", 100), ("pedang", 50), ("kepalan", 20), ("jambul", 40)):
             self.assertTrue(self.hc.readability_failures(dict(ok, **{key: bad})), (key, bad))
-        self.assertTrue(self.hc.blade_failures({"lebar": 8, "luk": [5, 5], "amplitudo_min": 4}))
-        self.assertTrue(self.hc.blade_failures({"lebar": 16, "luk": [4, 4], "amplitudo_min": 4}))
-        self.assertTrue(self.hc.blade_failures({"lebar": 16, "luk": [5, 5], "amplitudo_min": 2}))
 
-    def test_visibility_detects_a_covered_face(self):
-        hero = self.hero
-        p = hero.pose_idle()
-        clean = hero.render_pose(p)
-        self.assertEqual({k: v[0] == v[1] for k, v in self.hc.visibility(clean, p).items()},
-                         {"face": True, "eye": True, "mouth": True, "ear": True})
-        hx, hy = hero.geometry(p)["head"]
-
-        def cover(cv, g):
-            hero.part(cv, "penutup")
-            for x in range(int(hx) - 6, int(hx) + 7):
-                for y in range(int(hy), int(hy) + 6):
-                    cv.put(x, y, "o2")
-        q = dict(p, fx=[cover])
-        vis = self.hc.visibility(hero.render_pose(q), q)
-        self.assertLess(vis["eye"][0], vis["eye"][1])
-        self.assertLess(vis["face"][0], vis["face"][1])
+    def test_identity_check_flags_gobyet_colors_and_parts(self):
+        clean = self.R.render_pose(self.R.pose_idle())
+        self.assertEqual(self.hc.identity_findings(clean), [])
+        cv = self.hero.PartCanvas()
+        self.hero.part(cv, "face")
+        cv.put(10, 10, "cb")
+        found = self.hc.identity_findings(cv)
+        self.assertEqual(len(found), 2, found)
+        self.assertTrue(any("warna Gobyet" in f for f in found) and any("bagian Gobyet" in f for f in found))
 
     def test_head_height_is_stable_within_a_state(self):
-        for state in ("idle", "run", "defeated"):
-            t = self.hs.TRACKS[state]
+        for state, t in self.hs.TRACKS.items():
             hh = [self.hc.head_height(t.frame(i)) for i in range(t.n)]
             self.assertLessEqual((max(hh) - min(hh)) / float(max(hh)), vp.HERO_HEAD_VARIATION, (state, hh))
 
@@ -318,28 +306,29 @@ class HeroMeasure(unittest.TestCase):
         self.assertAlmostEqual(self.hc.contrast((0, 0, 0), (255, 255, 255)), 21.0, places=1)
         self.assertAlmostEqual(self.hc.contrast((10, 20, 30), (10, 20, 30)), 1.0)
 
-    def test_no_blood_color_outside_face_and_mouth(self):
-        for t in self.hs.TRACKS.values():
-            for i in range(t.n):
-                cv = t.frame(i)
-                owners = {cv.owner.get(k) for k, c in cv.px.items() if c in ("ra", "rb")}
-                self.assertLessEqual(owners - {None}, {"face", "mouth"}, (t.name, i))
+    def test_monster_fluid_only_in_victory(self):
+        for state, t in self.hs.TRACKS.items():
+            hit = [i for i in range(t.n) if (set(t.frame(i).px.values()) & self.hc.ICHOR_KEYS) or self.hc.count(t.frame(i), ("ichor",))]
+            if state == "victory":
+                self.assertTrue(hit, state)
+            else:
+                self.assertEqual(hit, [], state)
 
     def test_additive_rig_defaults_leave_phase_b_keyposes_unchanged(self):
         import hashlib
-        want = {"idle": "11974b75", "run": "08796a4b", "attack-smash": "76ba21ad"}      # hash piksel pose kunci Fase B (disetujui pemilik)
+        want = {"idle": "11974b75", "run": "08796a4b", "attack-smash": "76ba21ad"}      # hash piksel pose kunci hero v1 (Fase B)
         for name, fn in self.hero.KEYPOSES.items():
             got = hashlib.sha256(self.hero.render_pose(fn()).image(1).tobytes()).hexdigest()[:8]
             self.assertEqual(got, want[name], name)
 
 
 class HeroFindings(unittest.TestCase):
-    """vp.hero_findings (V11 per state) pada sheet yang dibangun dari kode: lulus untuk 8 state, dan gagal bila dirusak."""
+    """vp.hero_findings (V11 per state) pada sheet yang dibangun dari kode: lulus untuk 9 state, dan gagal bila dirusak."""
 
     @classmethod
     def setUpClass(cls):
-        import hero_scenes
-        cls.hs = hero_scenes
+        import hero3_scenes
+        cls.hs = hero3_scenes
         cls.cache = {}
 
     def build(self, state):
@@ -364,15 +353,21 @@ class HeroFindings(unittest.TestCase):
         bad, _ = vp.hero_findings("attack-smash", t, sheet, flat)
         self.assertTrue(any("1,5 x median" in b for b in bad), bad)
 
-    def test_red_face_and_teal_dots_only_in_rage(self):
+    def test_shock_lines_and_embers_only_in_rage(self):
         t, sheet, cell = self.build("rage")
         bad, info = vp.hero_findings("rage", t, sheet, cell)
         self.assertEqual(bad, [])
         self.assertIsNotNone(info["amuk"])
+        self.assertGreaterEqual(info["panas"][1], 1.25 * info["panas"][0])
         bad, _ = vp.hero_findings("idle", t, sheet, dict(cell))                                # rage dinilai sebagai state lain
         self.assertTrue(any("selain rage" in b for b in bad), bad)
-        bad, _ = vp.hero_findings("rage", *self.build("idle")[:2], self.build("idle")[2])      # idle dinilai sebagai rage: tidak ada frame marah
-        self.assertTrue(any("frame marah" in b for b in bad), bad)
+        bad, _ = vp.hero_findings("rage", *self.build("idle")[:2], self.build("idle")[2])      # idle dinilai sebagai rage: tidak ada amuk
+        self.assertTrue(any("rage:" in b for b in bad), bad)
+
+    def test_monster_fluid_outside_victory_is_rejected(self):
+        t, sheet, cell = self.build("victory")
+        bad, _ = vp.hero_findings("idle", t, sheet, dict(cell))
+        self.assertTrue(any("cairan monster" in b for b in bad), bad)
 
     def test_manifest_keyframes_match_the_code(self):
         import pack
@@ -382,88 +377,108 @@ class HeroFindings(unittest.TestCase):
             self.assertEqual(name, "berserker-hero-" + state)
 
 
-class HeroAsymmetry(unittest.TestCase):
-    """Elemen asimetris (bahu berlapis 3 pelat, gesper, tanduk patah) harus tetap di sisinya: sprite yang dicerminkan ditandai,
-    yang tidak dicerminkan lolos."""
+class HeroSides(unittest.TestCase):
+    """Elemen asimetris (pelindung bahu raksasa di kiri, bundar di kanan, jambul ke belakang helm, ekor di kiri) harus tetap di sisinya:
+    frame yang dicerminkan ditandai, yang tidak dicerminkan lolos."""
 
     def setUp(self):
         import hero
-        import hero_check
-        import hero_scenes
-        self.hero, self.hc, self.hs = hero, hero_check, hero_scenes
+        import hero3
+        import hero3_check
+        import hero3_scenes
+        self.hero, self.R, self.hc, self.hs = hero, hero3, hero3_check, hero3_scenes
 
-    def synthetic(self, flip_frames=(), n=5, center=50, shift=0):
-        """Frame sintetik: tiga pelat bahu di kiri, tanduk patah di kiri, gesper di tengah (sorot kiri, bayangan kanan)."""
-        out = []
-        for i in range(n):
-            cv = self.hero.PartCanvas()
-            f = (lambda x: 2 * center - 1 - x) if i in flip_frames else (lambda x: x)
-            for k, name in enumerate(("pauldron1", "pauldron2", "pauldron3")):
-                self.hero.part(cv, name)
-                for dx in range(4):
-                    cv.put(f(center - 20 + k * 3 + dx), 40 + k, "ib")
-            self.hero.part(cv, "horn_break")
-            for dx in range(3):
-                cv.put(f(center - 18 + dx), 20, "il")
-            self.hero.part(cv, "buckle")
-            cv.put(f(center - 2 + shift), 50, "kl")
-            cv.put(f(center + 2 + shift), 50, "ks")
-            out.append(cv)
-        return out
+    def flagged(self, frames, centers):
+        out = self.hc.sides(frames, centers)
+        return {k: [i for i, _ in v["tanda"]] for k, v in out.items() if v["tanda"]}
 
-    def flagged(self, frames, center=50, state=None):
-        a = self.hc.asymmetry(frames, [center] * len(frames), state)
-        return {k: [i for i, _ in v["tanda"]] for k, v in a.items() if v["tanda"]}
+    def test_real_frames_pass(self):
+        for state, i in (("idle", 0), ("run", 3), ("run", 9), ("attack-smash", 7), ("attack-leap", 4), ("defeated", 3), ("victory", 13)):
+            t = self.hs.TRACKS[state]
+            cv, tc = t.frame(i), self.R.geometry(t.pose(i))["tcx"]
+            self.assertEqual(self.flagged([cv], [tc]), {}, (state, i))
 
-    def test_unmirrored_synthetic_passes(self):
-        self.assertEqual(self.flagged(self.synthetic()), {})
-
-    def test_mirrored_synthetic_frame_is_flagged_only_there(self):
-        got = self.flagged(self.synthetic(flip_frames=(3,)))
-        for name in ("pelat_bahu_1", "pelat_bahu_2", "pelat_bahu_3", "tanduk_patah", "cahaya_gesper"):
-            self.assertEqual(got.get(name), [3], name)
-        self.assertNotIn("gesper", got)                     # gesper di tengah: posisinya tidak berubah saat dicerminkan, sorotnya yang berubah
+    def test_mirrored_frame_is_flagged_for_the_sided_elements(self):
+        for state, i in (("idle", 0), ("run", 3), ("attack-smash", 7), ("victory", 13)):
+            t = self.hs.TRACKS[state]
+            cv, tc = t.frame(i), self.R.geometry(t.pose(i))["tcx"]
+            got = self.flagged([self.hc.mirrored(cv, tc)], [tc])
+            for name in ("pelindung_bahu_raksasa", "pelindung_bahu_bundar", "jambul"):
+                self.assertEqual(got.get(name), [0], (state, i, name))
 
     def test_second_half_flip_is_caught(self):
-        got = self.flagged(self.synthetic(flip_frames=(6, 7, 8, 9, 10, 11), n=12))
-        self.assertEqual(got["pelat_bahu_2"], [6, 7, 8, 9, 10, 11])
+        t = self.hs.TRACKS["idle"]
+        cvs = [t.frame(i) for i in range(t.n)]
+        cs = [self.R.geometry(t.pose(i))["tcx"] for i in range(t.n)]
+        flipped = [self.hc.mirrored(cv, c) if i >= 6 else cv for i, (cv, c) in enumerate(zip(cvs, cs))]
+        got = self.flagged(flipped, cs)
+        self.assertEqual(got["pelindung_bahu_raksasa"], [6, 7, 8, 9, 10, 11])
 
-    def test_buckle_off_centre_is_flagged(self):
-        got = self.flagged(self.synthetic(shift=4))
-        self.assertEqual(sorted(got["gesper"]), [0, 1, 2, 3, 4])
-
-    def test_explicit_turn_is_exempt(self):
-        frames = self.synthetic(flip_frames=(2,))
-        self.hc.EXPLICIT_TURNS["uji-balik"] = {2}
-        try:
-            self.assertEqual(self.flagged(frames, state="uji-balik"), {})
-        finally:
-            del self.hc.EXPLICIT_TURNS["uji-balik"]
-        self.assertTrue(self.flagged(frames))
-
-    def test_unknown_side_uses_the_first_visible_frame_and_skips_hidden(self):
-        self.assertEqual(self.hc.side_flags([(-5, 1), (-6, 1), (5, 1)]), [(2, "pindah sisi: dx 5.0, seharusnya kiri")])
-        self.assertEqual(self.hc.side_flags([(None, 0), (4, 1), (None, 0), (3, 1), (-2, 1)])[0][0], 4)
-        self.assertEqual(self.hc.side_flags([(-5, 1), (None, 0), (-1, 1)]), [])
-
-    def test_real_frames_pass_and_their_mirror_is_flagged(self):
-        sided = ["pelat_bahu_1", "pelat_bahu_2", "pelat_bahu_3", "tanduk_patah", "bahu_kecil", "ekor", "moncong", "cahaya_gesper"]
-        for state, i in (("idle", 0), ("run", 3), ("run", 9), ("attack-smash", 7), ("attack-leap", 4), ("defeated", 3)):
-            t = self.hs.TRACKS[state]
-            cv, tc = t.frame(i), self.hero.geometry(t.pose(i))["tcx"]
-            self.assertEqual(self.flagged([cv], tc), {}, (state, i))
-            got = self.flagged([self.hc.mirrored(cv, tc)], tc)
-            for name in sided:
-                self.assertEqual(got.get(name), [0], (state, i, name))
-            self.assertNotIn("gesper", got)
-
-    def test_every_hero_frame_keeps_its_side(self):
+    def test_every_hero_frame_keeps_its_side_and_big_elements_stay_visible(self):
         for state, t in self.hs.TRACKS.items():
             cvs = [t.frame(i) for i in range(t.n)]
-            a = self.hc.asymmetry(cvs, [self.hero.geometry(t.pose(i))["tcx"] for i in range(t.n)], state)
+            a = self.hc.sides(cvs, [self.R.geometry(t.pose(i))["tcx"] for i in range(t.n)], state)
             for name, v in a.items():
                 self.assertEqual(v["tanda"], [], (state, name))
-                self.assertEqual(v["tidak_terlihat"], [], (state, name))
+                if v["wajib_terlihat"]:
+                    self.assertEqual(v["tidak_terlihat"], [], (state, name))
+
+
+class HeroVictorySequence(unittest.TestCase):
+    """Urutan victory yang diminta pemilik diperiksa dari piksel: topeng membuka lalu menutup, pedang diangkat lalu ditusukkan ke tanah, kaki naik ke batu,
+    noda hilang bertahap. Setiap perusakan harus terdeteksi."""
+
+    @classmethod
+    def setUpClass(cls):
+        import hero3
+        import hero3_check
+        import hero3_scenes
+        cls.R, cls.hc, cls.hs = hero3, hero3_check, hero3_scenes
+        cls.t = hero3_scenes.TRACKS["victory"]
+
+    def run_with(self, edit=None):
+        poses = [self.t.pose(i) for i in range(self.t.n)]
+        if edit:
+            poses = [edit(i, dict(p)) for i, p in enumerate(poses)]
+        cvs = [self.R.render_pose(p) for p in poses]
+        return self.hc.victory_findings(cvs, poses)
+
+    def test_real_sequence_passes_and_reports_the_order(self):
+        bad, info = self.run_with()
+        self.assertEqual(bad, [])
+        opened, peak, closed, size = info["topeng"]
+        self.assertTrue(opened < peak < closed < info["angkat"] < info["tusuk"] < info["kaki"][0], info)
+        self.assertEqual(info["kaki"][-1], self.t.n - 1)
+        self.assertEqual(info["noda"][-1], 0)
+        self.assertGreaterEqual(len(info["sebagian"]), 2)
+
+    def test_mask_that_never_opens_is_rejected(self):
+        bad, _ = self.run_with(lambda i, p: dict(p, mask=0.0))
+        self.assertTrue(any("topeng" in b for b in bad), bad)
+
+    def test_mask_that_stays_open_is_rejected(self):
+        bad, _ = self.run_with(lambda i, p: dict(p, mask=1.0) if i >= 3 else p)
+        self.assertTrue(any("topeng harus tertutup" in b for b in bad), bad)
+
+    def test_stain_that_remains_is_rejected(self):
+        bad, _ = self.run_with(lambda i, p: dict(p, stain_u=0))
+        self.assertTrue(any("noda belum hilang" in b for b in bad), bad)
+
+    def test_stain_that_vanishes_at_once_is_rejected(self):
+        bad, _ = self.run_with(lambda i, p: dict(p, stain_u=60) if i >= 12 else p)
+        self.assertTrue(any("bertahap" in b for b in bad), bad)
+
+    def test_foot_that_never_reaches_the_rock_is_rejected(self):
+        bad, _ = self.run_with(lambda i, p: dict(p, fr=(9, 0)))
+        self.assertTrue(any("kaki" in b for b in bad), bad)
+
+    def test_missing_rock_is_rejected(self):
+        bad, _ = self.run_with(lambda i, p: dict(p, props=()))
+        self.assertTrue(any("batu" in b for b in bad), bad)
+
+    def test_sword_that_is_never_planted_is_rejected(self):
+        bad, _ = self.run_with(lambda i, p: dict(p, grip=(p["grip"][0], 40), ang=-44.0) if i >= 8 else p)
+        self.assertTrue(any("menusuk tanah" in b or "pedang" in b for b in bad), bad)
 
 
 class SeamPopExempt(unittest.TestCase):
@@ -497,21 +512,25 @@ class SeamPopExempt(unittest.TestCase):
         self.assertAlmostEqual(r["seam_per_median"], 2.0)
 
 
-class HeroRageHold(unittest.TestCase):
-    def test_rage_last_frame_is_held_1500_ms_and_only_the_last_changed(self):
-        import hero_scenes
-        t = hero_scenes.TRACKS["rage"]
+class HeroHold(unittest.TestCase):
+    def test_non_looping_states_hold_their_last_frame_1500_ms_and_only_the_last_changed(self):
+        import hero3_scenes
+        t = hero3_scenes.TRACKS["rage"]
         self.assertEqual(t.duration(t.n - 1), 1500)
         self.assertEqual([t.duration(i) for i in range(t.n - 1)], [200, 140, 140, 180, 70, 90, 110, 70, 70, 70, 120])
-        self.assertEqual(vp.HERO_LAST_HOLD_MS, {"rage": 1500})
+        v = hero3_scenes.TRACKS["victory"]
+        self.assertEqual(v.duration(v.n - 1), 1500)
+        self.assertFalse(v.loop)
+        self.assertEqual(vp.HERO_LAST_HOLD_MS, {"rage": 1500, "victory": 1500})
 
-    def test_validator_rejects_a_rage_with_a_short_last_frame(self):
-        import hero_scenes
-        t = hero_scenes.TRACKS["rage"]
-        sheet = [t.frame(i).image(1) for i in range(t.n)]
-        ms = [int(t.duration(i)) for i in range(t.n)]
-        cell = {"frames": t.n, "durations_ms": ms, "loop": False, "keyframe": t.keyframe}
-        self.assertEqual(vp.hero_findings("rage", t, sheet, cell)[0], [])
-        short = dict(cell, durations_ms=ms[:-1] + [400])
-        bad = vp.hero_findings("rage", t, sheet, short)[0]
-        self.assertTrue(any("frame terakhir 400 ms" in b for b in bad), bad)
+    def test_validator_rejects_a_victory_or_rage_with_a_short_last_frame(self):
+        import hero3_scenes
+        for state in ("rage", "victory"):
+            t = hero3_scenes.TRACKS[state]
+            sheet = [t.frame(i).image(1) for i in range(t.n)]
+            ms = [int(t.duration(i)) for i in range(t.n)]
+            cell = {"frames": t.n, "durations_ms": ms, "loop": False, "keyframe": t.keyframe}
+            self.assertEqual(vp.hero_findings(state, t, sheet, cell)[0], [])
+            short = dict(cell, durations_ms=ms[:-1] + [400])
+            bad = vp.hero_findings(state, t, sheet, short)[0]
+            self.assertTrue(any("frame terakhir 400 ms" in b for b in bad), (state, bad))

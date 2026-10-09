@@ -18,7 +18,7 @@ import roles  # noqa: E402
 import scenes  # noqa: E402
 import special  # noqa: E402
 import fantasy  # noqa: E402
-import hero_scenes  # noqa: E402
+import hero3_scenes  # noqa: E402
 import theology  # noqa: E402
 import variants  # noqa: E402
 import pelengkap  # noqa: E402
@@ -53,7 +53,7 @@ def indexed(cv, scale, index=None, palette=None):
 
 def all_scenes():
     merged = {}
-    for mod in (scenes, costumes, roles, domains, special, fantasy, theology, variants, pelengkap, hero_scenes):
+    for mod in (scenes, costumes, roles, domains, special, fantasy, theology, variants, pelengkap, hero3_scenes):
         for name in mod.SCENES:
             assert name not in merged, "nama animasi ganda: " + name
         merged.update(mod.SCENES)
@@ -87,7 +87,7 @@ def main(only=None):
             sheet = Image.new("RGBA", (cw * scale * n, ch * scale), (0, 0, 0, 0))
             for i, cv in enumerate(frames):
                 sheet.paste(cv.image(scale), (i * cw * scale, 0))
-            sheet.save(os.path.join(ROOT, "sheets", "%s%s.png" % (name, "" if scale == 1 else "@4x")))
+            sheet.save(os.path.join(ROOT, "sheets", "%s%s.png" % (name, "" if scale == 1 else "@4x")), optimize=(cw, ch) != (W, H))   # kanvas sendiri (hero): PNG dioptimalkan, piksel sama
         print("%-13s %2d frame  %.1f detik  %d KB" % (name, n, sum(ms(i) for i in range(n)) / 1000, os.path.getsize(path) // 1024))
     write_manifest()
 

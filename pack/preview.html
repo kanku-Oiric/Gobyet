@@ -165,7 +165,7 @@ details.fam > .scroll { border: 0; border-top: 1px solid var(--line); border-rad
 
   <section class="panel" id="heroSection" data-herobg="light" aria-labelledby="heroTitle" hidden>
     <h2 id="heroTitle">Berserker Hero: lembar kontak per state</h2>
-    <p class="muted" style="margin-bottom:12px">Kostum berkanvas sendiri 128×96 (kostum lain 64×48). Tiap state: pemutar 2× (di mode Statis menampilkan frame kunci), lalu semua frame berurutan, bernomor, 2×, dengan durasi per frame; frame kunci diberi bingkai biru. Geser mendatar untuk melihat semua frame. State yang tidak berputar (rage) ditandai "diputar sekali" dan punya tombol Putar ulang. Latar abu tengah dan Halo (kontur krem 1 px) membantu menilai keterbacaan zirah hitam; keduanya hanya pratinjau. Ini pratinjau bahan penilaian gaya; bukan pernyataan bahwa gayanya bagus atau disetujui.</p>
+    <p class="muted" style="margin-bottom:12px">Kostum berkanvas sendiri 128×96 (kostum lain 64×48). Tiap state: pemutar 2× (di mode Statis menampilkan frame kunci), lalu semua frame berurutan, bernomor, 2×, dengan durasi per frame; frame kunci diberi bingkai biru. Geser mendatar untuk melihat semua frame. State yang tidak berputar (rage, victory) ditandai "diputar sekali" dan punya tombol Putar ulang. Latar abu tengah dan Halo (kontur krem 1 px) membantu menilai keterbacaan zirah hitam; keduanya hanya pratinjau. Ini pratinjau bahan penilaian gaya; bukan pernyataan bahwa gayanya bagus atau disetujui.</p>
     <div class="row" style="margin-bottom:10px">
       <span class="muted">Latar</span>
       <button type="button" id="btnHeroLight" aria-pressed="true">Terang</button>
@@ -467,7 +467,7 @@ details.fam > .scroll { border: 0; border-top: 1px solid var(--line); border-rad
 
   // ---- Berserker Hero: lembar kontak per state (semua frame berurutan, bernomor, 2x, bisa digulir mendatar)
   var HERO_ID = "berserker-hero";
-  var HERO_ORDER = ["idle", "run", "rage", "attack-leap", "attack-smash", "miss", "exhaustion", "defeated"];
+  var HERO_ORDER = ["idle", "run", "rage", "attack-leap", "attack-smash", "miss", "exhaustion", "defeated", "victory"];
   var heroSheets = [];   // {canvas, cell, url, index, done}
   function buildHero() {
     var sec = $("heroSection"), box = $("heroBox");
