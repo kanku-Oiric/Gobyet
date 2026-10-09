@@ -1,0 +1,471 @@
+{
+  "poses": {
+    "idle": {
+      "kotak_badan_tanpa_ekor_pedang": [
+        21,
+        3,
+        98,
+        89
+      ],
+      "tinggi_badan": 87,
+      "lebar_badan": 78,
+      "kotak_semua_piksel": [
+        4,
+        3,
+        110,
+        89
+      ],
+      "rentang_y": {
+        "kepala_jambul": [
+          3,
+          54
+        ],
+        "badan_bahu_perut": [
+          20,
+          89
+        ],
+        "kaki_sepatu": [
+          75,
+          89
+        ]
+      },
+      "proporsi_vertikal_persen": {
+        "kepala_dan_jambul": 59.8,
+        "dagu_ke_sabuk": 23.0,
+        "sabuk_ke_lantai": 17.2
+      },
+      "lebar_helm": 34,
+      "lebar_pelindung_bahu_raksasa": 27,
+      "lebar_bilah_px": 19.0,
+      "warna_dipakai": [
+        "n0",
+        "n1",
+        "n2",
+        "n3",
+        "n4",
+        "q0",
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "wh"
+      ],
+      "rasio_warna_persen": {
+        "merah_q0_q4": 37.9,
+        "besi_hitam_n0_n4": 62.0,
+        "lain": 0.1
+      },
+      "piksel_per_bagian": {
+        "weapon": 836,
+        "pauldron_big": 419,
+        "crest": 412,
+        "tail_arrow": 372,
+        "visor_plate": 319,
+        "horn_fin": 284,
+        "helm": 255,
+        "boot": 240,
+        "collar": 187,
+        "gauntlet": 176,
+        "chest": 150,
+        "pauldron_small": 111,
+        "face_panel": 108,
+        "ring": 107,
+        "belly": 100,
+        "fin": 86,
+        "hip_plate": 84,
+        "visor": 81,
+        "ear_disc": 74,
+        "claw": 73,
+        "sensor": 60,
+        "brow_band": 59,
+        "cheek": 58,
+        "knee": 42,
+        "thigh": 35,
+        "buckle": 34,
+        "elbow": 34,
+        "grill": 30,
+        "upper_arm": 27,
+        "vambrace": 15,
+        "chin": 7,
+        "belt": 6,
+        "shin": 4
+      }
+    },
+    "run": {
+      "kotak_badan_tanpa_ekor_pedang": [
+        20,
+        1,
+        98,
+        85
+      ],
+      "tinggi_badan": 85,
+      "lebar_badan": 79,
+      "kotak_semua_piksel": [
+        3,
+        1,
+        123,
+        85
+      ],
+      "rentang_y": {
+        "kepala_jambul": [
+          1,
+          52
+        ],
+        "badan_bahu_perut": [
+          19,
+          85
+        ],
+        "kaki_sepatu": [
+          69,
+          85
+        ]
+      },
+      "proporsi_vertikal_persen": {
+        "kepala_dan_jambul": 61.2,
+        "dagu_ke_sabuk": 22.4,
+        "sabuk_ke_lantai": 16.5
+      },
+      "lebar_helm": 34,
+      "lebar_pelindung_bahu_raksasa": 28,
+      "lebar_bilah_px": 19.0,
+      "warna_dipakai": [
+        "n0",
+        "n1",
+        "n2",
+        "n3",
+        "n4",
+        "q0",
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "wh"
+      ],
+      "rasio_warna_persen": {
+        "merah_q0_q4": 37.5,
+        "besi_hitam_n0_n4": 62.4,
+        "lain": 0.1
+      },
+      "piksel_per_bagian": {
+        "weapon": 863,
+        "pauldron_big": 438,
+        "crest": 413,
+        "tail_arrow": 338,
+        "visor_plate": 319,
+        "horn_fin": 266,
+        "helm": 255,
+        "boot": 190,
+        "gauntlet": 175,
+        "collar": 168,
+        "ring": 133,
+        "face_panel": 108,
+        "chest": 101,
+        "hip_plate": 87,
+        "fin": 86,
+        "visor": 81,
+        "ear_disc": 74,
+        "claw": 73,
+        "elbow": 69,
+        "belly": 63,
+        "sensor": 60,
+        "brow_band": 59,
+        "cheek": 58,
+        "knee": 47,
+        "thigh": 38,
+        "buckle": 32,
+        "pauldron_small": 31,
+        "grill": 30,
+        "vambrace": 26,
+        "upper_arm": 25,
+        "belt": 8,
+        "chin": 7,
+        "shin": 5
+      }
+    },
+    "attack-smash": {
+      "kotak_badan_tanpa_ekor_pedang": [
+        12,
+        9,
+        85,
+        89
+      ],
+      "tinggi_badan": 81,
+      "lebar_badan": 74,
+      "kotak_semua_piksel": [
+        3,
+        9,
+        117,
+        89
+      ],
+      "rentang_y": {
+        "kepala_jambul": [
+          9,
+          60
+        ],
+        "badan_bahu_perut": [
+          28,
+          89
+        ],
+        "kaki_sepatu": [
+          79,
+          89
+        ]
+      },
+      "proporsi_vertikal_persen": {
+        "kepala_dan_jambul": 64.2,
+        "dagu_ke_sabuk": 24.7,
+        "sabuk_ke_lantai": 11.1
+      },
+      "lebar_helm": 34,
+      "lebar_pelindung_bahu_raksasa": 28,
+      "lebar_bilah_px": 19.0,
+      "warna_dipakai": [
+        "n0",
+        "n1",
+        "n2",
+        "n3",
+        "n4",
+        "q0",
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "wh"
+      ],
+      "rasio_warna_persen": {
+        "merah_q0_q4": 36.4,
+        "besi_hitam_n0_n4": 63.5,
+        "lain": 0.1
+      },
+      "piksel_per_bagian": {
+        "weapon": 840,
+        "pauldron_big": 426,
+        "crest": 413,
+        "visor_plate": 280,
+        "horn_fin": 260,
+        "helm": 255,
+        "boot": 220,
+        "tail_arrow": 193,
+        "gauntlet": 176,
+        "ring": 149,
+        "collar": 142,
+        "face_panel": 108,
+        "visor": 105,
+        "pauldron_small": 93,
+        "hip_plate": 92,
+        "fin": 86,
+        "chest": 79,
+        "claw": 76,
+        "ear_disc": 74,
+        "belly": 72,
+        "sensor": 60,
+        "brow_band": 59,
+        "cheek": 58,
+        "elbow": 49,
+        "grill": 45,
+        "thigh": 38,
+        "buckle": 32,
+        "upper_arm": 23,
+        "vambrace": 22,
+        "knee": 13,
+        "belt": 8,
+        "chin": 7,
+        "shin": 2
+      }
+    }
+  },
+  "legenda_bagian": [
+    {
+      "nomor": 1,
+      "bagian": "jambul merah darah",
+      "keterangan": "lima bilah menyapu ke belakang-atas, tiga nada merah gelap",
+      "piksel": 412
+    },
+    {
+      "nomor": 2,
+      "bagian": "kubah helm + plat sensor",
+      "keterangan": "besi hitam, jahitan miring, baut",
+      "piksel": 315
+    },
+    {
+      "nomor": 3,
+      "bagian": "alis V merah menyala",
+      "keterangan": "garis V di atas wajah",
+      "piksel": 59
+    },
+    {
+      "nomor": 4,
+      "bagian": "visor salib",
+      "keterangan": "salib merah menyala; lengan datar = mata",
+      "piksel": 400
+    },
+    {
+      "nomor": 5,
+      "bagian": "grill mulut",
+      "keterangan": "tiga celah; terbuka bercahaya saat berteriak",
+      "piksel": 30
+    },
+    {
+      "nomor": 6,
+      "bagian": "sayap helm",
+      "keterangan": "sirip runcing di sisi depan",
+      "piksel": 86
+    },
+    {
+      "nomor": 7,
+      "bagian": "cakram telinga mekanis",
+      "keterangan": "cakram baja dan ventilasi pipi",
+      "piksel": 132
+    },
+    {
+      "nomor": 8,
+      "bagian": "pelindung bahu raksasa",
+      "keterangan": "cangkang bersudut bergaris merah",
+      "piksel": 419
+    },
+    {
+      "nomor": 9,
+      "bagian": "sirip tanduk bahu",
+      "keterangan": "dua sirip tinggi bertulang merah",
+      "piksel": 284
+    },
+    {
+      "nomor": 10,
+      "bagian": "panel wajah mesin",
+      "keterangan": "dua jendela mata merah",
+      "piksel": 108
+    },
+    {
+      "nomor": 11,
+      "bagian": "cincin inti merah + cakar",
+      "keterangan": "cincin baja berinti merah; tiga cakar merah",
+      "piksel": 180
+    },
+    {
+      "nomor": 12,
+      "bagian": "pelindung bahu bundar",
+      "keterangan": "cakram berlapis cincin",
+      "piksel": 111
+    },
+    {
+      "nomor": 13,
+      "bagian": "dada bergaris merah",
+      "keterangan": "bingkai merah tipis, garis V, inti cahaya",
+      "piksel": 337
+    },
+    {
+      "nomor": 14,
+      "bagian": "perut sisik heksagonal",
+      "keterangan": "pola sisik merah darah",
+      "piksel": 100
+    },
+    {
+      "nomor": 15,
+      "bagian": "sabuk + gesper",
+      "keterangan": "gesper bercahaya",
+      "piksel": 40
+    },
+    {
+      "nomor": 16,
+      "bagian": "pelat pinggul",
+      "keterangan": "ujung bergaris merah",
+      "piksel": 84
+    },
+    {
+      "nomor": 17,
+      "bagian": "sepatu besar",
+      "keterangan": "penutup ujung, bibir merah",
+      "piksel": 321
+    },
+    {
+      "nomor": 18,
+      "bagian": "ekor kipas panah",
+      "keterangan": "dua busur panah merah menyala",
+      "piksel": 372
+    },
+    {
+      "nomor": 19,
+      "bagian": "kepalan baja",
+      "keterangan": "manset merah, buku jari",
+      "piksel": 176
+    },
+    {
+      "nomor": 20,
+      "bagian": "pedang agung hitam inti api",
+      "keterangan": "bilah lebar 19 px, tepi api merah, pelindung, gagang bergaris merah",
+      "piksel": 836
+    }
+  ],
+  "warna_seluruh_tiga_pose_tanpa_efek": {
+    "jumlah": 11,
+    "kunci": [
+      "n0",
+      "n1",
+      "n2",
+      "n3",
+      "n4",
+      "q0",
+      "q1",
+      "q2",
+      "q3",
+      "q4",
+      "wh"
+    ]
+  },
+  "kontras_wcag": {
+    "n0": {
+      "terang": 18.17,
+      "gelap": 1.15,
+      "abu_tengah": 4.92,
+      "halo_krem": 14.05
+    },
+    "n1": {
+      "terang": 16.08,
+      "gelap": 1.02,
+      "abu_tengah": 4.36,
+      "halo_krem": 12.43
+    },
+    "n2": {
+      "terang": 12.8,
+      "gelap": 1.24,
+      "abu_tengah": 3.47,
+      "halo_krem": 9.89
+    },
+    "n3": {
+      "terang": 7.81,
+      "gelap": 2.02,
+      "abu_tengah": 2.12,
+      "halo_krem": 6.04
+    },
+    "n4": {
+      "terang": 3.59,
+      "gelap": 4.4,
+      "abu_tengah": 1.03,
+      "halo_krem": 2.78
+    },
+    "q1": {
+      "terang": 11.92,
+      "gelap": 1.33,
+      "abu_tengah": 3.23,
+      "halo_krem": 9.21
+    },
+    "q2": {
+      "terang": 7.19,
+      "gelap": 2.2,
+      "abu_tengah": 1.95,
+      "halo_krem": 5.55
+    },
+    "q3": {
+      "terang": 4.44,
+      "gelap": 3.56,
+      "abu_tengah": 1.2,
+      "halo_krem": 3.43
+    },
+    "q4": {
+      "terang": 2.55,
+      "gelap": 6.21,
+      "abu_tengah": 1.45,
+      "halo_krem": 1.97
+    }
+  }
+}
