@@ -9,7 +9,7 @@ Menulis (selain keluaran tools/hero3_animasi.py di folder yang sama: lembar per 
   wajah-gobyet.png        helm dengan topeng 0, 25, 50, 75, 100% terbuka (visor look dan angry) dan frame victory f1-f5, 8x
   tepi-terang.png         idle dan attack-smash di latar terang, gelap, abu tengah: tanpa tepi terang (kiri) dan dengan (kanan), 3x
   ekor-serangan.png       frame tumbukan attack-leap, attack-smash, miss dengan ekor ditandai, dan idle sebagai pembanding, 3x
-  darah-monster.png       bilah di frame victory f9, f12, f13, f14, f15, 6x
+  darah-monster.png       bilah di frame victory f11, f14, f16, f18, f19, 6x
   revisi.json             ukuran perisai, wajah, tepi terang, ekor, warna darah, ukuran berkas dan anggaran
 Bukan pernyataan bahwa gaya bagus atau disetujui.
 """
@@ -145,7 +145,7 @@ def main():
     info["ekor"] = tail
     # darah monster
     tiles = []
-    for i in (9, 12, 13, 14, 15):
+    for i in (11, 14, 16, 18, 19):
         tiles.append(tile(t.frame(i), 6, LIGHT, "f%d noda %d px" % (i, series[i]["noda"]), (60, 34, 116, 92)))
     grid(tiles, 5).save(os.path.join(OUT, "darah-monster.png"))
     info["darah_monster"] = {k: list(pal[k]) for k in ("m1", "m2", "m3")}
@@ -156,7 +156,7 @@ def main():
     for st, cell in row.items():
         sizes[st] = {"gif": os.path.getsize(os.path.join(ROOT, cell["gif"].replace("../", ""))), "sheet": os.path.getsize(os.path.join(ROOT, cell["sheet"].replace("../", "")))}
     total = sum(v["gif"] + v["sheet"] for v in sizes.values())
-    info["ukuran"] = {"per_state": sizes, "total_gif_dan_sheet": total, "batas_total": 2000000, "gif_terbesar": max(v["gif"] for v in sizes.values()), "batas_per_gif": 262144}
+    info["ukuran"] = {"per_state": sizes, "total_gif_dan_sheet": total, "batas_total": 2000000, "gif_terbesar": max(v["gif"] for v in sizes.values()), "batas_per_gif": 307200}
     json.dump(info, open(os.path.join(OUT, "revisi.json"), "w"), indent=2)
     print(json.dumps({"perisai_idle": info["perisai_naga"]["total_idle"], "kotak": info["perisai_naga"]["kotak_idle"], "ekor": {k: (v if isinstance(v, int) else v["persen_idle"]) for k, v in tail.items()},
                       "tepi_gelap_tanpa_tepi": info["tepi_terang"]["tepi_gelap_tanpa_tepi_terang_semua_frame"], "ukuran_total": total, "gif_terbesar": info["ukuran"]["gif_terbesar"]}, indent=1))

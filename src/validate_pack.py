@@ -61,7 +61,7 @@ LOCK_FILES = ("sha256-asli.txt", "sha256-disetujui.txt")  # terkunci: seam di at
 MADE_FILE = "sha256-dibuat.txt"  # aset gerbang yang sudah dibuat tetapi belum disetujui: hash wajib tetap
 HERO_FILE = "sha256-hero.txt"  # aset Berserker Hero (Gerbang K): hash wajib tetap setelah dibuat (berkas terpisah, tiga berkas lama tidak disentuh)
 HERO = "berserker-hero"
-HERO_GIF_LIMIT = 256 * 1024  # satu GIF hero setelah optimize (usulan saya: batas per GIF tidak ditetapkan pemilik saat anggaran total dinaikkan)
+HERO_GIF_LIMIT = 300 * 1024  # satu GIF hero setelah optimize (usulan saya, bukan angka pemilik; dinaikkan dari 256 KiB saat victory menjadi 20 frame)
 HERO_TOTAL_LIMIT = 2000000  # semua GIF + sheet hero: keputusan pemilik "maksimal 2 MB", dibaca ketat sebagai 2.000.000 byte
 HERO_MAX_COLORS = 28
 HERO_HEAD_VARIATION = 0.10  # tinggi kotak kepala berubah paling banyak 10% antar frame
@@ -74,7 +74,7 @@ HERO_LAST_HOLD_MS = {"rage": 1500, "victory": 1500}  # state yang tidak berputar
 HERO_ATTACKS = {"attack-leap": ("dust", "chip"), "attack-smash": ("dust", "chip"), "miss": ("dust",)}  # state serangan -> bagian efek di frame tumbukan
 HERO_TAIL_MEDIUM = (0.35, 0.80)  # keputusan pemilik "ekor sedang" di state serangan: piksel ekor di frame kunci = 35-80% ekor idle f0 (rentang usulan saya)
 HERO_SPEC = {"idle": (12, True), "run": (12, True), "rage": (12, False), "attack-leap": (14, True), "attack-smash": (12, True),
-             "miss": (10, True), "exhaustion": (12, True), "defeated": (14, True), "victory": (16, False)}
+             "miss": (10, True), "exhaustion": (12, True), "defeated": (14, True), "victory": (20, False)}
 GROUPS = ("core", "role", "domain", "fantasy", "theology", "special")
 SEAM_FACTOR = 1.25
 POP_RATIO, POP_MIN = 0.9, 100  # SEAM-POP: seam >= 0,9 x maks dan maks > 100 px (peringatan)

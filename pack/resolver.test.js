@@ -316,7 +316,7 @@ test("canvas per sel: bawaan manifest (64x48), field sel menimpa, manifest lama 
 
 test("Berserker Hero: 9 sel exact, kanvas 128x96 dan GIF x4 per sel, rage dan victory tidak loop, sel lama tidak punya field baru", () => {
   const want = { idle: [12, true], run: [12, true], rage: [12, false], "attack-leap": [14, true], "attack-smash": [12, true],
-    miss: [10, true], exhaustion: [12, true], defeated: [14, true], victory: [16, false] };
+    miss: [10, true], exhaustion: [12, true], defeated: [14, true], victory: [20, false] };
   const row = M.cells["berserker-hero"];
   assert.deepEqual(Object.keys(row).sort(), Object.keys(want).sort());
   for (const [state, [frames, loop]] of Object.entries(want)) {

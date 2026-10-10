@@ -268,7 +268,7 @@ function serve() {
   check(report.hero_replay.before === rageCell.frames - 1 && report.hero_replay.just_after <= 2 && report.hero_replay.after === rageCell.frames - 1 &&
     report.hero_replay.later === rageCell.frames - 1 && report.hero_replay.frames_seen.length >= 6,
     "Putar ulang rage: harus mulai dari frame awal, melewati beberapa frame, lalu berhenti di frame terakhir");
-  // victory (16 frame, diputar sekali): Putar ulang mulai dari frame awal, melewati banyak frame, lalu berhenti di frame terakhir
+  // victory (20 frame, diputar sekali): Putar ulang mulai dari frame awal, melewati banyak frame, lalu berhenti di frame terakhir
   const vicCell = manifestData.cells["berserker-hero"].victory, vicTotal = vicCell.durations_ms.reduce((a, b) => a + b, 0);
   await d.p.locator('.hero-state[data-state="victory"]').scrollIntoViewIfNeeded();
   const vicNow = () => d.p.$eval('.hero-state[data-state="victory"] .hero-player canvas', (c) => +c.dataset.frame);

@@ -595,7 +595,8 @@ def tail_fan(cv, center, phase=0.0, rot=0.0, k=1.0):
 BLADE_START, BLADE_LEN, BLADE_HW = 8.0, 40.0, 9.5
 
 
-STAIN_BLOBS = ((13.5, -3.5, 4.0), (20.0, 3.5, 4.4), (25.0, -2.0, 3.4), (11.5, 6.0, 2.0), (23.0, 6.5, 2.0), (17.0, -7.0, 2.0))   # (u, v, jari-jari) noda darah monster
+STAIN_BLOBS = ((10.5, -3.5, 4.0), (17.0, 3.5, 4.4), (22.0, -2.0, 3.4), (9.0, 6.0, 2.0), (20.0, 6.5, 2.0), (14.0, -7.0, 2.0))   # (u, v, jari-jari) noda darah monster;
+# dekat pelindung (u <= ~26) supaya seluruh noda terjangkau tangan saat diusap di pose kaki-di-batu
 
 
 def stain_color(u, v, stain_u):

@@ -171,10 +171,14 @@ def fx_roar(cv, x, y, k):
 
 
 # ------------------------------------------------------------------ batu, darah monster, kilau
+ROCK_TOP = (0.22, 0.72)          # bagian atas batu yang rata (pecahan lebar): tempat sepatu bertumpu
+
+
 def rock(cv, x, y_floor, w=18, h=10):
-    """Batu pijakan di lantai (x = tengah): bentuk tidak beraturan, sisi atas terang, retakan, satu kerikil di samping. h = tinggi puncak."""
+    """Batu pijakan di lantai (x = tengah): bentuk tidak beraturan dengan puncak rata (ROCK_TOP) tempat kaki bertumpu, sisi atas terang, retakan,
+    satu kerikil di samping. h = tinggi puncak."""
     x0, base = int(x - w / 2), int(y_floor)
-    pts = [(x0, base), (x0 + 0.5, base - h * 0.45), (x0 + 3, base - h * 0.8), (x0 + w * 0.42, base - h), (x0 + w * 0.7, base - h * 0.93),
+    pts = [(x0, base), (x0 + 0.5, base - h * 0.45), (x0 + 3, base - h * 0.85), (x0 + w * ROCK_TOP[0], base - h), (x0 + w * ROCK_TOP[1], base - h),
            (x0 + w - 1.5, base - h * 0.6), (x0 + w, base - h * 0.2), (x0 + w, base)]
     m = poly(pts)
     solid3(cv, m, STONE, OUT, depth=2, name="rock")

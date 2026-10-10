@@ -108,7 +108,7 @@ def main():
     info["victory"] = {"gagal": bad, "urutan": {k: v for k, v in vinfo.items() if k != "seri"}, "seri": [{k: (list(v) if isinstance(v, tuple) else v) for k, v in x.items()} for x in series]}
     total_gif = sum(s["gif_byte"] for s in info["states"].values())
     total_sheet = sum(s["sheet_byte"] for s in info["states"].values())
-    info["ukuran_total"] = {"gif": total_gif, "sheet": total_sheet, "gif_dan_sheet": total_gif + total_sheet, "batas_total": 2000000, "batas_per_gif": 262144}
+    info["ukuran_total"] = {"gif": total_gif, "sheet": total_sheet, "gif_dan_sheet": total_gif + total_sheet, "batas_total": 2000000, "batas_per_gif": 307200}
     json.dump(info, open(os.path.join(OUT, "ukuran.json"), "w"), indent=2)
     print(json.dumps({"ukuran_total": info["ukuran_total"], "victory_gagal": bad, "victory_urutan": info["victory"]["urutan"]}, indent=1))
 

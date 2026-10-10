@@ -286,7 +286,7 @@ NEW = {
     ("berserker-hero", "miss"): ("berserker-hero-miss", 6, "K"),
     ("berserker-hero", "exhaustion"): ("berserker-hero-exhaustion", 5, "K"),
     ("berserker-hero", "defeated"): ("berserker-hero-defeated", 3, "K"),
-    ("berserker-hero", "victory"): ("berserker-hero-victory", 13, "K"),
+    ("berserker-hero", "victory"): ("berserker-hero-victory", 16, "K"),
 }
 
 # Kanvas dan skala GIF per kostum (opsional; kostum yang tidak tercantum memakai kanvas global 64x48 dan gif_scale

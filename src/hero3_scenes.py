@@ -1,6 +1,6 @@
 """Animasi Berserker Hero v3 (kostum `berserker-hero`, kanvas 128x96; zirah bukan Gobyet, wajah Gobyet di balik topeng): sembilan state.
 
-    idle 12, run 12, rage 12 (tidak loop), attack-leap 14, attack-smash 12, miss 10, exhaustion 12, defeated 14, victory 16 (tidak loop).
+    idle 12, run 12, rage 12 (tidak loop), attack-leap 14, attack-smash 12, miss 10, exhaustion 12, defeated 14, victory 20 (tidak loop).
 
 Tiap state dibangun dari tabel pose per frame yang diinterpolasi (smoothstep) lalu dibulatkan ke piksel utuh, jadi tidak ada gerak sub-piksel yang
 berkedip. Durasi per frame tidak seragam: pose kunci ditahan lebih lama, ayunan cepat. Pola durasi dan urutan beat tiap state mengikuti yang sudah
@@ -537,42 +537,54 @@ DEF_TRACK = Track("defeated", 14, _def_keys(), [200, 180, 180, 200, 200, 220, 20
 
 
 # ================================================================== victory (tidak loop): topeng buka-tutup memperlihatkan wajah Gobyet, pedang ditusuk ke tanah, kaki naik batu, usap darah monster
-_VC = 54
-ROCK_X, ROCK_W, ROCK_H = _VC + 19, 24, 12
+_VC = 56
+ROCK_X, ROCK_W, ROCK_H = _VC + 19, 20, 10          # batu berpuncak rata (FX.ROCK_TOP) di depan kaki kanan
 _ROCK = (lambda cv: FX.rock(cv, ROCK_X, FLOOR, ROCK_W, ROCK_H),)
-_XS = _VC + 34                                    # sumbu mendatar pedang yang tertancap
+_XS = _VC + 36                                    # sumbu mendatar pedang yang tertancap (di kanan batu)
 _PLANT = dict(grip=(_XS, 48), ang=88)
+_ON_ROCK = (15, ROCK_H)                           # kaki kanan di puncak rata batu (sol tepat di atas batu)
+_WIPE = (7, 11, 15, 20, 26)                       # depan usapan (u bilah) di lima frame usap; tangan sedikit di depannya
 
 
 def _vk(**kw):
-    d = rest(_VC, tail_k=0.55, props=_ROCK, stain_u=0, grip=(_XS, 47), ang=86, lh=(_VC - 12, 74))
+    d = rest(_VC, tail_k=0.55, props=_ROCK, stain_u=0, grip=(_XS, 47), ang=86, lh=(_VC - 12, 74), lean=3)
     d.update(kw)
     return d
 
 
+def _wipe(u, **kw):
+    """Frame usap: kaki di batu, badan condong di atas lutut, kepalan kanan di sisi kiri bilah tepat di depan batas noda."""
+    d = dict(legs_front=True, eyes="look", crouch=2, lean=8, grip=_PLANT["grip"], ang=_PLANT["ang"], rh=(_XS - 7, 48 + u + 2), fr=_ON_ROCK, hdy=2,
+             stain_u=u, sway=-0.5)
+    d.update(kw)
+    return _vk(**d)
+
+
+_SMIRK, _SMILE = ("look", "flat", "smirk"), ("look", "flat", "smile")
 VICT_KEYS = [
     key(0, **_vk()),
-    key(1, **_vk(mask=0.25, tail_phase=0.6, face=("look", "flat", "smirk"))),
-    key(2, **_vk(mask=0.625, hdy=-1, tail_phase=0.8, face=("look", "flat", "smirk"))),
-    key(3, **_vk(mask=1.0, hdy=-1, hdx=1, tail_phase=1.0, sway=0.5, face=("look", "flat", "smile"))),
-    key(4, **_vk(mask=0.5, hdx=2, hdy=0, tail_phase=1.3, sway=0.0, face=("look", "flat", "smirk"))),
-    key(5, **_vk(mask=0.0, eyes="wide", hdx=0, tail_phase=1.6)),
-    key(6, **_vk(eyes="angry", crouch=1, lean=-1, grip=(_XS + 1, 42), ang=60, sway=-1.0, tail_phase=1.8)),
-    key(7, **_vk(eyes="angry", crouch=3, lean=-2, grip=(_XS + 2, 40), ang=-44, sway=-2.0, tail_phase=2.0, hdy=1)),
-    key(8, **_vk(eyes="angry", mouth="shout", crouch=4, lean=4, grip=(_XS + 1, 46), ang=70, sway=3.0, tail_phase=2.2, twist=3)),
-    key(9, **_vk(eyes="rage", crouch=6, lean=8, grip=_PLANT["grip"], ang=_PLANT["ang"], sway=3.0, tail_phase=2.4, twist=4, glow=2, hdy=1)),
-    key(10, **_vk(legs_front=True, eyes="look", crouch=5, lean=7, grip=_PLANT["grip"], ang=_PLANT["ang"], rh=(_XS - 4, 48), fr=(9, 6), sway=0.5,
-                  tail_phase=2.7, hdy=1)),
-    key(11, **_vk(legs_front=True, eyes="look", crouch=6, lean=9, grip=_PLANT["grip"], ang=_PLANT["ang"], rh=(_XS - 6, 56), fr=(13, 12), hdy=2, sway=-0.5,
-                  tail_phase=3.0)),
-    key(12, **_vk(legs_front=True, eyes="look", crouch=6, lean=9, grip=_PLANT["grip"], ang=_PLANT["ang"], rh=(_XS - 6, 62), fr=(13, 12), hdy=2, stain_u=8,
-                  sway=-0.5, tail_phase=3.3)),
-    key(13, **_vk(legs_front=True, eyes="look", crouch=6, lean=9, grip=_PLANT["grip"], ang=_PLANT["ang"], rh=(_XS - 6, 69), fr=(13, 12), hdy=2, stain_u=17,
-                  sway=-0.5, tail_phase=3.6)),
-    key(14, **_vk(legs_front=True, eyes="wide", crouch=6, lean=9, grip=_PLANT["grip"], ang=_PLANT["ang"], rh=(_XS - 6, 76), fr=(13, 12), hdy=1, stain_u=30,
-                  sway=-0.5, tail_phase=3.9, glow=2)),
-    key(15, **_vk(legs_front=True, eyes="look", crouch=5, lean=5, grip=_PLANT["grip"], ang=_PLANT["ang"], rh=(_XS - 3, 47), fr=(13, 12), hdy=0, hdx=1,
-                  stain_u=60, sway=1.0, tail_phase=4.2, glow=1)),
+    key(1, **_vk(mask=0.25, face=_SMIRK)),
+    key(2, **_vk(mask=0.625, hdy=-1, face=_SMIRK)),
+    key(3, **_vk(mask=1.0, hdy=-1, hdx=1, sway=0.5, face=_SMIRK)),
+    key(4, **_vk(mask=1.0, hdy=-1, hdx=1, sway=0.5, face=_SMILE)),
+    key(5, **_vk(mask=0.625, hdx=1, face=_SMIRK)),
+    key(6, **_vk(mask=0.25, hdx=1, face=_SMIRK)),
+    key(7, **_vk(mask=0.0, eyes="wide", tail_phase=1.7)),
+    key(8, **_vk(eyes="angry", crouch=1, lean=1, grip=(_XS - 3, 42), ang=60, sway=-1.0, tail_phase=1.9)),
+    key(9, **_vk(eyes="angry", crouch=3, lean=0, grip=(_XS - 6, 40), ang=-44, sway=-2.0, tail_phase=2.1, hdy=1)),
+    key(10, **_vk(eyes="angry", mouth="shout", crouch=4, lean=5, grip=(_XS - 3, 46), ang=70, sway=3.0, tail_phase=2.3, twist=3)),
+    key(11, **_vk(eyes="rage", crouch=4, lean=6, grip=_PLANT["grip"], ang=_PLANT["ang"], sway=3.0, tail_phase=2.5, twist=4, glow=2, hdy=1)),
+    key(12, **_vk(legs_front=True, eyes="look", crouch=4, lean=6, grip=_PLANT["grip"], ang=_PLANT["ang"], rh=(_XS - 4, 49), fr=(10, 5), sway=0.5,
+                  tail_phase=2.8, hdy=1)),
+    key(13, **_vk(legs_front=True, eyes="look", crouch=2, lean=8, grip=_PLANT["grip"], ang=_PLANT["ang"], rh=(_XS - 6, 53), fr=_ON_ROCK, hdy=2, sway=-0.5,
+                  tail_phase=3.1)),
+    key(14, **_wipe(_WIPE[0], tail_phase=3.1)),
+    key(15, **_wipe(_WIPE[1], tail_phase=3.1)),
+    key(16, **_wipe(_WIPE[2], tail_phase=3.1)),
+    key(17, **_wipe(_WIPE[3], tail_phase=3.1)),
+    key(18, **_wipe(_WIPE[4], tail_phase=3.1, eyes="wide", glow=2)),
+    key(19, **_vk(legs_front=True, eyes="look", crouch=2, lean=6, grip=_PLANT["grip"], ang=_PLANT["ang"], rh=(_XS - 3, 47), fr=_ON_ROCK, hdy=1, hdx=1,
+                  stain_u=60, sway=1.0, tail_phase=3.1, glow=1)),
 ]
 
 
@@ -582,38 +594,37 @@ def _vict_fx(i, p):
     hx, hy = int(g["head"][0]), int(g["head"][1])
     gx, gy = p["grip"]
     sf = SwordFrame(gx, gy, p["ang"])
-    if 2 <= i <= 4:                                             # uap keluar dari celah pintu topeng saat membuka dan menutup
-        k = (0, 1, 2, 3, 3)[i]
-        out.append(lambda cv, g: FX.fx_steam(cv, hx - 14, hy + 6, k))
-        out.append(lambda cv, g: FX.fx_steam(cv, hx + 14, hy + 6, k))
-    if i == 5:                                                  # klik: percikan di tengah pelat saat topeng tertutup
+    if 2 <= i <= 6:                                             # uap keluar dari celah pintu topeng saat membuka dan menutup
+        k = (0, 0, 1, 2, 3, 3, 2)[i]
+        out.append(lambda cv, g: FX.fx_steam(cv, hx - 15, hy + 6, k))
+        out.append(lambda cv, g: FX.fx_steam(cv, hx + 15, hy + 6, k))
+    if i == 7:                                                  # klik: percikan di tengah pelat saat topeng tertutup
         out.append(lambda cv, g: FX.fx_burst(cv, hx, hy + 3, 4))
-    if i == 8:                                                  # sapuan menukik
+    if i == 10:                                                 # sapuan menukik
         out.append(lambda cv, g: FX.fx_smear(cv, gx - 6, gy + 2, 38, p["ang"] - 62, p["ang"] - 2, 2))
-    if i >= 9:                                                  # ujung bilah masuk tanah: debu dan retakan di titik tusuk
-        k = min(i - 9, 3)
+    if i >= 11:                                                 # ujung bilah masuk tanah: debu dan retakan di titik tusuk
+        k = min(i - 11, 3)
         tx = sf.w(40.0, 0)[0]
-        if i <= 11:
+        if i <= 13:
             out.append(lambda cv, g: FX.fx_dust(cv, int(tx), FLOOR - 1, k, 0.9))
-        if i == 9:
+        if i == 11:
             out.append(lambda cv, g: FX.fx_chips(cv, int(tx), FLOOR - 4, 1, seed=7, n=7, power=0.8))
             out.append(lambda cv, g: FX.fx_burst(cv, int(tx), FLOOR - 6, 4))
             out.append(lambda cv, g: FX.fx_ichor_drip(cv, int(tx) - 13, gy + 20, 0))
             out.append(lambda cv, g: FX.fx_ichor_drip(cv, int(tx) + 13, gy + 14, 1))
-    if i == 13:                                                 # tetesan cairan jatuh dari sisi bilah ke lantai
-        out.append(lambda cv, g: FX.fx_ichor_drip(cv, int(sf.w(30.0, 0)[0]) - 12, int(gy) + 28, 1))
-    if i == 14:
-        out.append(lambda cv, g: FX.fx_ichor_drip(cv, int(sf.w(30.0, 0)[0]) - 12, FLOOR - 4, 3))
-        out.append(lambda cv, g: FX.fx_glint(cv, int(sf.w(18.0, 0)[0]) - 4, int(gy) + 18, 0))
-    if i == 15:
-        out.append(lambda cv, g: FX.fx_glint(cv, int(sf.w(18.0, 0)[0]) - 4, int(gy) + 18, 1))
-        out.append(lambda cv, g: FX.fx_glint(cv, int(sf.w(30.0, 0)[0]) + 4, int(gy) + 31, 2))
+    if i in (15, 16):                                           # tetesan darah jatuh dari sisi bilah ke lantai saat diusap
+        out.append(lambda cv, g: FX.fx_ichor_drip(cv, int(sf.w(30.0, 0)[0]) + 12, int(gy) + 26 + (i - 15) * 8, 1 + (i - 15) * 2))
+    if i == 18:
+        out.append(lambda cv, g: FX.fx_glint(cv, int(sf.w(14.0, 0)[0]) - 4, int(gy) + 14, 0))
+    if i == 19:
+        out.append(lambda cv, g: FX.fx_glint(cv, int(sf.w(14.0, 0)[0]) - 4, int(gy) + 14, 1))
+        out.append(lambda cv, g: FX.fx_glint(cv, int(sf.w(28.0, 0)[0]) + 4, int(gy) + 29, 2))
     return out
 
 
-VICT_TRACK = Track("victory", 16, VICT_KEYS, [160, 100, 100, 300, 100, 140, 100, 70, 60, 200, 140, 160, 120, 120, 140, 1500], keyframe=13,
-                   loop=False, fx=_vict_fx,
-                   label="topeng membuka memperlihatkan wajah Gobyet lalu menutup, pedang dicabut lalu ditusukkan ke tanah, satu kaki naik ke batu sambil tangan mengusap darah monster, bilah bersih berkilau")
+VICT_TRACK = Track("victory", 20, VICT_KEYS, [160, 100, 100, 150, 350, 100, 80, 140, 100, 70, 60, 200, 140, 160, 110, 110, 110, 110, 130, 1500],
+                   keyframe=16, loop=False, fx=_vict_fx,
+                   label="topeng membuka memperlihatkan wajah Gobyet yang tersenyum lalu menutup, pedang dicabut lalu ditusukkan ke tanah, satu kaki naik ke batu sambil tangan mengusap darah monster sepanjang bilah, bilah bersih berkilau")
 
 TRACKS = {t.name: t for t in (IDLE_TRACK, RUN_TRACK, RAGE_TRACK, LEAP_TRACK, SMASH_TRACK, MISS_TRACK, EXH_TRACK, DEF_TRACK, VICT_TRACK)}
 
