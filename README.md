@@ -9,6 +9,25 @@
   oleh monyet bodoh yang lagi larping jadi programmer.
 </p>
 
+## Berserker Hero
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-hero/gif/berserker-hero-attack-smash.gif" width="384" alt="Berserker Hero: ancang-ancang lalu hantaman pedang besar ke balok kayu">
+</p>
+
+Tokoh utama Gobyet. Zirahnya bukan Gobyet: helm penuh bersalib merah, pedang hitam berinti api, perisai naga bersayap di bahu kiri, dan ekor besi beruas berujung kipas panah. Wajah monyet Gobyet baru terlihat saat topengnya dibuka setelah menang.
+
+**9 state animasi · kanvas 128×96 · disetujui pemilik**
+
+| idle | run | attack-leap | victory |
+|:---:|:---:|:---:|:---:|
+| <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-hero/gif/berserker-hero-idle.gif" width="192" alt="Berserker Hero: berdiri siaga dengan perisai naga dan pedang besar"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-hero/gif/berserker-hero-run.gif" width="192" alt="Berserker Hero: lari berat, ekor berayun"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-hero/gif/berserker-hero-attack-leap.gif" width="192" alt="Berserker Hero: melompat lalu menebas turun"> | <img src="https://raw.githubusercontent.com/kanku-Oiric/Gobyet/claude/gobyet-hero/gif/berserker-hero-victory.gif" width="192" alt="Berserker Hero: topeng membuka memperlihatkan wajah Gobyet, pedang ditancapkan, kaki naik ke batu"> |
+| siaga di balik perisai naga | lari berat, ekor berayun | lompat lalu tebas turun | topeng membuka, pedang ditancap, kaki di batu (diputar sekali) |
+
+Juga ada `rage`, `miss`, `exhaustion`, dan `defeated`. Semua state tampil di [`pack/preview.html`](https://github.com/kanku-Oiric/Gobyet/blob/claude/gobyet-hero/pack/preview.html). Dua versi sebelumnya disimpan sebagai [evolusi](https://github.com/kanku-Oiric/Gobyet/tree/claude/gobyet-hero/pack/evolusi), dan laporan akhirnya ada di [`pack/reports/hero3-final.md`](https://github.com/kanku-Oiric/Gobyet/blob/claude/gobyet-hero/pack/reports/hero3-final.md).
+
+Berserker Hero juga sudah masuk arena [Battle Royale Argumen](https://github.com/kanku-Oiric/Bertahan-Bukan-hidup/tree/claude/argument-battle-royale-skill-3wzgmg/.claude/skills/argument-battle-royale). Ia membuka setiap tayangan, lalu ikut bertarung bila topiknya tentang pahlawan, perang, naga, atau monster. Asetnya masih di branch [`claude/gobyet-hero`](https://github.com/kanku-Oiric/Gobyet/tree/claude/gobyet-hero/) dan belum digabung ke `main`.
+
 ## Gobyet Universe
 
 Satu monyet, banyak dunia. Rework v2 membuat setiap karakter Gobyet berdiri dengan kuda-kuda, senjata, dan siluet sesuai perannya, sementara kepala, wajah, telinga, dan ekornya tetap Gobyet yang sama.
