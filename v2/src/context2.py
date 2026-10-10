@@ -18,6 +18,8 @@ Aturan:
   teologi) mengarah ke Philosopher supaya tidak ada tradisi yang diistimewakan (aturan 7.2). Aksesori sekunder untuk
   kedua tradisi sama jenisnya (buku polos).
 - Peran turnamen (wasit, juri, skeptic, champion, defeated) ditetapkan oleh fase turnamen, bukan oleh topik.
+- Domain hero (pahlawan, perang, naga, monster, prajurit) memilih Berserker Hero, tokoh utama dari pack/ (PACK_CHARS).
+  Kata "battle" dan "petarung" sengaja bukan kata kunci karena dipakai turnamen itu sendiri.
 """
 import json
 import re
@@ -108,6 +110,11 @@ DOMAINS = {
     "pirate": ("fantasy-pirate", "telescope", [
         "bajak laut", "pirate", "pirates", "perompak", "maritim", "maritime", "pelayaran", "sailing", "harta karun", "treasure",
         "kapal layar", "sailing ship", "angkatan laut", "navy", "samudra", "ocean"]),
+    # Berserker Hero (tokoh utama, kanvas 128x96, asetnya di pack/ bukan v2/registry.json; lihat PACK_CHARS)
+    "hero": ("berserker-hero", "sword", [
+        "pahlawan", "kepahlawanan", "hero", "heroes", "heroik", "heroic", "heroism", "berserker", "naga", "dragon", "dragons",
+        "monster", "monsters", "perang", "peperangan", "war", "wars", "warfare", "pertempuran", "prajurit", "warrior",
+        "warriors", "keberanian", "pemberani", "courage", "bravery", "gladiator"]),
     "magic": ("wizard", "star", [
         "sihir", "magic", "penyihir", "wizard", "fantasi", "fantasy", "mitologi", "mythology", "dongeng", "fairy tale", "mitos",
         "myth", "takhayul", "superstition", "supernatural", "alkimia", "alchemy", "ramalan", "prophecy", "astrologi", "astrology"]),
@@ -122,6 +129,10 @@ DOMAINS = {
         "olahraga", "sport", "sports", "sepak bola", "football", "soccer", "wasit", "referee", "pertandingan", "match",
         "kompetisi", "competition", "liga", "league", "atlet", "athlete", "esports", "e-sport", "piala dunia", "world cup"]),
 }
+
+# karakter yang asetnya ada di pack/ (kostum berkanvas sendiri), bukan di v2/registry.json; v2/tools/vendor_skill.py
+# menyalinnya ke arena. Di galeri v2 sendiri karakter ini tidak ada, jadi resolver v2 menurunkannya ke fallback.
+PACK_CHARS = {"berserker-hero": "pack/manifest.json"}
 
 # domain yang biasanya menjadi objek pertanyaan; jadi primer hanya bila tidak ada domain lain yang cocok
 SUBJECT_ONLY = {"technology"}

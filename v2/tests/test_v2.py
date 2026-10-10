@@ -197,9 +197,15 @@ class Assets(unittest.TestCase):
     def test_icons(self):
         for name, path in REG["icons"].items():
             self.assertTrue(os.path.exists(os.path.join(V2, path)), name)
+        pack = json.load(open(os.path.join(os.path.dirname(V2), "pack", "manifest.json"), encoding="utf-8"))
         for dom, (char, acc, _) in context2.DOMAINS.items():
             self.assertIn(acc, REG["icons"], dom)
-            self.assertIn(char, CH, dom)
+            if char in context2.PACK_CHARS:
+                # kostum berkanvas sendiri dari pack/ (Berserker Hero): harus ada di manifest pack dengan state inti arena
+                self.assertIn(char, pack["cells"], dom)
+                self.assertTrue({"idle", "attack-smash", "victory", "defeated"} <= set(pack["cells"][char]), dom)
+            else:
+                self.assertIn(char, CH, dom)
 
 
 class Resolve(unittest.TestCase):
@@ -252,6 +258,8 @@ class Context(unittest.TestCase):
         ("AI + matematika: bisakah LLM membuktikan teorema?", "mathematician", "laptop"),
         ("Hukum dan sejarah kolonial: warisan undang-undang", "lawyer", "oldscroll"),
         ("Apakah bunga bank haram menurut fikih?", "pak-haji", "calculator"),
+        ("Apakah perang bisa dibenarkan?", "berserker-hero", None),
+        ("Etika perang", "philosopher", "sword"),
         ("Apakah Alkitab mendukung hukuman mati?", "priest", None),
         ("Apakah Tuhan ada?", "philosopher", None),
         ("Apakah pajak kekayaan adil?", "economist", None),
@@ -308,7 +316,7 @@ class Context(unittest.TestCase):
         self.assertIsNone(context2.select("Kenapa kucing suka kotak?")["alt"])
 
     def test_tournament_words_are_not_keywords(self):
-        for w in ("argumen", "premis", "klaim", "argument", "premise", "claim"):
+        for w in ("argumen", "premis", "klaim", "argument", "premise", "claim", "battle", "petarung", "fighter"):
             self.assertEqual(context2.select("Argumen contoh: " + w)["primary"], "normal-gblk", w)
 
     def test_roles_are_registered(self):

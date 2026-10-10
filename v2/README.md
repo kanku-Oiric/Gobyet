@@ -71,6 +71,9 @@ kategori fantasy, domain, dan special punya kelima state inti sendiri (diuji).
   Pak Haji atau Priest; ikon aksesori kedua tradisi sama (buku polos).
 - Kata yang muncul di semua teks turnamen (argumen, premis) bukan kata kunci.
 - Peran turnamen tetap: referee, judge, skeptic, champion, defeated.
+- Domain `hero` (pahlawan, perang, naga, monster, prajurit, keberanian, ...) memilih **Berserker Hero**, tokoh utama
+  dari `pack/` (bukan karakter v2; `PACK_CHARS`). Di galeri v2 ia tidak ada, jadi resolver v2 menurunkannya ke
+  fallback; arena mendapatkannya lewat `tools/vendor_skill.py`. "battle" dan "petarung" bukan kata kunci.
 
 ## Berserker: pedang raksasa
 
@@ -88,10 +91,18 @@ kategori fantasy, domain, dan special punya kelima state inti sendiri (diuji).
   per tingkat (`Resolver.resolve(id, state, damage=...)`).
 - Darah: `registry.blood.levels` (0 mati, 1-3), hanya sprite `vfx/blood_*.png`, dimunculkan mesin pada event `hit`
   bila memang kena. Tidak pernah ada piksel darah di sheet karakter (diuji).
-- Arena Battle Royale masih menggambar frame 64×64, jadi `tools/vendor_skill.py` melewati Berserker.
+- Arena Battle Royale sekarang bisa menggambar kanvas per karakter, tetapi `tools/vendor_skill.py` tetap melewati
+  Berserker v2 ini: tidak ada domain atau peran arena yang memilihnya. Tokoh berpedang raksasa di arena adalah
+  Berserker Hero dari `pack/` (lihat di bawah).
 
 ## Integrasi Battle Royale
 
 `tools/vendor_skill.py DEST` menyalin subset aset (state inti + state peran) dan `context2.py`/`resolve2.py` ke skill
 `argument-battle-royale`. Arena HTML skill memilih karakter tiap petarung dari teks argumennya dan memutar duel,
 putusan juri, uji falsifikasi, dan pemenang dengan karakter Gobyet; tanpa aset, arena kembali ke sprite Clawd.
+
+Berserker Hero (`pack/`, kanvas 128×96) ikut disalin: 8 state (idle, run, rage, attack-smash, attack-leap,
+exhaustion, defeated, victory) dengan durasi per frame, `anchor` x 66 / baseline 90, `px` [2, 3] (1 piksel hero =
+2/3 piksel Gobyet, dibulatkan ke atas saat digambar), `core.attack` = attack-smash, `core.hit` = exhaustion (hero tidak
+punya state hit), `variants.attack` = smash dan leap bergantian, fallback viking-berserker. Arena memakainya sebagai
+pembuka tayangan (run lalu rage) dan sebagai petarung untuk domain `hero`.

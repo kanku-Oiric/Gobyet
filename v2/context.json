@@ -680,6 +680,39 @@
     "ocean"
    ]
   },
+  "hero": {
+   "character": "berserker-hero",
+   "accessory": "sword",
+   "keywords": [
+    "pahlawan",
+    "kepahlawanan",
+    "hero",
+    "heroes",
+    "heroik",
+    "heroic",
+    "heroism",
+    "berserker",
+    "naga",
+    "dragon",
+    "dragons",
+    "monster",
+    "monsters",
+    "perang",
+    "peperangan",
+    "war",
+    "wars",
+    "warfare",
+    "pertempuran",
+    "prajurit",
+    "warrior",
+    "warriors",
+    "keberanian",
+    "pemberani",
+    "courage",
+    "bravery",
+    "gladiator"
+   ]
+  },
   "magic": {
    "character": "wizard",
    "accessory": "star",
