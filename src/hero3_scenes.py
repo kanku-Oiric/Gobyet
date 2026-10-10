@@ -82,28 +82,15 @@ def pose_of(spec):
     return d
 
 
-# per state: pengali jari-jari ekor dan putaran tambahan kipas (derajat), dicari agar tepi kiri tetap >= 1 px (perisai naga menahan cx >= 52)
-TAIL_SCALE = {"rage": 0.6, "attack-leap": 0.8, "attack-smash": 1.0, "miss": 0.9, "exhaustion": 0.95, "defeated": 0.75, "victory": 1.0}
-TAIL_ROT = {"rage": 10.0, "attack-leap": 55.0, "attack-smash": 55.0, "miss": 25.0, "exhaustion": 10.0, "defeated": 10.0, "victory": 25.0}
-
-
-# State serangan (keputusan pemilik "ekor sedang"): di frame tumbukan kipas ekor dipindah ke atas-belakang dan dibesarkan supaya tidak tertutup perisai
-# naga; di frame lain ekor kembali bertahap ke bentuk dasar state itu supaya tidak terpotong tepi kanvas. (skala, putaran, dx, dy) dasar dan puncak,
-# dan bobot puncak per frame (0 = dasar, 1 = puncak). Nilai dicari otomatis terhadap tepi kanvas dan ukuran ekor idle; lihat laporan.
-TAIL_PEAK = {
-    "attack-leap": ((1.2, 90.0, 8.0, -24.0), [0.5, 0.75, 0.5, 0.5, 0.5, 0.5, 0.75, 0.75, 1.0, 1.0, 1.0, 1.0, 0.5, 0.5]),
-    "attack-smash": ((0.8, 30.0, 4.0, -24.0), [1.0] * 12),
-    "miss": ((0.8, 15.0, 8.0, -24.0), [1.0] * 10),
-}
+# Ekor (rig hero3.tail): per state (k = panjang, rot = derajat angkat di pangkal). Putaran di keyframe (tail_rot) ditambahkan setengahnya, mis. ekor
+# terangkat saat amarah. Nilai dicari otomatis supaya ekor tidak terpotong tepi kanvas; state serangan dibuat "sedang" (keputusan pemilik), lihat laporan.
+TAIL = {"idle": (1.0, -10.0), "run": (0.8, -10.0), "rage": (0.8, -10.0), "attack-leap": (0.7, 0.0), "attack-smash": (0.7, 0.0), "miss": (0.7, 0.0),
+        "exhaustion": (0.8, 0.0), "defeated": (0.7, 0.0), "victory": (0.8, -10.0)}
 
 
 def tail_params(name, i):
-    base = (TAIL_SCALE.get(name, 1.0), TAIL_ROT.get(name, 0.0), 0.0, 0.0)
-    if name not in TAIL_PEAK:
-        return base
-    peak, weights = TAIL_PEAK[name]
-    w = weights[i % len(weights)]
-    return tuple(a + (b - a) * w for a, b in zip(base, peak))
+    k, rot = TAIL.get(name, (1.0, 0.0))
+    return (k, rot, 0.0, 0.0)
 
 
 class Track:
@@ -119,9 +106,9 @@ class Track:
         p = at(self.keys, i, self.n, self.loop)
         if self.post:
             self.post(i, p)
-        sc, rot, dx, dy = tail_params(self.name, i)                          # ekor per state (dan per frame di state serangan)
-        p["tail_k"] = p["tail_k"] * sc
-        p["tail_rot"] = p["tail_rot"] + rot
+        k, rot, dx, dy = tail_params(self.name, i)                           # ekor per state; tail_k di keyframe (rig lama) tidak dipakai
+        p["tail_k"] = k
+        p["tail_rot"] = rot + 0.5 * p["tail_rot"]
         p["tail_dx"], p["tail_dy"] = dx, dy
         p = quant(p)
         if self.fx:
@@ -195,7 +182,7 @@ def _run_keys():
         sway = -4 - round(3 * (-prev["dy"]) / 7.0)                          # jambul menyusul badan dengan jeda satu frame
         d = dict(r, cx=_RC, lean=12, grip=(_RC + 31, 60 + bob), ang=-50 + (4 if r["dy"] < -5 else 0) - (2 if r["dy"] > -1 else 0),
                  lh=(_RC + 2, 70), eyes="angry", mouth="closed", hdx=2, sway=sway, tail_k=0.82, tail_rot=8 - 2 * (i % 2),
-                 tail_phase=2 * math.pi * 2 * i / 12.0 + 1.0)
+                 tail_phase=2 * math.pi * 2 * i / 12.0 + 2.5, tail_wag=7.0)
         if i in (3, 4, 9, 10):
             d.update(mouth="shout")
         keys.append((i, d))

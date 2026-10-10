@@ -305,11 +305,11 @@ class HeroMeasure(unittest.TestCase):
         self.assertGreater(self.hc.dark_edge_unlit(cv), 0)
 
     def test_attack_tail_is_medium(self):
-        ref = self.hc.count(self.hs.TRACKS["idle"].frame(0), ("tail_arrow",))
+        ref = self.hc.count(self.hs.TRACKS["idle"].frame(0), self.hc.TAIL_PARTS)
         lo, hi = vp.HERO_TAIL_MEDIUM
         for state in vp.HERO_ATTACKS:
             t = self.hs.TRACKS[state]
-            k = self.hc.count(t.frame(t.keyframe), ("tail_arrow",))
+            k = self.hc.count(t.frame(t.keyframe), self.hc.TAIL_PARTS)
             self.assertTrue(lo * ref <= k <= hi * ref, (state, k, ref))
 
     def test_head_height_is_stable_within_a_state(self):

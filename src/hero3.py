@@ -2,7 +2,7 @@
 
 Arah (dari pemilik; gambar referensi tidak disimpan di repo):
   - model badan mengikuti referensi pertama: prajurit mesin chibi, helm dan jambul sangat besar tanpa leher, perut berpola sisik heksagonal,
-    sepatu pendek bercakar, ekor kipas panah melengkung di belakang, bahu bundar di sisi senjata;
+    sepatu pendek bercakar, ekor beruas berujung kipas panah, bahu bundar di sisi senjata;
   - basis zirah bukan Gobyet: helm penuh bermata cahaya. Wajah monyet Gobyet (monkey.head asli) hanya terlihat di balik topeng yang dibuka
     (keputusan pemilik setelah fase animasi: "dalamnya wajah monyet Gobyet");
   - kepala referensi pertama dipertahankan (jambul menyapu ke belakang, pita V di atas wajah, sirip samping, rahang bergrill) tetapi
@@ -565,30 +565,65 @@ def leg(cv, hip, foot, bend=-1):
     return knee
 
 
-# ================================================================== ekor kipas panah
-def tail_fan(cv, center, phase=0.0, rot=0.0, k=1.0):
-    """Ekor kipas panah: dua busur panah merah menyala yang mengelilingi bagian belakang bahu (kiri dan atas), ujung panah mengikuti busur.
-    center = pusat busur (di belakang pelindung bahu raksasa); phase menggoyang kipas; rot memutar; k menskala jari-jari."""
-    cxx, cyy = center
-    sw = math.sin(phase) * 4.0 + rot
-    for kk, (r, n, size, a0, a1) in enumerate(((30.0 * k, 5, 11.0, 168.0, 248.0), (40.0 * k, 6, 12.5, 172.0, 258.0))):
-        for i in range(n):
-            t = (i + 0.5) / n
-            th = math.radians(a0 + sw * 0.6 + (a1 - a0) * t + sw * t)
-            x, y = cxx + math.cos(th) * r, cyy + math.sin(th) * r
-            ang = th + math.pi / 2.0
-            sz = size * (0.8 + 0.35 * t)
-            m = arrow(x, y, ang, sz, sz * 0.9)
-            lit, mid, dark = (("q4", "q3", "q2") if kk == 0 else ("q3", "q2", "q1"))
-            part(cv, "tail_arrow")
-            for (ax, ay) in m:                                   # tanpa garis tepi: dua nada rata (dasar dan bayangan di tepi bawah-kanan), sorotan hanya di ujung
-                c = mid
-                if (ax + 1, ay) not in m or (ax, ay + 1) not in m:
-                    c = dark
-                cv.put(ax, ay, c)
-            tx, ty = x + math.cos(ang) * sz * 0.5, y + math.sin(ang) * sz * 0.5
-            if (int(tx), int(ty)) in m:
-                cv.put(int(tx), int(ty), lit)
+# ================================================================== ekor beruas berujung kipas panah
+TAIL_PTS = ((0.0, 0.0), (-18.0, 12.0), (-40.0, 12.0), (-50.0, -10.0))   # pangkal, dua titik kendali, ujung (relatif pangkal, sebelum skala k)
+TAIL_R = (4.2, 1.8)                                                      # jari-jari batang ekor di pangkal dan di dekat ujung
+TAIL_FAN = ((-0.6, 10.0), (0.6, 10.0), (0.0, 13.0))                      # kipas ujung: (sudut relatif garis singgung, panjang panah)
+
+
+def _cubic(p0, p1, p2, p3, n):
+    out = []
+    for i in range(n + 1):
+        t = i / float(n)
+        a, b, c, d = (1 - t) ** 3, 3 * (1 - t) ** 2 * t, 3 * (1 - t) * t * t, t ** 3
+        out.append((a * p0[0] + b * p1[0] + c * p2[0] + d * p3[0], a * p0[1] + b * p1[1] + c * p2[1] + d * p3[1]))
+    return out
+
+
+def tail_path(base, phase=0.0, rot=0.0, k=1.0, wag=3.0):
+    """Garis tengah ekor: keluar dari pinggang belakang, turun ke dekat lantai di belakang kaki, lalu melengkung naik; rot > 0 mengangkat ekor
+    (derajat, berputar di pangkal), k menskala panjang, phase menggoyang ujung naik-turun sejauh wag piksel."""
+    bx, by = base
+    pts = [(x * k, y * k) for (x, y) in TAIL_PTS]
+    pts[2] = (pts[2][0], pts[2][1] + 1.5 * math.sin(phase + 1.0))
+    pts[3] = (pts[3][0], pts[3][1] - wag * math.sin(phase))
+    a = math.radians(rot)
+    ca, sa = math.cos(a), math.sin(a)
+    pts = [(bx + x * ca + y * sa, min(FLOOR - 3.0, by - x * sa + y * ca)) for (x, y) in pts]
+    return _cubic(pts[0], pts[1], pts[2], pts[3], 24)
+
+
+def tail(cv, base, phase=0.0, rot=0.0, k=1.0, wag=3.0):
+    """Ekor: batang besi hitam beruas dengan cincin merah, keluar dari pinggang belakang dan melengkung rendah di belakang kaki (di bawah sayap perisai),
+    berujung kipas tiga panah merah menyala (kipas panah dari referensi pertama). Digambar paling belakang."""
+    path = tail_path(base, phase, rot, k, wag)
+    r0 = TAIL_R[0] * max(0.75, k)
+    body = thick(path, r0, TAIL_R[1])
+    solid3(cv, body, IRON, OUT, depth=1, name="tail_seg")
+    part(cv, "tail_seg")
+    n = len(path) - 1
+    for i in (5, 9, 13, 17, 20):                                                # cincin merah di antara ruas
+        (x0, y0), (x1, y1) = path[i - 1], path[i + 1]
+        d = math.hypot(x1 - x0, y1 - y0) or 1.0
+        nx, ny = -(y1 - y0) / d, (x1 - x0) / d
+        r = r0 * (1 - i / float(n)) + TAIL_R[1] * (i / float(n)) - 0.6
+        for sgn in range(-int(r), int(r) + 1):
+            q = (int(round(path[i][0] + nx * sgn)), int(round(path[i][1] + ny * sgn)))
+            if q in body:
+                cv.put(q[0], q[1], "q2")
+    (x0, y0), (x1, y1) = path[-3], path[-1]
+    ang = math.atan2(y1 - y0, x1 - x0)
+    tip = path[-1]
+    part(cv, "tail_arrow")
+    for da, L in TAIL_FAN:                                                      # dua panah samping lebih gelap, panah tengah menyala
+        aa = ang + da
+        L = L * max(0.75, k)
+        cx_, cy_ = tip[0] + math.cos(aa) * L * 0.2, tip[1] + math.sin(aa) * L * 0.2           # pangkal panah menempel di ujung batang
+        m = arrow(cx_, cy_, aa, L, L * 0.85)
+        solid3(cv, m, REDB if da == 0.0 else RED, ROUT, depth=1, name="tail_arrow")
+        tx, ty = cx_ + math.cos(aa) * L * 0.45, cy_ + math.sin(aa) * L * 0.45
+        if (int(tx), int(ty)) in m:
+            cv.put(int(tx), int(ty), "q4")
 
 
 # ================================================================== pedang hitam raksasa berinti api merah
@@ -696,7 +731,7 @@ def pose(**kw):
     p = dict(cx=64, lean=0.0, crouch=0.0, dy=0.0, hdx=0.0, hdy=0.0,
              fl=(-9.0, 0.0), fr=(9.0, 0.0),
              grip=None, ang=0.0, sword_layer="front", lh_u=-6.5, lh=None, rh=None, glow=1,
-             eyes="look", mouth="closed", sway=0.0, tail_phase=0.0, tail_rot=0.0, tail_k=1.0, tail_dx=0.0, tail_dy=0.0, twist=0.0, fx=(), mask=0.0, face=None, stain_u=None, heat=0, flare=0.0,
+             eyes="look", mouth="closed", sway=0.0, tail_phase=0.0, tail_rot=0.0, tail_k=1.0, tail_dx=0.0, tail_dy=0.0, tail_wag=3.0, twist=0.0, fx=(), mask=0.0, face=None, stain_u=None, heat=0, flare=0.0,
              props=(), legs_front=False, toe_l=1, toe_r=1)
     p.update(kw)
     return p
@@ -748,7 +783,7 @@ def draw_hero(cv, p):
     tcx, tcy = g["tcx"], g["tcy"]
     for prop in p["props"]:
         prop(cv)
-    tail_fan(cv, (g["sh_l"][0] - 8.0 + p["tail_dx"], g["sh_l"][1] + 4.0 + p["tail_dy"]), p["tail_phase"], p["tail_rot"], p["tail_k"])
+    tail(cv, (g["hip_l"][0] - 2.0 + p["tail_dx"], g["hip_y"] - 4.0 + p["tail_dy"]), p["tail_phase"], p["tail_rot"], p["tail_k"], p["tail_wag"])
     if g["sword"] and p["sword_layer"] == "back":
         sword3(cv, g["sword"], p["glow"], p["stain_u"])
     if not p["legs_front"]:

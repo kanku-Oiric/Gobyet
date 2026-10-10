@@ -128,17 +128,17 @@ def main():
                            "piksel_tepi_idle": hc.count(idle, ("rim",)),
                            "tepi_gelap_tanpa_tepi_terang_semua_frame": sum(hc.dark_edge_unlit(tr.frame(i)) for tr in hs.TRACKS.values() for i in range(tr.n))}
     # ekor
-    ref = hc.count(hs.TRACKS["idle"].frame(0), ("tail_arrow",))
+    ref = hc.count(hs.TRACKS["idle"].frame(0), hc.TAIL_PARTS)
     tiles = [tile(hs.TRACKS["idle"].frame(0), 3, LIGHT, "idle f0 ekor %d px" % ref)]
     tail = {"idle_f0": ref}
     for st in ("attack-leap", "attack-smash", "miss"):
         tr = hs.TRACKS[st]
         cv = tr.frame(tr.keyframe)
-        k = hc.count(cv, ("tail_arrow",))
-        tail[st] = {"frame_kunci": tr.keyframe, "piksel": k, "persen_idle": round(100.0 * k / ref, 1), "puncak": list(hs.TAIL_PEAK[st][0]), "bobot_per_frame": hs.TAIL_PEAK[st][1]}
+        k = hc.count(cv, hc.TAIL_PARTS)
+        tail[st] = {"frame_kunci": tr.keyframe, "piksel": k, "persen_idle": round(100.0 * k / ref, 1), "k_dan_rot": list(hs.TAIL.get(st, (1.0, 0.0)))}
         mark = R.PartCanvas()
         for kk, c in cv.px.items():
-            mark.px[kk] = "q4" if cv.owner.get(kk) == "tail_arrow" else c
+            mark.px[kk] = "q4" if cv.owner.get(kk) in hc.TAIL_PARTS else c
             mark.owner[kk] = cv.owner.get(kk)
         tiles.append(tile(mark, 3, LIGHT, "%s f%d ekor %d px (%d%%)" % (st, tr.keyframe, k, round(100.0 * k / ref))))
     grid(tiles, 2).save(os.path.join(OUT, "ekor-serangan.png"))

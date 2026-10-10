@@ -1148,7 +1148,7 @@ def hero_findings(state, track, sheet_frames, cell):
     r = hc.readability(cvs[kf])
     info["kunci"] = (kf, r)
     if state in HERO_ATTACKS:                                   # ekor "sedang" di frame tumbukan dibanding ekor idle f0
-        ref = hc.count(hs_tracks()["idle"].frame(0), ("tail_arrow",))
+        ref = hc.count(hs_tracks()["idle"].frame(0), hc.TAIL_PARTS)
         lo, hi = HERO_TAIL_MEDIUM
         info["ekor"] = (r["ekor"], ref)
         if not lo * ref <= r["ekor"] <= hi * ref:
@@ -1219,7 +1219,7 @@ def check_hero(m):
         if state == "rage":
             extra = "; garis kejut f%d-f%d, merah menyala %d -> %d piksel" % (info["amuk"] + info["panas"]) if info.get("amuk") else "; tidak ada frame amuk"
         print("      sisi (dx px relatif tengah badan, - kiri / + kanan): perisai naga %s, bahu bundar %s, jambul %s, ekor %s" % (
-            rng("perisai_naga"), rng("pelindung_bahu_bundar"), rng("jambul"), rng("ekor_panah")))
+            rng("perisai_naga"), rng("pelindung_bahu_bundar"), rng("jambul"), rng("ekor")))
         print("      mata min %d px; tinggi kepala %d-%d px (langkah %.1f%%, rentang %.1f%%)%s%s%s" % (
             info["mata_min"], info["kepala_tinggi"][0], info["kepala_tinggi"][1], 100 * info["kepala_langkah"], 100 * info["kepala_rentang"],
             ("; seam %d <= langkah maks %d (seam/median %.2f)" % (info["seam"] + (info["seam_median"],))) if "seam" in info else "; tidak loop",

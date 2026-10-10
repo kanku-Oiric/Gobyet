@@ -21,13 +21,14 @@ ICHOR_KEYS = {"m1", "m2", "m3"}                                                 
 FX_PARTS = {"dust", "chip", "burst", "smear", "block", "speed", "sweat", "breath", "spark", "roar", "steam", "ichor", "glint", "rock"}
 HEAD_PARTS = {"helm", "visor_plate", "visor", "grill", "brow_band", "cheek", "ear_disc", "chin", "cavity", "gobyet_face", "gobyet_eye", "sensor", "fin"}
 CAVITY_PARTS = ("cavity", "gobyet_face", "gobyet_eye")
+TAIL_PARTS = ("tail_seg", "tail_arrow")
 SHIELD_PARTS = ("pauldron_big", "horn_fin", "dragon_horn", "dragon_eye", "dragon_brow", "dragon_scale", "dragon_glow")
 
 # elemen asimetris yang harus tetap di sisinya: -1 kiri, +1 kanan, relatif titik tengah badan (acuan "badan") atau titik tengah helm (acuan "helm").
 # Perisai naga (badan perisai) di kiri layar, bahu bundar di kanan, ekor ke belakang; jambul menyapu ke belakang helm (saat lari badan condong ke depan,
 # jadi jambul diukur terhadap helm, bukan terhadap badan).
 SIDED = (("perisai_naga", ("pauldron_big",), -1, True, "badan"), ("pelindung_bahu_bundar", ("pauldron_small",), +1, True, "badan"),
-         ("jambul", ("crest",), -1, True, "helm"), ("ekor_panah", ("tail_arrow",), -1, False, "badan"))
+         ("jambul", ("crest",), -1, True, "helm"), ("ekor", TAIL_PARTS, -1, False, "badan"))
 
 # batas keterbacaan frame kunci (piksel terlihat)
 MIN_HELM = (30, 28)          # lebar, tinggi helm
@@ -83,7 +84,7 @@ def readability(cv):
     h = bbox(owners_of(cv, ("helm",)))
     vis, eye, _ = eyes_visible(cv)
     return {"helm": (h[2], h[3]) if h else (0, 0), "mata": vis + eye, "bahu": count(cv, ("pauldron_big",)), "perisai": count(cv, SHIELD_PARTS),
-            "pedang": count(cv, ("weapon",)), "kepalan": count(cv, ("gauntlet",)), "jambul": count(cv, ("crest",)), "ekor": count(cv, ("tail_arrow",))}
+            "pedang": count(cv, ("weapon",)), "kepalan": count(cv, ("gauntlet",)), "jambul": count(cv, ("crest",)), "ekor": count(cv, TAIL_PARTS)}
 
 
 def readability_failures(r):

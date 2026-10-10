@@ -160,6 +160,20 @@ class Hero3Model(unittest.TestCase):
             self.assertEqual(unlit, 0, name)
             self.assertTrue(all(cv.px[k] == hero3.RIM_COLOR for k, o in cv.owner.items() if o == "rim" and k in cv.px), name)
 
+    def test_tail_is_a_segmented_stem_with_an_attached_arrow_fan(self):
+        """Ekor: batang beruas bercincin merah dari pinggang belakang, rendah di belakang kaki, berujung kipas panah yang menempel di batang."""
+        for name, p in self.poses.items():
+            cv = hero3.render_pose(dict(p, fx=()))
+            seg = {k for k, o in cv.owner.items() if o == "tail_seg" and k in cv.px}
+            fan = {k for k, o in cv.owner.items() if o == "tail_arrow" and k in cv.px}
+            self.assertGreaterEqual(len(seg), 80, name)                                        # pose kunci smash memakai ekor pendek (k 0,64)
+            self.assertGreaterEqual(len(fan), 25, name)
+            self.assertGreaterEqual(sum(1 for k in seg if cv.px[k] == "q2"), 6, name)          # cincin merah antar ruas
+            self.assertTrue(any((x + dx, y + dy) in seg for (x, y) in fan for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1))), name)
+            tcx = hero3.geometry(p)["tcx"]
+            self.assertLess(sum(x for x, _ in seg | fan) / float(len(seg | fan)), tcx - 20, name)  # jauh di belakang badan
+            self.assertLess(max(y for _, y in seg), hero3.FLOOR, name)
+
     def test_monster_blood_is_red(self):
         for k in ("m1", "m2", "m3"):
             r, g, b = monkey.PAL_HERO[k]
