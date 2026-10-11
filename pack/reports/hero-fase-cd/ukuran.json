@@ -1,0 +1,247 @@
+{
+  "states": [
+    {
+      "state": "idle",
+      "frames": 12,
+      "loop": true,
+      "keyframe": 0,
+      "durations_ms": [
+        240,
+        140,
+        140,
+        160,
+        160,
+        200,
+        180,
+        160,
+        90,
+        140,
+        160,
+        180
+      ],
+      "total_ms": 1950,
+      "gif_bytes": 111605,
+      "gif_px": [
+        512,
+        384
+      ],
+      "sheet_px": [
+        1536,
+        96
+      ]
+    },
+    {
+      "state": "run",
+      "frames": 12,
+      "loop": true,
+      "keyframe": 10,
+      "durations_ms": [
+        70,
+        80,
+        70,
+        60,
+        100,
+        60,
+        70,
+        80,
+        70,
+        60,
+        100,
+        60
+      ],
+      "total_ms": 880,
+      "gif_bytes": 112645,
+      "gif_px": [
+        512,
+        384
+      ],
+      "sheet_px": [
+        1536,
+        96
+      ]
+    },
+    {
+      "state": "rage",
+      "frames": 12,
+      "loop": false,
+      "keyframe": 6,
+      "durations_ms": [
+        200,
+        140,
+        140,
+        180,
+        70,
+        90,
+        110,
+        70,
+        70,
+        70,
+        120,
+        400
+      ],
+      "total_ms": 1660,
+      "gif_bytes": 113357,
+      "gif_px": [
+        512,
+        384
+      ],
+      "sheet_px": [
+        1536,
+        96
+      ]
+    },
+    {
+      "state": "attack-leap",
+      "frames": 14,
+      "loop": true,
+      "keyframe": 8,
+      "durations_ms": [
+        140,
+        130,
+        60,
+        60,
+        120,
+        50,
+        40,
+        40,
+        260,
+        130,
+        110,
+        100,
+        100,
+        130
+      ],
+      "total_ms": 1470,
+      "gif_bytes": 131783,
+      "gif_px": [
+        512,
+        384
+      ],
+      "sheet_px": [
+        1792,
+        96
+      ]
+    },
+    {
+      "state": "attack-smash",
+      "frames": 12,
+      "loop": true,
+      "keyframe": 7,
+      "durations_ms": [
+        120,
+        100,
+        120,
+        180,
+        50,
+        40,
+        40,
+        240,
+        120,
+        100,
+        100,
+        140
+      ],
+      "total_ms": 1350,
+      "gif_bytes": 111415,
+      "gif_px": [
+        512,
+        384
+      ],
+      "sheet_px": [
+        1536,
+        96
+      ]
+    },
+    {
+      "state": "miss",
+      "frames": 10,
+      "loop": true,
+      "keyframe": 6,
+      "durations_ms": [
+        140,
+        100,
+        130,
+        50,
+        40,
+        200,
+        220,
+        240,
+        140,
+        140
+      ],
+      "total_ms": 1400,
+      "gif_bytes": 92217,
+      "gif_px": [
+        512,
+        384
+      ],
+      "sheet_px": [
+        1280,
+        96
+      ]
+    },
+    {
+      "state": "exhaustion",
+      "frames": 12,
+      "loop": true,
+      "keyframe": 5,
+      "durations_ms": [
+        200,
+        150,
+        150,
+        170,
+        220,
+        260,
+        220,
+        150,
+        90,
+        150,
+        170,
+        200
+      ],
+      "total_ms": 2130,
+      "gif_bytes": 102797,
+      "gif_px": [
+        512,
+        384
+      ],
+      "sheet_px": [
+        1536,
+        96
+      ]
+    },
+    {
+      "state": "defeated",
+      "frames": 14,
+      "loop": true,
+      "keyframe": 3,
+      "durations_ms": [
+        200,
+        180,
+        180,
+        200,
+        200,
+        220,
+        200,
+        160,
+        120,
+        180,
+        200,
+        200,
+        200,
+        200
+      ],
+      "total_ms": 2640,
+      "gif_bytes": 112291,
+      "gif_px": [
+        512,
+        384
+      ],
+      "sheet_px": [
+        1792,
+        96
+      ]
+    }
+  ],
+  "gif_bytes_total": 888110
+}

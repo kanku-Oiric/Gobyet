@@ -1,0 +1,19 @@
+{
+  "chromium": "141.0.7390.37",
+  "rage_total_ms": 2760,
+  "rage_last_frame_ms": 1500,
+  "fails": [],
+  "rage_times_ms": [
+    400,
+    3260,
+    5760,
+    9260
+  ],
+  "rage_stops_after_total": true,
+  "rage_last_frame_equals_sheet_frame": true,
+  "rage_early_differs_from_last": true,
+  "run_control_distinct_frames": 5,
+  "before_stops": true,
+  "before_last_equals_after_last": true
+}
+GIF-SEKALI: LULUS

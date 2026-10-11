@@ -1,0 +1,104 @@
+{
+  "ekor_idle_f0": 288,
+  "per_state": {
+    "idle": {
+      "k_dan_rot": [
+        1.0,
+        -10.0
+      ],
+      "frame_kunci": 0,
+      "ekor_kunci": 288,
+      "persen_idle": 100.0,
+      "ekor_min": 260,
+      "ekor_maks": 292
+    },
+    "run": {
+      "k_dan_rot": [
+        0.8,
+        -10.0
+      ],
+      "frame_kunci": 10,
+      "ekor_kunci": 214,
+      "persen_idle": 74.3,
+      "ekor_min": 161,
+      "ekor_maks": 214
+    },
+    "rage": {
+      "k_dan_rot": [
+        0.8,
+        -10.0
+      ],
+      "frame_kunci": 6,
+      "ekor_kunci": 191,
+      "persen_idle": 66.3,
+      "ekor_min": 151,
+      "ekor_maks": 192
+    },
+    "attack-leap": {
+      "k_dan_rot": [
+        0.7,
+        0.0
+      ],
+      "frame_kunci": 8,
+      "ekor_kunci": 144,
+      "persen_idle": 50.0,
+      "ekor_min": 136,
+      "ekor_maks": 162
+    },
+    "attack-smash": {
+      "k_dan_rot": [
+        0.7,
+        0.0
+      ],
+      "frame_kunci": 7,
+      "ekor_kunci": 144,
+      "persen_idle": 50.0,
+      "ekor_min": 134,
+      "ekor_maks": 161
+    },
+    "miss": {
+      "k_dan_rot": [
+        0.7,
+        0.0
+      ],
+      "frame_kunci": 6,
+      "ekor_kunci": 155,
+      "persen_idle": 53.8,
+      "ekor_min": 135,
+      "ekor_maks": 160
+    },
+    "exhaustion": {
+      "k_dan_rot": [
+        0.8,
+        0.0
+      ],
+      "frame_kunci": 5,
+      "ekor_kunci": 153,
+      "persen_idle": 53.1,
+      "ekor_min": 151,
+      "ekor_maks": 167
+    },
+    "defeated": {
+      "k_dan_rot": [
+        0.7,
+        0.0
+      ],
+      "frame_kunci": 3,
+      "ekor_kunci": 110,
+      "persen_idle": 38.2,
+      "ekor_min": 99,
+      "ekor_maks": 111
+    },
+    "victory": {
+      "k_dan_rot": [
+        0.8,
+        -10.0
+      ],
+      "frame_kunci": 16,
+      "ekor_kunci": 164,
+      "persen_idle": 56.9,
+      "ekor_min": 160,
+      "ekor_maks": 181
+    }
+  }
+}

@@ -1,0 +1,302 @@
+{
+  "perisai_naga": {
+    "kotak_idle": {
+      "x": 18,
+      "y": 15,
+      "lebar": 43,
+      "tinggi": 69
+    },
+    "piksel_idle": {
+      "pauldron_big": 723,
+      "horn_fin": 217,
+      "dragon_horn": 74,
+      "dragon_eye": 68,
+      "dragon_brow": 26,
+      "dragon_scale": 128,
+      "dragon_glow": 31
+    },
+    "total_idle": 1267,
+    "per_state_kunci": {
+      "idle": 1267,
+      "run": 1460,
+      "rage": 1282,
+      "attack-leap": 1241,
+      "attack-smash": 1278,
+      "miss": 1219,
+      "exhaustion": 1339,
+      "defeated": 1341,
+      "victory": 1315
+    }
+  },
+  "wajah_gobyet": {
+    "per_frame_victory": [
+      {
+        "f": 0,
+        "isi_topeng": 0,
+        "wajah": 0,
+        "mata": 0
+      },
+      {
+        "f": 1,
+        "isi_topeng": 100,
+        "wajah": 30,
+        "mata": 0
+      },
+      {
+        "f": 2,
+        "isi_topeng": 240,
+        "wajah": 154,
+        "mata": 20
+      },
+      {
+        "f": 3,
+        "isi_topeng": 372,
+        "wajah": 244,
+        "mata": 24
+      },
+      {
+        "f": 4,
+        "isi_topeng": 206,
+        "wajah": 126,
+        "mata": 12
+      },
+      {
+        "f": 5,
+        "isi_topeng": 0,
+        "wajah": 0,
+        "mata": 0
+      },
+      {
+        "f": 6,
+        "isi_topeng": 0,
+        "wajah": 0,
+        "mata": 0
+      },
+      {
+        "f": 7,
+        "isi_topeng": 0,
+        "wajah": 0,
+        "mata": 0
+      },
+      {
+        "f": 8,
+        "isi_topeng": 0,
+        "wajah": 0,
+        "mata": 0
+      },
+      {
+        "f": 9,
+        "isi_topeng": 0,
+        "wajah": 0,
+        "mata": 0
+      },
+      {
+        "f": 10,
+        "isi_topeng": 0,
+        "wajah": 0,
+        "mata": 0
+      },
+      {
+        "f": 11,
+        "isi_topeng": 0,
+        "wajah": 0,
+        "mata": 0
+      },
+      {
+        "f": 12,
+        "isi_topeng": 0,
+        "wajah": 0,
+        "mata": 0
+      },
+      {
+        "f": 13,
+        "isi_topeng": 0,
+        "wajah": 0,
+        "mata": 0
+      },
+      {
+        "f": 14,
+        "isi_topeng": 0,
+        "wajah": 0,
+        "mata": 0
+      },
+      {
+        "f": 15,
+        "isi_topeng": 0,
+        "wajah": 0,
+        "mata": 0
+      }
+    ],
+    "kunci_warna": [
+      "B",
+      "F",
+      "M",
+      "b",
+      "f"
+    ],
+    "ekspresi_puncak": [
+      "look",
+      "flat",
+      "smile"
+    ]
+  },
+  "tepi_terang": {
+    "warna": "n4",
+    "rgb": [
+      130,
+      128,
+      148
+    ],
+    "kontras": {
+      "terang": 3.591821955678676,
+      "gelap": 4.402172045242178,
+      "abu_tengah": 1.0276926299378795
+    },
+    "garis_hitam_n0_tanpa_tepi": {
+      "terang": 18.17355269944279,
+      "gelap": 1.1493651434693135,
+      "abu_tengah": 4.923362255368338
+    },
+    "piksel_tepi_idle": 639,
+    "tepi_gelap_tanpa_tepi_terang_semua_frame": 0
+  },
+  "ekor": {
+    "idle_f0": 298,
+    "attack-leap": {
+      "frame_kunci": 8,
+      "piksel": 148,
+      "persen_idle": 49.7,
+      "puncak": [
+        1.2,
+        90.0,
+        8.0,
+        -24.0
+      ],
+      "bobot_per_frame": [
+        0.5,
+        0.75,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.75,
+        0.75,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.5,
+        0.5
+      ]
+    },
+    "attack-smash": {
+      "frame_kunci": 7,
+      "piksel": 148,
+      "persen_idle": 49.7,
+      "puncak": [
+        0.8,
+        30.0,
+        4.0,
+        -24.0
+      ],
+      "bobot_per_frame": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "miss": {
+      "frame_kunci": 6,
+      "piksel": 149,
+      "persen_idle": 50.0,
+      "puncak": [
+        0.8,
+        15.0,
+        8.0,
+        -24.0
+      ],
+      "bobot_per_frame": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    }
+  },
+  "darah_monster": {
+    "m1": [
+      74,
+      2,
+      12
+    ],
+    "m2": [
+      140,
+      10,
+      22
+    ],
+    "m3": [
+      232,
+      96,
+      88
+    ]
+  },
+  "ukuran": {
+    "per_state": {
+      "idle": {
+        "gif": 178727,
+        "sheet": 15278
+      },
+      "run": {
+        "gif": 181994,
+        "sheet": 18924
+      },
+      "rage": {
+        "gif": 164213,
+        "sheet": 26683
+      },
+      "attack-leap": {
+        "gif": 204536,
+        "sheet": 33470
+      },
+      "attack-smash": {
+        "gif": 174997,
+        "sheet": 27323
+      },
+      "miss": {
+        "gif": 139751,
+        "sheet": 24049
+      },
+      "exhaustion": {
+        "gif": 157916,
+        "sheet": 12719
+      },
+      "defeated": {
+        "gif": 167139,
+        "sheet": 12002
+      },
+      "victory": {
+        "gif": 232278,
+        "sheet": 29932
+      }
+    },
+    "total_gif_dan_sheet": 1801931,
+    "batas_total": 2000000,
+    "gif_terbesar": 232278,
+    "batas_per_gif": 262144
+  }
+}

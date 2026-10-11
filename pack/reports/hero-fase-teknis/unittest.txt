@@ -1,0 +1,49 @@
+test_buckle_off_centre_is_flagged (src.test_validate_pack.HeroAsymmetry.test_buckle_off_centre_is_flagged) ... ok
+test_every_hero_frame_keeps_its_side (src.test_validate_pack.HeroAsymmetry.test_every_hero_frame_keeps_its_side) ... ok
+test_explicit_turn_is_exempt (src.test_validate_pack.HeroAsymmetry.test_explicit_turn_is_exempt) ... ok
+test_mirrored_synthetic_frame_is_flagged_only_there (src.test_validate_pack.HeroAsymmetry.test_mirrored_synthetic_frame_is_flagged_only_there) ... ok
+test_real_frames_pass_and_their_mirror_is_flagged (src.test_validate_pack.HeroAsymmetry.test_real_frames_pass_and_their_mirror_is_flagged) ... ok
+test_second_half_flip_is_caught (src.test_validate_pack.HeroAsymmetry.test_second_half_flip_is_caught) ... ok
+test_unknown_side_uses_the_first_visible_frame_and_skips_hidden (src.test_validate_pack.HeroAsymmetry.test_unknown_side_uses_the_first_visible_frame_and_skips_hidden) ... ok
+test_unmirrored_synthetic_passes (src.test_validate_pack.HeroAsymmetry.test_unmirrored_synthetic_passes) ... ok
+test_canvas_problems (src.test_validate_pack.HeroCanvasSchema.test_canvas_problems) ... ok
+test_defaults_are_the_global_canvas (src.test_validate_pack.HeroCanvasSchema.test_defaults_are_the_global_canvas) ... ok
+test_frames_of_uses_the_cell_canvas (src.test_validate_pack.HeroCanvasSchema.test_frames_of_uses_the_cell_canvas) ... ok
+test_gif_timeline_with_cell_scale_and_no_loop (src.test_validate_pack.HeroCanvasSchema.test_gif_timeline_with_cell_scale_and_no_loop) ... ok
+test_attack_needs_smear_before_impact_and_a_held_impact_frame (src.test_validate_pack.HeroFindings.test_attack_needs_smear_before_impact_and_a_held_impact_frame) ... ok
+test_every_state_passes (src.test_validate_pack.HeroFindings.test_every_state_passes) ... ok
+test_manifest_keyframes_match_the_code (src.test_validate_pack.HeroFindings.test_manifest_keyframes_match_the_code) ... ok
+test_red_face_and_teal_dots_only_in_rage (src.test_validate_pack.HeroFindings.test_red_face_and_teal_dots_only_in_rage) ... ok
+test_additive_rig_defaults_leave_phase_b_keyposes_unchanged (src.test_validate_pack.HeroMeasure.test_additive_rig_defaults_leave_phase_b_keyposes_unchanged) ... ok
+test_all_frames_stay_in_palette_canvas_and_above_the_floor (src.test_validate_pack.HeroMeasure.test_all_frames_stay_in_palette_canvas_and_above_the_floor) ... ok
+test_contrast_helper (src.test_validate_pack.HeroMeasure.test_contrast_helper) ... ok
+test_head_height_is_stable_within_a_state (src.test_validate_pack.HeroMeasure.test_head_height_is_stable_within_a_state) ... ok
+test_idle_keyframe_passes_readability_and_blade (src.test_validate_pack.HeroMeasure.test_idle_keyframe_passes_readability_and_blade) ... ok
+test_loop_seam_not_larger_than_largest_step (src.test_validate_pack.HeroMeasure.test_loop_seam_not_larger_than_largest_step) ... ok
+test_no_blood_color_outside_face_and_mouth (src.test_validate_pack.HeroMeasure.test_no_blood_color_outside_face_and_mouth) ... ok
+test_readability_failures_each_limit (src.test_validate_pack.HeroMeasure.test_readability_failures_each_limit) ... ok
+test_run_silhouettes_differ_between_consecutive_frames (src.test_validate_pack.HeroMeasure.test_run_silhouettes_differ_between_consecutive_frames) ... ok
+test_spec_frames_loop_keyframes_and_non_uniform_durations (src.test_validate_pack.HeroMeasure.test_spec_frames_loop_keyframes_and_non_uniform_durations) ... ok
+test_visibility_detects_a_covered_face (src.test_validate_pack.HeroMeasure.test_visibility_detects_a_covered_face) ... ok
+test_canvas_loop_and_manifest (src.test_validate_pack.HeroPackSpec.test_canvas_loop_and_manifest) ... ok
+test_rage_last_frame_is_held_1500_ms_and_only_the_last_changed (src.test_validate_pack.HeroRageHold.test_rage_last_frame_is_held_1500_ms_and_only_the_last_changed) ... ok
+test_validator_rejects_a_rage_with_a_short_last_frame (src.test_validate_pack.HeroRageHold.test_validator_rejects_a_rage_with_a_short_last_frame) ... ok
+test_sawtooth_flagged (src.test_validate_pack.SeamPop.test_sawtooth_flagged) ... ok
+test_small_motion_below_minimum (src.test_validate_pack.SeamPop.test_small_motion_below_minimum) ... ok
+test_smooth_loop_not_flagged (src.test_validate_pack.SeamPop.test_smooth_loop_not_flagged) ... ok
+test_static_loop (src.test_validate_pack.SeamPop.test_static_loop) ... ok
+test_complementary_metric_is_seam_over_median (src.test_validate_pack.SeamPopExempt.test_complementary_metric_is_seam_over_median) ... ok
+test_listed_cell_with_a_real_pop_is_still_warned (src.test_validate_pack.SeamPopExempt.test_listed_cell_with_a_real_pop_is_still_warned) ... ok
+test_no_pop_means_nothing_to_exempt (src.test_validate_pack.SeamPopExempt.test_no_pop_means_nothing_to_exempt) ... ok
+test_other_cells_are_never_exempt (src.test_validate_pack.SeamPopExempt.test_other_cells_are_never_exempt) ... ok
+test_uniform_run_is_exempt_with_a_written_reason (src.test_validate_pack.SeamPopExempt.test_uniform_run_is_exempt_with_a_written_reason) ... ok
+test_alias_import_with_glyph_outside_mini (src.test_validate_pack.TextAudit.test_alias_import_with_glyph_outside_mini) ... ok
+test_direct_import_too_long (src.test_validate_pack.TextAudit.test_direct_import_too_long) ... ok
+test_exception_only_for_its_owner_and_static (src.test_validate_pack.TextAudit.test_exception_only_for_its_owner_and_static) ... ok
+test_module_attribute_call (src.test_validate_pack.TextAudit.test_module_attribute_call) ... ok
+test_patch_is_restored (src.test_validate_pack.TextAudit.test_patch_is_restored) ... ok
+
+----------------------------------------------------------------------
+Ran 44 tests in 158.936s
+
+OK

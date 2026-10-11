@@ -1,0 +1,154 @@
+TAP version 13
+# Subtest: kombinasi valid: sel asli terkena tepat (exact)
+ok 1 - kombinasi valid: sel asli terkena tepat (exact)
+  ---
+  duration_ms: 3.549724
+  type: 'test'
+  ...
+# Subtest: state hilang: jatuh ke kostum+idle bila ada
+ok 2 - state hilang: jatuh ke kostum+idle bila ada
+  ---
+  duration_ms: 0.349106
+  type: 'test'
+  ...
+# Subtest: state hilang tanpa idle kostum: jatuh ke normal+state, lalu normal+idle
+ok 3 - state hilang tanpa idle kostum: jatuh ke normal+state, lalu normal+idle
+  ---
+  duration_ms: 0.436448
+  type: 'test'
+  ...
+# Subtest: kostum hilang atau tidak dikenal: jatuh ke normal
+ok 4 - kostum hilang atau tidak dikenal: jatuh ke normal
+  ---
+  duration_ms: 0.267663
+  type: 'test'
+  ...
+# Subtest: pemetaan Gerbang B: wisuda di academic/idle, academic/victory bukan wisuda
+ok 5 - pemetaan Gerbang B: wisuda di academic/idle, academic/victory bukan wisuda
+  ---
+  duration_ms: 0.416383
+  type: 'test'
+  ...
+# Subtest: Gerbang C: sembilan sel baru terpetakan exact dan bergerbang C, sel asli di baris yang sama tidak tergeser
+ok 6 - Gerbang C: sembilan sel baru terpetakan exact dan bergerbang C, sel asli di baris yang sama tidak tergeser
+  ---
+  duration_ms: 0.352686
+  type: 'test'
+  ...
+# Subtest: keyframe: setiap sel punya frame kunci valid dan reduced motion selalu menampilkan frame itu
+ok 7 - keyframe: setiap sel punya frame kunci valid dan reduced motion selalu menampilkan frame itu
+  ---
+  duration_ms: 3.808912
+  type: 'test'
+  ...
+# Subtest: input dinormalkan: spasi, huruf besar, kosong, bukan string
+ok 8 - input dinormalkan: spasi, huruf besar, kosong, bukan string
+  ---
+  duration_ms: 0.22778
+  type: 'test'
+  ...
+# Subtest: manifest rusak: selalu placeholder, tidak pernah melempar
+ok 9 - manifest rusak: selalu placeholder, tidak pernah melempar
+  ---
+  duration_ms: 1.180189
+  type: 'test'
+  ...
+# Subtest: sel rusak dilewati, rantai berlanjut ke sel valid berikutnya
+ok 10 - sel rusak dilewati, rantai berlanjut ke sel valid berikutnya
+  ---
+  duration_ms: 0.518628
+  type: 'test'
+  ...
+# Subtest: seluruh matriks kostum x state teresolusi tanpa error
+ok 11 - seluruh matriks kostum x state teresolusi tanpa error
+  ---
+  duration_ms: 7.00785
+  type: 'test'
+  ...
+# Subtest: applies: tabel sel berlaku 163 (78 kostum lama + 85 kostum baru) + 8 sel Berserker Hero, semua sel terisi berlaku
+ok 12 - applies: tabel sel berlaku 163 (78 kostum lama + 85 kostum baru) + 8 sel Berserker Hero, semua sel terisi berlaku
+  ---
+  duration_ms: 1.204981
+  type: 'test'
+  ...
+# Subtest: varian tanpa aset jatuh ke induk; induk tanpa aset jatuh ke normal
+ok 13 - varian tanpa aset jatuh ke induk; induk tanpa aset jatuh ke normal
+  ---
+  duration_ms: 0.560509
+  type: 'test'
+  ...
+# Subtest: frame kunci keputusan pemilik: champion-victory f4, judge-judging f9, skeptic-attack f7
+ok 14 - frame kunci keputusan pemilik: champion-victory f4, judge-judging f9, skeptic-attack f7
+  ---
+  duration_ms: 0.10892
+  type: 'test'
+  ...
+# Subtest: sheet4x opsional: sel tanpa sheet4x tetap valid dan teresolusi exact
+ok 15 - sheet4x opsional: sel tanpa sheet4x tetap valid dan teresolusi exact
+  ---
+  duration_ms: 0.206885
+  type: 'test'
+  ...
+# Subtest: frameAt: mengikuti durasi, loop, dan reduced motion
+ok 16 - frameAt: mengikuti durasi, loop, dan reduced motion
+  ---
+  duration_ms: 0.189861
+  type: 'test'
+  ...
+# Subtest: manifest: setiap asset yang dirujuk benar-benar ada dan ukurannya cocok (kanvas per sel)
+ok 17 - manifest: setiap asset yang dirujuk benar-benar ada dan ukurannya cocok (kanvas per sel)
+  ---
+  duration_ms: 8.659086
+  type: 'test'
+  ...
+# Subtest: aset baru: ditandai, punya gerbang, terhubung ke file yang ada dengan ukuran cocok
+ok 18 - aset baru: ditandai, punya gerbang, terhubung ke file yang ada dengan ukuran cocok
+  ---
+  duration_ms: 34.442905
+  type: 'test'
+  ...
+# Subtest: GIF semua sel berukuran 512x384 (kanvas 64x48 x8, atau kanvas sel x skala sel: hero 128x96 x4)
+ok 19 - GIF semua sel berukuran 512x384 (kanvas 64x48 x8, atau kanvas sel x skala sel: hero 128x96 x4)
+  ---
+  duration_ms: 18.6856
+  type: 'test'
+  ...
+# Subtest: canvas per sel: bawaan manifest (64x48), field sel menimpa, manifest lama tanpa field tetap valid
+ok 20 - canvas per sel: bawaan manifest (64x48), field sel menimpa, manifest lama tanpa field tetap valid
+  ---
+  duration_ms: 0.267409
+  type: 'test'
+  ...
+# Subtest: Berserker Hero: 8 sel exact, kanvas 128x96 dan GIF x4 per sel, rage tidak loop, sel lama tidak punya field baru
+ok 21 - Berserker Hero: 8 sel exact, kanvas 128x96 dan GIF x4 per sel, rage tidak loop, sel lama tidak punya field baru
+  ---
+  duration_ms: 0.654139
+  type: 'test'
+  ...
+# Subtest: Berserker Hero: rage tidak berputar (berhenti di frame terakhir), state lain berputar
+ok 22 - Berserker Hero: rage tidak berputar (berhenti di frame terakhir), state lain berputar
+  ---
+  duration_ms: 0.14205
+  type: 'test'
+  ...
+# Subtest: Berserker Hero: fallback via base viking-berserker bila hero tidak punya idle; hero+idle dipakai dulu bila ada
+ok 23 - Berserker Hero: fallback via base viking-berserker bila hero tidak punya idle; hero+idle dipakai dulu bila ada
+  ---
+  duration_ms: 0.254418
+  type: 'test'
+  ...
+# Subtest: Berserker Hero: state baru ada di manifest dan hanya berlaku untuk hero; defeated berlaku juga untuk hero
+ok 24 - Berserker Hero: state baru ada di manifest dan hanya berlaku untuk hero; defeated berlaku juga untuk hero
+  ---
+  duration_ms: 0.243385
+  type: 'test'
+  ...
+1..24
+# tests 24
+# suites 0
+# pass 24
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 192.907632

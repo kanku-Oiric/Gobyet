@@ -1,0 +1,401 @@
+{
+  "frame": 20,
+  "kunci": 16,
+  "total_ms": 3980,
+  "gif_byte": 296819,
+  "sheet_byte": 30947,
+  "urutan": {
+    "topeng": [
+      1,
+      4,
+      6,
+      372
+    ],
+    "wajah": [
+      244,
+      24
+    ],
+    "angkat": 9,
+    "tusuk": 11,
+    "kaki": [
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19
+    ],
+    "noda": [
+      203,
+      203,
+      203,
+      203,
+      203,
+      203,
+      203,
+      203,
+      206,
+      209,
+      205,
+      205,
+      201,
+      197,
+      189,
+      155,
+      111,
+      59,
+      58,
+      0
+    ],
+    "sebagian": [
+      15,
+      16,
+      17,
+      18
+    ]
+  },
+  "gagal": [],
+  "per_frame": [
+    {
+      "f": 0,
+      "ms": 160,
+      "topeng": 0.0,
+      "isi_topeng": 0,
+      "wajah": 0,
+      "mata_gobyet": 0,
+      "noda": 203,
+      "batu": 125,
+      "kaki_di_batu": 0,
+      "tangan_di_pedang": true,
+      "kepalan_kanan": [
+        89.1,
+        48.3
+      ],
+      "sudut_pedang": 86
+    },
+    {
+      "f": 1,
+      "ms": 100,
+      "topeng": 0.25,
+      "isi_topeng": 100,
+      "wajah": 30,
+      "mata_gobyet": 0,
+      "noda": 203,
+      "batu": 125,
+      "kaki_di_batu": 0,
+      "tangan_di_pedang": true,
+      "kepalan_kanan": [
+        89.1,
+        48.3
+      ],
+      "sudut_pedang": 86
+    },
+    {
+      "f": 2,
+      "ms": 100,
+      "topeng": 0.625,
+      "isi_topeng": 240,
+      "wajah": 154,
+      "mata_gobyet": 20,
+      "noda": 203,
+      "batu": 125,
+      "kaki_di_batu": 0,
+      "tangan_di_pedang": true,
+      "kepalan_kanan": [
+        89.1,
+        48.3
+      ],
+      "sudut_pedang": 86
+    },
+    {
+      "f": 3,
+      "ms": 150,
+      "topeng": 1.0,
+      "isi_topeng": 371,
+      "wajah": 244,
+      "mata_gobyet": 24,
+      "noda": 203,
+      "batu": 125,
+      "kaki_di_batu": 0,
+      "tangan_di_pedang": true,
+      "kepalan_kanan": [
+        89.1,
+        48.3
+      ],
+      "sudut_pedang": 86
+    },
+    {
+      "f": 4,
+      "ms": 350,
+      "topeng": 1.0,
+      "isi_topeng": 372,
+      "wajah": 244,
+      "mata_gobyet": 24,
+      "noda": 203,
+      "batu": 125,
+      "kaki_di_batu": 0,
+      "tangan_di_pedang": true,
+      "kepalan_kanan": [
+        89.1,
+        48.3
+      ],
+      "sudut_pedang": 86
+    },
+    {
+      "f": 5,
+      "ms": 100,
+      "topeng": 0.625,
+      "isi_topeng": 240,
+      "wajah": 154,
+      "mata_gobyet": 20,
+      "noda": 203,
+      "batu": 125,
+      "kaki_di_batu": 0,
+      "tangan_di_pedang": true,
+      "kepalan_kanan": [
+        89.1,
+        48.3
+      ],
+      "sudut_pedang": 86
+    },
+    {
+      "f": 6,
+      "ms": 80,
+      "topeng": 0.25,
+      "isi_topeng": 100,
+      "wajah": 30,
+      "mata_gobyet": 0,
+      "noda": 203,
+      "batu": 125,
+      "kaki_di_batu": 0,
+      "tangan_di_pedang": true,
+      "kepalan_kanan": [
+        89.1,
+        48.3
+      ],
+      "sudut_pedang": 86
+    },
+    {
+      "f": 7,
+      "ms": 140,
+      "topeng": 0.0,
+      "isi_topeng": 0,
+      "wajah": 0,
+      "mata_gobyet": 0,
+      "noda": 203,
+      "batu": 125,
+      "kaki_di_batu": 0,
+      "tangan_di_pedang": true,
+      "kepalan_kanan": [
+        89.1,
+        48.3
+      ],
+      "sudut_pedang": 86
+    },
+    {
+      "f": 8,
+      "ms": 100,
+      "topeng": 0.0,
+      "isi_topeng": 0,
+      "wajah": 0,
+      "mata_gobyet": 0,
+      "noda": 206,
+      "batu": 128,
+      "kaki_di_batu": 0,
+      "tangan_di_pedang": true,
+      "kepalan_kanan": [
+        85.4,
+        45.2
+      ],
+      "sudut_pedang": 60
+    },
+    {
+      "f": 9,
+      "ms": 70,
+      "topeng": 0.0,
+      "isi_topeng": 0,
+      "wajah": 0,
+      "mata_gobyet": 0,
+      "noda": 209,
+      "batu": 123,
+      "kaki_di_batu": 0,
+      "tangan_di_pedang": true,
+      "kepalan_kanan": [
+        82.4,
+        44.9
+      ],
+      "sudut_pedang": -44
+    },
+    {
+      "f": 10,
+      "ms": 60,
+      "topeng": 0.0,
+      "isi_topeng": 0,
+      "wajah": 0,
+      "mata_gobyet": 0,
+      "noda": 205,
+      "batu": 119,
+      "kaki_di_batu": 0,
+      "tangan_di_pedang": true,
+      "kepalan_kanan": [
+        87.6,
+        47.4
+      ],
+      "sudut_pedang": 70
+    },
+    {
+      "f": 11,
+      "ms": 200,
+      "topeng": 0.0,
+      "isi_topeng": 0,
+      "wajah": 0,
+      "mata_gobyet": 0,
+      "noda": 205,
+      "batu": 88,
+      "kaki_di_batu": 0,
+      "tangan_di_pedang": true,
+      "kepalan_kanan": [
+        90.1,
+        49.4
+      ],
+      "sudut_pedang": 88
+    },
+    {
+      "f": 12,
+      "ms": 140,
+      "topeng": 0.0,
+      "isi_topeng": 0,
+      "wajah": 0,
+      "mata_gobyet": 0,
+      "noda": 201,
+      "batu": 105,
+      "kaki_di_batu": 0,
+      "tangan_di_pedang": true,
+      "kepalan_kanan": [
+        88,
+        49
+      ],
+      "sudut_pedang": 88
+    },
+    {
+      "f": 13,
+      "ms": 160,
+      "topeng": 0.0,
+      "isi_topeng": 0,
+      "wajah": 0,
+      "mata_gobyet": 0,
+      "noda": 197,
+      "batu": 129,
+      "kaki_di_batu": 37,
+      "tangan_di_pedang": true,
+      "kepalan_kanan": [
+        86,
+        53
+      ],
+      "sudut_pedang": 88
+    },
+    {
+      "f": 14,
+      "ms": 110,
+      "topeng": 0.0,
+      "isi_topeng": 0,
+      "wajah": 0,
+      "mata_gobyet": 0,
+      "noda": 189,
+      "batu": 168,
+      "kaki_di_batu": 37,
+      "tangan_di_pedang": true,
+      "kepalan_kanan": [
+        85,
+        57
+      ],
+      "sudut_pedang": 88
+    },
+    {
+      "f": 15,
+      "ms": 110,
+      "topeng": 0.0,
+      "isi_topeng": 0,
+      "wajah": 0,
+      "mata_gobyet": 0,
+      "noda": 155,
+      "batu": 168,
+      "kaki_di_batu": 37,
+      "tangan_di_pedang": true,
+      "kepalan_kanan": [
+        85,
+        61
+      ],
+      "sudut_pedang": 88
+    },
+    {
+      "f": 16,
+      "ms": 110,
+      "topeng": 0.0,
+      "isi_topeng": 0,
+      "wajah": 0,
+      "mata_gobyet": 0,
+      "noda": 111,
+      "batu": 168,
+      "kaki_di_batu": 37,
+      "tangan_di_pedang": true,
+      "kepalan_kanan": [
+        85,
+        65
+      ],
+      "sudut_pedang": 88
+    },
+    {
+      "f": 17,
+      "ms": 110,
+      "topeng": 0.0,
+      "isi_topeng": 0,
+      "wajah": 0,
+      "mata_gobyet": 0,
+      "noda": 59,
+      "batu": 168,
+      "kaki_di_batu": 37,
+      "tangan_di_pedang": true,
+      "kepalan_kanan": [
+        85,
+        70
+      ],
+      "sudut_pedang": 88
+    },
+    {
+      "f": 18,
+      "ms": 130,
+      "topeng": 0.0,
+      "isi_topeng": 0,
+      "wajah": 0,
+      "mata_gobyet": 0,
+      "noda": 58,
+      "batu": 168,
+      "kaki_di_batu": 37,
+      "tangan_di_pedang": true,
+      "kepalan_kanan": [
+        83.2,
+        71.8
+      ],
+      "sudut_pedang": 88
+    },
+    {
+      "f": 19,
+      "ms": 1500,
+      "topeng": 0.0,
+      "isi_topeng": 0,
+      "wajah": 0,
+      "mata_gobyet": 0,
+      "noda": 0,
+      "batu": 169,
+      "kaki_di_batu": 38,
+      "tangan_di_pedang": true,
+      "kepalan_kanan": [
+        88.8,
+        47.2
+      ],
+      "sudut_pedang": 88
+    }
+  ]
+}
